@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniDocs MCQ Portal</title>
-    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
         body { background-color: #050508; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; overflow-x: hidden; position: relative; }
         .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
         .blob { position: absolute; filter: blur(90px); opacity: 0.5; animation: float 12s infinite alternate ease-in-out; }
@@ -16,7 +14,6 @@
         .blob3 { width: 250px; height: 250px; background: #673ab7; top: 40%; left: 40%; animation-delay: 5s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
 
-        /* Notification Styling */
         .top-left-bar { position: absolute; top: 25px; left: 30px; z-index: 100; }
         .bell-icon-wrapper { position: relative; cursor: pointer; display: inline-block; padding: 5px; }
         .bell-icon-wrapper svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: 0.3s; }
@@ -30,15 +27,11 @@
         .close-btn { position: absolute; top: 10px; right: 15px; color: #ff5252; font-size: 28px; cursor: pointer; font-weight: bold; transition: 0.3s; line-height: 1; }
         .close-btn:hover { transform: scale(1.2); text-shadow: 0 0 10px #ff5252; }
         .msg-title { color: #00bcd4; font-size: 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;}
-        
-        /* 🟢 NOTUN: Scrollable Message Body */
         .msg-body { max-height: 320px; overflow-y: auto; text-align: left; padding-right: 5px;}
         .msg-body::-webkit-scrollbar { width: 5px; }
         .msg-body::-webkit-scrollbar-thumb { background: rgba(0, 188, 212, 0.5); border-radius: 10px; }
-        
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* App Launcher (9-Dots) */
         .top-bar { position: absolute; top: 20px; right: 30px; z-index: 100; }
         .apps-menu-wrapper { position: relative; display: inline-block; }
         .apps-icon { display: grid; grid-template-columns: repeat(3, 5px); gap: 3px; cursor: pointer; padding: 10px; border-radius: 50%; transition: background 0.3s ease; }
@@ -50,7 +43,6 @@
         .dropdown-item:hover { background: rgba(0, 188, 212, 0.15); border-color: rgba(0, 188, 212, 0.4); transform: translateY(-2px); }
         .dropdown-title { font-weight: bold; font-size: 14px; text-align: center; letter-spacing: 0.5px;}
 
-        /* Header & Boxes */
         .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; margin-top: 30px;}
         h1 { background: linear-gradient(135deg, #00bcd4, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 38px; letter-spacing: 1.5px; margin-bottom: 10px; }
         p { color: #a0a0b0; font-size: 16px; }
@@ -59,7 +51,7 @@
         .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 1100px; animation: slideUp 0.8s ease-out; z-index: 10; margin-bottom: 40px;}
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .glass-box { background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(0, 188, 212, 0.3); border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 0 20px rgba(0, 188, 212, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.02); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; justify-content: flex-start; min-height: 350px; }
+        .glass-box { background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(20px); border: 1px solid rgba(0, 188, 212, 0.3); border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 0 20px rgba(0, 188, 212, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.02); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; justify-content: flex-start; min-height: 350px; }
         .glass-box:hover { border-color: rgba(0, 188, 212, 0.8); box-shadow: 0 0 30px rgba(0, 188, 212, 0.3), inset 0 0 15px rgba(0, 188, 212, 0.1); transform: translateY(-8px); }
         .box-icon { font-size: 40px; margin-bottom: 15px; }
         .box-title { color: #fff; font-size: 22px; margin-bottom: 15px; font-weight: bold; }
@@ -94,10 +86,7 @@
 
     <div class="top-left-bar">
         <div class="bell-icon-wrapper" id="bellIcon">
-            <svg viewBox="0 0 24 24">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             <div class="red-dot" id="redDot"></div>
         </div>
     </div>
@@ -106,9 +95,7 @@
         <div class="msg-modal-content">
             <span class="close-btn" id="closeModalBtn">&times;</span>
             <div class="msg-title">🔔 Unread Announcements</div>
-            <div class="msg-body" id="msgText">
-                <p style="text-align: center; color: #b3b3b3; margin-top: 10px;">Checking for messages...</p>
-            </div>
+            <div class="msg-body" id="msgText"><p style="text-align: center; color: #b3b3b3; margin-top: 10px;">Checking for messages...</p></div>
         </div>
     </div>
 
@@ -128,8 +115,8 @@
     </div>
 
     <div class="header-section">
-        <h1>UniDocs MCQ Portal</h1>
-        <p>A centralized hub to test your knowledge and track your progress.</p>
+        <h1>Job Preparation Portal</h1>
+      
     </div>
 
     <div class="grid-container">
@@ -155,34 +142,20 @@
     <div class="footer-branding">Developed by UniDocs</div>
 
     <script>
-        const appsIcon = document.getElementById('appsIcon');
-        const appsDropdown = document.getElementById('appsDropdown');
-        const bellIcon = document.getElementById('bellIcon');
-        const msgModal = document.getElementById('msgModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-
+        const appsIcon = document.getElementById('appsIcon'); const appsDropdown = document.getElementById('appsDropdown');
+        const bellIcon = document.getElementById('bellIcon'); const msgModal = document.getElementById('msgModal'); const closeModalBtn = document.getElementById('closeModalBtn');
         appsIcon.addEventListener('click', (e) => { e.stopPropagation(); appsDropdown.classList.toggle('show'); });
-        
-        bellIcon.addEventListener('click', () => { 
-            msgModal.classList.add('show'); 
-            document.getElementById('redDot').style.display = 'none'; 
-        });
-        
+        bellIcon.addEventListener('click', () => { msgModal.classList.add('show'); document.getElementById('redDot').style.display = 'none'; });
         closeModalBtn.addEventListener('click', () => { msgModal.classList.remove('show'); });
-        
-        window.addEventListener('click', (e) => {
-            if(appsDropdown.classList.contains('show')) appsDropdown.classList.remove('show');
-            if(e.target === msgModal) msgModal.classList.remove('show'); 
-        });
+        window.addEventListener('click', (e) => { if(appsDropdown.classList.contains('show')) appsDropdown.classList.remove('show'); if(e.target === msgModal) msgModal.classList.remove('show'); });
         appsDropdown.addEventListener('click', (e) => e.stopPropagation());
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        // 🟢 NOTUN: limit import kora hoyeche jate shudhu last 15-20 ta notice fetch hoy
         import { getFirestore, collection, getDocs, orderBy, query, limit } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
+        // 🔴🔴 FIREBASE CONFIG 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -191,72 +164,35 @@
             messagingSenderId: "977853699063",
             appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
         };
+        const app = initializeApp(firebaseConfig); const db = getFirestore(app);
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Date format korar helper function
-        function formatNoticeDate(timestamp) {
-            const d = new Date(timestamp);
-            return d.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
-        }
+        function formatNoticeDate(timestamp) { const d = new Date(timestamp); return d.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }); }
 
         let highestMsgTimestamp = 0;
 
-        // 🟢 Dynamic Unread Notification Checking
         async function checkNotification() {
             try {
-                // Notun theke purano msg (Desc) sajano
                 const q = query(collection(db, "notifications"), orderBy("timestamp", "desc"), limit(20));
                 const querySnapshot = await getDocs(q);
-                
-                let lastSeen = localStorage.getItem('lastSeenMsgTime') || 0;
-                lastSeen = parseInt(lastSeen);
-                
-                let unreadCount = 0;
-                let htmlContent = "";
+                let lastSeen = parseInt(localStorage.getItem('lastSeenMsgTime') || 0);
+                let unreadCount = 0; let htmlContent = "";
 
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    
-                    // Sobcheye latest msg er time ta track kora hochhe
-                    if(data.timestamp > highestMsgTimestamp) {
-                        highestMsgTimestamp = data.timestamp; 
-                    }
-
-                    // Jodi local storage er theke msg er time boro hoy tar mane user ekhono dekheni
+                    if(data.timestamp > highestMsgTimestamp) highestMsgTimestamp = data.timestamp; 
                     if(data.timestamp > lastSeen) {
                         unreadCount++;
-                        htmlContent += `
-                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 3px solid #00e676;">
-                                <div style="font-size: 11px; color: #ffb74d; margin-bottom: 8px;">📅 ${formatNoticeDate(data.timestamp)}</div>
-                                <div style="font-size: 15px; color: #e0e0e0; white-space: pre-wrap; line-height: 1.5;">${data.message}</div>
-                            </div>
-                        `;
+                        htmlContent += `<div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 3px solid #00e676;"><div style="font-size: 11px; color: #ffb74d; margin-bottom: 8px;">📅 ${formatNoticeDate(data.timestamp)}</div><div style="font-size: 15px; color: #e0e0e0; white-space: pre-wrap; line-height: 1.5;">${data.message}</div></div>`;
                     }
                 });
 
                 const msgDiv = document.getElementById('msgText');
-                
-                if(unreadCount > 0) {
-                    document.getElementById('redDot').style.display = 'block';
-                    msgDiv.innerHTML = htmlContent;
-                } else {
-                    document.getElementById('redDot').style.display = 'none';
-                    msgDiv.innerHTML = "<p style='text-align:center; color:#b3b3b3; margin-top:20px;'>No new unread messages.</p>";
-                }
-            } catch(e) { 
-                console.error("Error fetching notice: ", e); 
-                document.getElementById('msgText').innerHTML = "<p style='color:red;'>Failed to load messages.</p>";
-            }
+                if(unreadCount > 0) { document.getElementById('redDot').style.display = 'block'; msgDiv.innerHTML = htmlContent; } 
+                else { document.getElementById('redDot').style.display = 'none'; msgDiv.innerHTML = "<p style='text-align:center; color:#b3b3b3; margin-top:20px;'>No new unread messages.</p>"; }
+            } catch(e) { console.error("Error fetching notice: ", e); }
         }
 
-        // Bell click korle local storage e time update hobe jate porer bar page reload dile unread msg udhao hoye jay
-        document.getElementById('bellIcon').addEventListener('click', () => {
-            if (highestMsgTimestamp > 0) {
-                localStorage.setItem('lastSeenMsgTime', highestMsgTimestamp);
-            }
-        });
+        document.getElementById('bellIcon').addEventListener('click', () => { if (highestMsgTimestamp > 0) { localStorage.setItem('lastSeenMsgTime', highestMsgTimestamp); } });
 
         async function loadAvailableExams() {
             const examsListDiv = document.getElementById('examsList');
@@ -264,23 +200,34 @@
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 
-                if (querySnapshot.empty) { examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>"; return; }
-                examsListDiv.innerHTML = ""; 
-                
+                let activeExamCount = 0;
+                let htmlOutput = "";
+
                 querySnapshot.forEach((doc) => {
                     const exam = doc.data(); const examId = doc.id;
-                    const item = document.createElement('div'); item.className = 'exam-item';
-                    item.innerHTML = `
-                        <div><div class="exam-name">${exam.title}</div><div class="exam-time">⏱ ${exam.duration} Min</div></div>
-                        <a href="exam.html?id=${examId}" class="start-btn">Start</a>
+                    
+                    // 🟢 NOTUN: Deleted Exam gulo k ekhane ignore kora hochhe!
+                    if (exam.status === "deleted") return; 
+
+                    activeExamCount++;
+                    htmlOutput += `
+                        <div class="exam-item">
+                            <div><div class="exam-name">${exam.title}</div><div class="exam-time">⏱ ${exam.duration} Min</div></div>
+                            <a href="exam.html?id=${examId}" class="start-btn">Start</a>
+                        </div>
                     `;
-                    examsListDiv.appendChild(item);
                 });
+
+                if (activeExamCount === 0) { 
+                    examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>"; 
+                } else {
+                    examsListDiv.innerHTML = htmlOutput;
+                }
+
             } catch (error) { examsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 20px;'>Error loading exams.</p>"; }
         }
 
-        checkNotification();
-        loadAvailableExams();
+        checkNotification(); loadAvailableExams();
     </script>
 </body>
 </html>
