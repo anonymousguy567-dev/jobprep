@@ -21,10 +21,14 @@
         .submit-btn { width: 100%; padding: 15px; margin-top: 20px; border: none; border-radius: 8px; background: linear-gradient(135deg, #00bcd4, #2196f3); color: white; font-size: 18px; font-weight: bold; cursor: pointer; }
         .score-display { font-size: 40px; font-weight: bold; color: #00e676; text-align: center; margin: 20px 0; }
         #examTimer { font-size: 18px; font-weight: bold; color: #ff5252; background: rgba(255, 82, 82, 0.1); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255, 82, 82, 0.3); }
-        
-        /* Marking rules warning styling */
         .marking-rules { background: rgba(255, 183, 77, 0.1); border-left: 4px solid #ffb74d; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; color: #e0e0e0; }
         .marking-rules span { color: #ffb74d; font-weight: bold; }
+        
+        /* 🟢 NOTUN: Roll Number Input Styling */
+        .roll-input-box { margin-bottom: 25px; background: rgba(0, 188, 212, 0.05); padding: 20px; border-radius: 10px; border: 1px solid rgba(0, 188, 212, 0.2); }
+        .roll-input-box label { display: block; margin-bottom: 10px; color: #00bcd4; font-weight: bold; font-size: 16px; }
+        .roll-input-box input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.4); color: #fff; font-size: 16px; outline: none; transition: 0.3s; }
+        .roll-input-box input:focus { border-color: #00bcd4; box-shadow: 0 0 10px rgba(0, 188, 212, 0.3); }
     </style>
 </head>
 <body>
@@ -49,6 +53,11 @@
             </div>
             
             <form id="examForm">
+                <div class="roll-input-box">
+                    <label for="rollNumber">Enter Your Roll Number (Required):</label>
+                    <input type="number" id="rollNumber" placeholder="e.g. 2101001" required>
+                </div>
+
                 <div id="questionsContainer"><p style="text-align: center;">Loading questions...</p></div>
                 <button type="submit" class="submit-btn" id="submitBtn">Submit Exam</button>
             </form>
@@ -121,6 +130,8 @@
 
                 const querySnapshot = await getDocs(collection(db, "exams", currentExamId, "questions"));
                 let questionNumber = 1;
+                questionsContainer.innerHTML = ""; // Clear loading text
+                
                 if(querySnapshot.empty) { questionsContainer.innerHTML = "<p>No questions found!</p>"; return; }
 
                 querySnapshot.forEach((doc) => {
@@ -167,26 +178,29 @@
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.innerText = "Submitting..."; submitBtn.disabled = true;
             
+            // 🟢 NOTUN: Roll Number nawa
+            const rollNum = document.getElementById('rollNumber').value || "N/A";
+
             let score = 0; 
             let correctCount = 0; let wrongCount = 0; let skippedCount = 0;
             let totalQuestions = Object.keys(correctAnswersList).length;
             let userSelectedAnswers = {}; 
 
-            // 🟢 Negative Marking Logic Implementation
+            // 🟢 Tumar dew marking system implementation
             for (let qId in correctAnswersList) {
                 const selectedOption = document.querySelector(`input[name="${qId}"]:checked`);
                 if (selectedOption) {
                     userSelectedAnswers[qId] = selectedOption.value; 
                     if (selectedOption.value === correctAnswersList[qId]) {
-                        score += 1; // +1 for correct
+                        score += 1; // Thik hole +1
                         correctCount++;
                     } else {
-                        score -= 0.5; // -0.5 for wrong
+                        score -= 0.5; // Vul hole -0.5
                         wrongCount++;
                     }
                 } else {
                     userSelectedAnswers[qId] = null; 
-                    score -= 1; // -1 for skipped
+                    score -= 1; // Skip korle -1
                     skippedCount++;
                 }
             }
@@ -194,6 +208,7 @@
             try {
                 await addDoc(collection(db, "results"), {
                     email: userEmail, 
+                    rollNumber: rollNum, // 🟢 Roll Number Database e save kora hocche
                     score: score, 
                     total: totalQuestions, 
                     correctCount: correctCount,
