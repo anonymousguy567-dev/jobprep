@@ -20,7 +20,7 @@
         .bell-icon-wrapper:hover svg { stroke: #00bcd4; transform: scale(1.1); }
         .red-dot { position: absolute; top: 2px; right: 4px; width: 10px; height: 10px; background: #ff5252; border-radius: 50%; box-shadow: 0 0 8px #ff5252; display: none; }
 
-        .msg-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; display: none; justify-content: center; align-items: center; }
+        .msg-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; justify-content: center; align-items: center; }
         .msg-modal.show { display: flex; animation: fadeIn 0.3s ease; }
         .msg-modal-content { background: rgba(20, 20, 25, 0.95); border: 1px solid rgba(0, 188, 212, 0.4); border-radius: 16px; padding: 30px 20px 20px 20px; width: 90%; max-width: 450px; position: relative; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); transform: translateY(-20px); transition: 0.3s ease; }
         .msg-modal.show .msg-modal-content { transform: translateY(0); }
@@ -48,6 +48,7 @@
         p { color: #a0a0b0; font-size: 16px; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* REVERTED TO 3 BOX GRID */
         .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 1100px; animation: slideUp 0.8s ease-out; z-index: 10; margin-bottom: 40px;}
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -115,8 +116,8 @@
     </div>
 
     <div class="header-section">
-        <h1>JOB Preparation Portal</h1>
-       
+        <h1>JOB Preparation MCQ Portal</h1>
+        
     </div>
 
     <div class="grid-container">
@@ -134,7 +135,7 @@
         <div class="glass-box">
             <div class="box-icon">⚙️</div>
             <div class="box-title">Admin Dashboard</div>
-            <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">Create new exams, set time limits, and add multiple-choice questions. Authorized access only.</p>
+            <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;"> Authorized access only.</p>
             <a href="admin.html" class="action-btn btn-outline">Enter Admin Panel</a>
         </div>
     </div>
@@ -167,7 +168,6 @@
         const app = initializeApp(firebaseConfig); const db = getFirestore(app);
 
         function formatNoticeDate(timestamp) { const d = new Date(timestamp); return d.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }); }
-
         let highestMsgTimestamp = 0;
 
         async function checkNotification() {
@@ -199,16 +199,11 @@
             try {
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
-                
-                let activeExamCount = 0;
-                let htmlOutput = "";
+                let activeExamCount = 0; let htmlOutput = "";
 
                 querySnapshot.forEach((doc) => {
                     const exam = doc.data(); const examId = doc.id;
-                    
-                    // 🟢 SHUDHU "ACTIVE" STATUS WALAI HOME PAGE E ASHBE (Draft/Deleted asbe na)
                     if (exam.status !== "active") return; 
-
                     activeExamCount++;
                     htmlOutput += `
                         <div class="exam-item">
@@ -217,13 +212,8 @@
                         </div>
                     `;
                 });
-
-                if (activeExamCount === 0) { 
-                    examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>"; 
-                } else {
-                    examsListDiv.innerHTML = htmlOutput;
-                }
-
+                if (activeExamCount === 0) { examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>"; } 
+                else { examsListDiv.innerHTML = htmlOutput; }
             } catch (error) { examsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 20px;'>Error loading exams.</p>"; }
         }
 
