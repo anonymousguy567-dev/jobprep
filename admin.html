@@ -33,7 +33,6 @@
 <body>
 
     <div class="glass-container" id="mainContainer">
-        
         <div id="loginSection">
             <h2>Admin Login Required</h2>
             <button id="adminLoginBtn" class="login-btn">Login with Google</button>
@@ -41,7 +40,6 @@
         </div>
 
         <div id="adminFormSection">
-            
             <div class="section-box" style="border-left: 5px solid #ffb74d;">
                 <h3 style="color: #ffb74d;">1. Create New Exam</h3>
                 <form id="createExamForm">
@@ -84,7 +82,6 @@
                     <label>Select Exam to Edit:</label>
                     <select id="manageExamSelector"><option value="">-- Select an Exam --</option></select>
                 </div>
-
                 <div id="manageWorkspace" style="display:none;">
                     <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                         <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Update Exam Settings</h4>
@@ -94,7 +91,7 @@
                         
                         <div class="action-buttons-row">
                             <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63; margin-top: 0;">Save Settings</button>
-                            <button id="deleteEntireExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0;">Delete Entire Exam</button>
+                            <button id="deleteEntireExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0;">Delete / Hide Exam</button>
                         </div>
                         <p id="updateSettingsStatus" class="status-msg"></p>
                     </div>
@@ -102,7 +99,6 @@
                     <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
                         <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Edit / Delete Questions</h4>
                         <div id="manageQuestionsList"><p style="color:#b3b3b3;">Loading questions...</p></div>
-                        
                         <div id="editQuestionFormBox" class="edit-form-box" style="display:none;">
                             <h4 style="color:#ffb74d;">Editing Question</h4>
                             <div class="input-group"><label>Question:</label><textarea id="editQText" rows="2" required></textarea></div>
@@ -130,15 +126,11 @@
                 <h3 style="color: #00e676;">4. Send Announcement (Message)</h3>
                 <p style="color: #a0a0b0; font-size: 13px; margin-bottom: 15px;">Send a global notification to all students. It will appear as a popup on the homepage.</p>
                 <form id="sendMsgForm">
-                    <div class="input-group">
-                        <label>Message Content:</label>
-                        <textarea id="adminMessage" rows="4" placeholder="Type your notice or announcement here..." required></textarea>
-                    </div>
+                    <div class="input-group"><label>Message Content:</label><textarea id="adminMessage" rows="4" required></textarea></div>
                     <button type="submit" class="submit-btn" id="sendMsgBtn" style="background: linear-gradient(135deg, #00e676, #00c853);">Publish Message</button>
                 </form>
                 <p id="msgStatus" class="status-msg"></p>
             </div>
-
         </div>
     </div>
 
@@ -147,7 +139,7 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
+        // 🔴🔴 FIREBASE CONFIG 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -156,37 +148,33 @@
             messagingSenderId: "977853699063",
             appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
         };
+        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); const db = getFirestore(app);
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        const db = getFirestore(app);
+        // 🔴🔴 ADMIN EMAILS 🔴🔴
+        const ADMIN_EMAILS = ["ahamedjubayer2003@gmail.com", "bondhuremail@gmail.com"]; 
 
-        // 🔴🔴 TOMAR ADMIN EMAILS EKHANE BOSHAO 🔴🔴
-        const ADMIN_EMAILS = [
-            "ahamedjubayer2003@gmail.com", 
-            "bondhuremail@gmail.com"
-        ]; 
-
-        const loginSection = document.getElementById('loginSection');
-        const adminFormSection = document.getElementById('adminFormSection');
-        const examSelector = document.getElementById('examSelector');
-        const manageExamSelector = document.getElementById('manageExamSelector');
+        const loginSection = document.getElementById('loginSection'); const adminFormSection = document.getElementById('adminFormSection');
+        const examSelector = document.getElementById('examSelector'); const manageExamSelector = document.getElementById('manageExamSelector');
 
         document.getElementById('adminLoginBtn').addEventListener('click', () => {
             signInWithPopup(auth, provider).then((result) => {
-                if (ADMIN_EMAILS.includes(result.user.email)) {
-                    loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); 
-                } else { document.getElementById('errorMsg').innerText = "Access Denied! You are not an admin."; auth.signOut(); }
+                if (ADMIN_EMAILS.includes(result.user.email)) { loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); } 
+                else { document.getElementById('errorMsg').innerText = "Access Denied!"; auth.signOut(); }
             }).catch(console.error);
         });
 
+        // 🟢 NOTUN: Dropdown-e status (Deleted) dekhanor logic
         async function loadExamsIntoDropdowns() {
             try {
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 let optionsHtml = '<option value="">-- Select an Exam --</option>'; 
-                querySnapshot.forEach((doc) => { optionsHtml += `<option value="${doc.id}">${doc.data().title}</option>`; });
+                querySnapshot.forEach((doc) => { 
+                    const data = doc.data();
+                    let titleStr = data.title;
+                    if(data.status === "deleted") { titleStr += " (Deleted / Hidden)"; }
+                    optionsHtml += `<option value="${doc.id}">${titleStr}</option>`; 
+                });
                 examSelector.innerHTML = optionsHtml; manageExamSelector.innerHTML = optionsHtml;
             } catch (error) { console.error("Error loading exams: ", error); }
         }
@@ -196,55 +184,46 @@
             try {
                 await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "active" });
                 statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Created Successfully!"; document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
-            } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error creating exam!"; }
-            setTimeout(() => { statusMsg.innerText = ""; }, 3000);
+            } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error creating exam!"; } setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
 
         document.getElementById('questionForm').addEventListener('submit', async function(e) {
             e.preventDefault(); const statusMsg = document.getElementById('questionStatus'); const selectedExamId = examSelector.value;
-            if(!selectedExamId) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Please select an Exam!"; return; }
-            document.getElementById('saveQuestionBtn').innerText = "Saving...";
+            if(!selectedExamId) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Please select an Exam!"; return; } document.getElementById('saveQuestionBtn').innerText = "Saving...";
             try {
                 await addDoc(collection(db, "exams", selectedExamId, "questions"), { question: document.getElementById('question').value, options: { "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, "3": document.getElementById('option3').value, "4": document.getElementById('option4').value }, correctAnswer: document.getElementById('correctOption').value, timestamp: new Date() });
                 statusMsg.style.color = "#00e676"; statusMsg.innerText = "Question Saved!"; document.getElementById('questionForm').reset();
-            } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error saving question!"; }
-            document.getElementById('saveQuestionBtn').innerText = "Save Question"; setTimeout(() => { statusMsg.innerText = ""; }, 3000);
+            } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error saving question!"; } document.getElementById('saveQuestionBtn').innerText = "Save Question"; setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
         
-        function formatTimeForInput(timestamp) {
-            const d = new Date(timestamp); const offset = d.getTimezoneOffset() * 60000; return new Date(d - offset).toISOString().slice(0, 16);
-        }
+        function formatTimeForInput(timestamp) { const d = new Date(timestamp); const offset = d.getTimezoneOffset() * 60000; return new Date(d - offset).toISOString().slice(0, 16); }
 
         manageExamSelector.addEventListener('change', async (e) => {
             const examId = e.target.value; const workspace = document.getElementById('manageWorkspace');
             if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block";
             document.getElementById('manageQuestionsList').innerHTML = "<p>Loading...</p>"; document.getElementById('editQuestionFormBox').style.display = "none";
             const examDoc = await getDoc(doc(db, "exams", examId));
-            if(examDoc.exists()) {
-                document.getElementById('editExamTitle').value = examDoc.data().title; document.getElementById('editExamDuration').value = examDoc.data().duration; document.getElementById('editExamPublishTime').value = formatTimeForInput(examDoc.data().publishTime);
-            }
+            if(examDoc.exists()) { document.getElementById('editExamTitle').value = examDoc.data().title; document.getElementById('editExamDuration').value = examDoc.data().duration; document.getElementById('editExamPublishTime').value = formatTimeForInput(examDoc.data().publishTime); }
             loadQuestionsForEdit(examId);
         });
 
         document.getElementById('updateSettingsBtn').addEventListener('click', async () => {
             const examId = manageExamSelector.value; const statusMsg = document.getElementById('updateSettingsStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Updating settings...";
-            try {
-                await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() });
-                statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Settings Updated!"; loadExamsIntoDropdowns(); 
-            } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error updating!"; }
-            setTimeout(() => { statusMsg.innerText = ""; }, 3000);
+            try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Settings Updated!"; loadExamsIntoDropdowns(); } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error updating!"; } setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
 
+        // 🟢 NOTUN: "Soft Delete" ba "Archive" logic
         document.getElementById('deleteEntireExamBtn').addEventListener('click', async (e) => {
             e.preventDefault(); const examId = manageExamSelector.value;
-            if(confirm("⚠ WARNING: Are you sure you want to delete this ENTIRE EXAM?\n\nThis will remove the exam and ALL its questions permanently!")) {
-                const btn = document.getElementById('deleteEntireExamBtn'); btn.innerText = "Deleting...";
+            if(confirm("⚠ HIDE EXAM?\n\nThis will remove the exam from the Homepage so no one can take it anymore.\nHowever, students can still check their results in the Answer Sheet section.")) {
+                const btn = document.getElementById('deleteEntireExamBtn'); btn.innerText = "Removing...";
                 try {
-                    const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
-                    qSnap.forEach(async (qDoc) => { await deleteDoc(doc(db, "exams", examId, "questions", qDoc.id)); });
-                    await deleteDoc(doc(db, "exams", examId)); alert("Exam deleted successfully!"); document.getElementById('manageWorkspace').style.display = "none"; loadExamsIntoDropdowns(); 
-                } catch (error) { alert("Failed to delete the exam."); }
-                btn.innerText = "Delete Entire Exam";
+                    // Shudhu status "deleted" kore dicchi, pura exam muchchi na
+                    await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true });
+                    alert("Exam removed from Homepage! (Saved in Answer Sheet)"); 
+                    document.getElementById('manageWorkspace').style.display = "none"; loadExamsIntoDropdowns(); 
+                } catch (error) { alert("Failed to hide the exam."); }
+                btn.innerText = "Delete / Hide Exam";
             }
         });
 
@@ -252,55 +231,28 @@
             const listDiv = document.getElementById('manageQuestionsList'); listDiv.innerHTML = "";
             const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
             if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#ff5252;'>No questions found.</p>"; return; }
-            let count = 1;
-            qSnap.forEach((docSnap) => {
+            let count = 1; qSnap.forEach((docSnap) => {
                 const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item";
-                item.innerHTML = `<div class="q-text">Q${count}: ${data.question}</div><div class="q-actions"><button class="btn-edit" data-id="${qId}">Edit</button><button class="btn-delete" data-id="${qId}">Delete</button></div>`;
-                listDiv.appendChild(item); count++;
+                item.innerHTML = `<div class="q-text">Q${count}: ${data.question}</div><div class="q-actions"><button class="btn-edit" data-id="${qId}">Edit</button><button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++;
                 item.querySelector('.btn-edit').addEventListener('click', () => {
                     document.getElementById('editQuestionFormBox').style.display = "block"; document.getElementById('editQText').value = data.question; document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; document.getElementById('editQCorrect').value = data.correctAnswer; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId);
                 });
-                item.querySelector('.btn-delete').addEventListener('click', async () => {
-                    if(confirm("Delete this specific question?")) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); }
-                });
+                item.querySelector('.btn-delete').addEventListener('click', async () => { if(confirm("Delete this specific question?")) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } });
             });
         }
 
         document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => {
             e.preventDefault(); const btn = document.getElementById('saveEditedQBtn'); const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid');
-            if(!examId || !qId) { alert("Missing ID! Please click Edit again."); return; } btn.innerText = "Saving...";
-            try {
-                await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true });
-                alert("Question updated successfully!"); document.getElementById('editQuestionFormBox').style.display = "none"; loadQuestionsForEdit(examId); 
-            } catch (error) { alert("Error: " + error.message); } btn.innerText = "Save Changes";
+            if(!examId || !qId) return; btn.innerText = "Saving...";
+            try { await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQuestionFormBox').style.display = "none"; loadQuestionsForEdit(examId); } catch (error) { alert("Error: " + error.message); } btn.innerText = "Save Changes";
         });
 
         document.getElementById('cancelEditQBtn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('editQuestionFormBox').style.display = "none"; });
 
-        // 🟢 NOTUN: Send Message -> "notifications" list-e save korchi
         document.getElementById('sendMsgForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const msgText = document.getElementById('adminMessage').value;
-            const btn = document.getElementById('sendMsgBtn');
-            const status = document.getElementById('msgStatus');
-            btn.innerText = "Sending...";
-            
-            try {
-                // Ekhon ar overwrite hobe na, notun msg hisebe add hobe
-                await addDoc(collection(db, "notifications"), {
-                    message: msgText,
-                    timestamp: new Date().getTime()
-                });
-                status.style.color = "#00e676"; status.innerText = "Message sent successfully!";
-                document.getElementById('sendMsgForm').reset();
-            } catch (error) {
-                console.error("Msg Error:", error); status.style.color = "#ff5252"; status.innerText = "Failed to send message.";
-            }
-            btn.innerText = "Publish Message"; setTimeout(() => { status.innerText = ""; }, 3000);
+            e.preventDefault(); const msgText = document.getElementById('adminMessage').value; const btn = document.getElementById('sendMsgBtn'); const status = document.getElementById('msgStatus'); btn.innerText = "Sending...";
+            try { await addDoc(collection(db, "notifications"), { message: msgText, timestamp: new Date().getTime() }); status.style.color = "#00e676"; status.innerText = "Message sent successfully!"; document.getElementById('sendMsgForm').reset(); } catch (error) { status.style.color = "#ff5252"; status.innerText = "Failed to send message."; } btn.innerText = "Publish Message"; setTimeout(() => { status.innerText = ""; }, 3000);
         });
-
     </script>
 </body>
 </html>
-
-
