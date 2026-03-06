@@ -94,7 +94,7 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, query, where, doc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 Ekhane Tomar Firebase Config Boshao 🔴🔴
+        // 🔴🔴 FIREBASE CONFIG 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -103,27 +103,16 @@
             messagingSenderId: "977853699063",
             appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
         };
+        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); const db = getFirestore(app);
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        const db = getFirestore(app);
-
-        let userEmail = ""; let userName = "";
-        let timerInterval;
-
-        const loginSection = document.getElementById('login-section');
-        const selectExamSection = document.getElementById('select-exam-section');
-        const timerSection = document.getElementById('timer-section');
-        const resultSection = document.getElementById('result-section');
-        const countdownDisplay = document.getElementById('countdown');
-        const examDropdown = document.getElementById('examDropdown');
+        let userEmail = ""; let userName = ""; let timerInterval;
+        const loginSection = document.getElementById('login-section'); const selectExamSection = document.getElementById('select-exam-section');
+        const timerSection = document.getElementById('timer-section'); const resultSection = document.getElementById('result-section');
+        const countdownDisplay = document.getElementById('countdown'); const examDropdown = document.getElementById('examDropdown');
 
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                userEmail = user.email; userName = user.displayName;
-                loginSection.style.display = "none"; loadExamsForSelection(); 
-            } else { loginSection.style.display = "flex"; }
+            if (user) { userEmail = user.email; userName = user.displayName; loginSection.style.display = "none"; loadExamsForSelection(); } 
+            else { loginSection.style.display = "flex"; }
         });
 
         document.getElementById('loginBtn').addEventListener('click', () => { signInWithPopup(auth, provider).catch(console.error); });
@@ -135,7 +124,15 @@
                 const querySnapshot = await getDocs(q);
                 examDropdown.innerHTML = '<option value="">-- Choose an Exam --</option>';
                 querySnapshot.forEach((doc) => {
-                    const option = document.createElement('option'); option.value = doc.id; option.innerText = doc.data().title;
+                    const examData = doc.data();
+                    const option = document.createElement('option'); 
+                    option.value = doc.id; 
+                    
+                    // 🟢 NOTUN: Deleted exam hole "[Ended]" lekha thakbe
+                    let examTitle = examData.title;
+                    if (examData.status === "deleted") { examTitle += " [Ended]"; }
+                    
+                    option.innerText = examTitle;
                     examDropdown.appendChild(option);
                 });
             } catch(error) { examDropdown.innerHTML = '<option value="">Error loading exams!</option>'; }
@@ -159,34 +156,27 @@
                     if (distance <= 0) {
                         clearInterval(timerInterval); timerSection.style.display = "none"; fetchResultData(examId); 
                     } else {
-                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                        let timeString = ""; if (days > 0) timeString += `${days}d `; timeString += `${hours}h ${minutes}m ${seconds}s`;
-                        countdownDisplay.innerText = `Opens in: ${timeString}`;
+                        const days = Math.floor(distance / (1000 * 60 * 60 * 24)); const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        let timeString = ""; if (days > 0) timeString += `${days}d `; timeString += `${hours}h ${minutes}m ${seconds}s`; countdownDisplay.innerText = `Opens in: ${timeString}`;
                     }
                 }, 1000);
             } catch (error) { countdownDisplay.innerText = "Error checking schedule!"; }
         }
 
         async function fetchResultData(examId) {
-            resultSection.style.display = "flex";
-            document.getElementById('studentNameDisplay').innerText = `Result for: ${userName}`;
-            const answersContainer = document.getElementById('answersContainer');
-            document.getElementById('downloadExcelBtn').setAttribute('data-examid', examId);
+            resultSection.style.display = "flex"; document.getElementById('studentNameDisplay').innerText = `Result for: ${userName}`;
+            const answersContainer = document.getElementById('answersContainer'); document.getElementById('downloadExcelBtn').setAttribute('data-examid', examId);
             
             try {
                 const q = query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", examId));
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
-                    answersContainer.innerHTML = "<p style='color:#ff5252;'>You haven't participated in this exam!</p>";
-                    document.getElementById('finalScore').innerText = "N/A"; return;
+                    answersContainer.innerHTML = "<p style='color:#ff5252;'>You haven't participated in this exam!</p>"; document.getElementById('finalScore').innerText = "N/A"; return;
                 }
 
-                const userData = querySnapshot.docs[0].data();
-                const userAnswers = userData.userAnswers || {};
+                const userData = querySnapshot.docs[0].data(); const userAnswers = userData.userAnswers || {};
                 
                 document.getElementById('studentRollDisplay').innerText = `Roll No: ${userData.rollNumber || 'N/A'}`;
                 document.getElementById('finalScore').innerText = `Total Score: ${userData.score}`;
@@ -208,58 +198,37 @@
                     for(let i=1; i<=4; i++) {
                         let optClass = "option-div"; let extraText = "";
                         
-                        if (i.toString() === correctOpt) {
-                            optClass += " correct-ans"; extraText = " ✓ (Correct Answer)";
-                        } else if (i.toString() === userOpt && userOpt !== correctOpt) {
-                            optClass += " wrong-ans"; extraText = " ✗ (Your Answer)";
-                        } else if (i.toString() === userOpt && userOpt === correctOpt) {
-                            extraText = " ✓ (You selected this)";
-                        }
+                        if (i.toString() === correctOpt) { optClass += " correct-ans"; extraText = " ✓ (Correct Answer)"; } 
+                        else if (i.toString() === userOpt && userOpt !== correctOpt) { optClass += " wrong-ans"; extraText = " ✗ (Your Answer)"; } 
+                        else if (i.toString() === userOpt && userOpt === correctOpt) { extraText = " ✓ (You selected this)"; }
+                        
                         optionsHTML += `<div class="${optClass}">${qData.options[i]} ${extraText}</div>`;
                     }
-
                     qCard.innerHTML = `<div class="question-text">${qNum}. ${qData.question}</div>${skippedMsg}${optionsHTML}`;
                     answersContainer.appendChild(qCard); qNum++;
                 });
-            } catch (error) {
-                answersContainer.innerHTML = "<p style='color:red;'>Error loading result sheet!</p>";
-            }
+            } catch (error) { answersContainer.innerHTML = "<p style='color:red;'>Error loading result sheet!</p>"; }
         }
 
         document.getElementById('downloadExcelBtn').addEventListener('click', async function() {
-            const examId = this.getAttribute('data-examid');
-            const statusText = document.getElementById('downloadStatus');
-            statusText.innerText = "Fetching leaderboard data, please wait...";
-            
+            const examId = this.getAttribute('data-examid'); const statusText = document.getElementById('downloadStatus'); statusText.innerText = "Fetching leaderboard data, please wait...";
             try {
                 const q = query(collection(db, "results"), where("examId", "==", examId));
                 const snapshot = await getDocs(q);
-
                 if (snapshot.empty) { statusText.innerText = "No one has submitted this exam yet!"; return; }
 
                 let resultsArray = [];
                 snapshot.forEach(doc => { resultsArray.push(doc.data()); });
-                
                 resultsArray.sort((a, b) => b.score - a.score);
 
                 let csvContent = "Position,Roll,Total Marks\n";
-                
-                resultsArray.forEach((row, index) => { 
-                    let roll = row.rollNumber || "N/A";
-                    csvContent += `${index + 1},${roll},${row.score}\n`; 
-                });
+                resultsArray.forEach((row, index) => { let roll = row.rollNumber || "N/A"; csvContent += `${index + 1},${roll},${row.score}\n`; });
 
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                link.setAttribute("href", url); link.setAttribute("download", `Merit_List_Exam_${examId}.csv`);
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob);
+                const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `Merit_List_Exam_${examId}.csv`);
                 document.body.appendChild(link); link.click(); document.body.removeChild(link);
-
-                statusText.innerText = "Download Successful!";
-                setTimeout(() => { statusText.innerText = ""; }, 3000);
-            } catch (error) {
-                console.error("Error generating Excel: ", error); statusText.innerText = "Failed to generate Excel file.";
-            }
+                statusText.innerText = "Download Successful!"; setTimeout(() => { statusText.innerText = ""; }, 3000);
+            } catch (error) { console.error("Error generating Excel: ", error); statusText.innerText = "Failed to generate Excel file."; }
         });
     </script>
 </body>
