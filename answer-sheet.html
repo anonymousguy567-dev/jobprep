@@ -94,7 +94,7 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, query, where, doc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 FIREBASE CONFIG 🔴🔴
+        // 🔴🔴 FIREBASE CONFIG BOSHAO 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -125,10 +125,13 @@
                 examDropdown.innerHTML = '<option value="">-- Choose an Exam --</option>';
                 querySnapshot.forEach((doc) => {
                     const examData = doc.data();
+                    
+                    // 🟢 DRAFT EXAM SHOW KORBE NA
+                    if (examData.status === "draft") return;
+
                     const option = document.createElement('option'); 
                     option.value = doc.id; 
                     
-                    // 🟢 NOTUN: Deleted exam hole "[Ended]" lekha thakbe
                     let examTitle = examData.title;
                     if (examData.status === "deleted") { examTitle += " [Ended]"; }
                     
