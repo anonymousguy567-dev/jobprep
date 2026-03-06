@@ -13,7 +13,10 @@
         .login-btn { padding: 12px 25px; margin-top: 20px; border: none; border-radius: 8px; background: #ffffff; color: #333; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; }
         #exam-section, #result-section { display: none; }
         .user-info { display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 10px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .question-card { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        
+        /* 🟢 NOTUN: Copy-Paste Prevention Styles */
+        .question-card { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.05); user-select: none; -webkit-user-select: none; }
+        
         .question-text { font-size: 18px; margin-bottom: 15px; color: #e0e0e0; }
         .option-label { display: block; background: rgba(255, 255, 255, 0.05); padding: 10px 15px; margin-bottom: 10px; border-radius: 6px; cursor: pointer; }
         .option-label:hover { background: rgba(0, 188, 212, 0.2); }
@@ -31,9 +34,8 @@
         .roll-input-box input:focus { border-color: #00bcd4; box-shadow: 0 0 10px rgba(0, 188, 212, 0.3); }
     </style>
 </head>
-<body>
-
-    <div class="glass-container">
+<body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false">
+<div class="glass-container">
         <div id="login-section">
             <h1>Welcome to MCQ Portal</h1>
             <p>Please login to start your selected exam.</p>
@@ -44,7 +46,8 @@
             <h2 id="mainExamTitle" style="color: #ffb74d; margin-bottom: 15px; text-transform: uppercase;">Loading Exam...</h2>
             
             <div class="marking-rules">
-                <span>⚠ Marking Scheme:</span> Correct: <b>+1</b> | Wrong: <b>-1.5</b> | Skipped: <b>-1</b>
+                <span>⚠ Marking Scheme:</span> Correct: <b>+1</b> | Wrong: <b>-1.5</b> | Skipped: <b>-1</b><br>
+                <span style="color: #ff5252; margin-top: 5px; display: block;">🚨 ANTI-CHEAT ACTIVE: Do not switch tabs or minimize the browser. Your exam will auto-submit on the 3rd attempt!</span>
             </div>
 
             <div class="user-info">
@@ -76,7 +79,7 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, addDoc, doc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 Ekhane Tomar Firebase Config Boshao 🔴🔴
+        // 🔴🔴 FIREBASE CONFIG BOSHAO 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -85,214 +88,120 @@
             messagingSenderId: "977853699063",
             appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
         };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); const db = getFirestore(app);
 
         const urlParams = new URLSearchParams(window.location.search);
         const currentExamId = urlParams.get('id');
 
-        if(!currentExamId) { 
-            alert("No exam selected!"); 
-            window.location.href = "index.html"; 
-        }
+        if(!currentExamId) { alert("No exam selected!"); window.location.href = "index.html"; }
 
-        let userEmail = "";
-        let correctAnswersList = {}; 
-        let timeLeft = 0;
-        let timerInterval, saveInterval;
-
-        const loginSection = document.getElementById('login-section');
-        const examSection = document.getElementById('exam-section');
-        const resultSection = document.getElementById('result-section');
-        const questionsContainer = document.getElementById('questionsContainer');
+        let userEmail = ""; let correctAnswersList = {}; let timeLeft = 0; let timerInterval, saveInterval;
+        const loginSection = document.getElementById('login-section'); const examSection = document.getElementById('exam-section');
+        const resultSection = document.getElementById('result-section'); const questionsContainer = document.getElementById('questionsContainer');
+        
+        // 🟢 NOTUN: Anti-Cheat Variables
+        let tabSwitchCount = 0;
+        let isExamActive = false;
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                userEmail = user.email; 
-                document.getElementById('userName').innerText = user.displayName;
-                
-                // Check if user already submitted THIS specific exam
+                userEmail = user.email; document.getElementById('userName').innerText = user.displayName;
                 const resSnap = await getDocs(query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", currentExamId)));
-                if (!resSnap.empty) { 
-                    alert("You have already submitted this exam! You cannot take it twice."); 
-                    window.location.href = "index.html"; 
-                    return; 
-                }
+                if (!resSnap.empty) { alert("You have already submitted this exam!"); window.location.href = "index.html"; return; }
                 
-                loginSection.style.display = "none"; 
-                examSection.style.display = "block"; 
+                loginSection.style.display = "none"; examSection.style.display = "block"; 
+                isExamActive = true; // Exam shuru holo
                 loadExamData(); 
-            } else { 
-                loginSection.style.display = "flex"; 
-            }
+            } else { loginSection.style.display = "flex"; }
         });
 
-        document.getElementById('loginBtn').addEventListener('click', () => { 
-            signInWithPopup(auth, provider).catch(console.error); 
+        document.getElementById('loginBtn').addEventListener('click', () => { signInWithPopup(auth, provider).catch(console.error); });
+
+        // 🟢 NOTUN: TAB SWITCH DETECTION LOGIC
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && isExamActive && timeLeft > 0) {
+                tabSwitchCount++;
+                
+                if (tabSwitchCount === 1) {
+                    alert("⚠ WARNING (1/2): You have switched tabs or minimized the browser! Please stay on this page. Cheating is strictly prohibited.");
+                } else if (tabSwitchCount === 2) {
+                    alert("🚨 FINAL WARNING (2/2): You left the exam page again! If you do this one more time, your exam will be AUTOMATICALLY SUBMITTED.");
+                } else if (tabSwitchCount >= 3) {
+                    alert("❌ CHEATING DETECTED: You left the tab 3 times. Your exam is now being automatically submitted.");
+                    submitExamCore(); // 3 bar er belay auto submit
+                }
+            }
         });
 
         async function loadExamData() {
             try {
-                const examDocSnap = await getDoc(doc(db, "exams", currentExamId));
-                let durationMinutes = 30; 
-                
-                if (examDocSnap.exists()) {
-                    document.getElementById('mainExamTitle').innerText = examDocSnap.data().title;
-                    durationMinutes = examDocSnap.data().duration;
-                } else { 
-                    alert("Exam not found!"); 
-                    window.location.href = "index.html"; 
-                    return; 
-                }
+                const examDocSnap = await getDoc(doc(db, "exams", currentExamId)); let durationMinutes = 30; 
+                if (examDocSnap.exists()) { document.getElementById('mainExamTitle').innerText = examDocSnap.data().title; durationMinutes = examDocSnap.data().duration; } 
+                else { alert("Exam not found!"); window.location.href = "index.html"; return; }
 
                 startTimer(durationMinutes);
-
                 const querySnapshot = await getDocs(collection(db, "exams", currentExamId, "questions"));
-                let questionNumber = 1;
-                questionsContainer.innerHTML = ""; 
-                
-                if(querySnapshot.empty) { 
-                    questionsContainer.innerHTML = "<p style='color:#ff5252;'>No questions found in this exam!</p>"; 
-                    return; 
-                }
+                let questionNumber = 1; questionsContainer.innerHTML = ""; 
+                if(querySnapshot.empty) { questionsContainer.innerHTML = "<p style='color:#ff5252;'>No questions found in this exam!</p>"; return; }
 
                 querySnapshot.forEach((doc) => {
-                    const data = doc.data(); 
-                    const qId = doc.id; 
-                    correctAnswersList[qId] = data.correctAnswer;
-                    
-                    const qCard = document.createElement('div'); 
-                    qCard.className = 'question-card';
-                    qCard.innerHTML = `
-                        <div class="question-text">${questionNumber}. ${data.question}</div>
-                        <label class="option-label"><input type="radio" name="${qId}" value="1"> ${data.options["1"]}</label>
-                        <label class="option-label"><input type="radio" name="${qId}" value="2"> ${data.options["2"]}</label>
-                        <label class="option-label"><input type="radio" name="${qId}" value="3"> ${data.options["3"]}</label>
-                        <label class="option-label"><input type="radio" name="${qId}" value="4"> ${data.options["4"]}</label>
-                    `;
-                    questionsContainer.appendChild(qCard); 
-                    questionNumber++;
+                    const data = doc.data(); const qId = doc.id; correctAnswersList[qId] = data.correctAnswer;
+                    const qCard = document.createElement('div'); qCard.className = 'question-card';
+                    qCard.innerHTML = `<div class="question-text">${questionNumber}. ${data.question}</div><label class="option-label"><input type="radio" name="${qId}" value="1"> ${data.options["1"]}</label><label class="option-label"><input type="radio" name="${qId}" value="2"> ${data.options["2"]}</label><label class="option-label"><input type="radio" name="${qId}" value="3"> ${data.options["3"]}</label><label class="option-label"><input type="radio" name="${qId}" value="4"> ${data.options["4"]}</label>`;
+                    questionsContainer.appendChild(qCard); questionNumber++;
                 });
-            } catch (error) { 
-                console.error("Error loading exam: ", error); 
-                questionsContainer.innerHTML = "<p style='color:#ff5252;'>Error loading questions. Please check your connection.</p>";
-            }
+            } catch (error) { console.error("Error loading exam: ", error); }
         }
 
         async function startTimer(totalMinutes) {
-            const timerDocId = userEmail + "_" + currentExamId;
-            const timerRef = doc(db, "user_timers", timerDocId);
-            const timerSnap = await getDoc(timerRef);
-            
-            // Jodi timer database e theke thake tahole nibe, noile full time theke shuru hobe
-            if (timerSnap.exists() && timerSnap.data().timeLeft !== undefined && timerSnap.data().timeLeft > 0) { 
-                timeLeft = timerSnap.data().timeLeft; 
-            } else { 
-                timeLeft = totalMinutes * 60; 
-            }
-            
-            if (timeLeft <= 0) { 
-                alert("Your time is already up for this exam!"); 
-                submitExamCore(); 
-                return; 
-            }
-
+            const timerDocId = userEmail + "_" + currentExamId; const timerRef = doc(db, "user_timers", timerDocId); const timerSnap = await getDoc(timerRef);
+            if (timerSnap.exists() && timerSnap.data().timeLeft !== undefined && timerSnap.data().timeLeft > 0) { timeLeft = timerSnap.data().timeLeft; } else { timeLeft = totalMinutes * 60; }
+            if (timeLeft <= 0) { alert("Your time is already up for this exam!"); submitExamCore(); return; }
             updateTimerUI();
-            
             timerInterval = setInterval(() => {
-                timeLeft--; 
-                updateTimerUI();
-                
-                if (timeLeft <= 0) { 
-                    clearInterval(timerInterval); 
-                    clearInterval(saveInterval); 
-                    alert("Time's up! Submitting your exam automatically."); 
-                    submitExamCore(); 
-                }
+                timeLeft--; updateTimerUI();
+                if (timeLeft <= 0) { clearInterval(timerInterval); clearInterval(saveInterval); alert("Time's up! Submitting your exam automatically."); submitExamCore(); }
             }, 1000);
-            
-            saveInterval = setInterval(() => { 
-                setDoc(timerRef, { timeLeft: timeLeft }, { merge: true }); 
-            }, 5000);
+            saveInterval = setInterval(() => { setDoc(timerRef, { timeLeft: timeLeft }, { merge: true }); }, 5000);
         }
 
         function updateTimerUI() {
-            let m = Math.floor(timeLeft / 60); 
-            let s = timeLeft % 60;
-            m = m < 10 ? "0" + m : m; 
-            s = s < 10 ? "0" + s : s;
-            document.getElementById('examTimer').innerText = `Time Left: ${m}:${s}`;
+            let m = Math.floor(timeLeft / 60); let s = timeLeft % 60; m = m < 10 ? "0" + m : m; s = s < 10 ? "0" + s : s; document.getElementById('examTimer').innerText = `Time Left: ${m}:${s}`;
         }
 
-        document.getElementById('examForm').addEventListener('submit', function(e) { 
-            e.preventDefault(); 
-            submitExamCore(); 
-        });
+        document.getElementById('examForm').addEventListener('submit', function(e) { e.preventDefault(); submitExamCore(); });
 
         async function submitExamCore() {
-            clearInterval(timerInterval); 
-            clearInterval(saveInterval);
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = "Submitting..."; 
-            submitBtn.disabled = true;
+            isExamActive = false; // Exam shesh, tai r warning asbe na
+            clearInterval(timerInterval); clearInterval(saveInterval);
+            const submitBtn = document.getElementById('submitBtn'); submitBtn.innerText = "Submitting..."; submitBtn.disabled = true;
             
             const rollNum = document.getElementById('rollNumber').value || "N/A";
-
-            let score = 0; 
-            let correctCount = 0; let wrongCount = 0; let skippedCount = 0;
-            let totalQuestions = Object.keys(correctAnswersList).length;
-            let userSelectedAnswers = {}; 
+            let score = 0; let correctCount = 0; let wrongCount = 0; let skippedCount = 0;
+            let totalQuestions = Object.keys(correctAnswersList).length; let userSelectedAnswers = {}; 
 
             for (let qId in correctAnswersList) {
                 const selectedOption = document.querySelector(`input[name="${qId}"]:checked`);
                 if (selectedOption) {
                     userSelectedAnswers[qId] = selectedOption.value; 
-                    if (selectedOption.value === correctAnswersList[qId]) {
-                        score += 1; 
-                        correctCount++;
-                    } else {
-                        score -= 1.5; 
-                        wrongCount++;
-                    }
-                } else {
-                    userSelectedAnswers[qId] = null; 
-                    score -= 1; 
-                    skippedCount++;
-                }
+                    if (selectedOption.value === correctAnswersList[qId]) { score += 1; correctCount++; } 
+                    else { score -= 1.5; wrongCount++; }
+                } else { userSelectedAnswers[qId] = null; score -= 1; skippedCount++; }
             }
-            
             score = parseFloat(score.toFixed(2));
 
             try {
                 await addDoc(collection(db, "results"), {
-                    email: userEmail, 
-                    rollNumber: rollNum, 
-                    score: score, 
-                    total: totalQuestions, 
-                    correctCount: correctCount,
-                    wrongCount: wrongCount,
-                    skippedCount: skippedCount,
-                    userAnswers: userSelectedAnswers, 
-                    examId: currentExamId, 
-                    timestamp: new Date()
+                    email: userEmail, rollNumber: rollNum, score: score, total: totalQuestions, 
+                    correctCount: correctCount, wrongCount: wrongCount, skippedCount: skippedCount,
+                    userAnswers: userSelectedAnswers, examId: currentExamId, timestamp: new Date()
                 });
-                
                 const timerDocId = userEmail + "_" + currentExamId;
                 await setDoc(doc(db, "user_timers", timerDocId), { timeLeft: 0 }, { merge: true });
 
-                examSection.style.display = "none";
-                resultSection.style.display = "block";
+                examSection.style.display = "none"; resultSection.style.display = "block";
                 document.getElementById('scoreDisplay').innerText = `Final Score: ${score}`;
-            } catch (error) {
-                console.error("Error saving result:", error);
-                alert("Error saving result! Check your internet connection.");
-                submitBtn.innerText = "Submit Exam"; 
-                submitBtn.disabled = false;
-            }
+            } catch (error) { alert("Error saving result!"); submitBtn.innerText = "Submit Exam"; submitBtn.disabled = false; }
         }
     </script>
 </body>
