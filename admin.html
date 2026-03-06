@@ -7,11 +7,11 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0d0d12; background-image: radial-gradient(circle at 15% 50%, rgba(45, 21, 82, 0.4), transparent 25%), radial-gradient(circle at 85% 30%, rgba(21, 64, 82, 0.4), transparent 25%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
-        .glass-container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; width: 100%; max-width: 600px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); margin-bottom: 20px;}
-        h2, h3 { text-align: center; margin-bottom: 20px; color: #00bcd4; }
-        .input-group { margin-bottom: 15px; }
+        .glass-container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; width: 100%; max-width: 700px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); margin-bottom: 20px;}
+        h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; }
+        .input-group { margin-bottom: 15px; width: 100%; }
         label { display: block; margin-bottom: 5px; font-size: 14px; color: #b3b3b3; font-weight: bold;}
-        input, textarea, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; }
+        input, textarea, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; font-size: 14px;}
         input:focus, textarea:focus, select:focus { border-color: #00bcd4; background: rgba(0, 0, 0, 0.5); }
         select option { background-color: #1a1a24; color: white; }
         .submit-btn, .login-btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #00bcd4, #2196f3); color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
@@ -20,6 +20,14 @@
         #loginSection { text-align: center; padding: 40px 0; width: 100%; max-width: 500px; margin: auto; }
         .section-box { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
         .status-msg { text-align: center; margin-top: 10px; font-weight: bold; font-size: 14px; }
+        
+        /* 🟢 NOTUN: Manage Section Styling */
+        .q-list-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 10px;}
+        .q-text { font-weight: bold; color: #e0e0e0; font-size: 15px;}
+        .q-actions { display: flex; gap: 10px; }
+        .btn-edit { background: #ffb74d; color: #000; padding: 6px 12px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; font-size: 13px;}
+        .btn-delete { background: #ff5252; color: #fff; padding: 6px 12px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; font-size: 13px;}
+        .edit-form-box { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid #ffb74d; margin-top: 15px;}
     </style>
 </head>
 <body>
@@ -33,21 +41,13 @@
         </div>
 
         <div id="adminFormSection">
+            
             <div class="section-box" style="border-left: 4px solid #ffb74d;">
                 <h3 style="color: #ffb74d;">1. Create New Exam</h3>
                 <form id="createExamForm">
-                    <div class="input-group">
-                        <label>Exam Title:</label>
-                        <input type="text" id="newExamTitle" placeholder="e.g. Thermodynamics Midterm" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Exam Duration (Minutes):</label>
-                        <input type="number" id="newExamDuration" placeholder="e.g. 30" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Result Publish Date & Time:</label>
-                        <input type="datetime-local" id="newExamPublishTime" required>
-                    </div>
+                    <div class="input-group"><label>Exam Title:</label><input type="text" id="newExamTitle" required></div>
+                    <div class="input-group"><label>Exam Duration (Minutes):</label><input type="number" id="newExamDuration" required></div>
+                    <div class="input-group"><label>Result Publish Date & Time:</label><input type="datetime-local" id="newExamPublishTime" required></div>
                     <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #ffb74d, #ff9800);">Create Exam</button>
                 </form>
                 <p id="examCreateStatus" class="status-msg"></p>
@@ -55,14 +55,10 @@
 
             <div class="section-box" style="border-left: 4px solid #00bcd4;">
                 <h3 style="color: #00bcd4;">2. Add Questions to Exam</h3>
-                
                 <div class="input-group">
                     <label>Select Exam:</label>
-                    <select id="examSelector" required>
-                        <option value="">-- Loading Exams... --</option>
-                    </select>
+                    <select id="examSelector" required><option value="">-- Loading Exams... --</option></select>
                 </div>
-
                 <form id="questionForm">
                     <div class="input-group"><label>Question:</label><textarea id="question" rows="3" required></textarea></div>
                     <div class="input-group"><label>Option 1:</label><input type="text" id="option1" required></div>
@@ -72,7 +68,7 @@
                     <div class="input-group">
                         <label>Correct Answer:</label>
                         <select id="correctOption" required>
-                            <option value="">Select the correct option</option>
+                            <option value="">Select correct option</option>
                             <option value="1">Option 1</option><option value="2">Option 2</option>
                             <option value="3">Option 3</option><option value="4">Option 4</option>
                         </select>
@@ -82,13 +78,61 @@
                 <p id="questionStatus" class="status-msg"></p>
             </div>
 
+            <div class="section-box" style="border-left: 4px solid #e91e63;">
+                <h3 style="color: #e91e63;">3. Manage & Edit Exams</h3>
+                
+                <div class="input-group">
+                    <label>Select Exam to Manage:</label>
+                    <select id="manageExamSelector"><option value="">-- Select an Exam --</option></select>
+                </div>
+
+                <div id="manageWorkspace" style="display:none;">
+                    
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Update Exam Settings</h4>
+                        <div class="input-group"><label>Update Title:</label><input type="text" id="editExamTitle"></div>
+                        <div class="input-group"><label>Update Duration (Mins):</label><input type="number" id="editExamDuration"></div>
+                        <div class="input-group"><label>Update Publish Time:</label><input type="datetime-local" id="editExamPublishTime"></div>
+                        <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63;">Save New Settings</button>
+                        <p id="updateSettingsStatus" class="status-msg"></p>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
+                        <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Edit / Delete Questions</h4>
+                        <div id="manageQuestionsList"><p style="color:#b3b3b3;">Loading questions...</p></div>
+                        
+                        <div id="editQuestionFormBox" class="edit-form-box" style="display:none;">
+                            <h4 style="color:#ffb74d;">Editing Question</h4>
+                            <input type="hidden" id="editQId">
+                            <div class="input-group"><label>Question:</label><textarea id="editQText" rows="2" required></textarea></div>
+                            <div class="input-group"><label>Opt 1:</label><input type="text" id="editQOpt1" required></div>
+                            <div class="input-group"><label>Opt 2:</label><input type="text" id="editQOpt2" required></div>
+                            <div class="input-group"><label>Opt 3:</label><input type="text" id="editQOpt3" required></div>
+                            <div class="input-group"><label>Opt 4:</label><input type="text" id="editQOpt4" required></div>
+                            <div class="input-group">
+                                <label>Correct Answer:</label>
+                                <select id="editQCorrect" required>
+                                    <option value="1">Option 1</option><option value="2">Option 2</option>
+                                    <option value="3">Option 3</option><option value="4">Option 4</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button id="saveEditedQBtn" class="submit-btn" style="background:#ffb74d; color:#000;">Save Changes</button>
+                                <button id="cancelEditQBtn" class="submit-btn" style="background:transparent; border:1px solid #fff;">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        // 🟢 NOTUN: updateDoc ebong deleteDoc import kora hoyeche
+        import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
         const firebaseConfig = {
@@ -105,28 +149,23 @@
         const provider = new GoogleAuthProvider();
         const db = getFirestore(app);
 
-        // =================================================================
-        // 🟢 NOTUN: MULTIPLE ADMIN EMAILS (Tumi joto khushi add korte parbe)
-        // =================================================================
+        // 🔴🔴 TOMAR ADMIN EMAILS EKHANE BOSHAO 🔴🔴
         const ADMIN_EMAILS = [
             "ahamedjubayer2003@gmail.com", 
-            "unidocsdeveloper@gmail.com"
-           
+            "bondhuremail@gmail.com"
         ]; 
 
         const loginSection = document.getElementById('loginSection');
         const adminFormSection = document.getElementById('adminFormSection');
         const examSelector = document.getElementById('examSelector');
+        const manageExamSelector = document.getElementById('manageExamSelector');
 
-        // Admin Login
         document.getElementById('adminLoginBtn').addEventListener('click', () => {
             signInWithPopup(auth, provider).then((result) => {
-                
-                // 🟢 UPDATE: Ekhon list er bhitor theke check korbe email ta ache kina
                 if (ADMIN_EMAILS.includes(result.user.email)) {
                     loginSection.style.display = "none"; 
                     adminFormSection.style.display = "block";
-                    loadExamsIntoDropdown(); 
+                    loadExamsIntoDropdowns(); 
                 } else {
                     document.getElementById('errorMsg').innerText = "Access Denied! You are not an admin."; 
                     auth.signOut();
@@ -134,51 +173,40 @@
             }).catch(console.error);
         });
 
-        async function loadExamsIntoDropdown() {
+        // 🟢 Load Exams in both dropdowns
+        async function loadExamsIntoDropdowns() {
             try {
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 
-                examSelector.innerHTML = '<option value="">-- Select an Exam --</option>'; 
-                
+                let optionsHtml = '<option value="">-- Select an Exam --</option>'; 
                 querySnapshot.forEach((doc) => {
-                    const exam = doc.data();
-                    const option = document.createElement('option');
-                    option.value = doc.id; 
-                    option.innerText = exam.title; 
-                    examSelector.appendChild(option);
+                    optionsHtml += `<option value="${doc.id}">${doc.data().title}</option>`;
                 });
+                examSelector.innerHTML = optionsHtml;
+                manageExamSelector.innerHTML = optionsHtml;
             } catch (error) {
                 console.error("Error loading exams: ", error);
-                examSelector.innerHTML = '<option value="">Error loading exams!</option>';
             }
         }
 
+        // ==========================================
+        // CREATE EXAM & ADD QUESTION LOGIC (Ager Motoi)
+        // ==========================================
         document.getElementById('createExamForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const statusMsg = document.getElementById('examCreateStatus');
             statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Creating Exam...";
-
-            const title = document.getElementById('newExamTitle').value;
-            const duration = document.getElementById('newExamDuration').value;
-            const publishTime = document.getElementById('newExamPublishTime').value;
-
             try {
                 await addDoc(collection(db, "exams"), {
-                    title: title,
-                    duration: parseInt(duration),
-                    publishTime: new Date(publishTime).getTime(),
-                    createdAt: new Date().getTime(), 
-                    status: "active"
+                    title: document.getElementById('newExamTitle').value,
+                    duration: parseInt(document.getElementById('newExamDuration').value),
+                    publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(),
+                    createdAt: new Date().getTime(), status: "active"
                 });
-                
                 statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Created Successfully!";
-                document.getElementById('createExamForm').reset();
-                loadExamsIntoDropdown(); 
-            } catch (error) {
-                console.error(error);
-                statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error creating exam!";
-            }
+                document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
+            } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error creating exam!"; }
             setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
 
@@ -186,40 +214,151 @@
             e.preventDefault(); 
             const statusMsg = document.getElementById('questionStatus');
             const selectedExamId = examSelector.value;
-
-            if(!selectedExamId) {
-                statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Please select an Exam first!";
-                setTimeout(() => { statusMsg.innerText = ""; }, 3000);
-                return;
-            }
-
+            if(!selectedExamId) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Please select an Exam!"; return; }
             document.getElementById('saveQuestionBtn').innerText = "Saving...";
-            
             try {
                 await addDoc(collection(db, "exams", selectedExamId, "questions"), {
                     question: document.getElementById('question').value,
                     options: { 
-                        1: document.getElementById('option1').value, 
-                        2: document.getElementById('option2').value, 
-                        3: document.getElementById('option3').value, 
-                        4: document.getElementById('option4').value 
+                        1: document.getElementById('option1').value, 2: document.getElementById('option2').value, 
+                        3: document.getElementById('option3').value, 4: document.getElementById('option4').value 
                     },
-                    correctAnswer: document.getElementById('correctOption').value, 
-                    timestamp: new Date()
+                    correctAnswer: document.getElementById('correctOption').value, timestamp: new Date()
                 });
-                
-                statusMsg.style.color = "#00e676"; statusMsg.innerText = "Question Saved to Exam!"; 
-                document.getElementById('questionForm').reset();
-            } catch (error) { 
-                console.error(error);
-                statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error saving question!"; 
-            }
-            
+                statusMsg.style.color = "#00e676"; statusMsg.innerText = "Question Saved!"; document.getElementById('questionForm').reset();
+            } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error saving question!"; }
             document.getElementById('saveQuestionBtn').innerText = "Save Question";
             setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
+
+        // ==========================================
+        // 🟢 NOTUN: MANAGE & EDIT LOGIC 
+        // ==========================================
+        
+        // Time format korar helper function (Input e dekhanor jonno)
+        function formatTimeForInput(timestamp) {
+            const d = new Date(timestamp);
+            const offset = d.getTimezoneOffset() * 60000;
+            return new Date(d - offset).toISOString().slice(0, 16);
+        }
+
+        // Jokhon kono Exam select kora hobe edit korar jonno
+        manageExamSelector.addEventListener('change', async (e) => {
+            const examId = e.target.value;
+            const workspace = document.getElementById('manageWorkspace');
+            
+            if(!examId) { workspace.style.display = "none"; return; }
+            workspace.style.display = "block";
+            document.getElementById('manageQuestionsList').innerHTML = "<p>Loading...</p>";
+            document.getElementById('editQuestionFormBox').style.display = "none";
+
+            // 1. Load Settings (Time & Info)
+            const examDoc = await getDoc(doc(db, "exams", examId));
+            if(examDoc.exists()) {
+                document.getElementById('editExamTitle').value = examDoc.data().title;
+                document.getElementById('editExamDuration').value = examDoc.data().duration;
+                document.getElementById('editExamPublishTime').value = formatTimeForInput(examDoc.data().publishTime);
+            }
+
+            // 2. Load Questions List
+            loadQuestionsForEdit(examId);
+        });
+
+        // 🟢 Exam Settings (Time) Update kora
+        document.getElementById('updateSettingsBtn').addEventListener('click', async () => {
+            const examId = manageExamSelector.value;
+            const statusMsg = document.getElementById('updateSettingsStatus');
+            statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Updating settings...";
+
+            const newTitle = document.getElementById('editExamTitle').value;
+            const newDuration = document.getElementById('editExamDuration').value;
+            const newTime = document.getElementById('editExamPublishTime').value;
+
+            try {
+                await updateDoc(doc(db, "exams", examId), {
+                    title: newTitle,
+                    duration: parseInt(newDuration),
+                    publishTime: new Date(newTime).getTime()
+                });
+                statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Settings Updated!";
+                loadExamsIntoDropdowns(); // Title change hole dropdown update kora
+            } catch (error) {
+                statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error updating!";
+            }
+            setTimeout(() => { statusMsg.innerText = ""; }, 3000);
+        });
+
+        // 🟢 Load Questions for Editing
+        async function loadQuestionsForEdit(examId) {
+            const listDiv = document.getElementById('manageQuestionsList');
+            listDiv.innerHTML = "";
+            
+            const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
+            if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#ff5252;'>No questions found.</p>"; return; }
+
+            let count = 1;
+            qSnap.forEach((docSnap) => {
+                const data = docSnap.data(); const qId = docSnap.id;
+                const item = document.createElement('div');
+                item.className = "q-list-item";
+                item.innerHTML = `
+                    <div class="q-text">Q${count}: ${data.question}</div>
+                    <div class="q-actions">
+                        <button class="btn-edit" data-id="${qId}">Edit</button>
+                        <button class="btn-delete" data-id="${qId}">Delete</button>
+                    </div>
+                `;
+                listDiv.appendChild(item); count++;
+
+                // Edit Button Click
+                item.querySelector('.btn-edit').addEventListener('click', () => {
+                    document.getElementById('editQuestionFormBox').style.display = "block";
+                    document.getElementById('editQId').value = qId;
+                    document.getElementById('editQText').value = data.question;
+                    document.getElementById('editQOpt1').value = data.options["1"];
+                    document.getElementById('editQOpt2').value = data.options["2"];
+                    document.getElementById('editQOpt3').value = data.options["3"];
+                    document.getElementById('editQOpt4').value = data.options["4"];
+                    document.getElementById('editQCorrect').value = data.correctAnswer;
+                });
+
+                // Delete Button Click
+                item.querySelector('.btn-delete').addEventListener('click', async () => {
+                    if(confirm("Are you sure you want to delete this question?")) {
+                        await deleteDoc(doc(db, "exams", examId, "questions", qId));
+                        loadQuestionsForEdit(examId); // Reload list
+                    }
+                });
+            });
+        }
+
+        // 🟢 Save Edited Question
+        document.getElementById('saveEditedQBtn').addEventListener('click', async () => {
+            const examId = manageExamSelector.value;
+            const qId = document.getElementById('editQId').value;
+            
+            try {
+                await updateDoc(doc(db, "exams", examId, "questions", qId), {
+                    question: document.getElementById('editQText').value,
+                    options: { 
+                        1: document.getElementById('editQOpt1').value, 2: document.getElementById('editQOpt2').value, 
+                        3: document.getElementById('editQOpt3').value, 4: document.getElementById('editQOpt4').value 
+                    },
+                    correctAnswer: document.getElementById('editQCorrect').value
+                });
+                alert("Question updated successfully!");
+                document.getElementById('editQuestionFormBox').style.display = "none";
+                loadQuestionsForEdit(examId); // Reload list
+            } catch (error) {
+                alert("Error updating question!");
+            }
+        });
+
+        // Cancel Edit
+        document.getElementById('cancelEditQBtn').addEventListener('click', () => {
+            document.getElementById('editQuestionFormBox').style.display = "none";
+        });
+
     </script>
 </body>
-
 </html>
-
