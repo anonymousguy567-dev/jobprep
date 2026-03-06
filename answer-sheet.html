@@ -126,8 +126,7 @@
                 querySnapshot.forEach((doc) => {
                     const examData = doc.data();
                     
-                    // 🟢 DRAFT EXAM SHOW KORBE NA
-                    if (examData.status === "draft") return;
+                    if (examData.status === "draft") return; // Draft dekhabe na
 
                     const option = document.createElement('option'); 
                     option.value = doc.id; 
@@ -146,25 +145,58 @@
             if(selectedExamId) { selectExamSection.style.display = "none"; checkTimeAndProceed(selectedExamId); }
         });
 
+        // 🟢 FIX: Ekdom strict time checking
         async function checkTimeAndProceed(examId) {
-            timerSection.style.display = "flex"; countdownDisplay.innerText = "Checking schedule...";
+            timerSection.style.display = "flex"; 
+            countdownDisplay.innerText = "Checking schedule...";
+            
             try {
-                const examSnap = await getDoc(doc(db, "exams", examId)); let publishTime = 0;
-                if (examSnap.exists() && examSnap.data().publishTime) { publishTime = examSnap.data().publishTime; } 
-                else { countdownDisplay.innerText = "Admin has not set a publish time yet."; return; }
+                const examSnap = await getDoc(doc(db, "exams", examId)); 
+                let publishTime = 0;
+                
+                if (examSnap.exists() && examSnap.data().publishTime) { 
+                    publishTime = examSnap.data().publishTime; 
+                } else { 
+                    countdownDisplay.innerText = "Admin has not set a publish time yet."; 
+                    return; 
+                }
 
+                // 🟢 1. Immediate Lock Check: Ekdom sathe sathe check korbe time hoyeche kina
+                const now = new Date().getTime();
+                if (now >= publishTime) {
+                    timerSection.style.display = "none"; 
+                    fetchResultData(examId);
+                    return;
+                }
+
+                // 🟢 2. Time na hole Countdown shuru hobe
                 if(timerInterval) clearInterval(timerInterval); 
+                
                 timerInterval = setInterval(() => {
-                    const now = new Date().getTime(); const distance = publishTime - now;
+                    const currentTime = new Date().getTime(); 
+                    const distance = publishTime - currentTime;
+                    
                     if (distance <= 0) {
-                        clearInterval(timerInterval); timerSection.style.display = "none"; fetchResultData(examId); 
+                        clearInterval(timerInterval); 
+                        timerSection.style.display = "none"; 
+                        fetchResultData(examId); 
                     } else {
-                        const days = Math.floor(distance / (1000 * 60 * 60 * 24)); const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                        let timeString = ""; if (days > 0) timeString += `${days}d `; timeString += `${hours}h ${minutes}m ${seconds}s`; countdownDisplay.innerText = `Opens in: ${timeString}`;
+                        const days = Math.floor(distance / (1000 * 60 * 60 * 24)); 
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); 
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        
+                        let timeString = ""; 
+                        if (days > 0) timeString += `${days}d `; 
+                        timeString += `${hours}h ${minutes}m ${seconds}s`; 
+                        countdownDisplay.innerText = `Opens in: ${timeString}`;
                     }
                 }, 1000);
-            } catch (error) { countdownDisplay.innerText = "Error checking schedule!"; }
+                
+            } catch (error) { 
+                console.error(error);
+                countdownDisplay.innerText = "Error checking schedule!"; 
+            }
         }
 
         async function fetchResultData(examId) {
