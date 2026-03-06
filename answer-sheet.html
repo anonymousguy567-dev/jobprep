@@ -55,7 +55,7 @@
             <h2 style="color: #ffb74d;">Result Not Published Yet!</h2>
             <p>Please wait until the scheduled time.</p>
             <div class="time-box" id="countdown">Loading schedule...</div>
-            <button class="action-btn" onclick="location.reload()" style="background:#00bcd4; color:#fff; width:auto; margin:auto; margin-top:20px;">Back to Selection</button>
+            <button class="action-btn" onclick="window.location.href='index.html'" style="background:#00bcd4; color:#fff; width:auto; margin:auto; margin-top:20px;">Back to Homepage</button>
         </div>
 
         <div id="result-section">
@@ -65,18 +65,9 @@
             <div class="score-display" id="finalScore">Loading...</div>
             
             <div class="breakdown-box">
-                <div class="stat-item" style="color: #00e676;">
-                    <div class="stat-label">Correct (+1)</div>
-                    <div class="stat-value" id="countCorrect">0</div>
-                </div>
-                <div class="stat-item" style="color: #ff5252;">
-                    <div class="stat-label">Wrong (-1.5)</div>
-                    <div class="stat-value" id="countWrong">0</div>
-                </div>
-                <div class="stat-item" style="color: #ffb74d;">
-                    <div class="stat-label">Skipped (-1)</div>
-                    <div class="stat-value" id="countSkipped">0</div>
-                </div>
+                <div class="stat-item" style="color: #00e676;"><div class="stat-label">Correct (+1)</div><div class="stat-value" id="countCorrect">0</div></div>
+                <div class="stat-item" style="color: #ff5252;"><div class="stat-label">Wrong (-1.5)</div><div class="stat-value" id="countWrong">0</div></div>
+                <div class="stat-item" style="color: #ffb74d;"><div class="stat-label">Skipped (-1)</div><div class="stat-value" id="countSkipped">0</div></div>
             </div>
             
             <button id="downloadExcelBtn" class="action-btn btn-excel">📥 Download Merit List (Excel)</button>
@@ -85,7 +76,7 @@
             <h3 style="margin-bottom: 20px; text-align: left; width: 100%;">Answer Breakdown:</h3>
             <div id="answersContainer" style="width: 100%;"></div>
             
-            <button class="action-btn" onclick="location.reload()" style="background:rgba(255,255,255,0.1); color:#fff; width:100%; border:1px solid rgba(255,255,255,0.2); margin-top:20px;">Check Another Exam</button>
+            <button class="action-btn" onclick="window.location.href='index.html'" style="background:rgba(255,255,255,0.1); color:#fff; width:100%; border:1px solid rgba(255,255,255,0.2); margin-top:20px;">Back to Homepage</button>
         </div>
     </div>
 
@@ -125,12 +116,10 @@
                 examDropdown.innerHTML = '<option value="">-- Choose an Exam --</option>';
                 querySnapshot.forEach((doc) => {
                     const examData = doc.data();
-                    
-                    if (examData.status === "draft") return; // Draft dekhabe na
+                    if (examData.status === "draft") return; 
 
                     const option = document.createElement('option'); 
                     option.value = doc.id; 
-                    
                     let examTitle = examData.title;
                     if (examData.status === "deleted") { examTitle += " [Ended]"; }
                     
@@ -145,102 +134,52 @@
             if(selectedExamId) { selectExamSection.style.display = "none"; checkTimeAndProceed(selectedExamId); }
         });
 
-        // 🟢 FIX: Ekdom strict time checking
         async function checkTimeAndProceed(examId) {
-            timerSection.style.display = "flex"; 
-            countdownDisplay.innerText = "Checking schedule...";
-            
+            timerSection.style.display = "flex"; countdownDisplay.innerText = "Checking schedule...";
             try {
-                const examSnap = await getDoc(doc(db, "exams", examId)); 
-                let publishTime = 0;
-                
-                if (examSnap.exists() && examSnap.data().publishTime) { 
-                    publishTime = examSnap.data().publishTime; 
-                } else { 
-                    countdownDisplay.innerText = "Admin has not set a publish time yet."; 
-                    return; 
-                }
+                const examSnap = await getDoc(doc(db, "exams", examId)); let publishTime = 0;
+                if (examSnap.exists() && examSnap.data().publishTime) { publishTime = examSnap.data().publishTime; } 
+                else { countdownDisplay.innerText = "Admin has not set a publish time yet."; return; }
 
-                // 🟢 1. Immediate Lock Check: Ekdom sathe sathe check korbe time hoyeche kina
                 const now = new Date().getTime();
-                if (now >= publishTime) {
-                    timerSection.style.display = "none"; 
-                    fetchResultData(examId);
-                    return;
-                }
+                if (now >= publishTime) { timerSection.style.display = "none"; fetchResultData(examId); return; }
 
-                // 🟢 2. Time na hole Countdown shuru hobe
                 if(timerInterval) clearInterval(timerInterval); 
-                
                 timerInterval = setInterval(() => {
-                    const currentTime = new Date().getTime(); 
-                    const distance = publishTime - currentTime;
-                    
-                    if (distance <= 0) {
-                        clearInterval(timerInterval); 
-                        timerSection.style.display = "none"; 
-                        fetchResultData(examId); 
-                    } else {
-                        const days = Math.floor(distance / (1000 * 60 * 60 * 24)); 
-                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); 
-                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                        
-                        let timeString = ""; 
-                        if (days > 0) timeString += `${days}d `; 
-                        timeString += `${hours}h ${minutes}m ${seconds}s`; 
-                        countdownDisplay.innerText = `Opens in: ${timeString}`;
+                    const currentTime = new Date().getTime(); const distance = publishTime - currentTime;
+                    if (distance <= 0) { clearInterval(timerInterval); timerSection.style.display = "none"; fetchResultData(examId); } 
+                    else {
+                        const days = Math.floor(distance / (1000 * 60 * 60 * 24)); const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        let timeString = ""; if (days > 0) timeString += `${days}d `; timeString += `${hours}h ${minutes}m ${seconds}s`; countdownDisplay.innerText = `Opens in: ${timeString}`;
                     }
                 }, 1000);
-                
-            } catch (error) { 
-                console.error(error);
-                countdownDisplay.innerText = "Error checking schedule!"; 
-            }
+            } catch (error) { console.error(error); countdownDisplay.innerText = "Error checking schedule!"; }
         }
 
         async function fetchResultData(examId) {
             resultSection.style.display = "flex"; document.getElementById('studentNameDisplay').innerText = `Result for: ${userName}`;
             const answersContainer = document.getElementById('answersContainer'); document.getElementById('downloadExcelBtn').setAttribute('data-examid', examId);
-            
             try {
                 const q = query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", examId));
                 const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    answersContainer.innerHTML = "<p style='color:#ff5252;'>You haven't participated in this exam!</p>"; document.getElementById('finalScore').innerText = "N/A"; return;
-                }
+                if (querySnapshot.empty) { answersContainer.innerHTML = "<p style='color:#ff5252;'>You haven't participated in this exam!</p>"; document.getElementById('finalScore').innerText = "N/A"; return; }
 
                 const userData = querySnapshot.docs[0].data(); const userAnswers = userData.userAnswers || {};
-                
-                document.getElementById('studentRollDisplay').innerText = `Roll No: ${userData.rollNumber || 'N/A'}`;
-                document.getElementById('finalScore').innerText = `Total Score: ${userData.score}`;
-                document.getElementById('countCorrect').innerText = userData.correctCount || 0;
-                document.getElementById('countWrong').innerText = userData.wrongCount || 0;
-                document.getElementById('countSkipped').innerText = userData.skippedCount || 0;
+                document.getElementById('studentRollDisplay').innerText = `Roll No: ${userData.rollNumber || 'N/A'}`; document.getElementById('finalScore').innerText = `Total Score: ${userData.score}`; document.getElementById('countCorrect').innerText = userData.correctCount || 0; document.getElementById('countWrong').innerText = userData.wrongCount || 0; document.getElementById('countSkipped').innerText = userData.skippedCount || 0;
 
                 const questionsSnapshot = await getDocs(collection(db, "exams", examId, "questions"));
                 answersContainer.innerHTML = ""; let qNum = 1;
-
                 questionsSnapshot.forEach((doc) => {
-                    const qData = doc.data(); const qId = doc.id;
-                    const correctOpt = qData.correctAnswer; const userOpt = userAnswers[qId];
-
+                    const qData = doc.data(); const qId = doc.id; const correctOpt = qData.correctAnswer; const userOpt = userAnswers[qId];
                     const qCard = document.createElement('div'); qCard.className = 'question-card';
-                    let optionsHTML = "";
-                    let skippedMsg = (!userOpt) ? "<span class='skipped-msg'>⚠ You skipped this question (-1 mark).</span>" : "";
-                    
+                    let optionsHTML = ""; let skippedMsg = (!userOpt) ? "<span class='skipped-msg'>⚠ You skipped this question (-1 mark).</span>" : "";
                     for(let i=1; i<=4; i++) {
                         let optClass = "option-div"; let extraText = "";
-                        
-                        if (i.toString() === correctOpt) { optClass += " correct-ans"; extraText = " ✓ (Correct Answer)"; } 
-                        else if (i.toString() === userOpt && userOpt !== correctOpt) { optClass += " wrong-ans"; extraText = " ✗ (Your Answer)"; } 
-                        else if (i.toString() === userOpt && userOpt === correctOpt) { extraText = " ✓ (You selected this)"; }
-                        
+                        if (i.toString() === correctOpt) { optClass += " correct-ans"; extraText = " ✓ (Correct Answer)"; } else if (i.toString() === userOpt && userOpt !== correctOpt) { optClass += " wrong-ans"; extraText = " ✗ (Your Answer)"; } else if (i.toString() === userOpt && userOpt === correctOpt) { extraText = " ✓ (You selected this)"; }
                         optionsHTML += `<div class="${optClass}">${qData.options[i]} ${extraText}</div>`;
                     }
-                    qCard.innerHTML = `<div class="question-text">${qNum}. ${qData.question}</div>${skippedMsg}${optionsHTML}`;
-                    answersContainer.appendChild(qCard); qNum++;
+                    qCard.innerHTML = `<div class="question-text">${qNum}. ${qData.question}</div>${skippedMsg}${optionsHTML}`; answersContainer.appendChild(qCard); qNum++;
                 });
             } catch (error) { answersContainer.innerHTML = "<p style='color:red;'>Error loading result sheet!</p>"; }
         }
@@ -248,22 +187,14 @@
         document.getElementById('downloadExcelBtn').addEventListener('click', async function() {
             const examId = this.getAttribute('data-examid'); const statusText = document.getElementById('downloadStatus'); statusText.innerText = "Fetching leaderboard data, please wait...";
             try {
-                const q = query(collection(db, "results"), where("examId", "==", examId));
-                const snapshot = await getDocs(q);
+                const q = query(collection(db, "results"), where("examId", "==", examId)); const snapshot = await getDocs(q);
                 if (snapshot.empty) { statusText.innerText = "No one has submitted this exam yet!"; return; }
-
-                let resultsArray = [];
-                snapshot.forEach(doc => { resultsArray.push(doc.data()); });
-                resultsArray.sort((a, b) => b.score - a.score);
-
-                let csvContent = "Position,Roll,Total Marks\n";
-                resultsArray.forEach((row, index) => { let roll = row.rollNumber || "N/A"; csvContent += `${index + 1},${roll},${row.score}\n`; });
-
+                let resultsArray = []; snapshot.forEach(doc => { resultsArray.push(doc.data()); }); resultsArray.sort((a, b) => b.score - a.score);
+                let csvContent = "Position,Roll,Total Marks\n"; resultsArray.forEach((row, index) => { let roll = row.rollNumber || "N/A"; csvContent += `${index + 1},${roll},${row.score}\n`; });
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob);
-                const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `Merit_List_Exam_${examId}.csv`);
-                document.body.appendChild(link); link.click(); document.body.removeChild(link);
+                const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `Merit_List_Exam_${examId}.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link);
                 statusText.innerText = "Download Successful!"; setTimeout(() => { statusText.innerText = ""; }, 3000);
-            } catch (error) { console.error("Error generating Excel: ", error); statusText.innerText = "Failed to generate Excel file."; }
+            } catch (error) { statusText.innerText = "Failed to generate Excel file."; }
         });
     </script>
 </body>
