@@ -80,7 +80,6 @@
 
             <div class="section-box" style="border-left: 5px solid #e91e63;">
                 <h3 style="color: #e91e63;">3. Edit / Manage Exam</h3>
-                
                 <div class="input-group">
                     <label>Select Exam to Edit:</label>
                     <select id="manageExamSelector"><option value="">-- Select an Exam --</option></select>
@@ -165,8 +164,8 @@
 
         // 🔴🔴 TOMAR ADMIN EMAILS EKHANE BOSHAO 🔴🔴
         const ADMIN_EMAILS = [
-            "ahamedjubayer2003@gmail.com", 
-            "bondhuremail@gmail.com"
+            "ahamedjubayer2003a@gmail.com", 
+            "bondhur_email@gmail.com"
         ]; 
 
         const loginSection = document.getElementById('loginSection');
@@ -177,13 +176,8 @@
         document.getElementById('adminLoginBtn').addEventListener('click', () => {
             signInWithPopup(auth, provider).then((result) => {
                 if (ADMIN_EMAILS.includes(result.user.email)) {
-                    loginSection.style.display = "none"; 
-                    adminFormSection.style.display = "block";
-                    loadExamsIntoDropdowns(); 
-                } else {
-                    document.getElementById('errorMsg').innerText = "Access Denied! You are not an admin."; 
-                    auth.signOut();
-                }
+                    loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); 
+                } else { document.getElementById('errorMsg').innerText = "Access Denied! You are not an admin."; auth.signOut(); }
             }).catch(console.error);
         });
 
@@ -197,80 +191,45 @@
             } catch (error) { console.error("Error loading exams: ", error); }
         }
 
-        // Section 1: Create Exam
         document.getElementById('createExamForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const statusMsg = document.getElementById('examCreateStatus');
-            statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Creating Exam...";
+            e.preventDefault(); const statusMsg = document.getElementById('examCreateStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Creating Exam...";
             try {
-                await addDoc(collection(db, "exams"), {
-                    title: document.getElementById('newExamTitle').value,
-                    duration: parseInt(document.getElementById('newExamDuration').value),
-                    publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(),
-                    createdAt: new Date().getTime(), status: "active"
-                });
-                statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Created Successfully!";
-                document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
+                await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "active" });
+                statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Created Successfully!"; document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
             } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error creating exam!"; }
             setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
 
-        // Section 2: Create Question
         document.getElementById('questionForm').addEventListener('submit', async function(e) {
-            e.preventDefault(); 
-            const statusMsg = document.getElementById('questionStatus');
-            const selectedExamId = examSelector.value;
+            e.preventDefault(); const statusMsg = document.getElementById('questionStatus'); const selectedExamId = examSelector.value;
             if(!selectedExamId) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Please select an Exam!"; return; }
             document.getElementById('saveQuestionBtn').innerText = "Saving...";
             try {
-                await addDoc(collection(db, "exams", selectedExamId, "questions"), {
-                    question: document.getElementById('question').value,
-                    options: { 
-                        "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, 
-                        "3": document.getElementById('option3').value, "4": document.getElementById('option4').value 
-                    },
-                    correctAnswer: document.getElementById('correctOption').value, timestamp: new Date()
-                });
+                await addDoc(collection(db, "exams", selectedExamId, "questions"), { question: document.getElementById('question').value, options: { "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, "3": document.getElementById('option3').value, "4": document.getElementById('option4').value }, correctAnswer: document.getElementById('correctOption').value, timestamp: new Date() });
                 statusMsg.style.color = "#00e676"; statusMsg.innerText = "Question Saved!"; document.getElementById('questionForm').reset();
             } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error saving question!"; }
-            document.getElementById('saveQuestionBtn').innerText = "Save Question";
-            setTimeout(() => { statusMsg.innerText = ""; }, 3000);
+            document.getElementById('saveQuestionBtn').innerText = "Save Question"; setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
         
         function formatTimeForInput(timestamp) {
-            const d = new Date(timestamp);
-            const offset = d.getTimezoneOffset() * 60000;
-            return new Date(d - offset).toISOString().slice(0, 16);
+            const d = new Date(timestamp); const offset = d.getTimezoneOffset() * 60000; return new Date(d - offset).toISOString().slice(0, 16);
         }
 
-        // Section 3: Edit Exam Logic
         manageExamSelector.addEventListener('change', async (e) => {
-            const examId = e.target.value;
-            const workspace = document.getElementById('manageWorkspace');
-            if(!examId) { workspace.style.display = "none"; return; }
-            workspace.style.display = "block";
-            document.getElementById('manageQuestionsList').innerHTML = "<p>Loading...</p>";
-            document.getElementById('editQuestionFormBox').style.display = "none";
-
+            const examId = e.target.value; const workspace = document.getElementById('manageWorkspace');
+            if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block";
+            document.getElementById('manageQuestionsList').innerHTML = "<p>Loading...</p>"; document.getElementById('editQuestionFormBox').style.display = "none";
             const examDoc = await getDoc(doc(db, "exams", examId));
             if(examDoc.exists()) {
-                document.getElementById('editExamTitle').value = examDoc.data().title;
-                document.getElementById('editExamDuration').value = examDoc.data().duration;
-                document.getElementById('editExamPublishTime').value = formatTimeForInput(examDoc.data().publishTime);
+                document.getElementById('editExamTitle').value = examDoc.data().title; document.getElementById('editExamDuration').value = examDoc.data().duration; document.getElementById('editExamPublishTime').value = formatTimeForInput(examDoc.data().publishTime);
             }
             loadQuestionsForEdit(examId);
         });
 
         document.getElementById('updateSettingsBtn').addEventListener('click', async () => {
-            const examId = manageExamSelector.value;
-            const statusMsg = document.getElementById('updateSettingsStatus');
-            statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Updating settings...";
+            const examId = manageExamSelector.value; const statusMsg = document.getElementById('updateSettingsStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Updating settings...";
             try {
-                await updateDoc(doc(db, "exams", examId), {
-                    title: document.getElementById('editExamTitle').value,
-                    duration: parseInt(document.getElementById('editExamDuration').value),
-                    publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime()
-                });
+                await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() });
                 statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Settings Updated!"; loadExamsIntoDropdowns(); 
             } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error updating!"; }
             setTimeout(() => { statusMsg.innerText = ""; }, 3000);
@@ -283,8 +242,7 @@
                 try {
                     const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
                     qSnap.forEach(async (qDoc) => { await deleteDoc(doc(db, "exams", examId, "questions", qDoc.id)); });
-                    await deleteDoc(doc(db, "exams", examId));
-                    alert("Exam deleted successfully!"); document.getElementById('manageWorkspace').style.display = "none"; loadExamsIntoDropdowns(); 
+                    await deleteDoc(doc(db, "exams", examId)); alert("Exam deleted successfully!"); document.getElementById('manageWorkspace').style.display = "none"; loadExamsIntoDropdowns(); 
                 } catch (error) { alert("Failed to delete the exam."); }
                 btn.innerText = "Delete Entire Exam";
             }
@@ -294,85 +252,51 @@
             const listDiv = document.getElementById('manageQuestionsList'); listDiv.innerHTML = "";
             const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
             if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#ff5252;'>No questions found.</p>"; return; }
-
             let count = 1;
             qSnap.forEach((docSnap) => {
-                const data = docSnap.data(); const qId = docSnap.id;
-                const item = document.createElement('div'); item.className = "q-list-item";
-                item.innerHTML = `
-                    <div class="q-text">Q${count}: ${data.question}</div>
-                    <div class="q-actions"><button class="btn-edit" data-id="${qId}">Edit</button><button class="btn-delete" data-id="${qId}">Delete</button></div>
-                `;
+                const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item";
+                item.innerHTML = `<div class="q-text">Q${count}: ${data.question}</div><div class="q-actions"><button class="btn-edit" data-id="${qId}">Edit</button><button class="btn-delete" data-id="${qId}">Delete</button></div>`;
                 listDiv.appendChild(item); count++;
-
                 item.querySelector('.btn-edit').addEventListener('click', () => {
-                    document.getElementById('editQuestionFormBox').style.display = "block";
-                    document.getElementById('editQText').value = data.question;
-                    document.getElementById('editQOpt1').value = data.options["1"];
-                    document.getElementById('editQOpt2').value = data.options["2"];
-                    document.getElementById('editQOpt3').value = data.options["3"];
-                    document.getElementById('editQOpt4').value = data.options["4"];
-                    document.getElementById('editQCorrect').value = data.correctAnswer;
-                    document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId);
-                    document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId);
+                    document.getElementById('editQuestionFormBox').style.display = "block"; document.getElementById('editQText').value = data.question; document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; document.getElementById('editQCorrect').value = data.correctAnswer; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId);
                 });
-
                 item.querySelector('.btn-delete').addEventListener('click', async () => {
-                    if(confirm("Delete this specific question?")) {
-                        await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); 
-                    }
+                    if(confirm("Delete this specific question?")) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); }
                 });
             });
         }
 
         document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => {
-            e.preventDefault(); 
-            const btn = document.getElementById('saveEditedQBtn');
-            const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid');
-            if(!examId || !qId) { alert("Missing ID! Please click Edit again."); return; }
-            btn.innerText = "Saving...";
+            e.preventDefault(); const btn = document.getElementById('saveEditedQBtn'); const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid');
+            if(!examId || !qId) { alert("Missing ID! Please click Edit again."); return; } btn.innerText = "Saving...";
             try {
-                await setDoc(doc(db, "exams", examId, "questions", qId), {
-                    question: document.getElementById('editQText').value,
-                    options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value },
-                    correctAnswer: document.getElementById('editQCorrect').value
-                }, { merge: true });
+                await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true });
                 alert("Question updated successfully!"); document.getElementById('editQuestionFormBox').style.display = "none"; loadQuestionsForEdit(examId); 
-            } catch (error) { alert("Error: " + error.message); }
-            btn.innerText = "Save Changes";
+            } catch (error) { alert("Error: " + error.message); } btn.innerText = "Save Changes";
         });
 
-        document.getElementById('cancelEditQBtn').addEventListener('click', (e) => {
-            e.preventDefault(); document.getElementById('editQuestionFormBox').style.display = "none";
-        });
+        document.getElementById('cancelEditQBtn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('editQuestionFormBox').style.display = "none"; });
 
-        // 🟢 NOTUN SECTION 4: Send Message Logic
+        // 🟢 NOTUN: Send Message -> "notifications" list-e save korchi
         document.getElementById('sendMsgForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const msgText = document.getElementById('adminMessage').value;
             const btn = document.getElementById('sendMsgBtn');
             const status = document.getElementById('msgStatus');
-            
             btn.innerText = "Sending...";
             
             try {
-                // "settings" collection er vitor "notification" namer document update korchi
-                await setDoc(doc(db, "settings", "notification"), {
+                // Ekhon ar overwrite hobe na, notun msg hisebe add hobe
+                await addDoc(collection(db, "notifications"), {
                     message: msgText,
-                    timestamp: new Date().getTime() // Sathe time rekhe dicchi
+                    timestamp: new Date().getTime()
                 });
-                
-                status.style.color = "#00e676";
-                status.innerText = "Message sent successfully!";
+                status.style.color = "#00e676"; status.innerText = "Message sent successfully!";
                 document.getElementById('sendMsgForm').reset();
             } catch (error) {
-                console.error("Msg Error:", error);
-                status.style.color = "#ff5252";
-                status.innerText = "Failed to send message.";
+                console.error("Msg Error:", error); status.style.color = "#ff5252"; status.innerText = "Failed to send message.";
             }
-            
-            btn.innerText = "Publish Message";
-            setTimeout(() => { status.innerText = ""; }, 3000);
+            btn.innerText = "Publish Message"; setTimeout(() => { status.innerText = ""; }, 3000);
         });
 
     </script>
