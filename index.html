@@ -115,8 +115,8 @@
     </div>
 
     <div class="header-section">
-        <h1>Job Preparation Portal</h1>
-      
+        <h1>JOB Preparation Portal</h1>
+       
     </div>
 
     <div class="grid-container">
@@ -155,7 +155,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getFirestore, collection, getDocs, orderBy, query, limit } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 FIREBASE CONFIG 🔴🔴
+        // 🔴🔴 FIREBASE CONFIG BOSHAO 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -206,8 +206,8 @@
                 querySnapshot.forEach((doc) => {
                     const exam = doc.data(); const examId = doc.id;
                     
-                    // 🟢 NOTUN: Deleted Exam gulo k ekhane ignore kora hochhe!
-                    if (exam.status === "deleted") return; 
+                    // 🟢 SHUDHU "ACTIVE" STATUS WALAI HOME PAGE E ASHBE (Draft/Deleted asbe na)
+                    if (exam.status !== "active") return; 
 
                     activeExamCount++;
                     htmlOutput += `
