@@ -18,7 +18,6 @@
         
         .score-display { font-size: 40px; font-weight: bold; color: #00bcd4; margin: 15px 0 10px 0; }
         
-        /* Premium Breakdown Box */
         .breakdown-box { display: flex; justify-content: space-around; width: 100%; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
         .stat-item { text-align: center; }
         .stat-label { font-size: 14px; font-weight: bold; margin-bottom: 5px; }
@@ -61,6 +60,7 @@
 
         <div id="result-section">
             <h2 id="studentNameDisplay">Your Result</h2>
+            <p id="studentRollDisplay" style="color: #ffb74d; font-weight: bold; margin-bottom: 10px;">Roll: Loading...</p>
             
             <div class="score-display" id="finalScore">Loading...</div>
             
@@ -188,7 +188,8 @@
                 const userData = querySnapshot.docs[0].data();
                 const userAnswers = userData.userAnswers || {};
                 
-                // 🟢 Showing Detailed Breakdown
+                // 🟢 Roll Number and score load kora
+                document.getElementById('studentRollDisplay').innerText = `Roll No: ${userData.rollNumber || 'N/A'}`;
                 document.getElementById('finalScore').innerText = `Total Score: ${userData.score}`;
                 document.getElementById('countCorrect').innerText = userData.correctCount || 0;
                 document.getElementById('countWrong').innerText = userData.wrongCount || 0;
@@ -226,7 +227,7 @@
             }
         }
 
-        // 🟢 Detailed Excel Download Logic Update
+        // 🟢 NOTUN: Excel Download Logic (Shudhu 3 ta column: Position, Roll, Total Marks)
         document.getElementById('downloadExcelBtn').addEventListener('click', async function() {
             const examId = this.getAttribute('data-examid');
             const statusText = document.getElementById('downloadStatus');
@@ -241,15 +242,15 @@
                 let resultsArray = [];
                 snapshot.forEach(doc => { resultsArray.push(doc.data()); });
                 
-                // Sorbochho number paowa student theke shuru hobe
+                // Sorbochho number theke nicher dike sajano
                 resultsArray.sort((a, b) => b.score - a.score);
 
-                // 🟢 Excel Header e ekhon breakdown o thakbe
-                let csvContent = "Rank,Student Email,Final Score,Total Questions,Correct (+1),Wrong (-0.5),Skipped (-1)\n";
+                // 🟢 Excel Header - Shudhu 3 ta column tumi jemon cheyecho
+                let csvContent = "Position,Roll,Total Marks\n";
                 
                 resultsArray.forEach((row, index) => { 
-                    let c = row.correctCount || 0; let w = row.wrongCount || 0; let s = row.skippedCount || 0;
-                    csvContent += `${index + 1},${row.email},${row.score},${row.total},${c},${w},${s}\n`; 
+                    let roll = row.rollNumber || "N/A";
+                    csvContent += `${index + 1},${roll},${row.score}\n`; 
                 });
 
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
