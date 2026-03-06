@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Take Exam</title>
+    <title>Take Exam - UniDocs</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0d0d12; background-image: radial-gradient(circle at 15% 50%, rgba(45, 21, 82, 0.4), transparent 25%), radial-gradient(circle at 85% 30%, rgba(21, 64, 82, 0.4), transparent 25%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
@@ -56,10 +56,10 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, addDoc, doc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
+        // 🔴🔴 Ekhane Tomar Firebase Config Boshao 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -92,11 +92,13 @@
         const resultSection = document.getElementById('result-section');
         const questionsContainer = document.getElementById('questionsContainer');
 
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).then(async (result) => {
-                userEmail = result.user.email;
-                document.getElementById('userName').innerText = result.user.displayName;
+        // Auto Login Checker
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userEmail = user.email;
+                document.getElementById('userName').innerText = user.displayName;
                 
+                // Check if already submitted
                 const resSnap = await getDocs(query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", currentExamId)));
                 if (!resSnap.empty) {
                     alert("You have already submitted this exam!");
@@ -106,9 +108,15 @@
 
                 loginSection.style.display = "none";
                 examSection.style.display = "block";
-                
                 loadExamData(); 
-            }).catch(console.error);
+            } else {
+                loginSection.style.display = "flex";
+            }
+        });
+
+        // Manual Login Button
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch(console.error);
         });
 
         async function loadExamData() {
@@ -133,7 +141,6 @@
                     const data = doc.data(); const qId = doc.id;
                     correctAnswersList[qId] = data.correctAnswer;
                     const qCard = document.createElement('div'); qCard.className = 'question-card';
-                    // 🟢 UPDATE: Ekhane radio button theke 'required' bad dewa hoyeche!
                     qCard.innerHTML = `
                         <div class="question-text">${questionNumber}. ${data.question}</div>
                         <label class="option-label"><input type="radio" name="${qId}" value="1"> ${data.options["1"]}</label>
@@ -182,21 +189,18 @@
 
         async function submitExamCore() {
             clearInterval(timerInterval); clearInterval(saveInterval);
-            
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.innerText = "Submitting..."; submitBtn.disabled = true;
-
             let score = 0; let totalQuestions = Object.keys(correctAnswersList).length;
             let userSelectedAnswers = {}; 
 
             for (let qId in correctAnswersList) {
                 const selectedOption = document.querySelector(`input[name="${qId}"]:checked`);
-                // 🟢 UPDATE: Skip korle null save hobe
                 if (selectedOption) {
                     userSelectedAnswers[qId] = selectedOption.value; 
                     if (selectedOption.value === correctAnswersList[qId]) score++; 
                 } else {
-                    userSelectedAnswers[qId] = null; // Skipped
+                    userSelectedAnswers[qId] = null; 
                 }
             }
 
@@ -205,7 +209,6 @@
                     email: userEmail, score: score, total: totalQuestions, 
                     userAnswers: userSelectedAnswers, examId: currentExamId, timestamp: new Date()
                 });
-                
                 const timerDocId = userEmail + "_" + currentExamId;
                 await setDoc(doc(db, "user_timers", timerDocId), { timeLeft: 0 }, { merge: true });
 
