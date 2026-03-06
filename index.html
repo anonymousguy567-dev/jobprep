@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> MCQ Portal</title>
+    <title>UniDocs MCQ Portal</title>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Premium Blackish Background with Animated Blobs */
         body { 
             background-color: #050508; 
             color: #ffffff; 
@@ -35,6 +34,59 @@
             100% { transform: translate(40px, -40px) scale(1.1); }
         }
 
+        /* 🟢 NOTUN: Top Bar & 9-Dot Menu Styling */
+        .top-bar { position: absolute; top: 20px; right: 30px; z-index: 100; }
+        .apps-menu-wrapper { position: relative; display: inline-block; }
+        
+        .apps-icon { 
+            display: grid; 
+            grid-template-columns: repeat(3, 5px); 
+            gap: 3px; 
+            cursor: pointer; 
+            padding: 10px; 
+            border-radius: 50%; 
+            transition: background 0.3s ease; 
+        }
+        .apps-icon:hover { background: rgba(255, 255, 255, 0.1); }
+        .dot { width: 5px; height: 5px; background: #fff; border-radius: 50%; }
+
+        .apps-dropdown { 
+            position: absolute; 
+            top: 45px; 
+            right: 0; 
+            background: rgba(15, 15, 20, 0.85); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 188, 212, 0.3); 
+            border-radius: 12px; 
+            width: 250px; 
+            padding: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            transform: translateY(-10px); 
+            opacity: 0; 
+            visibility: hidden;
+            transition: all 0.3s ease; 
+        }
+        .apps-dropdown.show { transform: translateY(0); opacity: 1; visibility: visible; }
+        
+        .dropdown-item { 
+            text-decoration: none; 
+            color: #fff; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            padding: 15px; 
+            border-radius: 8px; 
+            transition: 0.3s; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .dropdown-item:hover { 
+            background: rgba(0, 188, 212, 0.15); 
+            border-color: rgba(0, 188, 212, 0.4); 
+            transform: translateY(-2px);
+        }
+        .dropdown-title { font-weight: bold; font-size: 14px; text-align: center; letter-spacing: 0.5px;}
+
         /* Header Section */
         .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; }
         h1 { 
@@ -46,85 +98,52 @@
         @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* 3 Box Grid Layout */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            width: 100%;
-            max-width: 1100px;
-            animation: slideUp 0.8s ease-out;
-        }
-
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 1100px; animation: slideUp 0.8s ease-out; z-index: 10;}
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Glassy Box with Glow Effect */
+        /* Glassy Box */
         .glass-box { 
-            background: rgba(20, 20, 25, 0.4); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 188, 212, 0.3); /* Subtle Cyan Border */
-            border-radius: 20px; 
-            padding: 30px; 
-            text-align: center; 
+            background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 188, 212, 0.3); border-radius: 20px; padding: 30px; text-align: center; 
             box-shadow: 0 0 20px rgba(0, 188, 212, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.02); 
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            min-height: 350px;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; justify-content: flex-start; min-height: 350px;
         }
-        
-        /* Hover Glow Effect */
-        .glass-box:hover {
-            border-color: rgba(0, 188, 212, 0.8);
-            box-shadow: 0 0 30px rgba(0, 188, 212, 0.3), inset 0 0 15px rgba(0, 188, 212, 0.1);
-            transform: translateY(-8px);
-        }
+        .glass-box:hover { border-color: rgba(0, 188, 212, 0.8); box-shadow: 0 0 30px rgba(0, 188, 212, 0.3), inset 0 0 15px rgba(0, 188, 212, 0.1); transform: translateY(-8px); }
 
         .box-icon { font-size: 40px; margin-bottom: 15px; }
         .box-title { color: #fff; font-size: 22px; margin-bottom: 15px; font-weight: bold; }
 
-        /* Exam List inside Box 1 */
-        .exam-list-wrapper {
-            flex-grow: 1;
-            overflow-y: auto;
-            max-height: 220px;
-            padding-right: 5px;
-            text-align: left;
-        }
-        
-        /* Custom Scrollbar for Exam List */
+        .exam-list-wrapper { flex-grow: 1; overflow-y: auto; max-height: 220px; padding-right: 5px; text-align: left; }
         .exam-list-wrapper::-webkit-scrollbar { width: 6px; }
         .exam-list-wrapper::-webkit-scrollbar-thumb { background: rgba(0, 188, 212, 0.5); border-radius: 10px; }
 
-        .exam-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 12px; 
-            margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s;
-        }
+        .exam-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s; }
         .exam-item:hover { background: rgba(0, 188, 212, 0.1); border-color: rgba(0, 188, 212, 0.4); }
         .exam-name { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 4px; }
         .exam-time { font-size: 12px; color: #00bcd4; }
-        .start-btn { 
-            background: linear-gradient(135deg, #00bcd4, #2196f3); color: #fff; padding: 8px 16px; 
-            border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; transition: 0.3s; 
-        }
+        .start-btn { background: linear-gradient(135deg, #00bcd4, #2196f3); color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; transition: 0.3s; }
         .start-btn:hover { box-shadow: 0 4px 15px rgba(0, 188, 212, 0.5); transform: scale(1.05); }
 
-        /* Action Buttons for Box 2 & 3 */
-        .action-btn { 
-            display: inline-block; width: 100%; padding: 15px; margin-top: auto;
-            border-radius: 12px; text-decoration: none; color: white; 
-            font-size: 16px; font-weight: bold; transition: all 0.3s ease; border: none; cursor: pointer;
-        }
+        .action-btn { display: inline-block; width: 100%; padding: 15px; margin-top: auto; border-radius: 12px; text-decoration: none; color: white; font-size: 16px; font-weight: bold; transition: all 0.3s ease; border: none; cursor: pointer; }
         .btn-green { background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.4); color: #00e676; }
         .btn-green:hover { background: rgba(0, 230, 118, 0.2); box-shadow: 0 0 20px rgba(0, 230, 118, 0.4); }
-        
         .btn-outline { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); color: #e0e0e0; }
         .btn-outline:hover { background: rgba(255, 255, 255, 0.1); color: #fff; border-color: #fff; }
 
         .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #00bcd4; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        /* 🟢 NOTUN: Footer Styling */
+        .footer-branding {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #6a6a7a;
+            letter-spacing: 1px;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -135,13 +154,28 @@
         <div class="blob blob3"></div>
     </div>
 
+    <div class="top-bar">
+        <div class="apps-menu-wrapper">
+            <div class="apps-icon" id="appsIcon">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+            
+            <div class="apps-dropdown" id="appsDropdown">
+                <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="dropdown-item">
+                    <span class="dropdown-title">UNIdocs generator | RUET</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div class="header-section">
-        <h1>Job Preparetion</h1>
-      
+        <h1>Job Preparation Portal</h1>
+       
     </div>
 
     <div class="grid-container">
-        
         <div class="glass-box">
             <div class="box-icon">📝</div>
             <div class="box-title">Available Exams</div>
@@ -164,12 +198,37 @@
             <div class="box-icon">⚙️</div>
             <div class="box-title">Admin Dashboard</div>
             <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
-                 Authorized access only.
+                Create new exams, set time limits, and add multiple-choice questions. Authorized access only.
             </p>
             <a href="admin.html" class="action-btn btn-outline">Enter Admin Panel</a>
         </div>
-
     </div>
+
+    <div class="footer-branding">
+        Developed by UniDocs
+    </div>
+
+    <script>
+        const appsIcon = document.getElementById('appsIcon');
+        const appsDropdown = document.getElementById('appsDropdown');
+
+        appsIcon.addEventListener('click', function(e) {
+            e.stopPropagation(); // Box ta jate click korar sathe sathe off na hoye jay
+            appsDropdown.classList.toggle('show');
+        });
+
+        // Baire kothao click korle jate box hide hoye jay
+        window.addEventListener('click', function() {
+            if(appsDropdown.classList.contains('show')) {
+                appsDropdown.classList.remove('show');
+            }
+        });
+
+        // Box er bhitor click korleo jate kete na jay
+        appsDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
@@ -188,7 +247,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Fetch and Display Exams in Box 1
         async function loadAvailableExams() {
             const examsListDiv = document.getElementById('examsList');
             try {
@@ -227,5 +285,4 @@
         loadAvailableExams();
     </script>
 </body>
-
 </html>
