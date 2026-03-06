@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Answer Sheet & Result</title>
+    <title>Answer Sheet & Result - UniDocs</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0d0d12; background-image: radial-gradient(circle at 15% 50%, rgba(45, 21, 82, 0.4), transparent 25%), radial-gradient(circle at 85% 30%, rgba(21, 64, 82, 0.4), transparent 25%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
@@ -23,7 +23,6 @@
         .wrong-ans { background: rgba(255, 82, 82, 0.2) !important; border: 1px solid #ff5252; color: #ff5252; }
         .skipped-msg { color: #ffb74d; font-weight: bold; font-size: 14px; margin-bottom: 15px; display: block;}
         
-        /* Excel Download Button Styling */
         .btn-excel { background: linear-gradient(135deg, #4caf50, #2e7d32); color: white; margin-top: 10px; width: 100%; }
         .btn-excel:hover { box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4); }
     </style>
@@ -68,10 +67,10 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, query, where, doc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
+        // 🔴🔴 Ekhane Tomar Firebase Config Boshao 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -96,12 +95,21 @@
         const countdownDisplay = document.getElementById('countdown');
         const examDropdown = document.getElementById('examDropdown');
 
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).then((result) => {
-                userEmail = result.user.email; userName = result.user.displayName;
+        // Auto Login Checker
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userEmail = user.email; 
+                userName = user.displayName;
                 loginSection.style.display = "none";
                 loadExamsForSelection(); 
-            }).catch(console.error);
+            } else {
+                loginSection.style.display = "flex";
+            }
+        });
+
+        // Manual Login
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch(console.error);
         });
 
         async function loadExamsForSelection() {
@@ -174,8 +182,6 @@
             resultSection.style.display = "flex";
             document.getElementById('studentNameDisplay').innerText = `Result for: ${userName}`;
             const answersContainer = document.getElementById('answersContainer');
-            
-            // Set the active exam ID to the download button
             document.getElementById('downloadExcelBtn').setAttribute('data-examid', examId);
             
             try {
@@ -200,15 +206,13 @@
 
                     const qCard = document.createElement('div'); qCard.className = 'question-card';
                     let optionsHTML = "";
-                    
                     let skippedMsg = (!userOpt) ? "<span class='skipped-msg'>⚠ You skipped this question.</span>" : "";
                     
                     for(let i=1; i<=4; i++) {
                         let optClass = "option-div"; let extraText = "";
                         
                         if (i.toString() === correctOpt) {
-                            optClass += " correct-ans"; 
-                            extraText = " ✓ (Correct Answer)";
+                            optClass += " correct-ans"; extraText = " ✓ (Correct Answer)";
                         } else if (i.toString() === userOpt && userOpt !== correctOpt) {
                             optClass += " wrong-ans"; extraText = " ✗ (Your Answer)";
                         } else if (i.toString() === userOpt && userOpt === correctOpt) {
@@ -225,54 +229,35 @@
             }
         }
 
-        // 🟢 NOTUN: Download Merit List Logic (Excel / CSV Generate kora)
+        // Excel Download Logic
         document.getElementById('downloadExcelBtn').addEventListener('click', async function() {
             const examId = this.getAttribute('data-examid');
             const statusText = document.getElementById('downloadStatus');
             statusText.innerText = "Fetching leaderboard data, please wait...";
             
             try {
-                // Oi nirdisto exam er shob result anbe
                 const q = query(collection(db, "results"), where("examId", "==", examId));
                 const snapshot = await getDocs(q);
 
-                if (snapshot.empty) {
-                    statusText.innerText = "No one has submitted this exam yet!";
-                    return;
-                }
+                if (snapshot.empty) { statusText.innerText = "No one has submitted this exam yet!"; return; }
 
                 let resultsArray = [];
-                snapshot.forEach(doc => {
-                    resultsArray.push(doc.data());
-                });
-
-                // Highest theke Lowest Score e sajano (Sorting)
+                snapshot.forEach(doc => { resultsArray.push(doc.data()); });
                 resultsArray.sort((a, b) => b.score - a.score);
 
-                // CSV File er Header (Excel e column hisebe ashbe)
                 let csvContent = "Rank,Student Email,Obtained Score,Total Marks\n";
+                resultsArray.forEach((row, index) => { csvContent += `${index + 1},${row.email},${row.score},${row.total}\n`; });
 
-                // Excel sheet e data gulo bosano
-                resultsArray.forEach((row, index) => {
-                    csvContent += `${index + 1},${row.email},${row.score},${row.total}\n`;
-                });
-
-                // JavaScript diye auto download kora
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement("a");
-                link.setAttribute("href", url);
-                link.setAttribute("download", `Merit_List_${examId}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                link.setAttribute("href", url); link.setAttribute("download", `Merit_List_${examId}.csv`);
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
 
                 statusText.innerText = "Download Successful!";
                 setTimeout(() => { statusText.innerText = ""; }, 3000);
-
             } catch (error) {
-                console.error("Error generating Excel: ", error);
-                statusText.innerText = "Failed to generate Excel file.";
+                console.error("Error generating Excel: ", error); statusText.innerText = "Failed to generate Excel file.";
             }
         });
     </script>
