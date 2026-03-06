@@ -27,12 +27,14 @@
         .btn-edit { background: #ffb74d; color: #000; padding: 6px 12px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; font-size: 13px;}
         .btn-delete { background: #ff5252; color: #fff; padding: 6px 12px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; font-size: 13px;}
         .edit-form-box { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid #ffb74d; margin-top: 15px;}
-        .action-buttons-row { display: flex; gap: 15px; margin-top: 10px; }
+        .action-buttons-row { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; }
+        .action-buttons-row button { flex: 1; min-width: 150px; }
     </style>
 </head>
 <body>
 
     <div class="glass-container" id="mainContainer">
+        
         <div id="loginSection">
             <h2>Admin Login Required</h2>
             <button id="adminLoginBtn" class="login-btn">Login with Google</button>
@@ -40,21 +42,23 @@
         </div>
 
         <div id="adminFormSection">
+            
             <div class="section-box" style="border-left: 5px solid #ffb74d;">
-                <h3 style="color: #ffb74d;">1. Create New Exam</h3>
+                <h3 style="color: #ffb74d;">1. Create New Exam (Saved as Draft)</h3>
+                <p style="color: #a0a0b0; font-size: 13px; margin-bottom: 15px;">New exams are automatically hidden. You can add questions later and Publish when ready.</p>
                 <form id="createExamForm">
                     <div class="input-group"><label>Exam Title:</label><input type="text" id="newExamTitle" required></div>
                     <div class="input-group"><label>Exam Duration (Minutes):</label><input type="number" id="newExamDuration" required></div>
                     <div class="input-group"><label>Result Publish Date & Time:</label><input type="datetime-local" id="newExamPublishTime" required></div>
-                    <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #ffb74d, #ff9800);">Create Exam</button>
+                    <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #ffb74d, #ff9800);">Create Exam (Draft)</button>
                 </form>
                 <p id="examCreateStatus" class="status-msg"></p>
             </div>
 
             <div class="section-box" style="border-left: 5px solid #00bcd4;">
-                <h3 style="color: #00bcd4;">2. Create Question</h3>
+                <h3 style="color: #00bcd4;">2. Add Questions</h3>
                 <div class="input-group">
-                    <label>Select Exam to add question:</label>
+                    <label>Select Exam:</label>
                     <select id="examSelector" required><option value="">-- Loading Exams... --</option></select>
                 </div>
                 <form id="questionForm">
@@ -77,21 +81,22 @@
             </div>
 
             <div class="section-box" style="border-left: 5px solid #e91e63;">
-                <h3 style="color: #e91e63;">3. Edit / Manage Exam</h3>
+                <h3 style="color: #e91e63;">3. Edit, Publish or Hide Exam</h3>
                 <div class="input-group">
-                    <label>Select Exam to Edit:</label>
+                    <label>Select Exam to Manage:</label>
                     <select id="manageExamSelector"><option value="">-- Select an Exam --</option></select>
                 </div>
                 <div id="manageWorkspace" style="display:none;">
                     <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                        <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Update Exam Settings</h4>
+                        <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Update Settings & Status</h4>
                         <div class="input-group"><label>Update Title:</label><input type="text" id="editExamTitle"></div>
                         <div class="input-group"><label>Update Duration (Mins):</label><input type="number" id="editExamDuration"></div>
                         <div class="input-group"><label>Update Publish Time:</label><input type="datetime-local" id="editExamPublishTime"></div>
                         
                         <div class="action-buttons-row">
-                            <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63; margin-top: 0;">Save Settings</button>
-                            <button id="deleteEntireExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0;">Delete / Hide Exam</button>
+                            <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63; margin-top: 0;">Save Time/Title</button>
+                            <button id="publishExamBtn" class="submit-btn" style="background: #00e676; margin-top: 0; color:#000;">🚀 Publish Live</button>
+                            <button id="deleteEntireExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0;">Hide/End Exam</button>
                         </div>
                         <p id="updateSettingsStatus" class="status-msg"></p>
                     </div>
@@ -124,7 +129,6 @@
 
             <div class="section-box" style="border-left: 5px solid #00e676;">
                 <h3 style="color: #00e676;">4. Send Announcement (Message)</h3>
-                <p style="color: #a0a0b0; font-size: 13px; margin-bottom: 15px;">Send a global notification to all students. It will appear as a popup on the homepage.</p>
                 <form id="sendMsgForm">
                     <div class="input-group"><label>Message Content:</label><textarea id="adminMessage" rows="4" required></textarea></div>
                     <button type="submit" class="submit-btn" id="sendMsgBtn" style="background: linear-gradient(135deg, #00e676, #00c853);">Publish Message</button>
@@ -139,7 +143,7 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 FIREBASE CONFIG 🔴🔴
+        // 🔴🔴 FIREBASE CONFIG BOSHAO 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -150,7 +154,7 @@
         };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); const db = getFirestore(app);
 
-        // 🔴🔴 ADMIN EMAILS 🔴🔴
+        // 🔴🔴 ADMIN EMAILS BOSHAO 🔴🔴
         const ADMIN_EMAILS = ["ahamedjubayer2003@gmail.com", "bondhuremail@gmail.com"]; 
 
         const loginSection = document.getElementById('loginSection'); const adminFormSection = document.getElementById('adminFormSection');
@@ -163,7 +167,7 @@
             }).catch(console.error);
         });
 
-        // 🟢 NOTUN: Dropdown-e status (Deleted) dekhanor logic
+        // 🟢 LOAD EXAMS & ADD LABELS (Draft, Active, Ended)
         async function loadExamsIntoDropdowns() {
             try {
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
@@ -172,19 +176,30 @@
                 querySnapshot.forEach((doc) => { 
                     const data = doc.data();
                     let titleStr = data.title;
-                    if(data.status === "deleted") { titleStr += " (Deleted / Hidden)"; }
+                    if(data.status === "deleted") { titleStr += " ❌ (Ended/Hidden)"; }
+                    else if(data.status === "draft") { titleStr += " 📝 (Draft)"; }
+                    else { titleStr += " 🟢 (Live)"; }
                     optionsHtml += `<option value="${doc.id}">${titleStr}</option>`; 
                 });
                 examSelector.innerHTML = optionsHtml; manageExamSelector.innerHTML = optionsHtml;
             } catch (error) { console.error("Error loading exams: ", error); }
         }
 
+        // 🟢 SECTION 1: CREATE (Saved as Draft by default)
         document.getElementById('createExamForm').addEventListener('submit', async function(e) {
-            e.preventDefault(); const statusMsg = document.getElementById('examCreateStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Creating Exam...";
+            e.preventDefault(); const statusMsg = document.getElementById('examCreateStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Creating...";
             try {
-                await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "active" });
-                statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Created Successfully!"; document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
-            } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error creating exam!"; } setTimeout(() => { statusMsg.innerText = ""; }, 3000);
+                await addDoc(collection(db, "exams"), { 
+                    title: document.getElementById('newExamTitle').value, 
+                    duration: parseInt(document.getElementById('newExamDuration').value), 
+                    publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), 
+                    createdAt: new Date().getTime(), 
+                    status: "draft" // 🟢 Notun Exam Draft hisebe save hobe
+                });
+                statusMsg.style.color = "#ffb74d"; statusMsg.innerText = "Exam Saved as DRAFT successfully!"; 
+                document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
+            } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error creating exam!"; } 
+            setTimeout(() => { statusMsg.innerText = ""; }, 4000);
         });
 
         document.getElementById('questionForm').addEventListener('submit', async function(e) {
@@ -203,7 +218,17 @@
             if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block";
             document.getElementById('manageQuestionsList').innerHTML = "<p>Loading...</p>"; document.getElementById('editQuestionFormBox').style.display = "none";
             const examDoc = await getDoc(doc(db, "exams", examId));
-            if(examDoc.exists()) { document.getElementById('editExamTitle').value = examDoc.data().title; document.getElementById('editExamDuration').value = examDoc.data().duration; document.getElementById('editExamPublishTime').value = formatTimeForInput(examDoc.data().publishTime); }
+            if(examDoc.exists()) { 
+                const data = examDoc.data();
+                document.getElementById('editExamTitle').value = data.title; 
+                document.getElementById('editExamDuration').value = data.duration; 
+                document.getElementById('editExamPublishTime').value = formatTimeForInput(data.publishTime); 
+                
+                // Button Visibility Logic
+                const pubBtn = document.getElementById('publishExamBtn');
+                if(data.status === "draft") { pubBtn.style.display = "block"; } 
+                else { pubBtn.style.display = "none"; }
+            }
             loadQuestionsForEdit(examId);
         });
 
@@ -212,17 +237,30 @@
             try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Settings Updated!"; loadExamsIntoDropdowns(); } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error updating!"; } setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
 
-        // 🟢 NOTUN: "Soft Delete" ba "Archive" logic
+        // 🟢 PUBLISH EXAM LOGIC
+        document.getElementById('publishExamBtn').addEventListener('click', async (e) => {
+            e.preventDefault(); const examId = manageExamSelector.value;
+            if(confirm("🚀 Ready to Publish?\n\nThis will make the exam LIVE on the homepage for all students to see and participate. Proceed?")) {
+                const pubBtn = document.getElementById('publishExamBtn'); pubBtn.innerText = "Publishing...";
+                try {
+                    await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true });
+                    alert("SUCCESS! Exam is now LIVE!"); 
+                    pubBtn.style.display = "none";
+                    loadExamsIntoDropdowns(); 
+                } catch (error) { alert("Failed to publish."); }
+                pubBtn.innerText = "🚀 Publish Live";
+            }
+        });
+
         document.getElementById('deleteEntireExamBtn').addEventListener('click', async (e) => {
             e.preventDefault(); const examId = manageExamSelector.value;
-            if(confirm("⚠ HIDE EXAM?\n\nThis will remove the exam from the Homepage so no one can take it anymore.\nHowever, students can still check their results in the Answer Sheet section.")) {
+            if(confirm("⚠ END / HIDE EXAM?\n\nThis will remove the exam from the Homepage so no one can take it anymore. Students can still check results in Answer Sheet.")) {
                 const btn = document.getElementById('deleteEntireExamBtn'); btn.innerText = "Removing...";
                 try {
-                    // Shudhu status "deleted" kore dicchi, pura exam muchchi na
                     await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true });
-                    alert("Exam removed from Homepage! (Saved in Answer Sheet)"); 
+                    alert("Exam ended/hidden successfully!"); 
                     document.getElementById('manageWorkspace').style.display = "none"; loadExamsIntoDropdowns(); 
-                } catch (error) { alert("Failed to hide the exam."); }
+                } catch (error) { alert("Failed to hide."); }
                 btn.innerText = "Delete / Hide Exam";
             }
         });
@@ -237,16 +275,15 @@
                 item.querySelector('.btn-edit').addEventListener('click', () => {
                     document.getElementById('editQuestionFormBox').style.display = "block"; document.getElementById('editQText').value = data.question; document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; document.getElementById('editQCorrect').value = data.correctAnswer; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId);
                 });
-                item.querySelector('.btn-delete').addEventListener('click', async () => { if(confirm("Delete this specific question?")) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } });
+                item.querySelector('.btn-delete').addEventListener('click', async () => { if(confirm("Delete this question?")) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } });
             });
         }
 
         document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => {
             e.preventDefault(); const btn = document.getElementById('saveEditedQBtn'); const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid');
             if(!examId || !qId) return; btn.innerText = "Saving...";
-            try { await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQuestionFormBox').style.display = "none"; loadQuestionsForEdit(examId); } catch (error) { alert("Error: " + error.message); } btn.innerText = "Save Changes";
+            try { await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('correctOption').value }, { merge: true }); document.getElementById('editQuestionFormBox').style.display = "none"; loadQuestionsForEdit(examId); } catch (error) { alert("Error: " + error.message); } btn.innerText = "Save Changes";
         });
-
         document.getElementById('cancelEditQBtn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('editQuestionFormBox').style.display = "none"; });
 
         document.getElementById('sendMsgForm').addEventListener('submit', async (e) => {
