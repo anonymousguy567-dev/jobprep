@@ -21,102 +21,62 @@
             position: relative;
         }
 
-        .bg-blobs {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1;
-        }
+        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
         .blob { position: absolute; filter: blur(90px); opacity: 0.5; animation: float 12s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #00bcd4; top: -10%; left: -5%; animation-delay: 0s; }
         .blob2 { width: 400px; height: 400px; background: #2196f3; bottom: -10%; right: -5%; animation-delay: 3s; }
         .blob3 { width: 250px; height: 250px; background: #673ab7; top: 40%; left: 40%; animation-delay: 5s; }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, -40px) scale(1.1); }
-        }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
 
-        /* 🟢 NOTUN: Top Bar & 9-Dot Menu Styling */
+        /* 🟢 NOTUN: Top Left Bell Icon Styling */
+        .top-left-bar { position: absolute; top: 25px; left: 30px; z-index: 100; }
+        .bell-icon-wrapper { position: relative; cursor: pointer; display: inline-block; padding: 5px; }
+        .bell-icon-wrapper svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: 0.3s; }
+        .bell-icon-wrapper:hover svg { stroke: #00bcd4; transform: scale(1.1); }
+        .red-dot { position: absolute; top: 2px; right: 4px; width: 10px; height: 10px; background: #ff5252; border-radius: 50%; box-shadow: 0 0 8px #ff5252; display: none; }
+
+        /* 🟢 NOTUN: Notification Modal Styling */
+        .msg-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; display: none; justify-content: center; align-items: center; }
+        .msg-modal.show { display: flex; animation: fadeIn 0.3s ease; }
+        .msg-modal-content { background: rgba(20, 20, 25, 0.9); border: 1px solid rgba(0, 188, 212, 0.4); border-radius: 16px; padding: 30px; width: 90%; max-width: 400px; position: relative; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.5); transform: translateY(-20px); transition: 0.3s ease; }
+        .msg-modal.show .msg-modal-content { transform: translateY(0); }
+        .close-btn { position: absolute; top: 10px; right: 15px; color: #ff5252; font-size: 28px; cursor: pointer; font-weight: bold; transition: 0.3s; line-height: 1; }
+        .close-btn:hover { transform: scale(1.2); text-shadow: 0 0 10px #ff5252; }
+        .msg-title { color: #00bcd4; font-size: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .msg-body { font-size: 16px; color: #e0e0e0; line-height: 1.5; white-space: pre-wrap;}
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Top Right 9-Dot Menu */
         .top-bar { position: absolute; top: 20px; right: 30px; z-index: 100; }
         .apps-menu-wrapper { position: relative; display: inline-block; }
-        
-        .apps-icon { 
-            display: grid; 
-            grid-template-columns: repeat(3, 5px); 
-            gap: 3px; 
-            cursor: pointer; 
-            padding: 10px; 
-            border-radius: 50%; 
-            transition: background 0.3s ease; 
-        }
+        .apps-icon { display: grid; grid-template-columns: repeat(3, 5px); gap: 3px; cursor: pointer; padding: 10px; border-radius: 50%; transition: background 0.3s ease; }
         .apps-icon:hover { background: rgba(255, 255, 255, 0.1); }
         .dot { width: 5px; height: 5px; background: #fff; border-radius: 50%; }
-
-        .apps-dropdown { 
-            position: absolute; 
-            top: 45px; 
-            right: 0; 
-            background: rgba(15, 15, 20, 0.85); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 188, 212, 0.3); 
-            border-radius: 12px; 
-            width: 250px; 
-            padding: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            transform: translateY(-10px); 
-            opacity: 0; 
-            visibility: hidden;
-            transition: all 0.3s ease; 
-        }
+        .apps-dropdown { position: absolute; top: 45px; right: 0; background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(0, 188, 212, 0.3); border-radius: 12px; width: 250px; padding: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-10px); opacity: 0; visibility: hidden; transition: all 0.3s ease; }
         .apps-dropdown.show { transform: translateY(0); opacity: 1; visibility: visible; }
-        
-        .dropdown-item { 
-            text-decoration: none; 
-            color: #fff; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            padding: 15px; 
-            border-radius: 8px; 
-            transition: 0.3s; 
-            background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .dropdown-item:hover { 
-            background: rgba(0, 188, 212, 0.15); 
-            border-color: rgba(0, 188, 212, 0.4); 
-            transform: translateY(-2px);
-        }
+        .dropdown-item { text-decoration: none; color: #fff; display: flex; align-items: center; justify-content: center; padding: 15px; border-radius: 8px; transition: 0.3s; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .dropdown-item:hover { background: rgba(0, 188, 212, 0.15); border-color: rgba(0, 188, 212, 0.4); transform: translateY(-2px); }
         .dropdown-title { font-weight: bold; font-size: 14px; text-align: center; letter-spacing: 0.5px;}
 
-        /* Header Section */
-        .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; }
-        h1 { 
-            background: linear-gradient(135deg, #00bcd4, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-size: 38px; letter-spacing: 1.5px; margin-bottom: 10px;
-        }
+        /* Header & Boxes */
+        .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; margin-top: 30px;}
+        h1 { background: linear-gradient(135deg, #00bcd4, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 38px; letter-spacing: 1.5px; margin-bottom: 10px; }
         p { color: #a0a0b0; font-size: 16px; }
-
         @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 3 Box Grid Layout */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 1100px; animation: slideUp 0.8s ease-out; z-index: 10;}
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 1100px; animation: slideUp 0.8s ease-out; z-index: 10; margin-bottom: 40px;}
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Glassy Box */
-        .glass-box { 
-            background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 188, 212, 0.3); border-radius: 20px; padding: 30px; text-align: center; 
-            box-shadow: 0 0 20px rgba(0, 188, 212, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.02); 
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; justify-content: flex-start; min-height: 350px;
-        }
+        .glass-box { background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(0, 188, 212, 0.3); border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 0 20px rgba(0, 188, 212, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.02); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; justify-content: flex-start; min-height: 350px; }
         .glass-box:hover { border-color: rgba(0, 188, 212, 0.8); box-shadow: 0 0 30px rgba(0, 188, 212, 0.3), inset 0 0 15px rgba(0, 188, 212, 0.1); transform: translateY(-8px); }
-
         .box-icon { font-size: 40px; margin-bottom: 15px; }
         .box-title { color: #fff; font-size: 22px; margin-bottom: 15px; font-weight: bold; }
 
         .exam-list-wrapper { flex-grow: 1; overflow-y: auto; max-height: 220px; padding-right: 5px; text-align: left; }
         .exam-list-wrapper::-webkit-scrollbar { width: 6px; }
         .exam-list-wrapper::-webkit-scrollbar-thumb { background: rgba(0, 188, 212, 0.5); border-radius: 10px; }
-
         .exam-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s; }
         .exam-item:hover { background: rgba(0, 188, 212, 0.1); border-color: rgba(0, 188, 212, 0.4); }
         .exam-name { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 4px; }
@@ -133,25 +93,32 @@
         .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #00bcd4; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* 🟢 NOTUN: Footer Styling */
-        .footer-branding {
-            position: absolute;
-            bottom: 15px;
-            width: 100%;
-            text-align: center;
-            font-size: 12px;
-            color: #6a6a7a;
-            letter-spacing: 1px;
-            z-index: 10;
-        }
+        /* Footer Branding */
+        .footer-branding { position: absolute; bottom: 15px; width: 100%; text-align: center; font-size: 13px; color: #6a6a7a; letter-spacing: 1.5px; z-index: 10; font-weight: bold;}
     </style>
 </head>
 <body>
 
     <div class="bg-blobs">
-        <div class="blob blob1"></div>
-        <div class="blob blob2"></div>
-        <div class="blob blob3"></div>
+        <div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div>
+    </div>
+
+    <div class="top-left-bar">
+        <div class="bell-icon-wrapper" id="bellIcon">
+            <svg viewBox="0 0 24 24">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <div class="red-dot" id="redDot"></div>
+        </div>
+    </div>
+
+    <div class="msg-modal" id="msgModal">
+        <div class="msg-modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <div class="msg-title">🔔 Admin Announcement</div>
+            <div class="msg-body" id="msgText">No new messages from admin.</div>
+        </div>
     </div>
 
     <div class="top-bar">
@@ -161,7 +128,6 @@
                 <div class="dot"></div><div class="dot"></div><div class="dot"></div>
                 <div class="dot"></div><div class="dot"></div><div class="dot"></div>
             </div>
-            
             <div class="apps-dropdown" id="appsDropdown">
                 <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="dropdown-item">
                     <span class="dropdown-title">UNIdocs generator | RUET</span>
@@ -171,68 +137,60 @@
     </div>
 
     <div class="header-section">
-        <h1>Job Preparation Portal</h1>
-       
+        <h1>UniDocs MCQ Portal</h1>
+        <p>A centralized hub to test your knowledge and track your progress.</p>
     </div>
 
     <div class="grid-container">
         <div class="glass-box">
             <div class="box-icon">📝</div>
             <div class="box-title">Available Exams</div>
-            <div class="exam-list-wrapper" id="examsList">
-                <div class="loader"></div>
-                <p style="text-align: center; color: #b3b3b3; font-size: 14px;">Fetching live exams...</p>
-            </div>
+            <div class="exam-list-wrapper" id="examsList"><div class="loader"></div></div>
         </div>
-
         <div class="glass-box">
             <div class="box-icon">📊</div>
             <div class="box-title">Check Results</div>
-            <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
-                Review your submitted answer sheets, check correct answers, and track your scores once the time is up.
-            </p>
+            <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">Review your submitted answer sheets, check correct answers, and track your scores once the time is up.</p>
             <a href="answer-sheet.html" class="action-btn btn-green">View Answer Sheet</a>
         </div>
-
         <div class="glass-box">
             <div class="box-icon">⚙️</div>
             <div class="box-title">Admin Dashboard</div>
-            <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
-                Create new exams, set time limits, and add multiple-choice questions. Authorized access only.
-            </p>
+            <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">Create new exams, set time limits, and add multiple-choice questions. Authorized access only.</p>
             <a href="admin.html" class="action-btn btn-outline">Enter Admin Panel</a>
         </div>
     </div>
 
-    <div class="footer-branding">
-        Developed by UniDocs
-    </div>
+    <div class="footer-branding">Developed by UniDocs</div>
 
     <script>
+        // UI Logic for App Menu & Notification Modal
         const appsIcon = document.getElementById('appsIcon');
         const appsDropdown = document.getElementById('appsDropdown');
+        const bellIcon = document.getElementById('bellIcon');
+        const msgModal = document.getElementById('msgModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
 
-        appsIcon.addEventListener('click', function(e) {
-            e.stopPropagation(); // Box ta jate click korar sathe sathe off na hoye jay
-            appsDropdown.classList.toggle('show');
+        appsIcon.addEventListener('click', (e) => { e.stopPropagation(); appsDropdown.classList.toggle('show'); });
+        
+        // Modal Handlers
+        bellIcon.addEventListener('click', () => { 
+            msgModal.classList.add('show'); 
+            document.getElementById('redDot').style.display = 'none'; // Hide red dot on open
         });
-
-        // Baire kothao click korle jate box hide hoye jay
-        window.addEventListener('click', function() {
-            if(appsDropdown.classList.contains('show')) {
-                appsDropdown.classList.remove('show');
-            }
+        closeModalBtn.addEventListener('click', () => { msgModal.classList.remove('show'); });
+        
+        window.addEventListener('click', (e) => {
+            if(appsDropdown.classList.contains('show')) appsDropdown.classList.remove('show');
+            if(e.target === msgModal) msgModal.classList.remove('show'); // Click outside to close
         });
-
-        // Box er bhitor click korleo jate kete na jay
-        appsDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
+        appsDropdown.addEventListener('click', (e) => e.stopPropagation());
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        // 🟢 NOTUN: doc ebong getDoc import kora holo
+        import { getFirestore, collection, getDocs, orderBy, query, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
         const firebaseConfig = {
@@ -247,41 +205,54 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // 🟢 Notification Load Logic
+        let currentMsgTimestamp = 0;
+        async function checkNotification() {
+            try {
+                const docSnap = await getDoc(doc(db, "settings", "notification"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('msgText').innerText = data.message;
+                    currentMsgTimestamp = data.timestamp;
+                    
+                    // Local storage a check kora aage dekheche kina
+                    const lastSeen = localStorage.getItem('lastSeenMsgTime');
+                    if (!lastSeen || parseInt(lastSeen) < currentMsgTimestamp) {
+                        document.getElementById('redDot').style.display = 'block';
+                    }
+                }
+            } catch(e) { console.error("Error fetching notice: ", e); }
+        }
+
+        // Bell click korle local storage update hobe jate red dot abar na ase
+        document.getElementById('bellIcon').addEventListener('click', () => {
+            if (currentMsgTimestamp > 0) {
+                localStorage.setItem('lastSeenMsgTime', currentMsgTimestamp);
+            }
+        });
+
         async function loadAvailableExams() {
             const examsListDiv = document.getElementById('examsList');
             try {
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 
-                if (querySnapshot.empty) {
-                    examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>";
-                    return;
-                }
-
+                if (querySnapshot.empty) { examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>"; return; }
                 examsListDiv.innerHTML = ""; 
                 
                 querySnapshot.forEach((doc) => {
-                    const exam = doc.data();
-                    const examId = doc.id;
-                    
-                    const item = document.createElement('div');
-                    item.className = 'exam-item';
-                    
+                    const exam = doc.data(); const examId = doc.id;
+                    const item = document.createElement('div'); item.className = 'exam-item';
                     item.innerHTML = `
-                        <div>
-                            <div class="exam-name">${exam.title}</div>
-                            <div class="exam-time">⏱ ${exam.duration} Min</div>
-                        </div>
+                        <div><div class="exam-name">${exam.title}</div><div class="exam-time">⏱ ${exam.duration} Min</div></div>
                         <a href="exam.html?id=${examId}" class="start-btn">Start</a>
                     `;
                     examsListDiv.appendChild(item);
                 });
-            } catch (error) {
-                console.error("Error loading exams: ", error);
-                examsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 20px;'>Error loading exams.</p>";
-            }
+            } catch (error) { examsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 20px;'>Error loading exams.</p>"; }
         }
 
+        checkNotification();
         loadAvailableExams();
     </script>
 </body>
