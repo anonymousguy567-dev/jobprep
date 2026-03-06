@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Multi Exam System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0d0d12; background-image: radial-gradient(circle at 15% 50%, rgba(45, 21, 82, 0.4), transparent 25%), radial-gradient(circle at 85% 30%, rgba(21, 64, 82, 0.4), transparent 25%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
+        .glass-container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; width: 100%; max-width: 600px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); margin-bottom: 20px;}
+        h2, h3 { text-align: center; margin-bottom: 20px; color: #00bcd4; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 14px; color: #b3b3b3; font-weight: bold;}
+        input, textarea, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; }
+        input:focus, textarea:focus, select:focus { border-color: #00bcd4; background: rgba(0, 0, 0, 0.5); }
+        select option { background-color: #1a1a24; color: white; }
+        .submit-btn, .login-btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #00bcd4, #2196f3); color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .submit-btn:hover, .login-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4); }
+        #adminFormSection { display: none; width: 100%; }
+        #loginSection { text-align: center; padding: 40px 0; width: 100%; max-width: 500px; margin: auto; }
+        .section-box { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .status-msg { text-align: center; margin-top: 10px; font-weight: bold; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-container" id="mainContainer">
+        
+        <div id="loginSection">
+            <h2>Admin Login Required</h2>
+            <button id="adminLoginBtn" class="login-btn">Login with Google</button>
+            <p id="errorMsg" style="color:#ff5252; margin-top: 15px;"></p>
+        </div>
+
+        <div id="adminFormSection">
+            <div class="section-box" style="border-left: 4px solid #ffb74d;">
+                <h3 style="color: #ffb74d;">1. Create New Exam</h3>
+                <form id="createExamForm">
+                    <div class="input-group">
+                        <label>Exam Title:</label>
+                        <input type="text" id="newExamTitle" placeholder="e.g. Thermodynamics Midterm" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Exam Duration (Minutes):</label>
+                        <input type="number" id="newExamDuration" placeholder="e.g. 30" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Result Publish Date & Time:</label>
+                        <input type="datetime-local" id="newExamPublishTime" required>
+                    </div>
+                    <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #ffb74d, #ff9800);">Create Exam</button>
+                </form>
+                <p id="examCreateStatus" class="status-msg"></p>
+            </div>
+
+            <div class="section-box" style="border-left: 4px solid #00bcd4;">
+                <h3 style="color: #00bcd4;">2. Add Questions to Exam</h3>
+                
+                <div class="input-group">
+                    <label>Select Exam:</label>
+                    <select id="examSelector" required>
+                        <option value="">-- Loading Exams... --</option>
+                    </select>
+                </div>
+
+                <form id="questionForm">
+                    <div class="input-group"><label>Question:</label><textarea id="question" rows="3" required></textarea></div>
+                    <div class="input-group"><label>Option 1:</label><input type="text" id="option1" required></div>
+                    <div class="input-group"><label>Option 2:</label><input type="text" id="option2" required></div>
+                    <div class="input-group"><label>Option 3:</label><input type="text" id="option3" required></div>
+                    <div class="input-group"><label>Option 4:</label><input type="text" id="option4" required></div>
+                    <div class="input-group">
+                        <label>Correct Answer:</label>
+                        <select id="correctOption" required>
+                            <option value="">Select the correct option</option>
+                            <option value="1">Option 1</option><option value="2">Option 2</option>
+                            <option value="3">Option 3</option><option value="4">Option 4</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn" id="saveQuestionBtn">Save Question</button>
+                </form>
+                <p id="questionStatus" class="status-msg"></p>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+        // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
+            authDomain: "mcq-portal-904fd.firebaseapp.com",
+            projectId: "mcq-portal-904fd",
+            storageBucket: "mcq-portal-904fd.firebasestorage.app",
+            messagingSenderId: "977853699063",
+            appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        const db = getFirestore(app);
+
+        // =================================================================
+        // 🟢 NOTUN: MULTIPLE ADMIN EMAILS (Tumi joto khushi add korte parbe)
+        // =================================================================
+        const ADMIN_EMAILS = [
+            "tomar_email@gmail.com", 
+            "arek_admin_er_email@gmail.com",
+            "titio_kono_email@gmail.com" // Eivabe comma diye add koro
+        ]; 
+
+        const loginSection = document.getElementById('loginSection');
+        const adminFormSection = document.getElementById('adminFormSection');
+        const examSelector = document.getElementById('examSelector');
+
+        // Admin Login
+        document.getElementById('adminLoginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider).then((result) => {
+                
+                // 🟢 UPDATE: Ekhon list er bhitor theke check korbe email ta ache kina
+                if (ADMIN_EMAILS.includes(result.user.email)) {
+                    loginSection.style.display = "none"; 
+                    adminFormSection.style.display = "block";
+                    loadExamsIntoDropdown(); 
+                } else {
+                    document.getElementById('errorMsg').innerText = "Access Denied! You are not an admin."; 
+                    auth.signOut();
+                }
+            }).catch(console.error);
+        });
+
+        async function loadExamsIntoDropdown() {
+            try {
+                const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                examSelector.innerHTML = '<option value="">-- Select an Exam --</option>'; 
+                
+                querySnapshot.forEach((doc) => {
+                    const exam = doc.data();
+                    const option = document.createElement('option');
+                    option.value = doc.id; 
+                    option.innerText = exam.title; 
+                    examSelector.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error loading exams: ", error);
+                examSelector.innerHTML = '<option value="">Error loading exams!</option>';
+            }
+        }
+
+        document.getElementById('createExamForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const statusMsg = document.getElementById('examCreateStatus');
+            statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Creating Exam...";
+
+            const title = document.getElementById('newExamTitle').value;
+            const duration = document.getElementById('newExamDuration').value;
+            const publishTime = document.getElementById('newExamPublishTime').value;
+
+            try {
+                await addDoc(collection(db, "exams"), {
+                    title: title,
+                    duration: parseInt(duration),
+                    publishTime: new Date(publishTime).getTime(),
+                    createdAt: new Date().getTime(), 
+                    status: "active"
+                });
+                
+                statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Created Successfully!";
+                document.getElementById('createExamForm').reset();
+                loadExamsIntoDropdown(); 
+            } catch (error) {
+                console.error(error);
+                statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error creating exam!";
+            }
+            setTimeout(() => { statusMsg.innerText = ""; }, 3000);
+        });
+
+        document.getElementById('questionForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            const statusMsg = document.getElementById('questionStatus');
+            const selectedExamId = examSelector.value;
+
+            if(!selectedExamId) {
+                statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Please select an Exam first!";
+                setTimeout(() => { statusMsg.innerText = ""; }, 3000);
+                return;
+            }
+
+            document.getElementById('saveQuestionBtn').innerText = "Saving...";
+            
+            try {
+                await addDoc(collection(db, "exams", selectedExamId, "questions"), {
+                    question: document.getElementById('question').value,
+                    options: { 
+                        1: document.getElementById('option1').value, 
+                        2: document.getElementById('option2').value, 
+                        3: document.getElementById('option3').value, 
+                        4: document.getElementById('option4').value 
+                    },
+                    correctAnswer: document.getElementById('correctOption').value, 
+                    timestamp: new Date()
+                });
+                
+                statusMsg.style.color = "#00e676"; statusMsg.innerText = "Question Saved to Exam!"; 
+                document.getElementById('questionForm').reset();
+            } catch (error) { 
+                console.error(error);
+                statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error saving question!"; 
+            }
+            
+            document.getElementById('saveQuestionBtn').innerText = "Save Question";
+            setTimeout(() => { statusMsg.innerText = ""; }, 3000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniDocs MCQ Portal</title>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        /* Premium Blackish Background with Animated Blobs */
+        body { 
+            background-color: #050508; 
+            color: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 40px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bg-blobs {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1;
+        }
+        .blob { position: absolute; filter: blur(90px); opacity: 0.5; animation: float 12s infinite alternate ease-in-out; }
+        .blob1 { width: 350px; height: 350px; background: #00bcd4; top: -10%; left: -5%; animation-delay: 0s; }
+        .blob2 { width: 400px; height: 400px; background: #2196f3; bottom: -10%; right: -5%; animation-delay: 3s; }
+        .blob3 { width: 250px; height: 250px; background: #673ab7; top: 40%; left: 40%; animation-delay: 5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, -40px) scale(1.1); }
+        }
+
+        /* Header Section */
+        .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; }
+        h1 { 
+            background: linear-gradient(135deg, #00bcd4, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-size: 38px; letter-spacing: 1.5px; margin-bottom: 10px;
+        }
+        p { color: #a0a0b0; font-size: 16px; }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 3 Box Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1100px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Glassy Box with Glow Effect */
+        .glass-box { 
+            background: rgba(20, 20, 25, 0.4); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 188, 212, 0.3); /* Subtle Cyan Border */
+            border-radius: 20px; 
+            padding: 30px; 
+            text-align: center; 
+            box-shadow: 0 0 20px rgba(0, 188, 212, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.02); 
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-height: 350px;
+        }
+        
+        /* Hover Glow Effect */
+        .glass-box:hover {
+            border-color: rgba(0, 188, 212, 0.8);
+            box-shadow: 0 0 30px rgba(0, 188, 212, 0.3), inset 0 0 15px rgba(0, 188, 212, 0.1);
+            transform: translateY(-8px);
+        }
+
+        .box-icon { font-size: 40px; margin-bottom: 15px; }
+        .box-title { color: #fff; font-size: 22px; margin-bottom: 15px; font-weight: bold; }
+
+        /* Exam List inside Box 1 */
+        .exam-list-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 220px;
+            padding-right: 5px;
+            text-align: left;
+        }
+        
+        /* Custom Scrollbar for Exam List */
+        .exam-list-wrapper::-webkit-scrollbar { width: 6px; }
+        .exam-list-wrapper::-webkit-scrollbar-thumb { background: rgba(0, 188, 212, 0.5); border-radius: 10px; }
+
+        .exam-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 12px; 
+            margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s;
+        }
+        .exam-item:hover { background: rgba(0, 188, 212, 0.1); border-color: rgba(0, 188, 212, 0.4); }
+        .exam-name { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 4px; }
+        .exam-time { font-size: 12px; color: #00bcd4; }
+        .start-btn { 
+            background: linear-gradient(135deg, #00bcd4, #2196f3); color: #fff; padding: 8px 16px; 
+            border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; transition: 0.3s; 
+        }
+        .start-btn:hover { box-shadow: 0 4px 15px rgba(0, 188, 212, 0.5); transform: scale(1.05); }
+
+        /* Action Buttons for Box 2 & 3 */
+        .action-btn { 
+            display: inline-block; width: 100%; padding: 15px; margin-top: auto;
+            border-radius: 12px; text-decoration: none; color: white; 
+            font-size: 16px; font-weight: bold; transition: all 0.3s ease; border: none; cursor: pointer;
+        }
+        .btn-green { background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.4); color: #00e676; }
+        .btn-green:hover { background: rgba(0, 230, 118, 0.2); box-shadow: 0 0 20px rgba(0, 230, 118, 0.4); }
+        
+        .btn-outline { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); color: #e0e0e0; }
+        .btn-outline:hover { background: rgba(255, 255, 255, 0.1); color: #fff; border-color: #fff; }
+
+        .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #00bcd4; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-blobs">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+    </div>
+
+    <div class="header-section">
+        <h1>UniDocs MCQ Portal</h1>
+        <p>A centralized hub to test your knowledge and track your progress.</p>
+    </div>
+
+    <div class="grid-container">
+        
+        <div class="glass-box">
+            <div class="box-icon">📝</div>
+            <div class="box-title">Available Exams</div>
+            <div class="exam-list-wrapper" id="examsList">
+                <div class="loader"></div>
+                <p style="text-align: center; color: #b3b3b3; font-size: 14px;">Fetching live exams...</p>
+            </div>
+        </div>
+
+        <div class="glass-box">
+            <div class="box-icon">📊</div>
+            <div class="box-title">Check Results</div>
+            <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
+                Review your submitted answer sheets, check correct answers, and track your scores once the time is up.
+            </p>
+            <a href="answer-sheet.html" class="action-btn btn-green">View Answer Sheet</a>
+        </div>
+
+        <div class="glass-box">
+            <div class="box-icon">⚙️</div>
+            <div class="box-title">Admin Dashboard</div>
+            <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
+                 Authorized access only.
+            </p>
+            <a href="admin.html" class="action-btn btn-outline">Enter Admin Panel</a>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+        // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
+            authDomain: "mcq-portal-904fd.firebaseapp.com",
+            projectId: "mcq-portal-904fd",
+            storageBucket: "mcq-portal-904fd.firebasestorage.app",
+            messagingSenderId: "977853699063",
+            appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Fetch and Display Exams in Box 1
+        async function loadAvailableExams() {
+            const examsListDiv = document.getElementById('examsList');
+            try {
+                const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>";
+                    return;
+                }
+
+                examsListDiv.innerHTML = ""; 
+                
+                querySnapshot.forEach((doc) => {
+                    const exam = doc.data();
+                    const examId = doc.id;
+                    
+                    const item = document.createElement('div');
+                    item.className = 'exam-item';
+                    
+                    item.innerHTML = `
+                        <div>
+                            <div class="exam-name">${exam.title}</div>
+                            <div class="exam-time">⏱ ${exam.duration} Min</div>
+                        </div>
+                        <a href="exam.html?id=${examId}" class="start-btn">Start</a>
+                    `;
+                    examsListDiv.appendChild(item);
+                });
+            } catch (error) {
+                console.error("Error loading exams: ", error);
+                examsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 20px;'>Error loading exams.</p>";
+            }
+        }
+
+        loadAvailableExams();
+    </script>
+</body>
+</html>

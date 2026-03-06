@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Exam</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0d0d12; background-image: radial-gradient(circle at 15% 50%, rgba(45, 21, 82, 0.4), transparent 25%), radial-gradient(circle at 85% 30%, rgba(21, 64, 82, 0.4), transparent 25%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
+        .glass-container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; width: 100%; max-width: 800px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
+        h1, h2 { text-align: center; margin-bottom: 20px; color: #00bcd4; }
+        #login-section { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 50px 0; }
+        .login-btn { padding: 12px 25px; margin-top: 20px; border: none; border-radius: 8px; background: #ffffff; color: #333; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        #exam-section, #result-section { display: none; }
+        .user-info { display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 10px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .question-card { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .question-text { font-size: 18px; margin-bottom: 15px; color: #e0e0e0; }
+        .option-label { display: block; background: rgba(255, 255, 255, 0.05); padding: 10px 15px; margin-bottom: 10px; border-radius: 6px; cursor: pointer; }
+        .option-label:hover { background: rgba(0, 188, 212, 0.2); }
+        input[type="radio"] { margin-right: 10px; accent-color: #00bcd4; }
+        .submit-btn { width: 100%; padding: 15px; margin-top: 20px; border: none; border-radius: 8px; background: linear-gradient(135deg, #00bcd4, #2196f3); color: white; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .score-display { font-size: 40px; font-weight: bold; color: #00e676; text-align: center; margin: 20px 0; }
+        #examTimer { font-size: 18px; font-weight: bold; color: #ff5252; background: rgba(255, 82, 82, 0.1); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255, 82, 82, 0.3); }
+    </style>
+</head>
+<body>
+
+    <div class="glass-container">
+        <div id="login-section">
+            <h1>Welcome to MCQ Portal</h1>
+            <p>Please login to start your selected exam.</p>
+            <button id="loginBtn" class="login-btn">Login with Google</button>
+        </div>
+
+        <div id="exam-section">
+            <h2 id="mainExamTitle" style="color: #ffb74d; margin-bottom: 15px; text-transform: uppercase;">Loading Exam...</h2>
+            
+            <div class="user-info">
+                <span id="userName">Student Name</span>
+                <div id="examTimer">Time: --:--</div>
+            </div>
+            
+            <form id="examForm">
+                <div id="questionsContainer"><p style="text-align: center;">Loading questions...</p></div>
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Exam</button>
+            </form>
+        </div>
+
+        <div id="result-section">
+            <h2>Exam Submitted!</h2>
+            <div class="score-display" id="scoreDisplay">0 / 0</div>
+            <p style="text-align: center; color: #b3b3b3;">Full answer sheet will be available at scheduled time.</p>
+            <a href="index.html" style="display:block; text-align:center; color:#00bcd4; margin-top: 20px;">Back to Homepage</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, addDoc, doc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+        // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
+            authDomain: "mcq-portal-904fd.firebaseapp.com",
+            projectId: "mcq-portal-904fd",
+            storageBucket: "mcq-portal-904fd.firebasestorage.app",
+            messagingSenderId: "977853699063",
+            appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        const db = getFirestore(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentExamId = urlParams.get('id');
+
+        if(!currentExamId) {
+            alert("No exam selected! Redirecting to homepage...");
+            window.location.href = "index.html";
+        }
+
+        let userEmail = "";
+        let correctAnswersList = {}; 
+        let timeLeft = 0;
+        let timerInterval, saveInterval;
+
+        const loginSection = document.getElementById('login-section');
+        const examSection = document.getElementById('exam-section');
+        const resultSection = document.getElementById('result-section');
+        const questionsContainer = document.getElementById('questionsContainer');
+
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider).then(async (result) => {
+                userEmail = result.user.email;
+                document.getElementById('userName').innerText = result.user.displayName;
+                
+                const resSnap = await getDocs(query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", currentExamId)));
+                if (!resSnap.empty) {
+                    alert("You have already submitted this exam!");
+                    window.location.href = "index.html";
+                    return; 
+                }
+
+                loginSection.style.display = "none";
+                examSection.style.display = "block";
+                
+                loadExamData(); 
+            }).catch(console.error);
+        });
+
+        async function loadExamData() {
+            try {
+                const examDocSnap = await getDoc(doc(db, "exams", currentExamId));
+                let durationMinutes = 30; 
+                
+                if (examDocSnap.exists()) {
+                    document.getElementById('mainExamTitle').innerText = examDocSnap.data().title;
+                    durationMinutes = examDocSnap.data().duration;
+                } else {
+                    alert("Exam not found!"); window.location.href = "index.html"; return;
+                }
+
+                startTimer(durationMinutes);
+
+                const querySnapshot = await getDocs(collection(db, "exams", currentExamId, "questions"));
+                let questionNumber = 1;
+                if(querySnapshot.empty) { questionsContainer.innerHTML = "<p>No questions found in this exam!</p>"; return; }
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data(); const qId = doc.id;
+                    correctAnswersList[qId] = data.correctAnswer;
+                    const qCard = document.createElement('div'); qCard.className = 'question-card';
+                    // 🟢 UPDATE: Ekhane radio button theke 'required' bad dewa hoyeche!
+                    qCard.innerHTML = `
+                        <div class="question-text">${questionNumber}. ${data.question}</div>
+                        <label class="option-label"><input type="radio" name="${qId}" value="1"> ${data.options["1"]}</label>
+                        <label class="option-label"><input type="radio" name="${qId}" value="2"> ${data.options["2"]}</label>
+                        <label class="option-label"><input type="radio" name="${qId}" value="3"> ${data.options["3"]}</label>
+                        <label class="option-label"><input type="radio" name="${qId}" value="4"> ${data.options["4"]}</label>
+                    `;
+                    questionsContainer.appendChild(qCard); questionNumber++;
+                });
+            } catch (error) { console.error("Error loading exam: ", error); }
+        }
+
+        async function startTimer(totalMinutes) {
+            const timerDocId = userEmail + "_" + currentExamId;
+            const timerRef = doc(db, "user_timers", timerDocId);
+            const timerSnap = await getDoc(timerRef);
+
+            if (timerSnap.exists() && timerSnap.data().timeLeft !== undefined) {
+                timeLeft = timerSnap.data().timeLeft;
+            } else { timeLeft = totalMinutes * 60; }
+
+            if (timeLeft <= 0) { alert("Your time is already up!"); submitExamCore(); return; }
+
+            updateTimerUI();
+
+            timerInterval = setInterval(() => {
+                timeLeft--; updateTimerUI();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval); clearInterval(saveInterval);
+                    alert("Time's up! Submitting your exam automatically."); submitExamCore(); 
+                }
+            }, 1000);
+
+            saveInterval = setInterval(() => { setDoc(timerRef, { timeLeft: timeLeft }, { merge: true }); }, 5000);
+        }
+
+        function updateTimerUI() {
+            let m = Math.floor(timeLeft / 60); let s = timeLeft % 60;
+            m = m < 10 ? "0" + m : m; s = s < 10 ? "0" + s : s;
+            document.getElementById('examTimer').innerText = `Time Left: ${m}:${s}`;
+        }
+
+        document.getElementById('examForm').addEventListener('submit', function(e) {
+            e.preventDefault(); submitExamCore();
+        });
+
+        async function submitExamCore() {
+            clearInterval(timerInterval); clearInterval(saveInterval);
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = "Submitting..."; submitBtn.disabled = true;
+
+            let score = 0; let totalQuestions = Object.keys(correctAnswersList).length;
+            let userSelectedAnswers = {}; 
+
+            for (let qId in correctAnswersList) {
+                const selectedOption = document.querySelector(`input[name="${qId}"]:checked`);
+                // 🟢 UPDATE: Skip korle null save hobe
+                if (selectedOption) {
+                    userSelectedAnswers[qId] = selectedOption.value; 
+                    if (selectedOption.value === correctAnswersList[qId]) score++; 
+                } else {
+                    userSelectedAnswers[qId] = null; // Skipped
+                }
+            }
+
+            try {
+                await addDoc(collection(db, "results"), {
+                    email: userEmail, score: score, total: totalQuestions, 
+                    userAnswers: userSelectedAnswers, examId: currentExamId, timestamp: new Date()
+                });
+                
+                const timerDocId = userEmail + "_" + currentExamId;
+                await setDoc(doc(db, "user_timers", timerDocId), { timeLeft: 0 }, { merge: true });
+
+                examSection.style.display = "none";
+                resultSection.style.display = "block";
+                document.getElementById('scoreDisplay').innerText = `${score} / ${totalQuestions}`;
+            } catch (error) {
+                alert("Error saving result!");
+                submitBtn.innerText = "Submit Exam"; submitBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
