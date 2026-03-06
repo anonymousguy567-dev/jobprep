@@ -70,7 +70,7 @@
                     <div class="stat-value" id="countCorrect">0</div>
                 </div>
                 <div class="stat-item" style="color: #ff5252;">
-                    <div class="stat-label">Wrong (-0.5)</div>
+                    <div class="stat-label">Wrong (-1.5)</div>
                     <div class="stat-value" id="countWrong">0</div>
                 </div>
                 <div class="stat-item" style="color: #ffb74d;">
@@ -188,7 +188,6 @@
                 const userData = querySnapshot.docs[0].data();
                 const userAnswers = userData.userAnswers || {};
                 
-                // 🟢 Roll Number and score load kora
                 document.getElementById('studentRollDisplay').innerText = `Roll No: ${userData.rollNumber || 'N/A'}`;
                 document.getElementById('finalScore').innerText = `Total Score: ${userData.score}`;
                 document.getElementById('countCorrect').innerText = userData.correctCount || 0;
@@ -227,7 +226,6 @@
             }
         }
 
-        // 🟢 NOTUN: Excel Download Logic (Shudhu 3 ta column: Position, Roll, Total Marks)
         document.getElementById('downloadExcelBtn').addEventListener('click', async function() {
             const examId = this.getAttribute('data-examid');
             const statusText = document.getElementById('downloadStatus');
@@ -242,10 +240,8 @@
                 let resultsArray = [];
                 snapshot.forEach(doc => { resultsArray.push(doc.data()); });
                 
-                // Sorbochho number theke nicher dike sajano
                 resultsArray.sort((a, b) => b.score - a.score);
 
-                // 🟢 Excel Header - Shudhu 3 ta column tumi jemon cheyecho
                 let csvContent = "Position,Roll,Total Marks\n";
                 
                 resultsArray.forEach((row, index) => { 
