@@ -3,79 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Take Exam - UniDocs</title>
+    <title>Answer Sheet & Result - UniDocs</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0d0d12; background-image: radial-gradient(circle at 15% 50%, rgba(45, 21, 82, 0.4), transparent 25%), radial-gradient(circle at 85% 30%, rgba(21, 64, 82, 0.4), transparent 25%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
         .glass-container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; width: 100%; max-width: 800px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
-        h1, h2 { text-align: center; margin-bottom: 20px; color: #00bcd4; }
-        #login-section { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 50px 0; }
-        .login-btn { padding: 12px 25px; margin-top: 20px; border: none; border-radius: 8px; background: #ffffff; color: #333; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        #exam-section, #result-section { display: none; }
-        .user-info { display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 10px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .question-card { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .question-text { font-size: 18px; margin-bottom: 15px; color: #e0e0e0; }
-        .option-label { display: block; background: rgba(255, 255, 255, 0.05); padding: 10px 15px; margin-bottom: 10px; border-radius: 6px; cursor: pointer; }
-        .option-label:hover { background: rgba(0, 188, 212, 0.2); }
-        input[type="radio"] { margin-right: 10px; accent-color: #00bcd4; }
-        .submit-btn { width: 100%; padding: 15px; margin-top: 20px; border: none; border-radius: 8px; background: linear-gradient(135deg, #00bcd4, #2196f3); color: white; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .score-display { font-size: 40px; font-weight: bold; color: #00e676; text-align: center; margin: 20px 0; }
-        #examTimer { font-size: 18px; font-weight: bold; color: #ff5252; background: rgba(255, 82, 82, 0.1); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255, 82, 82, 0.3); }
+        h1, h2, h3 { text-align: center; margin-bottom: 20px; color: #00bcd4; letter-spacing: 1px; }
+        #login-section, #select-exam-section, #timer-section, #result-section { display: none; flex-direction: column; align-items: center; text-align: center; padding: 20px 0; width: 100%; }
+        .login-btn, .action-btn { padding: 12px 25px; margin-top: 20px; border: none; border-radius: 8px; background: #ffffff; color: #333; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s;}
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
         
-        /* Marking warning styling */
-        .marking-rules { background: rgba(255, 183, 77, 0.1); border-left: 4px solid #ffb74d; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; color: #e0e0e0; }
-        .marking-rules span { color: #ffb74d; font-weight: bold; }
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; font-size: 16px; margin-bottom: 20px;}
+        .time-box { font-size: 24px; font-weight: bold; color: #ff5252; background: rgba(255, 82, 82, 0.1); padding: 15px 30px; border-radius: 10px; margin: 20px 0; border: 1px solid rgba(255, 82, 82, 0.2); }
         
-        .roll-input-box { margin-bottom: 25px; background: rgba(0, 188, 212, 0.05); padding: 20px; border-radius: 10px; border: 1px solid rgba(0, 188, 212, 0.2); }
-        .roll-input-box label { display: block; margin-bottom: 10px; color: #00bcd4; font-weight: bold; font-size: 16px; }
-        .roll-input-box input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.4); color: #fff; font-size: 16px; outline: none; transition: 0.3s; }
-        .roll-input-box input:focus { border-color: #00bcd4; box-shadow: 0 0 10px rgba(0, 188, 212, 0.3); }
+        .score-display { font-size: 40px; font-weight: bold; color: #00bcd4; margin: 15px 0 10px 0; }
+        
+        .breakdown-box { display: flex; justify-content: space-around; width: 100%; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-item { text-align: center; }
+        .stat-label { font-size: 14px; font-weight: bold; margin-bottom: 5px; }
+        .stat-value { font-size: 24px; font-weight: bold; }
+        
+        .question-card { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.05); text-align: left; width: 100%; }
+        .question-text { font-size: 18px; margin-bottom: 10px; color: #e0e0e0; font-weight: bold; }
+        .option-div { background: rgba(255, 255, 255, 0.05); padding: 10px 15px; margin-bottom: 10px; border-radius: 6px; font-size: 15px; }
+        .correct-ans { background: rgba(0, 230, 118, 0.2) !important; border: 1px solid #00e676; color: #00e676; }
+        .wrong-ans { background: rgba(255, 82, 82, 0.2) !important; border: 1px solid #ff5252; color: #ff5252; }
+        .skipped-msg { color: #ffb74d; font-weight: bold; font-size: 14px; margin-bottom: 15px; display: block;}
+        
+        .btn-excel { background: linear-gradient(135deg, #4caf50, #2e7d32); color: white; margin-top: 10px; width: 100%; }
+        .btn-excel:hover { box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4); }
     </style>
 </head>
 <body>
 
     <div class="glass-container">
-        <div id="login-section">
-            <h1>Welcome to MCQ Portal</h1>
-            <p>Please login to start your selected exam.</p>
+        <h1>Answer Sheet & Result</h1>
+
+        <div id="login-section" style="display: flex;">
+            <p>Please login to view your exam result.</p>
             <button id="loginBtn" class="login-btn">Login with Google</button>
         </div>
 
-        <div id="exam-section">
-            <h2 id="mainExamTitle" style="color: #ffb74d; margin-bottom: 15px; text-transform: uppercase;">Loading Exam...</h2>
-            
-            <div class="marking-rules">
-                <span>⚠ Marking Scheme:</span> Correct: <b>+1</b> | Wrong: <b>-1.5</b> | Skipped: <b>-1</b>
-            </div>
+        <div id="select-exam-section">
+            <h3 style="color: #ffb74d;">Select an Exam</h3>
+            <select id="examDropdown">
+                <option value="">-- Loading Exams... --</option>
+            </select>
+        </div>
 
-            <div class="user-info">
-                <span id="userName">Student Name</span>
-                <div id="examTimer">Time: --:--</div>
-            </div>
-            
-            <form id="examForm">
-                <div class="roll-input-box">
-                    <label for="rollNumber">Enter Your Roll Number (Required):</label>
-                    <input type="number" id="rollNumber" placeholder="e.g. 2101001" required>
-                </div>
-
-                <div id="questionsContainer"><p style="text-align: center;">Loading questions...</p></div>
-                <button type="submit" class="submit-btn" id="submitBtn">Submit Exam</button>
-            </form>
+        <div id="timer-section">
+            <h2 style="color: #ffb74d;">Result Not Published Yet!</h2>
+            <p>Please wait until the scheduled time.</p>
+            <div class="time-box" id="countdown">Loading schedule...</div>
+            <button class="action-btn" onclick="location.reload()" style="background:#00bcd4; color:#fff; width:auto; margin:auto; margin-top:20px;">Back to Selection</button>
         </div>
 
         <div id="result-section">
-            <h2>Exam Submitted!</h2>
-            <div class="score-display" id="scoreDisplay">0</div>
-            <p style="text-align: center; color: #b3b3b3;">Full answer sheet will be available at scheduled time.</p>
-            <a href="index.html" style="display:block; text-align:center; color:#00bcd4; margin-top: 20px;">Back to Homepage</a>
+            <h2 id="studentNameDisplay">Your Result</h2>
+            <p id="studentRollDisplay" style="color: #ffb74d; font-weight: bold; margin-bottom: 10px;">Roll: Loading...</p>
+            
+            <div class="score-display" id="finalScore">Loading...</div>
+            
+            <div class="breakdown-box">
+                <div class="stat-item" style="color: #00e676;">
+                    <div class="stat-label">Correct (+1)</div>
+                    <div class="stat-value" id="countCorrect">0</div>
+                </div>
+                <div class="stat-item" style="color: #ff5252;">
+                    <div class="stat-label">Wrong (-1.5)</div>
+                    <div class="stat-value" id="countWrong">0</div>
+                </div>
+                <div class="stat-item" style="color: #ffb74d;">
+                    <div class="stat-label">Skipped (-1)</div>
+                    <div class="stat-value" id="countSkipped">0</div>
+                </div>
+            </div>
+            
+            <button id="downloadExcelBtn" class="action-btn btn-excel">📥 Download Merit List (Excel)</button>
+            <p id="downloadStatus" style="font-size: 13px; color: #ffb74d; margin-bottom: 20px;"></p>
+
+            <h3 style="margin-bottom: 20px; text-align: left; width: 100%;">Answer Breakdown:</h3>
+            <div id="answersContainer" style="width: 100%;"></div>
+            
+            <button class="action-btn" onclick="location.reload()" style="background:rgba(255,255,255,0.1); color:#fff; width:100%; border:1px solid rgba(255,255,255,0.2); margin-top:20px;">Check Another Exam</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, addDoc, doc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where, doc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         // 🔴🔴 Ekhane Tomar Firebase Config Boshao 🔴🔴
         const firebaseConfig = {
@@ -92,146 +109,158 @@
         const provider = new GoogleAuthProvider();
         const db = getFirestore(app);
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentExamId = urlParams.get('id');
-
-        if(!currentExamId) { alert("No exam selected!"); window.location.href = "index.html"; }
-
-        let userEmail = "";
-        let correctAnswersList = {}; 
-        let timeLeft = 0;
-        let timerInterval, saveInterval;
+        let userEmail = ""; let userName = "";
+        let timerInterval;
 
         const loginSection = document.getElementById('login-section');
-        const examSection = document.getElementById('exam-section');
+        const selectExamSection = document.getElementById('select-exam-section');
+        const timerSection = document.getElementById('timer-section');
         const resultSection = document.getElementById('result-section');
-        const questionsContainer = document.getElementById('questionsContainer');
+        const countdownDisplay = document.getElementById('countdown');
+        const examDropdown = document.getElementById('examDropdown');
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
-                userEmail = user.email; document.getElementById('userName').innerText = user.displayName;
-                const resSnap = await getDocs(query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", currentExamId)));
-                if (!resSnap.empty) { alert("You have already submitted this exam!"); window.location.href = "index.html"; return; }
-                loginSection.style.display = "none"; examSection.style.display = "block"; loadExamData(); 
+                userEmail = user.email; userName = user.displayName;
+                loginSection.style.display = "none"; loadExamsForSelection(); 
             } else { loginSection.style.display = "flex"; }
         });
 
         document.getElementById('loginBtn').addEventListener('click', () => { signInWithPopup(auth, provider).catch(console.error); });
 
-        async function loadExamData() {
+        async function loadExamsForSelection() {
+            selectExamSection.style.display = "flex";
             try {
-                const examDocSnap = await getDoc(doc(db, "exams", currentExamId));
-                let durationMinutes = 30; 
-                if (examDocSnap.exists()) {
-                    document.getElementById('mainExamTitle').innerText = examDocSnap.data().title;
-                    durationMinutes = examDocSnap.data().duration;
-                } else { alert("Exam not found!"); window.location.href = "index.html"; return; }
-
-                startTimer(durationMinutes);
-
-                const querySnapshot = await getDocs(collection(db, "exams", currentExamId, "questions"));
-                let questionNumber = 1;
-                questionsContainer.innerHTML = ""; 
-                
-                if(querySnapshot.empty) { questionsContainer.innerHTML = "<p>No questions found!</p>"; return; }
-
+                const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                examDropdown.innerHTML = '<option value="">-- Choose an Exam --</option>';
                 querySnapshot.forEach((doc) => {
-                    const data = doc.data(); const qId = doc.id; correctAnswersList[qId] = data.correctAnswer;
-                    const qCard = document.createElement('div'); qCard.className = 'question-card';
-                    qCard.innerHTML = `
-                        <div class="question-text">${questionNumber}. ${data.question}</div>
-                        <label class="option-label"><input type="radio" name="${qId}" value="1"> ${data.options["1"]}</label>
-                        <label class="option-label"><input type="radio" name="${qId}" value="2"> ${data.options["2"]}</label>
-                        <label class="option-label"><input type="radio" name="${qId}" value="3"> ${data.options["3"]}</label>
-                        <label class="option-label"><input type="radio" name="${qId}" value="4"> ${data.options["4"]}</label>
-                    `;
-                    questionsContainer.appendChild(qCard); questionNumber++;
+                    const option = document.createElement('option'); option.value = doc.id; option.innerText = doc.data().title;
+                    examDropdown.appendChild(option);
                 });
-            } catch (error) { console.error("Error loading exam: ", error); }
+            } catch(error) { examDropdown.innerHTML = '<option value="">Error loading exams!</option>'; }
         }
 
-        async function startTimer(totalMinutes) {
-            const timerDocId = userEmail + "_" + currentExamId;
-            const timerRef = doc(db, "user_timers", timerDocId);
-            const timerSnap = await getDoc(timerRef);
-            if (timerSnap.exists() && timerSnap.data().timeLeft !== undefined) { timeLeft = timerSnap.data().timeLeft; } 
-            else { timeLeft = totalMinutes * 60; }
-            if (timeLeft <= 0) { alert("Your time is already up!"); submitExamCore(); return; }
+        examDropdown.addEventListener('change', (e) => {
+            const selectedExamId = e.target.value;
+            if(selectedExamId) { selectExamSection.style.display = "none"; checkTimeAndProceed(selectedExamId); }
+        });
 
-            updateTimerUI();
-            timerInterval = setInterval(() => {
-                timeLeft--; updateTimerUI();
-                if (timeLeft <= 0) { clearInterval(timerInterval); clearInterval(saveInterval); alert("Time's up! Submitting automatically."); submitExamCore(); }
-            }, 1000);
-            saveInterval = setInterval(() => { setDoc(timerRef, { timeLeft: timeLeft }, { merge: true }); }, 5000);
-        }
-
-        function updateTimerUI() {
-            let m = Math.floor(timeLeft / 60); let s = timeLeft % 60;
-            m = m < 10 ? "0" + m : m; s = s < 10 ? "0" + s : s;
-            document.getElementById('examTimer').innerText = `Time Left: ${m}:${s}`;
-        }
-
-        document.getElementById('examForm').addEventListener('submit', function(e) { e.preventDefault(); submitExamCore(); });
-
-        async function submitExamCore() {
-            clearInterval(timerInterval); clearInterval(saveInterval);
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = "Submitting..."; submitBtn.disabled = true;
-            
-            const rollNum = document.getElementById('rollNumber').value || "N/A";
-
-            let score = 0; 
-            let correctCount = 0; let wrongCount = 0; let skippedCount = 0;
-            let totalQuestions = Object.keys(correctAnswersList).length;
-            let userSelectedAnswers = {}; 
-
-            // 🟢 Tumar Exact Math Formula
-            for (let qId in correctAnswersList) {
-                const selectedOption = document.querySelector(`input[name="${qId}"]:checked`);
-                if (selectedOption) {
-                    userSelectedAnswers[qId] = selectedOption.value; 
-                    if (selectedOption.value === correctAnswersList[qId]) {
-                        score += 1; // +1 Mark
-                        correctCount++;
-                    } else {
-                        score -= 1.5; // 🟢 FIX: Wrong e 1.5 marks minus hobe
-                        wrongCount++;
-                    }
-                } else {
-                    userSelectedAnswers[qId] = null; 
-                    score -= 1; // 🟢 Skip e 1 mark minus hobe
-                    skippedCount++;
-                }
-            }
-            
-            // Jate doshomik fraction error na ashe (Jemon: -1.500000001)
-            score = parseFloat(score.toFixed(2));
-
+        async function checkTimeAndProceed(examId) {
+            timerSection.style.display = "flex"; countdownDisplay.innerText = "Checking schedule...";
             try {
-                await addDoc(collection(db, "results"), {
-                    email: userEmail, 
-                    rollNumber: rollNum, 
-                    score: score, 
-                    total: totalQuestions, 
-                    correctCount: correctCount,
-                    wrongCount: wrongCount,
-                    skippedCount: skippedCount,
-                    userAnswers: userSelectedAnswers, 
-                    examId: currentExamId, 
-                    timestamp: new Date()
-                });
-                const timerDocId = userEmail + "_" + currentExamId;
-                await setDoc(doc(db, "user_timers", timerDocId), { timeLeft: 0 }, { merge: true });
+                const examSnap = await getDoc(doc(db, "exams", examId)); let publishTime = 0;
+                if (examSnap.exists() && examSnap.data().publishTime) { publishTime = examSnap.data().publishTime; } 
+                else { countdownDisplay.innerText = "Admin has not set a publish time yet."; return; }
 
-                examSection.style.display = "none";
-                resultSection.style.display = "block";
-                document.getElementById('scoreDisplay').innerText = `Final Score: ${score}`;
+                if(timerInterval) clearInterval(timerInterval); 
+                timerInterval = setInterval(() => {
+                    const now = new Date().getTime(); const distance = publishTime - now;
+                    if (distance <= 0) {
+                        clearInterval(timerInterval); timerSection.style.display = "none"; fetchResultData(examId); 
+                    } else {
+                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        let timeString = ""; if (days > 0) timeString += `${days}d `; timeString += `${hours}h ${minutes}m ${seconds}s`;
+                        countdownDisplay.innerText = `Opens in: ${timeString}`;
+                    }
+                }, 1000);
+            } catch (error) { countdownDisplay.innerText = "Error checking schedule!"; }
+        }
+
+        async function fetchResultData(examId) {
+            resultSection.style.display = "flex";
+            document.getElementById('studentNameDisplay').innerText = `Result for: ${userName}`;
+            const answersContainer = document.getElementById('answersContainer');
+            document.getElementById('downloadExcelBtn').setAttribute('data-examid', examId);
+            
+            try {
+                const q = query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", examId));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    answersContainer.innerHTML = "<p style='color:#ff5252;'>You haven't participated in this exam!</p>";
+                    document.getElementById('finalScore').innerText = "N/A"; return;
+                }
+
+                const userData = querySnapshot.docs[0].data();
+                const userAnswers = userData.userAnswers || {};
+                
+                document.getElementById('studentRollDisplay').innerText = `Roll No: ${userData.rollNumber || 'N/A'}`;
+                document.getElementById('finalScore').innerText = `Total Score: ${userData.score}`;
+                document.getElementById('countCorrect').innerText = userData.correctCount || 0;
+                document.getElementById('countWrong').innerText = userData.wrongCount || 0;
+                document.getElementById('countSkipped').innerText = userData.skippedCount || 0;
+
+                const questionsSnapshot = await getDocs(collection(db, "exams", examId, "questions"));
+                answersContainer.innerHTML = ""; let qNum = 1;
+
+                questionsSnapshot.forEach((doc) => {
+                    const qData = doc.data(); const qId = doc.id;
+                    const correctOpt = qData.correctAnswer; const userOpt = userAnswers[qId];
+
+                    const qCard = document.createElement('div'); qCard.className = 'question-card';
+                    let optionsHTML = "";
+                    let skippedMsg = (!userOpt) ? "<span class='skipped-msg'>⚠ You skipped this question (-1 mark).</span>" : "";
+                    
+                    for(let i=1; i<=4; i++) {
+                        let optClass = "option-div"; let extraText = "";
+                        
+                        if (i.toString() === correctOpt) {
+                            optClass += " correct-ans"; extraText = " ✓ (Correct Answer)";
+                        } else if (i.toString() === userOpt && userOpt !== correctOpt) {
+                            optClass += " wrong-ans"; extraText = " ✗ (Your Answer)";
+                        } else if (i.toString() === userOpt && userOpt === correctOpt) {
+                            extraText = " ✓ (You selected this)";
+                        }
+                        optionsHTML += `<div class="${optClass}">${qData.options[i]} ${extraText}</div>`;
+                    }
+
+                    qCard.innerHTML = `<div class="question-text">${qNum}. ${qData.question}</div>${skippedMsg}${optionsHTML}`;
+                    answersContainer.appendChild(qCard); qNum++;
+                });
             } catch (error) {
-                alert("Error saving result!");
-                submitBtn.innerText = "Submit Exam"; submitBtn.disabled = false;
+                answersContainer.innerHTML = "<p style='color:red;'>Error loading result sheet!</p>";
             }
         }
+
+        document.getElementById('downloadExcelBtn').addEventListener('click', async function() {
+            const examId = this.getAttribute('data-examid');
+            const statusText = document.getElementById('downloadStatus');
+            statusText.innerText = "Fetching leaderboard data, please wait...";
+            
+            try {
+                const q = query(collection(db, "results"), where("examId", "==", examId));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) { statusText.innerText = "No one has submitted this exam yet!"; return; }
+
+                let resultsArray = [];
+                snapshot.forEach(doc => { resultsArray.push(doc.data()); });
+                
+                resultsArray.sort((a, b) => b.score - a.score);
+
+                let csvContent = "Position,Roll,Total Marks\n";
+                
+                resultsArray.forEach((row, index) => { 
+                    let roll = row.rollNumber || "N/A";
+                    csvContent += `${index + 1},${roll},${row.score}\n`; 
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url); link.setAttribute("download", `Merit_List_Exam_${examId}.csv`);
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
+
+                statusText.innerText = "Download Successful!";
+                setTimeout(() => { statusText.innerText = ""; }, 3000);
+            } catch (error) {
+                console.error("Error generating Excel: ", error); statusText.innerText = "Failed to generate Excel file.";
+            }
+        });
     </script>
 </body>
 </html>
