@@ -21,7 +21,6 @@
         .section-box { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
         .status-msg { text-align: center; margin-top: 10px; font-weight: bold; font-size: 14px; }
         
-        /* 🟢 NOTUN: Manage Section Styling */
         .q-list-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 10px;}
         .q-text { font-weight: bold; color: #e0e0e0; font-size: 15px;}
         .q-actions { display: flex; gap: 10px; }
@@ -131,8 +130,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        // 🟢 NOTUN: updateDoc ebong deleteDoc import kora hoyeche
-        import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        // 🟢 FIX: setDoc import kora hoyeche ekhane
+        import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
         const firebaseConfig = {
@@ -151,8 +150,8 @@
 
         // 🔴🔴 TOMAR ADMIN EMAILS EKHANE BOSHAO 🔴🔴
         const ADMIN_EMAILS = [
-            "ahamedjubayer2003@gmail.com", 
-            "bondhuremail@gmail.com"
+            "tomar_email@gmail.com", 
+            "bondhur_email@gmail.com"
         ]; 
 
         const loginSection = document.getElementById('loginSection');
@@ -173,7 +172,6 @@
             }).catch(console.error);
         });
 
-        // 🟢 Load Exams in both dropdowns
         async function loadExamsIntoDropdowns() {
             try {
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
@@ -190,9 +188,6 @@
             }
         }
 
-        // ==========================================
-        // CREATE EXAM & ADD QUESTION LOGIC (Ager Motoi)
-        // ==========================================
         document.getElementById('createExamForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const statusMsg = document.getElementById('examCreateStatus');
@@ -230,19 +225,13 @@
             document.getElementById('saveQuestionBtn').innerText = "Save Question";
             setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
-
-        // ==========================================
-        // 🟢 NOTUN: MANAGE & EDIT LOGIC 
-        // ==========================================
         
-        // Time format korar helper function (Input e dekhanor jonno)
         function formatTimeForInput(timestamp) {
             const d = new Date(timestamp);
             const offset = d.getTimezoneOffset() * 60000;
             return new Date(d - offset).toISOString().slice(0, 16);
         }
 
-        // Jokhon kono Exam select kora hobe edit korar jonno
         manageExamSelector.addEventListener('change', async (e) => {
             const examId = e.target.value;
             const workspace = document.getElementById('manageWorkspace');
@@ -252,7 +241,6 @@
             document.getElementById('manageQuestionsList').innerHTML = "<p>Loading...</p>";
             document.getElementById('editQuestionFormBox').style.display = "none";
 
-            // 1. Load Settings (Time & Info)
             const examDoc = await getDoc(doc(db, "exams", examId));
             if(examDoc.exists()) {
                 document.getElementById('editExamTitle').value = examDoc.data().title;
@@ -260,11 +248,9 @@
                 document.getElementById('editExamPublishTime').value = formatTimeForInput(examDoc.data().publishTime);
             }
 
-            // 2. Load Questions List
             loadQuestionsForEdit(examId);
         });
 
-        // 🟢 Exam Settings (Time) Update kora
         document.getElementById('updateSettingsBtn').addEventListener('click', async () => {
             const examId = manageExamSelector.value;
             const statusMsg = document.getElementById('updateSettingsStatus');
@@ -275,20 +261,21 @@
             const newTime = document.getElementById('editExamPublishTime').value;
 
             try {
-                await updateDoc(doc(db, "exams", examId), {
+                // 🟢 FIX: setDoc used for safer updates
+                await setDoc(doc(db, "exams", examId), {
                     title: newTitle,
                     duration: parseInt(newDuration),
                     publishTime: new Date(newTime).getTime()
-                });
+                }, { merge: true });
                 statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Settings Updated!";
-                loadExamsIntoDropdowns(); // Title change hole dropdown update kora
+                loadExamsIntoDropdowns(); 
             } catch (error) {
-                statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error updating!";
+                console.error(error);
+                statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error updating: " + error.message;
             }
             setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
 
-        // 🟢 Load Questions for Editing
         async function loadQuestionsForEdit(examId) {
             const listDiv = document.getElementById('manageQuestionsList');
             listDiv.innerHTML = "";
@@ -310,7 +297,6 @@
                 `;
                 listDiv.appendChild(item); count++;
 
-                // Edit Button Click
                 item.querySelector('.btn-edit').addEventListener('click', () => {
                     document.getElementById('editQuestionFormBox').style.display = "block";
                     document.getElementById('editQId').value = qId;
@@ -322,40 +308,48 @@
                     document.getElementById('editQCorrect').value = data.correctAnswer;
                 });
 
-                // Delete Button Click
                 item.querySelector('.btn-delete').addEventListener('click', async () => {
                     if(confirm("Are you sure you want to delete this question?")) {
                         await deleteDoc(doc(db, "exams", examId, "questions", qId));
-                        loadQuestionsForEdit(examId); // Reload list
+                        loadQuestionsForEdit(examId); 
                     }
                 });
             });
         }
 
-        // 🟢 Save Edited Question
-        document.getElementById('saveEditedQBtn').addEventListener('click', async () => {
+        // 🟢 FIX: setDoc used with merge for robust editing
+        document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => {
+            e.preventDefault(); // Prevent accidental form submission
             const examId = manageExamSelector.value;
             const qId = document.getElementById('editQId').value;
+            const saveBtn = document.getElementById('saveEditedQBtn');
+            
+            saveBtn.innerText = "Saving...";
             
             try {
-                await updateDoc(doc(db, "exams", examId, "questions", qId), {
+                await setDoc(doc(db, "exams", examId, "questions", qId), {
                     question: document.getElementById('editQText').value,
                     options: { 
-                        1: document.getElementById('editQOpt1').value, 2: document.getElementById('editQOpt2').value, 
-                        3: document.getElementById('editQOpt3').value, 4: document.getElementById('editQOpt4').value 
+                        "1": document.getElementById('editQOpt1').value, 
+                        "2": document.getElementById('editQOpt2').value, 
+                        "3": document.getElementById('editQOpt3').value, 
+                        "4": document.getElementById('editQOpt4').value 
                     },
                     correctAnswer: document.getElementById('editQCorrect').value
-                });
+                }, { merge: true });
+                
                 alert("Question updated successfully!");
                 document.getElementById('editQuestionFormBox').style.display = "none";
-                loadQuestionsForEdit(examId); // Reload list
+                loadQuestionsForEdit(examId); 
             } catch (error) {
-                alert("Error updating question!");
+                console.error("Firebase Error:", error);
+                alert("Error updating question: " + error.message);
             }
+            saveBtn.innerText = "Save Changes";
         });
 
-        // Cancel Edit
-        document.getElementById('cancelEditQBtn').addEventListener('click', () => {
+        document.getElementById('cancelEditQBtn').addEventListener('click', (e) => {
+            e.preventDefault();
             document.getElementById('editQuestionFormBox').style.display = "none";
         });
 
