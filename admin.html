@@ -140,7 +140,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        
+        // 🟢 NOTUN: signInWithRedirect এবং onAuthStateChanged ইমপোর্ট করা হলো
+        import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         // 🔴🔴 FIREBASE CONFIG BOSHAO 🔴🔴
@@ -152,22 +154,51 @@
             messagingSenderId: "977853699063",
             appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
         };
-        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); const db = getFirestore(app);
+        
+        const app = initializeApp(firebaseConfig); 
+        const auth = getAuth(app); 
+        const provider = new GoogleAuthProvider(); 
+        const db = getFirestore(app);
 
         // 🔴🔴 ADMIN EMAILS BOSHAO 🔴🔴
-        const ADMIN_EMAILS = ["ahamedjubayer2003@gmail.com", "bondhuremail@gmail.com"]; 
+        const ADMIN_EMAILS = [
+            "ahamedjubayer2003@gmail.com", 
+            "mcqportal98@gmail.com"
+        ]; 
 
-        const loginSection = document.getElementById('loginSection'); const adminFormSection = document.getElementById('adminFormSection');
-        const examSelector = document.getElementById('examSelector'); const manageExamSelector = document.getElementById('manageExamSelector');
+        const loginSection = document.getElementById('loginSection'); 
+        const adminFormSection = document.getElementById('adminFormSection');
+        const examSelector = document.getElementById('examSelector'); 
+        const manageExamSelector = document.getElementById('manageExamSelector');
 
-        document.getElementById('adminLoginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).then((result) => {
-                if (ADMIN_EMAILS.includes(result.user.email)) { loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); } 
-                else { document.getElementById('errorMsg').innerText = "Access Denied!"; auth.signOut(); }
-            }).catch(console.error);
+        // 🟢 FIX: Auto-Session Checker (Page Refresh দিলেও লগআউট হবে না)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (ADMIN_EMAILS.includes(user.email)) {
+                    loginSection.style.display = "none";
+                    adminFormSection.style.display = "block";
+                    loadExamsIntoDropdowns();
+                } else {
+                    document.getElementById('errorMsg').innerText = "Access Denied! You are not an admin.";
+                    signOut(auth); // অ্যাডমিন না হলে লগআউট করে দেবে
+                }
+            } else {
+                loginSection.style.display = "block";
+                adminFormSection.style.display = "none";
+            }
         });
 
-        // 🟢 LOAD EXAMS & ADD LABELS (Draft, Active, Ended)
+        // 🟢 FIX: Mobile-Friendly Redirect Login 
+        document.getElementById('adminLoginBtn').addEventListener('click', () => {
+            document.getElementById('adminLoginBtn').innerText = "Redirecting to Google...";
+            signInWithRedirect(auth, provider).catch((error) => {
+                console.error("Login Error:", error);
+                document.getElementById('errorMsg').innerText = "Login failed. Please try again.";
+                document.getElementById('adminLoginBtn').innerText = "Login with Google";
+            });
+        });
+
+        // Load Exams into Dropdowns
         async function loadExamsIntoDropdowns() {
             try {
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
@@ -185,7 +216,7 @@
             } catch (error) { console.error("Error loading exams: ", error); }
         }
 
-        // 🟢 SECTION 1: CREATE (Saved as Draft by default)
+        // Section 1: Create Draft Exam
         document.getElementById('createExamForm').addEventListener('submit', async function(e) {
             e.preventDefault(); const statusMsg = document.getElementById('examCreateStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Creating...";
             try {
@@ -194,7 +225,7 @@
                     duration: parseInt(document.getElementById('newExamDuration').value), 
                     publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), 
                     createdAt: new Date().getTime(), 
-                    status: "draft" // 🟢 Notun Exam Draft hisebe save hobe
+                    status: "draft"
                 });
                 statusMsg.style.color = "#ffb74d"; statusMsg.innerText = "Exam Saved as DRAFT successfully!"; 
                 document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
@@ -202,6 +233,7 @@
             setTimeout(() => { statusMsg.innerText = ""; }, 4000);
         });
 
+        // Section 2: Create Question
         document.getElementById('questionForm').addEventListener('submit', async function(e) {
             e.preventDefault(); const statusMsg = document.getElementById('questionStatus'); const selectedExamId = examSelector.value;
             if(!selectedExamId) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Please select an Exam!"; return; } document.getElementById('saveQuestionBtn').innerText = "Saving...";
@@ -213,6 +245,7 @@
         
         function formatTimeForInput(timestamp) { const d = new Date(timestamp); const offset = d.getTimezoneOffset() * 60000; return new Date(d - offset).toISOString().slice(0, 16); }
 
+        // Section 3: Manage & Edit
         manageExamSelector.addEventListener('change', async (e) => {
             const examId = e.target.value; const workspace = document.getElementById('manageWorkspace');
             if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block";
@@ -224,7 +257,6 @@
                 document.getElementById('editExamDuration').value = data.duration; 
                 document.getElementById('editExamPublishTime').value = formatTimeForInput(data.publishTime); 
                 
-                // Button Visibility Logic
                 const pubBtn = document.getElementById('publishExamBtn');
                 if(data.status === "draft") { pubBtn.style.display = "block"; } 
                 else { pubBtn.style.display = "none"; }
@@ -237,18 +269,11 @@
             try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); statusMsg.style.color = "#00e676"; statusMsg.innerText = "Exam Settings Updated!"; loadExamsIntoDropdowns(); } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error updating!"; } setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         });
 
-        // 🟢 PUBLISH EXAM LOGIC
         document.getElementById('publishExamBtn').addEventListener('click', async (e) => {
             e.preventDefault(); const examId = manageExamSelector.value;
             if(confirm("🚀 Ready to Publish?\n\nThis will make the exam LIVE on the homepage for all students to see and participate. Proceed?")) {
                 const pubBtn = document.getElementById('publishExamBtn'); pubBtn.innerText = "Publishing...";
-                try {
-                    await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true });
-                    alert("SUCCESS! Exam is now LIVE!"); 
-                    pubBtn.style.display = "none";
-                    loadExamsIntoDropdowns(); 
-                } catch (error) { alert("Failed to publish."); }
-                pubBtn.innerText = "🚀 Publish Live";
+                try { await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true }); alert("SUCCESS! Exam is now LIVE!"); pubBtn.style.display = "none"; loadExamsIntoDropdowns(); } catch (error) { alert("Failed to publish."); } pubBtn.innerText = "🚀 Publish Live";
             }
         });
 
@@ -256,12 +281,7 @@
             e.preventDefault(); const examId = manageExamSelector.value;
             if(confirm("⚠ END / HIDE EXAM?\n\nThis will remove the exam from the Homepage so no one can take it anymore. Students can still check results in Answer Sheet.")) {
                 const btn = document.getElementById('deleteEntireExamBtn'); btn.innerText = "Removing...";
-                try {
-                    await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true });
-                    alert("Exam ended/hidden successfully!"); 
-                    document.getElementById('manageWorkspace').style.display = "none"; loadExamsIntoDropdowns(); 
-                } catch (error) { alert("Failed to hide."); }
-                btn.innerText = "Delete / Hide Exam";
+                try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); alert("Exam ended/hidden successfully!"); document.getElementById('manageWorkspace').style.display = "none"; loadExamsIntoDropdowns(); } catch (error) { alert("Failed to hide."); } btn.innerText = "Delete / Hide Exam";
             }
         });
 
@@ -286,6 +306,7 @@
         });
         document.getElementById('cancelEditQBtn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('editQuestionFormBox').style.display = "none"; });
 
+        // Section 4: Send Notice
         document.getElementById('sendMsgForm').addEventListener('submit', async (e) => {
             e.preventDefault(); const msgText = document.getElementById('adminMessage').value; const btn = document.getElementById('sendMsgBtn'); const status = document.getElementById('msgStatus'); btn.innerText = "Sending...";
             try { await addDoc(collection(db, "notifications"), { message: msgText, timestamp: new Date().getTime() }); status.style.color = "#00e676"; status.innerText = "Message sent successfully!"; document.getElementById('sendMsgForm').reset(); } catch (error) { status.style.color = "#ff5252"; status.innerText = "Failed to send message."; } btn.innerText = "Publish Message"; setTimeout(() => { status.innerText = ""; }, 3000);
