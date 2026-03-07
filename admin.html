@@ -29,6 +29,11 @@
         .edit-form-box { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid #ffb74d; margin-top: 15px;}
         .action-buttons-row { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; }
         .action-buttons-row button { flex: 1; min-width: 150px; }
+
+        /* 🟢 NOTUN: Participant Stats Box CSS */
+        .stats-banner { background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.3); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .stats-banner h4 { margin: 0; color: #e0e0e0; font-size: 16px; font-weight: normal;}
+        .stats-banner .count { font-size: 26px; font-weight: bold; color: #00e676; }
     </style>
 </head>
 <body>
@@ -87,6 +92,12 @@
                     <select id="manageExamSelector"><option value="">-- Select an Exam --</option></select>
                 </div>
                 <div id="manageWorkspace" style="display:none;">
+                    
+                    <div class="stats-banner">
+                        <h4>👥 Total Participants Submitted:</h4>
+                        <div class="count" id="participantCount">...</div>
+                    </div>
+
                     <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                         <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Update Settings</h4>
                         <div class="input-group"><label>Update Title:</label><input type="text" id="editExamTitle"></div>
@@ -140,9 +151,10 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        // 🟢 FIX: signInWithPopup ফিরে আনা হলো
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        
+        // 🟢 NOTUN: 'where' import করা হয়েছে participants count বের করার জন্য
+        import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         // 🔴🔴 FIREBASE CONFIG BOSHAO 🔴🔴
         const firebaseConfig = {
@@ -158,17 +170,12 @@
         const auth = getAuth(app); 
         const provider = new GoogleAuthProvider(); 
 
-        // 🟢🟢 THE MAGIC FIX FOR MULTIPLE ACCOUNTS 🟢🟢
-        // এটি গুগলকে বাধ্য করবে প্রতিবার অ্যাকাউন্ট সিলেক্ট করার অপশন দেখাতে
-        provider.setCustomParameters({
-            prompt: 'select_account'
-        });
-
+        provider.setCustomParameters({ prompt: 'select_account' });
         const db = getFirestore(app);
 
         // 🔴🔴 ADMIN EMAILS BOSHAO 🔴🔴
         const ADMIN_EMAILS = [
-            "ahamedjubayer2003@gmail.com", 
+              "ahamedjubayer2003@gmail.com", 
             "mcqportal198@gmail.com"
         ]; 
 
@@ -177,39 +184,21 @@
         const examSelector = document.getElementById('examSelector'); 
         const manageExamSelector = document.getElementById('manageExamSelector');
 
-        // Session Checker
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 if (ADMIN_EMAILS.includes(user.email)) {
                     loginSection.style.display = "none";
                     adminFormSection.style.display = "block";
                     loadExamsIntoDropdowns();
-                } else {
-                    document.getElementById('errorMsg').innerText = "Access Denied! You are not an admin.";
-                    signOut(auth);
-                }
-            } else {
-                loginSection.style.display = "block";
-                adminFormSection.style.display = "none";
-            }
+                } else { document.getElementById('errorMsg').innerText = "Access Denied! You are not an admin."; signOut(auth); }
+            } else { loginSection.style.display = "block"; adminFormSection.style.display = "none"; }
         });
 
-        // 🟢 FIX: Login Button Logic with Error Handling
         document.getElementById('adminLoginBtn').addEventListener('click', async () => {
-            const btn = document.getElementById('adminLoginBtn');
-            const errorMsg = document.getElementById('errorMsg');
-            btn.innerText = "Processing...";
-            errorMsg.innerText = "";
-
-            try {
-                const result = await signInWithPopup(auth, provider);
-                // The onAuthStateChanged listener will handle the success
-                btn.innerText = "Login with Google";
-            } catch (error) {
-                console.error("Login Error:", error);
-                errorMsg.innerText = "Login failed. Please select your authorized account.";
-                btn.innerText = "Login with Google";
-            }
+            const btn = document.getElementById('adminLoginBtn'); const errorMsg = document.getElementById('errorMsg');
+            btn.innerText = "Processing..."; errorMsg.innerText = "";
+            try { await signInWithPopup(auth, provider); btn.innerText = "Login with Google"; } 
+            catch (error) { errorMsg.innerText = "Login failed. Please select your authorized account."; btn.innerText = "Login with Google"; }
         });
 
         async function loadExamsIntoDropdowns() {
@@ -218,9 +207,8 @@
                 const querySnapshot = await getDocs(q);
                 let optionsHtml = '<option value="">-- Select an Exam --</option>'; 
                 querySnapshot.forEach((doc) => { 
-                    const data = doc.data();
-                    let titleStr = data.title;
-                    if(data.status === "deleted") { titleStr += " ❌ (Ended/Hidden)"; }
+                    const data = doc.data(); let titleStr = data.title;
+                    if(data.status === "deleted") { titleStr += " ❌ (Ended)"; }
                     else if(data.status === "draft") { titleStr += " 📝 (Draft)"; }
                     else { titleStr += " 🟢 (Live)"; }
                     optionsHtml += `<option value="${doc.id}">${titleStr}</option>`; 
@@ -232,9 +220,7 @@
         document.getElementById('createExamForm').addEventListener('submit', async function(e) {
             e.preventDefault(); const statusMsg = document.getElementById('examCreateStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Creating...";
             try {
-                await addDoc(collection(db, "exams"), { 
-                    title: document.getElementById('newExamTitle').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "draft"
-                });
+                await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "draft" });
                 statusMsg.style.color = "#ffb74d"; statusMsg.innerText = "Exam Saved as DRAFT successfully!"; document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
             } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error creating exam!"; } setTimeout(() => { statusMsg.innerText = ""; }, 4000);
         });
@@ -252,8 +238,15 @@
 
         manageExamSelector.addEventListener('change', async (e) => {
             const examId = e.target.value; const workspace = document.getElementById('manageWorkspace');
-            if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block";
-            document.getElementById('manageQuestionsList').innerHTML = "<p>Loading...</p>"; document.getElementById('editQuestionFormBox').style.display = "none";
+            const participantCountEl = document.getElementById('participantCount');
+            
+            if(!examId) { workspace.style.display = "none"; return; } 
+            workspace.style.display = "block";
+            document.getElementById('manageQuestionsList').innerHTML = "<p>Loading...</p>"; 
+            document.getElementById('editQuestionFormBox').style.display = "none";
+            participantCountEl.innerText = "Loading...";
+
+            // 🟢 1. Load Exam Data
             const examDoc = await getDoc(doc(db, "exams", examId));
             if(examDoc.exists()) { 
                 const data = examDoc.data();
@@ -261,6 +254,18 @@
                 const pubBtn = document.getElementById('publishExamBtn');
                 if(data.status === "draft") { pubBtn.style.display = "block"; } else { pubBtn.style.display = "none"; }
             }
+
+            // 🟢 2. Load Participant Count (কতজন পরীক্ষা দিয়েছে)
+            try {
+                const resQuery = query(collection(db, "results"), where("examId", "==", examId));
+                const resSnap = await getDocs(resQuery);
+                participantCountEl.innerText = resSnap.size; // size দিলে মোট কয়টা রেজাল্ট আছে তা কাউন্ট করে
+            } catch (err) {
+                console.error(err);
+                participantCountEl.innerText = "Error";
+            }
+
+            // 🟢 3. Load Questions
             loadQuestionsForEdit(examId);
         });
 
