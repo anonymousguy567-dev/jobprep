@@ -66,8 +66,8 @@
             
             <div class="breakdown-box">
                 <div class="stat-item" style="color: #00e676;"><div class="stat-label">Correct (+1)</div><div class="stat-value" id="countCorrect">0</div></div>
-                <div class="stat-item" style="color: #ff5252;"><div class="stat-label">Wrong (-1.5)</div><div class="stat-value" id="countWrong">0</div></div>
-                <div class="stat-item" style="color: #ffb74d;"><div class="stat-label">Skipped (-1)</div><div class="stat-value" id="countSkipped">0</div></div>
+                <div class="stat-item" style="color: #ff5252;"><div class="stat-label">Wrong (-0.5)</div><div class="stat-value" id="countWrong">0</div></div>
+                <div class="stat-item" style="color: #ffb74d;"><div class="stat-label">Skipped (0)</div><div class="stat-value" id="countSkipped">0</div></div>
             </div>
             
             <button id="downloadExcelBtn" class="action-btn btn-excel">📥 Download Merit List (Excel)</button>
@@ -173,7 +173,9 @@
                 questionsSnapshot.forEach((doc) => {
                     const qData = doc.data(); const qId = doc.id; const correctOpt = qData.correctAnswer; const userOpt = userAnswers[qId];
                     const qCard = document.createElement('div'); qCard.className = 'question-card';
-                    let optionsHTML = ""; let skippedMsg = (!userOpt) ? "<span class='skipped-msg'>⚠ You skipped this question (-1 mark).</span>" : "";
+                    let optionsHTML = ""; 
+                    // 🟢 Text updated here
+                    let skippedMsg = (!userOpt) ? "<span class='skipped-msg'>⚠ You skipped this question (0 mark).</span>" : "";
                     for(let i=1; i<=4; i++) {
                         let optClass = "option-div"; let extraText = "";
                         if (i.toString() === correctOpt) { optClass += " correct-ans"; extraText = " ✓ (Correct Answer)"; } else if (i.toString() === userOpt && userOpt !== correctOpt) { optClass += " wrong-ans"; extraText = " ✗ (Your Answer)"; } else if (i.toString() === userOpt && userOpt === correctOpt) { extraText = " ✓ (You selected this)"; }
