@@ -17,7 +17,7 @@
             flex-direction: column; 
             justify-content: center; 
             align-items: center; 
-            padding: 40px 20px;
+            padding: 80px 20px 60px 20px; 
             overflow-x: hidden;
             position: relative;
         }
@@ -34,6 +34,59 @@
             0% { transform: translate(0, 0) scale(1); }
             100% { transform: translate(40px, -40px) scale(1.1); }
         }
+
+        /* 🟢 Top Left Notification Menu 🟢 */
+        .top-left-bar { position: absolute; top: 20px; left: 25px; z-index: 1000; }
+        
+        .icon-menu { 
+            position: relative; width: 45px; height: 45px; border-radius: 50%; 
+            background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); display: flex; 
+            justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; 
+        }
+        .icon-menu:hover { background: rgba(0, 188, 212, 0.2); border-color: rgba(0, 188, 212, 0.5); }
+        .icon-menu svg { fill: #e0e0e0; width: 24px; height: 24px; transition: 0.3s; }
+        .icon-menu:hover svg { fill: #00bcd4; }
+        
+        .noti-badge { position: absolute; top: -2px; right: -2px; background: #ff5252; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #050508; display: none; }
+        
+        .dropdown-content { 
+            position: absolute; top: 55px; left: 0; background: rgba(20, 20, 25, 0.95); 
+            backdrop-filter: blur(15px); border: 1px solid rgba(0, 188, 212, 0.3); 
+            border-radius: 12px; padding: 10px; min-width: 250px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: none; flex-direction: column; 
+            transform: translateY(-10px); opacity: 0; transition: all 0.3s ease;
+        }
+        
+        .icon-menu.noti-menu:hover .dropdown-content { display: flex; flex-direction: column; transform: translateY(0); opacity: 1; }
+        
+        .noti-content { padding: 15px; width: 280px; }
+        .noti-header { font-size: 13px; color: #00bcd4; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid rgba(0, 188, 212, 0.2); padding-bottom: 5px; }
+        .noti-body { font-size: 14px; color: #e0e0e0; line-height: 1.5; }
+
+        /* 🟢 Top Right 9-Dot Menu (No Circle, Click Only) 🟢 */
+        .top-right-bar { position: absolute; top: 20px; right: 25px; z-index: 1000; }
+        
+        .apps-menu-btn {
+            background: transparent; border: none; outline: none; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px;
+        }
+        .apps-menu-btn svg { fill: #e0e0e0; width: 28px; height: 28px; transition: 0.3s; }
+        .apps-menu-btn:hover svg { fill: #00bcd4; }
+
+        .apps-dropdown {
+            position: absolute; top: 50px; right: 0; background: rgba(20, 20, 25, 0.95); 
+            backdrop-filter: blur(15px); border: 1px solid rgba(0, 188, 212, 0.3); 
+            border-radius: 8px; padding: 8px; width: max-content;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: none; 
+        }
+        .apps-dropdown.show { display: block; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .apps-link {
+            display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; transition: 0.3s; background: rgba(255, 255, 255, 0.05); text-align: center; letter-spacing: 0.5px;
+        }
+        .apps-link:hover { background: rgba(0, 188, 212, 0.15); color: #00bcd4; }
+
 
         /* Header Section */
         .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; }
@@ -57,11 +110,11 @@
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Glassy Box with Glow Effect */
+        /* Glassy Box */
         .glass-box { 
             background: rgba(20, 20, 25, 0.4); 
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 188, 212, 0.3); /* Subtle Cyan Border */
+            border: 1px solid rgba(0, 188, 212, 0.3);
             border-radius: 20px; 
             padding: 30px; 
             text-align: center; 
@@ -73,7 +126,6 @@
             min-height: 350px;
         }
         
-        /* Hover Glow Effect */
         .glass-box:hover {
             border-color: rgba(0, 188, 212, 0.8);
             box-shadow: 0 0 30px rgba(0, 188, 212, 0.3), inset 0 0 15px rgba(0, 188, 212, 0.1);
@@ -83,16 +135,7 @@
         .box-icon { font-size: 40px; margin-bottom: 15px; }
         .box-title { color: #fff; font-size: 22px; margin-bottom: 15px; font-weight: bold; }
 
-        /* Exam List inside Box 1 */
-        .exam-list-wrapper {
-            flex-grow: 1;
-            overflow-y: auto;
-            max-height: 220px;
-            padding-right: 5px;
-            text-align: left;
-        }
-        
-        /* Custom Scrollbar for Exam List */
+        .exam-list-wrapper { flex-grow: 1; overflow-y: auto; max-height: 220px; padding-right: 5px; text-align: left; }
         .exam-list-wrapper::-webkit-scrollbar { width: 6px; }
         .exam-list-wrapper::-webkit-scrollbar-thumb { background: rgba(0, 188, 212, 0.5); border-radius: 10px; }
 
@@ -104,7 +147,6 @@
         .exam-item:hover { background: rgba(0, 188, 212, 0.1); border-color: rgba(0, 188, 212, 0.4); }
         .exam-name { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 4px; }
         
-        /* Updated Meta Info Styles */
         .meta-info { display: flex; flex-direction: column; gap: 4px; }
         .exam-time { font-size: 12px; color: #00bcd4; font-weight: bold; }
         .publish-time { font-size: 11px; color: #ffb74d; background: rgba(255, 183, 77, 0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; width: max-content; font-weight: bold;}
@@ -115,7 +157,6 @@
         }
         .start-btn:hover { box-shadow: 0 4px 15px rgba(0, 188, 212, 0.5); transform: scale(1.05); }
 
-        /* Action Buttons for Box 2 & 3 */
         .action-btn { 
             display: inline-block; width: 100%; padding: 15px; margin-top: auto;
             border-radius: 12px; text-decoration: none; color: white; 
@@ -130,6 +171,10 @@
         .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #00bcd4; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        /* Footer */
+        .footer { position: absolute; bottom: 15px; width: 100%; text-align: center; color: #888; font-size: 13px; z-index: 10; font-weight: 500;}
+        .footer span { color: #00bcd4; font-weight: bold; letter-spacing: 0.5px; }
+
     </style>
 </head>
 <body>
@@ -140,9 +185,33 @@
         <div class="blob blob3"></div>
     </div>
 
+    <div class="top-left-bar">
+        <div class="icon-menu noti-menu" id="notiMenuBtn">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            <span class="noti-badge" id="notiBadge"></span>
+            <div class="dropdown-content noti-content">
+                <div class="noti-header">📢 Notice Board</div>
+                <div class="noti-body" id="noticeText">Checking for updates...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="top-right-bar">
+        <div style="position: relative;">
+            <button class="apps-menu-btn" id="appsMenuBtn">
+                <svg viewBox="0 0 24 24"><path d="M12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-16 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg>
+            </button>
+            <div class="apps-dropdown" id="appsDropdown">
+                <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">
+                    UniDocs Generator | RUET
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div class="header-section">
-        <h1>UniDocs MCQ Portal</h1>
-       
+        <h1>JOB PREPARATION MCQ Portal</h1>
+      
     </div>
 
     <div class="grid-container">
@@ -176,9 +245,13 @@
 
     </div>
 
+    <div class="footer">
+        Developed by <span>UniDocs</span>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, orderBy, query, limit } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
         const firebaseConfig = {
@@ -193,7 +266,58 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Function to format the publish timestamp
+        // 🟢 9-Dots Click Logic 🟢
+        const appsBtn = document.getElementById('appsMenuBtn');
+        const appsDropdown = document.getElementById('appsDropdown');
+
+        appsBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevents click from bubbling up
+            appsDropdown.classList.toggle('show');
+        });
+
+        // Click outside to close
+        window.addEventListener('click', (e) => {
+            if (!appsBtn.contains(e.target)) {
+                appsDropdown.classList.remove('show');
+            }
+        });
+
+
+        // 🟢 Notification Logic 🟢
+        async function fetchNotice() {
+            try {
+                const q = query(collection(db, "notices"), orderBy("timestamp", "desc"), limit(1));
+                const snap = await getDocs(q);
+                
+                const notiBadge = document.getElementById('notiBadge');
+                const noticeText = document.getElementById('noticeText');
+                
+                if (!snap.empty) {
+                    const noticeData = snap.docs[0].data();
+                    const noticeId = snap.docs[0].id;
+                    const savedId = localStorage.getItem('readNoticeId');
+                    
+                    if (savedId !== noticeId) {
+                        notiBadge.style.display = 'flex';
+                        noticeText.innerText = noticeData.message || noticeData.text || "You have a new announcement!";
+                        
+                        document.getElementById('notiMenuBtn').addEventListener('click', () => {
+                            localStorage.setItem('readNoticeId', noticeId);
+                        });
+                    } else {
+                        notiBadge.style.display = 'none';
+                        noticeText.innerText = "No new announcements at the moment.";
+                    }
+                } else {
+                    noticeText.innerText = "No new announcements at the moment.";
+                }
+            } catch (error) {
+                console.error("Notice error: ", error);
+            }
+        }
+        fetchNotice();
+
+        // 🟢 Exam Load Logic 🟢
         function formatResultTime(timestamp) {
             if (!timestamp) return "Not Scheduled";
             const d = new Date(timestamp);
@@ -201,11 +325,9 @@
             return d.toLocaleString('en-US', options);
         }
 
-        // Fetch and Display Exams in Box 1
         async function loadAvailableExams() {
             const examsListDiv = document.getElementById('examsList');
             try {
-                // Fetching all exams ordered by newest first (No 'where' clause here to prevent Index Error)
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 
@@ -221,7 +343,6 @@
                     const exam = doc.data();
                     const examId = doc.id;
 
-                    // 🟢 Only render exams that are published LIVE ("active" status)
                     if (exam.status === "active") {
                         activeExamFound = true;
                         const publishTimeFormatted = formatResultTime(exam.publishTime);
@@ -241,7 +362,6 @@
                     }
                 });
 
-                // If exams exist in DB, but all are hidden/drafted
                 if (!activeExamFound) {
                     examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>";
                 }
@@ -256,4 +376,3 @@
     </script>
 </body>
 </html>
-
