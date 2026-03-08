@@ -14,11 +14,11 @@
         .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
         
         select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; font-size: 16px; margin-bottom: 20px;}
-        .time-box { font-size: 24px; font-weight: bold; color: #ff5252; background: rgba(255, 82, 82, 0.1); padding: 15px 30px; border-radius: 10px; margin: 20px 0; border: 1px solid rgba(255, 82, 82, 0.2); }
+        .time-box { font-size: 20px; font-weight: bold; color: #ff5252; background: rgba(255, 82, 82, 0.1); padding: 15px 30px; border-radius: 10px; margin: 15px 0; border: 1px solid rgba(255, 82, 82, 0.2); }
         
         .score-display { font-size: 40px; font-weight: bold; color: #00bcd4; margin: 15px 0 10px 0; }
         
-        .breakdown-box { display: flex; justify-content: space-around; width: 100%; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        .breakdown-box { display: flex; justify-content: space-around; width: 100%; max-width: 500px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
         .stat-item { text-align: center; }
         .stat-label { font-size: 14px; font-weight: bold; margin-bottom: 5px; }
         .stat-value { font-size: 24px; font-weight: bold; }
@@ -52,14 +52,25 @@
         </div>
 
         <div id="timer-section">
-            <h2 style="color: #ffb74d;">Result Not Published Yet!</h2>
-            <p>Please wait until the scheduled time.</p>
-            <div class="time-box" id="countdown">Loading schedule...</div>
-            <button class="action-btn" onclick="window.location.href='index.html'" style="background:#00bcd4; color:#fff; width:auto; margin:auto; margin-top:20px;">Back to Homepage</button>
+            <h2 style="color: #00e676;">Exam Submitted!</h2>
+            
+            <div id="earlyResultContainer" style="display: none; width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <h3 style="color: #00bcd4; margin-top: 10px;">Your Score: <span id="earlyFinalScore" style="font-size: 36px; color: #00e676; display: block;">0</span></h3>
+                
+                <div class="breakdown-box" style="margin-top: 10px;">
+                    <div class="stat-item" style="color: #00e676;"><div class="stat-label">Correct (+1)</div><div class="stat-value" id="earlyCorrect">0</div></div>
+                    <div class="stat-item" style="color: #ff5252;"><div class="stat-label">Wrong (-0.5)</div><div class="stat-value" id="earlyWrong">0</div></div>
+                    <div class="stat-item" style="color: #ffb74d;"><div class="stat-label">Skipped (0)</div><div class="stat-value" id="earlySkipped">0</div></div>
+                </div>
+            </div>
+
+            <p style="margin-top: 20px; color: #b3b3b3; font-size: 14px;">Detailed Answer Sheet and Merit List will be visible below after the publish time.</p>
+            <div class="time-box" id="countdown">Checking schedule...</div>
+            <button class="action-btn" onclick="window.location.href='index.html'" style="background:rgba(255,255,255,0.1); color:#fff; width:auto; margin:auto; margin-top:10px; border: 1px solid rgba(255,255,255,0.2);">Back to Homepage</button>
         </div>
 
         <div id="result-section">
-            <h2 id="studentNameDisplay">Your Result</h2>
+            <h2 id="studentNameDisplay">Your Detailed Result</h2>
             <p id="studentRollDisplay" style="color: #ffb74d; font-weight: bold; margin-bottom: 10px;">Roll: Loading...</p>
             
             <div class="score-display" id="finalScore">Loading...</div>
@@ -117,14 +128,9 @@
                 querySnapshot.forEach((doc) => {
                     const examData = doc.data();
                     if (examData.status === "draft") return; 
-
-                    const option = document.createElement('option'); 
-                    option.value = doc.id; 
-                    let examTitle = examData.title;
-                    if (examData.status === "deleted") { examTitle += " [Ended]"; }
-                    
-                    option.innerText = examTitle;
-                    examDropdown.appendChild(option);
+                    const option = document.createElement('option'); option.value = doc.id; 
+                    let examTitle = examData.title; if (examData.status === "deleted") { examTitle += " [Ended]"; }
+                    option.innerText = examTitle; examDropdown.appendChild(option);
                 });
             } catch(error) { examDropdown.innerHTML = '<option value="">Error loading exams!</option>'; }
         }
@@ -134,51 +140,87 @@
             if(selectedExamId) { selectExamSection.style.display = "none"; checkTimeAndProceed(selectedExamId); }
         });
 
+        async function fetchBasicUserResult(examId) {
+            const q = query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", examId));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) { return querySnapshot.docs[0].data(); }
+            return null;
+        }
+
         async function checkTimeAndProceed(examId) {
             timerSection.style.display = "flex"; countdownDisplay.innerText = "Checking schedule...";
+            const userData = await fetchBasicUserResult(examId);
+            
+            if (!userData) {
+                document.getElementById('earlyResultContainer').style.display = "none"; countdownDisplay.innerText = "";
+                timerSection.innerHTML = "<h2 style='color:#ff5252;'>You haven't participated in this exam!</h2><button class='action-btn' onclick='window.location.href=\"index.html\"' style='background:rgba(255,255,255,0.1); color:#fff; width:auto; margin:auto; margin-top:20px; border: 1px solid rgba(255,255,255,0.2);'>Back to Homepage</button>";
+                return;
+            }
+
+            document.getElementById('earlyResultContainer').style.display = "flex";
+            document.getElementById('earlyFinalScore').innerText = userData.score;
+            document.getElementById('earlyCorrect').innerText = userData.correctCount || 0;
+            document.getElementById('earlyWrong').innerText = userData.wrongCount || 0;
+            document.getElementById('earlySkipped').innerText = userData.skippedCount || 0;
+
             try {
                 const examSnap = await getDoc(doc(db, "exams", examId)); let publishTime = 0;
                 if (examSnap.exists() && examSnap.data().publishTime) { publishTime = examSnap.data().publishTime; } 
                 else { countdownDisplay.innerText = "Admin has not set a publish time yet."; return; }
 
                 const now = new Date().getTime();
-                if (now >= publishTime) { timerSection.style.display = "none"; fetchResultData(examId); return; }
+                if (now >= publishTime) { timerSection.style.display = "none"; showFullResult(examId, userData); return; }
 
                 if(timerInterval) clearInterval(timerInterval); 
                 timerInterval = setInterval(() => {
                     const currentTime = new Date().getTime(); const distance = publishTime - currentTime;
-                    if (distance <= 0) { clearInterval(timerInterval); timerSection.style.display = "none"; fetchResultData(examId); } 
+                    if (distance <= 0) { clearInterval(timerInterval); timerSection.style.display = "none"; showFullResult(examId, userData); } 
                     else {
                         const days = Math.floor(distance / (1000 * 60 * 60 * 24)); const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                        let timeString = ""; if (days > 0) timeString += `${days}d `; timeString += `${hours}h ${minutes}m ${seconds}s`; countdownDisplay.innerText = `Opens in: ${timeString}`;
+                        let timeString = ""; if (days > 0) timeString += `${days}d `; timeString += `${hours}h ${minutes}m ${seconds}s`; countdownDisplay.innerText = `Answers unlock in: ${timeString}`;
                     }
                 }, 1000);
             } catch (error) { console.error(error); countdownDisplay.innerText = "Error checking schedule!"; }
         }
 
-        async function fetchResultData(examId) {
-            resultSection.style.display = "flex"; document.getElementById('studentNameDisplay').innerText = `Result for: ${userName}`;
+        async function showFullResult(examId, userData) {
+            resultSection.style.display = "flex"; document.getElementById('studentNameDisplay').innerText = `Detailed Result for: ${userName}`;
             const answersContainer = document.getElementById('answersContainer'); document.getElementById('downloadExcelBtn').setAttribute('data-examid', examId);
+            
+            const userAnswers = userData.userAnswers || {};
+            document.getElementById('studentRollDisplay').innerText = `Roll No: ${userData.rollNumber || 'N/A'}`; 
+            document.getElementById('finalScore').innerText = `Total Score: ${userData.score}`; 
+            document.getElementById('countCorrect').innerText = userData.correctCount || 0; 
+            document.getElementById('countWrong').innerText = userData.wrongCount || 0; 
+            document.getElementById('countSkipped').innerText = userData.skippedCount || 0;
+
             try {
-                const q = query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", examId));
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) { answersContainer.innerHTML = "<p style='color:#ff5252;'>You haven't participated in this exam!</p>"; document.getElementById('finalScore').innerText = "N/A"; return; }
-
-                const userData = querySnapshot.docs[0].data(); const userAnswers = userData.userAnswers || {};
-                document.getElementById('studentRollDisplay').innerText = `Roll No: ${userData.rollNumber || 'N/A'}`; document.getElementById('finalScore').innerText = `Total Score: ${userData.score}`; document.getElementById('countCorrect').innerText = userData.correctCount || 0; document.getElementById('countWrong').innerText = userData.wrongCount || 0; document.getElementById('countSkipped').innerText = userData.skippedCount || 0;
-
                 const questionsSnapshot = await getDocs(collection(db, "exams", examId, "questions"));
                 answersContainer.innerHTML = ""; let qNum = 1;
                 questionsSnapshot.forEach((doc) => {
-                    const qData = doc.data(); const qId = doc.id; const correctOpt = qData.correctAnswer; const userOpt = userAnswers[qId];
+                    const qData = doc.data(); const qId = doc.id; 
+                    
+                    // 🟢 BUG FIX: FORCE STRING CONVERSION
+                    const correctOpt = String(qData.correctAnswer); 
+                    const userOpt = userAnswers[qId] ? String(userAnswers[qId]) : null;
+                    
                     const qCard = document.createElement('div'); qCard.className = 'question-card';
                     let optionsHTML = ""; 
-                    // 🟢 Text updated here
                     let skippedMsg = (!userOpt) ? "<span class='skipped-msg'>⚠ You skipped this question (0 mark).</span>" : "";
+                    
                     for(let i=1; i<=4; i++) {
                         let optClass = "option-div"; let extraText = "";
-                        if (i.toString() === correctOpt) { optClass += " correct-ans"; extraText = " ✓ (Correct Answer)"; } else if (i.toString() === userOpt && userOpt !== correctOpt) { optClass += " wrong-ans"; extraText = " ✗ (Your Answer)"; } else if (i.toString() === userOpt && userOpt === correctOpt) { extraText = " ✓ (You selected this)"; }
+                        let iStr = String(i);
+                        
+                        if (iStr === correctOpt && iStr === userOpt) { 
+                            optClass += " correct-ans"; extraText = " ✓ (Correct Answer & You selected this)"; 
+                        } else if (iStr === correctOpt) { 
+                            optClass += " correct-ans"; extraText = " ✓ (Correct Answer)"; 
+                        } else if (iStr === userOpt) { 
+                            optClass += " wrong-ans"; extraText = " ✗ (Your Answer)"; 
+                        }
+                        
                         optionsHTML += `<div class="${optClass}">${qData.options[i]} ${extraText}</div>`;
                     }
                     qCard.innerHTML = `<div class="question-text">${qNum}. ${qData.question}</div>${skippedMsg}${optionsHTML}`; answersContainer.appendChild(qCard); qNum++;
