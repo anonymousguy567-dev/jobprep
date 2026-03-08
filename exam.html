@@ -51,7 +51,7 @@
             
             <div class="marking-rules">
                 <span>⚠ Marking Scheme:</span> Correct: <b>+1</b> | Wrong: <b>-0.5</b> | Skipped: <b>0</b><br>
-                <span style="color: #ff5252; margin-top: 5px; display: block;">🚨 ANTI-CHEAT ACTIVE: Do not switch tabs or minimize the browser. Your exam will auto-submit on the 6th attempt!</span>
+                <span style="color: #ff5252; margin-top: 5px; display: block;">🚨  Do not switch tabs or minimize the browser. Your exam will auto-submit on the 6th attempt!</span>
             </div>
 
             <div class="user-info">
@@ -129,10 +129,10 @@
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && isExamActive && timeLeft > 0) {
                 tabSwitchCount++;
-                if (tabSwitchCount === 1) alert("⚠ WARNING (1/5): You have switched tabs! Cheating is strictly prohibited.");
+                if (tabSwitchCount === 1) alert("⚠ WARNING (1/5): You have switched tabs! It is strictly prohibited.");
                 else if (tabSwitchCount > 1 && tabSwitchCount < 5) alert(`⚠ WARNING (${tabSwitchCount}/5): Do not switch tabs!`);
                 else if (tabSwitchCount === 5) alert("🚨 FINAL WARNING (5/5): ONE MORE TIME, and exam will auto-submit.");
-                else if (tabSwitchCount >= 6) { alert("❌ CHEATING DETECTED: Exam auto-submitted."); submitExamCore(); }
+                else if (tabSwitchCount >= 6) { alert("❌ Exam auto-submitted."); submitExamCore(); }
             }
         });
 
@@ -228,3 +228,4 @@
     </script>
 </body>
 </html>
+
