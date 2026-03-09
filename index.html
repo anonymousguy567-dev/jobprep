@@ -64,7 +64,7 @@
         .noti-header { font-size: 13px; color: #00bcd4; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid rgba(0, 188, 212, 0.2); padding-bottom: 5px; }
         .noti-body { font-size: 14px; color: #e0e0e0; line-height: 1.5; }
 
-        /* 🟢 Top Right 9-Dot Menu (No Circle, Click Only) 🟢 */
+        /* 🟢 Top Right 9-Dot Menu 🟢 */
         .top-right-bar { position: absolute; top: 20px; right: 25px; z-index: 1000; }
         
         .apps-menu-btn {
@@ -149,7 +149,10 @@
         
         .meta-info { display: flex; flex-direction: column; gap: 4px; }
         .exam-time { font-size: 12px; color: #00bcd4; font-weight: bold; }
+        
+        /* Highlight Published State */
         .publish-time { font-size: 11px; color: #ffb74d; background: rgba(255, 183, 77, 0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; width: max-content; font-weight: bold;}
+        .published-state { color: #00e676; background: rgba(0, 230, 118, 0.1); } /* Green style for published */
 
         .start-btn { 
             background: linear-gradient(135deg, #00bcd4, #2196f3); color: #fff; padding: 8px 16px; 
@@ -211,7 +214,7 @@
 
     <div class="header-section">
         <h1>JOB PREPARATION MCQ Portal</h1>
-      
+       
     </div>
 
     <div class="grid-container">
@@ -238,7 +241,7 @@
             <div class="box-icon">⚙️</div>
             <div class="box-title">Admin Dashboard</div>
             <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
-                 Authorized access only.
+                 Authorized access only. 
             </p>
             <a href="admin.html" class="action-btn btn-outline">Enter Admin Panel</a>
         </div>
@@ -271,11 +274,10 @@
         const appsDropdown = document.getElementById('appsDropdown');
 
         appsBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevents click from bubbling up
+            e.stopPropagation(); 
             appsDropdown.classList.toggle('show');
         });
 
-        // Click outside to close
         window.addEventListener('click', (e) => {
             if (!appsBtn.contains(e.target)) {
                 appsDropdown.classList.remove('show');
@@ -317,7 +319,7 @@
         }
         fetchNotice();
 
-        // 🟢 Exam Load Logic 🟢
+        // 🟢 Exam Load & Time Logic 🟢
         function formatResultTime(timestamp) {
             if (!timestamp) return "Not Scheduled";
             const d = new Date(timestamp);
@@ -338,6 +340,7 @@
 
                 examsListDiv.innerHTML = ""; 
                 let activeExamFound = false;
+                const currentTime = new Date().getTime(); // Current Time
                 
                 querySnapshot.forEach((doc) => {
                     const exam = doc.data();
@@ -345,7 +348,17 @@
 
                     if (exam.status === "active") {
                         activeExamFound = true;
-                        const publishTimeFormatted = formatResultTime(exam.publishTime);
+                        
+                        // 🟢 TIME CHECKING LOGIC 🟢
+                        let publishTextHTML = "";
+                        if (exam.publishTime && currentTime >= exam.publishTime) {
+                            // Time Over: Show "Published" with green color
+                            publishTextHTML = `<span class="publish-time published-state">📢 Result: Published ✅</span>`;
+                        } else {
+                            // Time Not Over: Show formatting Date & Time
+                            const publishTimeFormatted = formatResultTime(exam.publishTime);
+                            publishTextHTML = `<span class="publish-time">📢 Result: ${publishTimeFormatted}</span>`;
+                        }
                         
                         const item = document.createElement('div');
                         item.className = 'exam-item';
@@ -354,7 +367,7 @@
                             <div class="meta-info">
                                 <div class="exam-name">${exam.title}</div>
                                 <div class="exam-time">⏱ ${exam.duration} Min</div>
-                                <div class="publish-time">📢 Result: ${publishTimeFormatted}</div>
+                                ${publishTextHTML}
                             </div>
                             <a href="exam.html?id=${examId}" class="start-btn">Start</a>
                         `;
