@@ -249,7 +249,7 @@
 
                 doc.setFontSize(18);
                 doc.setTextColor(33, 33, 33);
-                doc.text(`${examTitle} | Hridoy Boshunia`, 14, 20);
+                doc.text(`${examTitle} | Hridoy Bosunia`, 14, 20);
                 
                 let finalY = 25;
 
@@ -280,7 +280,7 @@
                 if (lateSubmissions.length > 0) {
                     doc.setFontSize(12);
                     doc.setTextColor(211, 47, 47); 
-                    doc.text("Late Submissions (Unranked)", 14, finalY + 15);
+                    doc.text("Late Submissions", 14, finalY + 15);
 
                     const lateData = lateSubmissions.map(row => [
                         row.rollNumber || "N/A", row.score
@@ -418,3 +418,4 @@
     </script>
 </body>
 </html>
+
