@@ -51,11 +51,11 @@
             background: rgba(255, 255, 255, 0.05);
             color: #e0e0e0;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 24px; /* Ektu boro kora hoyeche */
+            padding: 10px 24px; 
             border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 17px; /* Text boro kora hoyeche */
+            font-size: 17px; 
             transition: 0.3s;
             display: flex; align-items: center; gap: 8px;
         }
@@ -180,9 +180,9 @@
 
         <div class="glass-box">
             <div class="box-icon">🏆</div>
-            <div class="box-title">Merit List</div>
+            <div class="box-title">Public Merit List</div>
             <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
-                View and download the final merit list.
+                View and download the final merit list. No login required! 
             </p>
             <select id="publicExamSelector">
                 <option value="">-- Select Exam --</option>
@@ -194,7 +194,7 @@
 
         <div class="glass-box">
             <div class="box-icon">📊</div>
-            <div class="box-title">Answer Sheet</div>
+            <div class="box-title">Personal Answer Sheet</div>
             <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
                 Review your submitted answer sheets, check correct answers, and track your scores once the time is up.
             </p>
@@ -331,6 +331,7 @@
             }
         });
 
+        // 🟢 PDF GENERATION LOGIC 🟢
         async function generateMeritListPDF(examId, examTitle, publishTime) {
             const btn = document.getElementById('downloadMeritPdfBtn');
             const originalText = btn.innerHTML;
@@ -355,6 +356,7 @@
                 const { jsPDF } = window.jspdf; const doc = new jsPDF();
                 doc.setFontSize(18); doc.setTextColor(33, 33, 33); doc.text(`${examTitle} | Hridoy Boshunia`, 14, 20); let finalY = 25;
 
+                // 🔴 SECTION 1: On-Time Submissions
                 if (onTimeSubmissions.length > 0) {
                     doc.setFontSize(12); doc.setTextColor(46, 125, 50); doc.text("Official Merit List (On-Time Submissions)", 14, finalY + 8);
                     const onTimeData = onTimeSubmissions.map((row, index) => [ index + 1, row.rollNumber || "N/A", row.score ]);
@@ -362,10 +364,19 @@
                     finalY = doc.lastAutoTable.finalY;
                 } else { doc.setFontSize(11); doc.setTextColor(100, 100, 100); doc.text("No on-time submissions available.", 14, finalY + 8); finalY += 15; }
 
+                // 🔴 SECTION 2: Late Submissions (Styled Same as Section 1)
                 if (lateSubmissions.length > 0) {
-                    doc.setFontSize(12); doc.setTextColor(211, 47, 47); doc.text("Late Submissions (Unranked)", 14, finalY + 15);
+                    doc.setFontSize(12); doc.setTextColor(46, 125, 50); doc.text("Late Submissions (Unranked)", 14, finalY + 15);
                     const lateData = lateSubmissions.map(row => [ row.rollNumber || "N/A", row.score ]);
-                    doc.autoTable({ startY: finalY + 20, head: [['Roll Number', 'Total Score']], body: lateData, headStyles: { fillColor: [255, 82, 82] }, bodyStyles: { textColor: [255, 0, 0] }, styles: { halign: 'center' } });
+                    
+                    // Fixed header styling to match the first table
+                    doc.autoTable({ 
+                        startY: finalY + 20, 
+                        head: [['Roll Number', 'Total Score']], 
+                        body: lateData, 
+                        headStyles: { fillColor: [0, 188, 212] }, 
+                        styles: { halign: 'center' } 
+                    });
                 }
                 doc.save(`Merit_List_${examTitle.replace(/\s+/g, '_')}.pdf`);
             } catch (error) { alert("Failed to generate PDF."); }
