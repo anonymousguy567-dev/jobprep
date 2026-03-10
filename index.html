@@ -5,132 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniDocs MCQ Portal</title>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Premium Blackish Background with Animated Blobs */
         body { 
-            background-color: #050508; 
-            color: #ffffff; 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            padding: 80px 20px 60px 20px; 
-            overflow-x: hidden;
-            position: relative;
+            background-color: #050508; color: #ffffff; min-height: 100vh; display: flex; 
+            flex-direction: column; justify-content: center; align-items: center; 
+            padding: 120px 20px 60px 20px; overflow-x: hidden; position: relative;
         }
 
-        .bg-blobs {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1;
-        }
+        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
         .blob { position: absolute; filter: blur(90px); opacity: 0.5; animation: float 12s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #00bcd4; top: -10%; left: -5%; animation-delay: 0s; }
         .blob2 { width: 400px; height: 400px; background: #2196f3; bottom: -10%; right: -5%; animation-delay: 3s; }
         .blob3 { width: 250px; height: 250px; background: #673ab7; top: 40%; left: 40%; animation-delay: 5s; }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, -40px) scale(1.1); }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
+
+        /* 🟢 Top Navigation Bar 🟢 */
+        .navbar {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(20, 20, 25, 0.4);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 188, 212, 0.2);
+            z-index: 2000;
+        }
+        
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #00bcd4;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        
+        .nav-admin-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e0e0e0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 24px; /* Ektu boro kora hoyeche */
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 17px; /* Text boro kora hoyeche */
+            transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-admin-btn:hover {
+            background: rgba(0, 188, 212, 0.15);
+            border-color: #00bcd4;
+            color: #00bcd4;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+            transform: translateY(-2px);
         }
 
-        /* 🟢 Top Left Notification Menu 🟢 */
-        .top-left-bar { position: absolute; top: 20px; left: 25px; z-index: 1000; }
+        /* 9-Dot Menu */
+        .top-right-bar { position: absolute; top: 90px; right: 25px; z-index: 1000; }
         
-        .icon-menu { 
+        .apps-menu-btn { 
             position: relative; width: 45px; height: 45px; border-radius: 50%; 
             background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(10px); 
             border: 1px solid rgba(255, 255, 255, 0.1); display: flex; 
-            justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; 
+            justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; outline: none;
         }
-        .icon-menu:hover { background: rgba(0, 188, 212, 0.2); border-color: rgba(0, 188, 212, 0.5); }
-        .icon-menu svg { fill: #e0e0e0; width: 24px; height: 24px; transition: 0.3s; }
-        .icon-menu:hover svg { fill: #00bcd4; }
+        .apps-menu-btn:hover { background: rgba(0, 188, 212, 0.2); border-color: rgba(0, 188, 212, 0.5); }
+        .apps-menu-btn svg { fill: #e0e0e0; width: 24px; height: 24px; transition: 0.3s; }
+        .apps-menu-btn:hover svg { fill: #00bcd4; }
         
-        .noti-badge { position: absolute; top: -2px; right: -2px; background: #ff5252; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #050508; display: none; }
-        
-        .dropdown-content { 
-            position: absolute; top: 55px; left: 0; background: rgba(20, 20, 25, 0.95); 
+        .apps-dropdown { 
+            position: absolute; top: 55px; right: 0; background: rgba(20, 20, 25, 0.95); 
             backdrop-filter: blur(15px); border: 1px solid rgba(0, 188, 212, 0.3); 
-            border-radius: 12px; padding: 10px; min-width: 250px; 
+            border-radius: 12px; padding: 10px; width: max-content; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: none; flex-direction: column; 
             transform: translateY(-10px); opacity: 0; transition: all 0.3s ease;
         }
-        
-        .icon-menu.noti-menu:hover .dropdown-content { display: flex; flex-direction: column; transform: translateY(0); opacity: 1; }
-        
-        .noti-content { padding: 15px; width: 280px; }
-        .noti-header { font-size: 13px; color: #00bcd4; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid rgba(0, 188, 212, 0.2); padding-bottom: 5px; }
-        .noti-body { font-size: 14px; color: #e0e0e0; line-height: 1.5; }
-
-        /* 🟢 Top Right 9-Dot Menu 🟢 */
-        .top-right-bar { position: absolute; top: 20px; right: 25px; z-index: 1000; }
-        
-        .apps-menu-btn {
-            background: transparent; border: none; outline: none; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px;
-        }
-        .apps-menu-btn svg { fill: #e0e0e0; width: 28px; height: 28px; transition: 0.3s; }
-        .apps-menu-btn:hover svg { fill: #00bcd4; }
-
-        .apps-dropdown {
-            position: absolute; top: 50px; right: 0; background: rgba(20, 20, 25, 0.95); 
-            backdrop-filter: blur(15px); border: 1px solid rgba(0, 188, 212, 0.3); 
-            border-radius: 8px; padding: 8px; width: max-content;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: none; 
-        }
-        .apps-dropdown.show { display: block; animation: fadeIn 0.2s ease; }
+        .apps-dropdown.show { display: block; animation: fadeIn 0.2s ease; opacity: 1; transform: translateY(0); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
-        .apps-link {
-            display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; transition: 0.3s; background: rgba(255, 255, 255, 0.05); text-align: center; letter-spacing: 0.5px;
-        }
+        
+        .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; transition: 0.3s; background: rgba(255, 255, 255, 0.05); text-align: center; }
         .apps-link:hover { background: rgba(0, 188, 212, 0.15); color: #00bcd4; }
-
-
-        /* Header Section */
-        .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; }
-        h1 { 
-            background: linear-gradient(135deg, #00bcd4, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-size: 38px; letter-spacing: 1.5px; margin-bottom: 10px; text-transform: uppercase; font-weight: 800;
-        }
-        p { color: #a0a0b0; font-size: 16px; }
-
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* 3 Box Grid Layout */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            width: 100%;
-            max-width: 1100px;
-            animation: slideUp 0.8s ease-out;
+            gap: 30px; width: 100%; max-width: 1100px; animation: slideUp 0.8s ease-out;
         }
-
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Glassy Box */
         .glass-box { 
-            background: rgba(20, 20, 25, 0.4); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 188, 212, 0.3);
-            border-radius: 20px; 
-            padding: 30px; 
-            text-align: center; 
+            background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 188, 212, 0.3); border-radius: 20px; padding: 30px; text-align: center; 
             box-shadow: 0 0 20px rgba(0, 188, 212, 0.1), inset 0 0 10px rgba(255, 255, 255, 0.02); 
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            min-height: 350px;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; justify-content: flex-start; min-height: 350px;
         }
-        
-        .glass-box:hover {
-            border-color: rgba(0, 188, 212, 0.8);
-            box-shadow: 0 0 30px rgba(0, 188, 212, 0.3), inset 0 0 15px rgba(0, 188, 212, 0.1);
-            transform: translateY(-8px);
-        }
+        .glass-box:hover { border-color: rgba(0, 188, 212, 0.8); box-shadow: 0 0 30px rgba(0, 188, 212, 0.3), inset 0 0 15px rgba(0, 188, 212, 0.1); transform: translateY(-8px); }
 
         .box-icon { font-size: 40px; margin-bottom: 15px; }
         .box-title { color: #fff; font-size: 22px; margin-bottom: 15px; font-weight: bold; }
@@ -139,42 +117,29 @@
         .exam-list-wrapper::-webkit-scrollbar { width: 6px; }
         .exam-list-wrapper::-webkit-scrollbar-thumb { background: rgba(0, 188, 212, 0.5); border-radius: 10px; }
 
-        .exam-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 12px; 
-            margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s;
-        }
+        .exam-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.04); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.05); transition: 0.3s; }
         .exam-item:hover { background: rgba(0, 188, 212, 0.1); border-color: rgba(0, 188, 212, 0.4); }
         .exam-name { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 4px; }
-        
         .meta-info { display: flex; flex-direction: column; gap: 4px; }
         .exam-time { font-size: 12px; color: #00bcd4; font-weight: bold; }
         
-        /* Highlight Published State */
         .publish-time { font-size: 11px; color: #ffb74d; background: rgba(255, 183, 77, 0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; width: max-content; font-weight: bold;}
-        .published-state { color: #00e676; background: rgba(0, 230, 118, 0.1); } /* Green style for published */
+        .published-state { color: #00e676; background: rgba(0, 230, 118, 0.1); }
 
-        .start-btn { 
-            background: linear-gradient(135deg, #00bcd4, #2196f3); color: #fff; padding: 8px 16px; 
-            border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; transition: 0.3s; 
-        }
+        .start-btn { background: linear-gradient(135deg, #00bcd4, #2196f3); color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; transition: 0.3s; }
         .start-btn:hover { box-shadow: 0 4px 15px rgba(0, 188, 212, 0.5); transform: scale(1.05); }
 
-        .action-btn { 
-            display: inline-block; width: 100%; padding: 15px; margin-top: auto;
-            border-radius: 12px; text-decoration: none; color: white; 
-            font-size: 16px; font-weight: bold; transition: all 0.3s ease; border: none; cursor: pointer;
-        }
+        .action-btn { display: inline-block; width: 100%; padding: 15px; margin-top: auto; border-radius: 12px; text-decoration: none; color: white; font-size: 16px; font-weight: bold; transition: all 0.3s ease; border: none; cursor: pointer; }
         .btn-green { background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.4); color: #00e676; }
         .btn-green:hover { background: rgba(0, 230, 118, 0.2); box-shadow: 0 0 20px rgba(0, 230, 118, 0.4); }
-        
-        .btn-outline { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); color: #e0e0e0; }
-        .btn-outline:hover { background: rgba(255, 255, 255, 0.1); color: #fff; border-color: #fff; }
+
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; font-size: 15px; margin-bottom: 20px; }
+        select option { background-color: #1a1a24; color: white; }
+        select:focus { border-color: #00bcd4; }
 
         .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #00bcd4; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Footer */
         .footer { position: absolute; bottom: 15px; width: 100%; text-align: center; color: #888; font-size: 13px; z-index: 10; font-weight: 500;}
         .footer span { color: #00bcd4; font-weight: bold; letter-spacing: 0.5px; }
 
@@ -182,22 +147,14 @@
 </head>
 <body>
 
-    <div class="bg-blobs">
-        <div class="blob blob1"></div>
-        <div class="blob blob2"></div>
-        <div class="blob blob3"></div>
-    </div>
+    <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
 
-    <div class="top-left-bar">
-        <div class="icon-menu noti-menu" id="notiMenuBtn">
-            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-            <span class="noti-badge" id="notiBadge"></span>
-            <div class="dropdown-content noti-content">
-                <div class="noti-header">📢 Notice Board</div>
-                <div class="noti-body" id="noticeText">Checking for updates...</div>
-            </div>
-        </div>
-    </div>
+    <nav class="navbar">
+        <div class="nav-brand">MCQ Portal</div>
+        <a href="admin.html" class="nav-admin-btn">
+            ⚙️ Admin
+        </a>
+    </nav>
 
     <div class="top-right-bar">
         <div style="position: relative;">
@@ -205,16 +162,9 @@
                 <svg viewBox="0 0 24 24"><path d="M12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-16 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg>
             </button>
             <div class="apps-dropdown" id="appsDropdown">
-                <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">
-                    UniDocs Generator | RUET
-                </a>
+                <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">UniDocs Generator | RUET</a>
             </div>
         </div>
-    </div>
-
-    <div class="header-section">
-        <h1>JOB PREPARATION MCQ Portal</h1>
-       
     </div>
 
     <div class="grid-container">
@@ -229,21 +179,26 @@
         </div>
 
         <div class="glass-box">
-            <div class="box-icon">📊</div>
-            <div class="box-title">Check Results</div>
+            <div class="box-icon">🏆</div>
+            <div class="box-title">Merit List</div>
             <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
-                Review your submitted answer sheets, check correct answers, and track your scores once the time is up.
+                View and download the final merit list.
             </p>
-            <a href="answer-sheet.html" class="action-btn btn-green">View Answer Sheet</a>
+            <select id="publicExamSelector">
+                <option value="">-- Select Exam --</option>
+            </select>
+            <div id="meritListDisplay" style="text-align: center; min-height: 55px; display: flex; align-items: flex-end; justify-content: center; width: 100%;">
+                <p style="color: #b3b3b3; font-size: 13px;">Select an exam to check status.</p>
+            </div>
         </div>
 
         <div class="glass-box">
-            <div class="box-icon">⚙️</div>
-            <div class="box-title">Admin Dashboard</div>
+            <div class="box-icon">📊</div>
+            <div class="box-title">Answer Sheet</div>
             <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
-                 Authorized access only. 
+                Review your submitted answer sheets, check correct answers, and track your scores once the time is up.
             </p>
-            <a href="admin.html" class="action-btn btn-outline">Enter Admin Panel</a>
+            <a href="answer-sheet.html" class="action-btn btn-green" style="text-align: center;">View Answer Sheet</a>
         </div>
 
     </div>
@@ -254,9 +209,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, orderBy, query, limit } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, orderBy, query, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 TOMAR FIREBASE CONFIG EKHANE BOSHAO 🔴🔴
+        // 🔴🔴 YOUR ORIGINAL FIREBASE CONFIG 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -269,57 +224,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 🟢 9-Dots Click Logic 🟢
+        // Apps Menu Logic
         const appsBtn = document.getElementById('appsMenuBtn');
         const appsDropdown = document.getElementById('appsDropdown');
+        appsBtn.addEventListener('click', (e) => { e.stopPropagation(); appsDropdown.classList.toggle('show'); });
+        window.addEventListener('click', (e) => { if (!appsBtn.contains(e.target)) appsDropdown.classList.remove('show'); });
 
-        appsBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            appsDropdown.classList.toggle('show');
-        });
-
-        window.addEventListener('click', (e) => {
-            if (!appsBtn.contains(e.target)) {
-                appsDropdown.classList.remove('show');
-            }
-        });
-
-
-        // 🟢 Notification Logic 🟢
-        async function fetchNotice() {
-            try {
-                const q = query(collection(db, "notices"), orderBy("timestamp", "desc"), limit(1));
-                const snap = await getDocs(q);
-                
-                const notiBadge = document.getElementById('notiBadge');
-                const noticeText = document.getElementById('noticeText');
-                
-                if (!snap.empty) {
-                    const noticeData = snap.docs[0].data();
-                    const noticeId = snap.docs[0].id;
-                    const savedId = localStorage.getItem('readNoticeId');
-                    
-                    if (savedId !== noticeId) {
-                        notiBadge.style.display = 'flex';
-                        noticeText.innerText = noticeData.message || noticeData.text || "You have a new announcement!";
-                        
-                        document.getElementById('notiMenuBtn').addEventListener('click', () => {
-                            localStorage.setItem('readNoticeId', noticeId);
-                        });
-                    } else {
-                        notiBadge.style.display = 'none';
-                        noticeText.innerText = "No new announcements at the moment.";
-                    }
-                } else {
-                    noticeText.innerText = "No new announcements at the moment.";
-                }
-            } catch (error) {
-                console.error("Notice error: ", error);
-            }
-        }
-        fetchNotice();
-
-        // 🟢 Exam Load & Time Logic 🟢
         function formatResultTime(timestamp) {
             if (!timestamp) return "Not Scheduled";
             const d = new Date(timestamp);
@@ -327,8 +237,12 @@
             return d.toLocaleString('en-US', options);
         }
 
+        let allExamsData = {}; 
+
         async function loadAvailableExams() {
             const examsListDiv = document.getElementById('examsList');
+            const publicExamSelector = document.getElementById('publicExamSelector');
+            
             try {
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
@@ -340,29 +254,35 @@
 
                 examsListDiv.innerHTML = ""; 
                 let activeExamFound = false;
-                const currentTime = new Date().getTime(); // Current Time
+                const currentTime = new Date().getTime();
                 
                 querySnapshot.forEach((doc) => {
                     const exam = doc.data();
                     const examId = doc.id;
 
+                    // Exclude Drafts from Merit List Selection
+                    if (exam.status !== "draft") {
+                        allExamsData[examId] = exam;
+                        const option = document.createElement('option');
+                        option.value = examId;
+                        let titleSuffix = exam.status === "deleted" ? " [Ended]" : "";
+                        option.innerText = exam.title + titleSuffix;
+                        publicExamSelector.appendChild(option);
+                    }
+
+                    // Display active exams
                     if (exam.status === "active") {
                         activeExamFound = true;
-                        
-                        // 🟢 TIME CHECKING LOGIC 🟢
                         let publishTextHTML = "";
                         if (exam.publishTime && currentTime >= exam.publishTime) {
-                            // Time Over: Show "Published" with green color
                             publishTextHTML = `<span class="publish-time published-state">📢 Result: Published ✅</span>`;
                         } else {
-                            // Time Not Over: Show formatting Date & Time
                             const publishTimeFormatted = formatResultTime(exam.publishTime);
                             publishTextHTML = `<span class="publish-time">📢 Result: ${publishTimeFormatted}</span>`;
                         }
                         
                         const item = document.createElement('div');
                         item.className = 'exam-item';
-                        
                         item.innerHTML = `
                             <div class="meta-info">
                                 <div class="exam-name">${exam.title}</div>
@@ -374,18 +294,84 @@
                         examsListDiv.appendChild(item);
                     }
                 });
+                if (!activeExamFound) { examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>"; }
+            } catch (error) { examsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 20px;'>Error loading exams.</p>"; }
+        }
+        
+        loadAvailableExams();
 
-                if (!activeExamFound) {
-                    examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>";
-                }
+        const meritListDisplay = document.getElementById('meritListDisplay');
+        const publicExamSelector = document.getElementById('publicExamSelector');
 
-            } catch (error) {
-                console.error("Error loading exams: ", error);
-                examsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 20px;'>Error loading exams.</p>";
+        publicExamSelector.addEventListener('change', async (e) => {
+            const examId = e.target.value;
+            if (!examId) {
+                meritListDisplay.innerHTML = `<p style="color: #b3b3b3; font-size: 13px;">Select an exam to check status.</p>`;
+                return;
             }
+
+            const exam = allExamsData[examId];
+            const currentTime = new Date().getTime();
+
+            if (exam.publishTime && currentTime < exam.publishTime) {
+                const publishTimeFormatted = formatResultTime(exam.publishTime);
+                meritListDisplay.innerHTML = `
+                    <p style="color: #ffb74d; font-size: 14px; font-weight: bold; background: rgba(255, 183, 77, 0.1); padding: 10px; border-radius: 8px; width: 100%; border: 1px solid rgba(255, 183, 77, 0.3);">
+                        🔒 Result will be published at:<br> <span style="color:#fff;">${publishTimeFormatted}</span>
+                    </p>`;
+            } else {
+                meritListDisplay.innerHTML = `
+                    <button id="downloadMeritPdfBtn" class="action-btn" style="background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.5); color: #00e676; margin-top: 0; padding: 12px;">
+                        📥 Download Merit List (PDF)
+                    </button>`;
+                
+                document.getElementById('downloadMeritPdfBtn').addEventListener('click', async () => {
+                    await generateMeritListPDF(examId, exam.title, exam.publishTime);
+                });
+            }
+        });
+
+        async function generateMeritListPDF(examId, examTitle, publishTime) {
+            const btn = document.getElementById('downloadMeritPdfBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "⏳ Generating PDF...";
+            btn.disabled = true;
+
+            try {
+                const q = query(collection(db, "results"), where("examId", "==", examId));
+                const snapshot = await getDocs(q);
+                if (snapshot.empty) { alert("No submissions found."); btn.innerHTML = originalText; btn.disabled = false; return; }
+
+                let onTimeSubmissions = []; let lateSubmissions = [];
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    let submittedAt = data.timestamp?.seconds ? data.timestamp.seconds * 1000 : new Date(data.timestamp).getTime();
+                    if (publishTime && submittedAt > publishTime) { lateSubmissions.push(data); } else { onTimeSubmissions.push(data); }
+                });
+
+                onTimeSubmissions.sort((a, b) => b.score - a.score); lateSubmissions.sort((a, b) => b.score - a.score);
+
+                const { jsPDF } = window.jspdf; const doc = new jsPDF();
+                doc.setFontSize(18); doc.setTextColor(33, 33, 33); doc.text(`${examTitle} | Hridoy Boshunia`, 14, 20); let finalY = 25;
+
+                if (onTimeSubmissions.length > 0) {
+                    doc.setFontSize(12); doc.setTextColor(46, 125, 50); doc.text("Official Merit List (On-Time Submissions)", 14, finalY + 8);
+                    const onTimeData = onTimeSubmissions.map((row, index) => [ index + 1, row.rollNumber || "N/A", row.score ]);
+                    doc.autoTable({ startY: finalY + 12, head: [['Position', 'Roll Number', 'Total Score']], body: onTimeData, headStyles: { fillColor: [0, 188, 212] }, styles: { halign: 'center' } });
+                    finalY = doc.lastAutoTable.finalY;
+                } else { doc.setFontSize(11); doc.setTextColor(100, 100, 100); doc.text("No on-time submissions available.", 14, finalY + 8); finalY += 15; }
+
+                if (lateSubmissions.length > 0) {
+                    doc.setFontSize(12); doc.setTextColor(211, 47, 47); doc.text("Late Submissions (Unranked)", 14, finalY + 15);
+                    const lateData = lateSubmissions.map(row => [ row.rollNumber || "N/A", row.score ]);
+                    doc.autoTable({ startY: finalY + 20, head: [['Roll Number', 'Total Score']], body: lateData, headStyles: { fillColor: [255, 82, 82] }, bodyStyles: { textColor: [255, 0, 0] }, styles: { halign: 'center' } });
+                }
+                doc.save(`Merit_List_${examTitle.replace(/\s+/g, '_')}.pdf`);
+            } catch (error) { alert("Failed to generate PDF."); }
+            btn.innerHTML = originalText; btn.disabled = false;
         }
 
-        loadAvailableExams();
     </script>
 </body>
 </html>
