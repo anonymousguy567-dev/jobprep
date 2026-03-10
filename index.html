@@ -354,7 +354,7 @@
                 onTimeSubmissions.sort((a, b) => b.score - a.score); lateSubmissions.sort((a, b) => b.score - a.score);
 
                 const { jsPDF } = window.jspdf; const doc = new jsPDF();
-                doc.setFontSize(18); doc.setTextColor(33, 33, 33); doc.text(`${examTitle} | Hridoy Boshunia`, 14, 20); let finalY = 25;
+                doc.setFontSize(18); doc.setTextColor(33, 33, 33); doc.text(`${examTitle} | Hridoy Bosunia`, 14, 20); let finalY = 25;
 
                 // 🔴 SECTION 1: On-Time Submissions
                 if (onTimeSubmissions.length > 0) {
@@ -386,3 +386,4 @@
     </script>
 </body>
 </html>
+
