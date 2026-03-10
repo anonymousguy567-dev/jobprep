@@ -3,16 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Answer Sheet & Result - UniDocs</title>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <title>Personal Answer Sheet - UniDocs</title>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0d0d12; background-image: radial-gradient(circle at 15% 50%, rgba(45, 21, 82, 0.4), transparent 25%), radial-gradient(circle at 85% 30%, rgba(21, 64, 82, 0.4), transparent 25%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
+        
+        body { 
+            background-color: #050508; color: #ffffff; min-height: 100vh; display: flex; 
+            flex-direction: column; justify-content: center; align-items: center; 
+            padding: 120px 20px 60px 20px; overflow-x: hidden; position: relative; 
+        }
+        
+        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
+        .blob { position: absolute; filter: blur(90px); opacity: 0.5; animation: float 12s infinite alternate ease-in-out; }
+        .blob1 { width: 350px; height: 350px; background: #00bcd4; top: -10%; left: -5%; animation-delay: 0s; }
+        .blob2 { width: 400px; height: 400px; background: #2196f3; bottom: -10%; right: -5%; animation-delay: 3s; }
+        .blob3 { width: 250px; height: 250px; background: #673ab7; top: 40%; left: 40%; animation-delay: 5s; }
+
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
+
+        /* 🟢 Top Navigation Bar 🟢 */
+        .navbar {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(20, 20, 25, 0.4);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 188, 212, 0.2);
+            z-index: 2000;
+        }
+        
+        .nav-brand {
+            font-size: 24px;
+            font-weight: 800;
+            color: #00bcd4;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        
+        .nav-admin-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e0e0e0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 24px; 
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 17px; 
+            transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-admin-btn:hover {
+            background: rgba(0, 188, 212, 0.15);
+            border-color: #00bcd4;
+            color: #00bcd4;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* 🟢 9-Dot Menu 🟢 */
+        .top-right-bar { position: absolute; top: 90px; right: 25px; z-index: 1000; }
+        
+        .apps-menu-btn { 
+            position: relative; width: 45px; height: 45px; border-radius: 50%; 
+            background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); display: flex; 
+            justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; outline: none;
+        }
+        .apps-menu-btn:hover { background: rgba(0, 188, 212, 0.2); border-color: rgba(0, 188, 212, 0.5); }
+        .apps-menu-btn svg { fill: #e0e0e0; width: 24px; height: 24px; transition: 0.3s; }
+        .apps-menu-btn:hover svg { fill: #00bcd4; }
+        
+        .apps-dropdown { 
+            position: absolute; top: 55px; right: 0; background: rgba(20, 20, 25, 0.95); 
+            backdrop-filter: blur(15px); border: 1px solid rgba(0, 188, 212, 0.3); 
+            border-radius: 12px; padding: 10px; width: max-content; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: none; flex-direction: column; 
+            transform: translateY(-10px); opacity: 0; transition: all 0.3s ease;
+        }
+        .apps-dropdown.show { display: block; animation: fadeIn 0.2s ease; opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; transition: 0.3s; background: rgba(255, 255, 255, 0.05); text-align: center; }
+        .apps-link:hover { background: rgba(0, 188, 212, 0.15); color: #00bcd4; }
+
+        /* Main Container */
         .glass-container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; width: 100%; max-width: 800px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
-        h1, h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; letter-spacing: 1px; }
+        h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; letter-spacing: 1px; }
         
         #timer-section, #result-section { display: none; flex-direction: column; align-items: center; text-align: center; padding: 10px 0; width: 100%; }
         
@@ -20,8 +100,10 @@
         .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
         
         select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; font-size: 16px; margin-bottom: 20px;}
-        .time-box { font-size: 20px; font-weight: bold; color: #ff5252; background: rgba(255, 82, 82, 0.1); padding: 15px 30px; border-radius: 10px; margin: 15px 0; border: 1px solid rgba(255, 82, 82, 0.2); }
+        select option { background-color: #1a1a24; color: white; }
+        select:focus { border-color: #00bcd4; }
         
+        .time-box { font-size: 20px; font-weight: bold; color: #ff5252; background: rgba(255, 82, 82, 0.1); padding: 15px 30px; border-radius: 10px; margin: 15px 0; border: 1px solid rgba(255, 82, 82, 0.2); }
         .score-display { font-size: 40px; font-weight: bold; color: #00bcd4; margin: 15px 0 10px 0; }
         
         .breakdown-box { display: flex; justify-content: space-around; width: 100%; max-width: 500px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
@@ -36,36 +118,42 @@
         .wrong-ans { background: rgba(255, 82, 82, 0.2) !important; border: 1px solid #ff5252; color: #ff5252; }
         .skipped-msg { color: #ffb74d; font-weight: bold; font-size: 14px; margin-bottom: 15px; display: block;}
         
-        .public-box { background: rgba(0, 188, 212, 0.05); border: 1px solid rgba(0, 188, 212, 0.2); border-radius: 12px; padding: 25px; width: 100%; margin-bottom: 20px; text-align: center; display: flex; flex-direction: column; align-items: center;}
-        .login-box { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 25px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center;}
-
+        .login-box { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 30px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center;}
     </style>
 </head>
 <body>
 
-    <div class="glass-container">
-        <h1>Answer Sheet & Merit List</h1>
+    <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
 
-        <div id="public-merit-section" class="public-box">
-            <h3 style="color: #ffb74d; margin-bottom: 10px;">🏆Merit List</h3>
-            <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 15px;">Check the merit list. Select an exam below.</p>
-            <select id="publicExamSelector">
-                <option value="">-- Loading Exams... --</option>
-            </select>
-            <div id="publicMeritStatus" style="min-height: 50px; width: 100%;">
-                <p style="color: #b3b3b3; font-size: 13px;">Select an exam to view the result status.</p>
+    <nav class="navbar">
+        <div class="nav-brand">MCQ Portal</div>
+        <a href="admin.html" class="nav-admin-btn">
+            ⚙️ Admin
+        </a>
+    </nav>
+
+    <div class="top-right-bar">
+        <div style="position: relative;">
+            <button class="apps-menu-btn" id="appsMenuBtn">
+                <svg viewBox="0 0 24 24"><path d="M12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-16 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg>
+            </button>
+            <div class="apps-dropdown" id="appsDropdown">
+                <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">UniDocs Generator | RUET</a>
             </div>
         </div>
+    </div>
+
+    <div class="glass-container">
 
         <div id="login-section" class="login-box" style="display: none;">
-            <h3 style="color: #00bcd4; margin-bottom: 10px;">🔍 Answer Sheet</h3>
+            <h3 style="color: #00bcd4; margin-bottom: 10px;">🔍  Answer Sheet</h3>
             <p style="color: #a0a0b0; font-size: 14px;">Login to view your detailed question-by-question breakdown and mistakes.</p>
             <button id="loginBtn" class="login-btn" style="margin: 20px auto 0 auto;">Login with Google</button>
         </div>
 
         <div id="select-exam-section" class="login-box" style="display: none;">
             <h3 style="color: #00bcd4; margin-bottom: 5px;">👤 Welcome, <span id="userNameHeader">Student</span></h3>
-            <h4 style="color: #a0a0b0; margin-bottom: 15px; font-weight: normal; font-size: 15px;">Select an exam to view detailed answer sheet.</h4>
+            <h4 style="color: #a0a0b0; margin-bottom: 25px; font-weight: normal; font-size: 15px;">Select an exam to view your detailed answer sheet.</h4>
             <select id="examDropdown">
                 <option value="">-- Loading Exams... --</option>
             </select>
@@ -112,7 +200,6 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        // 🔴 NOTE: Removed getAnalytics import since this Firebase project setup might not have it initialized fully, keeping it simple as per your first request.
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, query, where, doc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
@@ -132,23 +219,19 @@
 
         let userEmail = ""; let userName = ""; let timerInterval; let allExamsCache = {};
         
+        // Setup 9-dot App Menu
+        const appsBtn = document.getElementById('appsMenuBtn');
+        const appsDropdown = document.getElementById('appsDropdown');
+        appsBtn.addEventListener('click', (e) => { e.stopPropagation(); appsDropdown.classList.toggle('show'); });
+        window.addEventListener('click', (e) => { if (!appsBtn.contains(e.target)) appsDropdown.classList.remove('show'); });
+
         const loginSection = document.getElementById('login-section');
         const selectExamSection = document.getElementById('select-exam-section');
-        const publicMeritSection = document.getElementById('public-merit-section');
         const timerSection = document.getElementById('timer-section'); 
         const resultSection = document.getElementById('result-section');
         const countdownDisplay = document.getElementById('countdown'); 
         const examDropdown = document.getElementById('examDropdown');
-        const publicExamSelector = document.getElementById('publicExamSelector');
-        const publicMeritStatus = document.getElementById('publicMeritStatus');
         const homeLink = document.getElementById('homeLink');
-
-        function formatResultTime(timestamp) {
-            if (!timestamp) return "Not Scheduled";
-            const d = new Date(timestamp);
-            const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
-            return d.toLocaleString('en-US', options);
-        }
 
         async function fetchExams() {
             try {
@@ -166,143 +249,15 @@
                     optionsHTML += `<option value="${doc.id}">${examTitle}</option>`;
                 });
                 
-                publicExamSelector.innerHTML = optionsHTML;
                 examDropdown.innerHTML = optionsHTML;
             } catch(error) { 
-                publicExamSelector.innerHTML = '<option value="">Error loading exams!</option>'; 
+                examDropdown.innerHTML = '<option value="">Error loading exams!</option>'; 
             }
         }
         
         fetchExams();
 
-        publicExamSelector.addEventListener('change', async (e) => {
-            const examId = e.target.value;
-            if (!examId) {
-                publicMeritStatus.innerHTML = `<p style="color: #b3b3b3; font-size: 13px;">Select an exam to view the result status.</p>`;
-                return;
-            }
-
-            const exam = allExamsCache[examId];
-            const currentTime = new Date().getTime();
-
-            if (exam.publishTime && currentTime < exam.publishTime) {
-                const publishTimeFormatted = formatResultTime(exam.publishTime);
-                publicMeritStatus.innerHTML = `
-                    <p style="color: #ffb74d; font-size: 14px; font-weight: bold; background: rgba(255, 183, 77, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 183, 77, 0.3);">
-                        🔒 Result will be published at:<br> <span style="color:#fff;">${publishTimeFormatted}</span>
-                    </p>`;
-            } else {
-                publicMeritStatus.innerHTML = `
-                    <button id="downloadPublicPdfBtn" class="action-btn" style="background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.5); color: #00e676; margin-top: 10px; width: 100%;">
-                        📥 Download Merit List (PDF)
-                    </button>`;
-                
-                document.getElementById('downloadPublicPdfBtn').addEventListener('click', async () => {
-                    await generateMeritListPDF(examId, exam.title, exam.publishTime);
-                });
-            }
-        });
-
-        async function generateMeritListPDF(examId, examTitle, publishTime) {
-            const btn = document.getElementById('downloadPublicPdfBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = "⏳ Generating PDF...";
-            btn.disabled = true;
-
-            try {
-                const q = query(collection(db, "results"), where("examId", "==", examId));
-                const snapshot = await getDocs(q);
-                
-                if (snapshot.empty) {
-                    alert("No submissions found for this exam yet.");
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    return;
-                }
-
-                let onTimeSubmissions = [];
-                let lateSubmissions = [];
-
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    let submittedAt = 0;
-                    if (data.timestamp && typeof data.timestamp.toDate === 'function') {
-                        submittedAt = data.timestamp.toDate().getTime();
-                    } else if (data.timestamp && data.timestamp.seconds) {
-                        submittedAt = data.timestamp.seconds * 1000;
-                    } else {
-                        submittedAt = new Date(data.timestamp).getTime();
-                    }
-
-                    if (publishTime && submittedAt > publishTime) {
-                        lateSubmissions.push(data);
-                    } else {
-                        onTimeSubmissions.push(data);
-                    }
-                });
-
-                onTimeSubmissions.sort((a, b) => b.score - a.score);
-                lateSubmissions.sort((a, b) => b.score - a.score);
-
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-
-                doc.setFontSize(18);
-                doc.setTextColor(33, 33, 33);
-                doc.text(`${examTitle} | Hridoy Bosunia`, 14, 20);
-                
-                let finalY = 25;
-
-                if (onTimeSubmissions.length > 0) {
-                    doc.setFontSize(12);
-                    doc.setTextColor(46, 125, 50); 
-                    doc.text("Official Merit List (On-Time Submissions)", 14, finalY + 8);
-                    
-                    const onTimeData = onTimeSubmissions.map((row, index) => [
-                        index + 1, row.rollNumber || "N/A", row.score 
-                    ]);
-
-                    doc.autoTable({
-                        startY: finalY + 12,
-                        head: [['Position', 'Roll Number', 'Total Score']],
-                        body: onTimeData,
-                        headStyles: { fillColor: [0, 188, 212] }, 
-                        styles: { halign: 'center' }
-                    });
-                    finalY = doc.lastAutoTable.finalY;
-                } else {
-                    doc.setFontSize(11);
-                    doc.setTextColor(100, 100, 100);
-                    doc.text("No on-time submissions available.", 14, finalY + 8);
-                    finalY += 15;
-                }
-
-                if (lateSubmissions.length > 0) {
-                    doc.setFontSize(12);
-                    doc.setTextColor(211, 47, 47); 
-                    doc.text("Late Submissions", 14, finalY + 15);
-
-                    const lateData = lateSubmissions.map(row => [
-                        row.rollNumber || "N/A", row.score
-                    ]);
-
-                    doc.autoTable({
-                        startY: finalY + 20,
-                        head: [['Roll Number', 'Total Score']],
-                        body: lateData,
-                        headStyles: { fillColor: [255, 82, 82] }, 
-                        bodyStyles: { textColor: [255, 0, 0] },   
-                        styles: { halign: 'center' }
-                    });
-                }
-                doc.save(`Merit_List_${examTitle.replace(/\s+/g, '_')}.pdf`);
-            } catch (error) {
-                alert("Failed to generate PDF.");
-            }
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }
-
+        // Auth Logic
         onAuthStateChanged(auth, (user) => {
             if (user) { 
                 userEmail = user.email; userName = user.displayName; 
@@ -323,10 +278,8 @@
         examDropdown.addEventListener('change', (e) => {
             const selectedExamId = e.target.value;
             if(selectedExamId) { 
-                publicMeritSection.style.display = "none";
                 selectExamSection.style.display = "none"; 
                 homeLink.style.display = "none";
-                
                 checkTimeAndProceed(selectedExamId); 
             }
         });
@@ -418,4 +371,3 @@
     </script>
 </body>
 </html>
-
