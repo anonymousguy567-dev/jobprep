@@ -14,9 +14,10 @@
         body { 
             background-color: #050508; color: #ffffff; min-height: 100vh; display: flex; 
             flex-direction: column; justify-content: center; align-items: center; 
-            padding: 120px 20px 60px 20px; overflow-x: hidden; position: relative;
+            padding: 120px 20px 30px 20px; overflow-x: hidden; position: relative;
         }
 
+        /* 🟢 Background Blobs 🟢 */
         .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
         .blob { position: absolute; filter: blur(90px); opacity: 0.5; animation: float 12s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #00bcd4; top: -10%; left: -5%; animation-delay: 0s; }
@@ -27,53 +28,26 @@
 
         /* 🟢 Top Navigation Bar 🟢 */
         .navbar {
-            position: absolute;
-            top: 0; left: 0; width: 100%;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(20, 20, 25, 0.4);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 188, 212, 0.2);
-            z-index: 2000;
+            position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 188, 212, 0.2); z-index: 2000;
         }
         
-        .nav-brand {
-            font-size: 24px;
-            font-weight: 800;
-            color: #00bcd4;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
+        .nav-brand { font-size: 24px; font-weight: 800; color: #00bcd4; letter-spacing: 1.5px; text-transform: uppercase; }
         
         .nav-admin-btn {
-            background: rgba(255, 255, 255, 0.05);
-            color: #e0e0e0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 24px; 
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 17px; 
-            transition: 0.3s;
-            display: flex; align-items: center; gap: 8px;
+            background: rgba(255, 255, 255, 0.05); color: #e0e0e0; border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 17px; 
+            display: flex; align-items: center; gap: 8px; transition: 0.3s;
         }
-        .nav-admin-btn:hover {
-            background: rgba(0, 188, 212, 0.15);
-            border-color: #00bcd4;
-            color: #00bcd4;
-            box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
-            transform: translateY(-2px);
-        }
+        .nav-admin-btn:hover { background: rgba(0, 188, 212, 0.15); border-color: #00bcd4; color: #00bcd4; box-shadow: 0 0 15px rgba(0, 188, 212, 0.3); transform: translateY(-2px); }
 
         /* 9-Dot Menu */
         .top-right-bar { position: absolute; top: 90px; right: 25px; z-index: 1000; }
-        
         .apps-menu-btn { 
-            position: relative; width: 45px; height: 45px; border-radius: 50%; 
-            background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); display: flex; 
+            position: relative; width: 45px; height: 45px; border-radius: 50%; background: rgba(20, 20, 25, 0.6); 
+            backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; 
             justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; outline: none;
         }
         .apps-menu-btn:hover { background: rgba(0, 188, 212, 0.2); border-color: rgba(0, 188, 212, 0.5); }
@@ -81,9 +55,8 @@
         .apps-menu-btn:hover svg { fill: #00bcd4; }
         
         .apps-dropdown { 
-            position: absolute; top: 55px; right: 0; background: rgba(20, 20, 25, 0.95); 
-            backdrop-filter: blur(15px); border: 1px solid rgba(0, 188, 212, 0.3); 
-            border-radius: 12px; padding: 10px; width: max-content; 
+            position: absolute; top: 55px; right: 0; background: rgba(20, 20, 25, 0.95); backdrop-filter: blur(15px); 
+            border: 1px solid rgba(0, 188, 212, 0.3); border-radius: 12px; padding: 10px; width: max-content; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: none; flex-direction: column; 
             transform: translateY(-10px); opacity: 0; transition: all 0.3s ease;
         }
@@ -93,12 +66,13 @@
         .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; transition: 0.3s; background: rgba(255, 255, 255, 0.05); text-align: center; }
         .apps-link:hover { background: rgba(0, 188, 212, 0.15); color: #00bcd4; }
 
+        /* Header Section */
+        .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; z-index: 10; position: relative;}
+        h1 { background: linear-gradient(135deg, #00bcd4, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 36px; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; font-weight: 800; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
         /* 3 Box Grid Layout */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px; width: 100%; max-width: 1100px; animation: slideUp 0.8s ease-out;
-        }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 1100px; animation: slideUp 0.8s ease-out; z-index: 10; position: relative;}
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Glassy Box */
@@ -110,7 +84,7 @@
         }
         .glass-box:hover { border-color: rgba(0, 188, 212, 0.8); box-shadow: 0 0 30px rgba(0, 188, 212, 0.3), inset 0 0 15px rgba(0, 188, 212, 0.1); transform: translateY(-8px); }
 
-        .box-icon { font-size: 40px; margin-bottom: 15px; }
+        .box-icon { font-size: 40px; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
         .box-title { color: #fff; font-size: 22px; margin-bottom: 15px; font-weight: bold; }
 
         .exam-list-wrapper { flex-grow: 1; overflow-y: auto; max-height: 220px; padding-right: 5px; text-align: left; }
@@ -138,10 +112,48 @@
         select:focus { border-color: #00bcd4; }
 
         .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #00bcd4; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .footer { position: absolute; bottom: 15px; width: 100%; text-align: center; color: #888; font-size: 13px; z-index: 10; font-weight: 500;}
+        .footer { width: 100%; text-align: center; color: #888; font-size: 13px; z-index: 10; font-weight: 500; margin-top: 30px; margin-bottom: 10px;}
         .footer span { color: #00bcd4; font-weight: bold; letter-spacing: 0.5px; }
+
+        /* 🟢 Support Button & Modal 🟢 */
+        .support-fab { 
+            position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #ffb74d, #ff9800); 
+            color: #000; border: none; border-radius: 50px; padding: 12px 24px; font-size: 16px; font-weight: bold; 
+            cursor: pointer; box-shadow: 0 4px 15px rgba(255, 183, 77, 0.4); z-index: 3000; display: flex; align-items: center; gap: 8px; transition: 0.3s; 
+        }
+        .support-fab:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(255, 183, 77, 0.6); }
+
+        .support-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 4000; display: none; justify-content: center; align-items: center; }
+        .support-modal.show { display: flex; animation: fadeIn 0.3s ease; }
+        .support-modal-content { background: rgba(20, 20, 25, 0.95); border: 1px solid rgba(255, 183, 77, 0.4); border-radius: 16px; padding: 30px; width: 90%; max-width: 450px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .close-support-btn { position: absolute; top: 15px; right: 20px; color: #ff5252; font-size: 28px; cursor: pointer; font-weight: bold; transition: 0.3s; line-height: 1; }
+        .close-support-btn:hover { transform: scale(1.2); }
+        
+        .support-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; font-size: 14px; margin-bottom: 15px; }
+        .support-input:focus { border-color: #ffb74d; background: rgba(0, 0, 0, 0.5); }
+        
+        .file-upload-wrapper { margin-bottom: 15px; }
+        .file-upload-wrapper label { display: block; font-size: 13px; color: #b3b3b3; margin-bottom: 5px; }
+        .file-upload-note { font-size: 11px; color: #ffb74d; margin-top: 3px; display: block; }
+        .file-input { background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 8px; width: 100%; color: #fff; font-size: 13px; }
+        
+        .submit-issue-btn { background: linear-gradient(135deg, #ffb74d, #ff9800); color: #000; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 15px; border: none; cursor: pointer; transition: 0.3s; width: 100%; }
+        .submit-issue-btn:hover { box-shadow: 0 4px 15px rgba(255, 183, 77, 0.4); }
+
+        /* 📱 Mobile Specific Adjustments for Support Button 📱 */
+        @media (max-width: 768px) {
+            .support-fab {
+                position: relative; 
+                bottom: auto; right: auto;
+                width: 100%; max-width: 300px;
+                margin: 40px auto 0 auto; /* Places it below grid, above footer */
+                justify-content: center;
+                border-radius: 12px; /* Makes it look like a standard large button */
+                box-shadow: 0 4px 15px rgba(255, 183, 77, 0.2);
+            }
+            .support-fab:hover { transform: none; box-shadow: 0 4px 15px rgba(255, 183, 77, 0.4); }
+        }
 
     </style>
 </head>
@@ -151,9 +163,7 @@
 
     <nav class="navbar">
         <div class="nav-brand">MCQ Portal</div>
-        <a href="admin.html" class="nav-admin-btn">
-            ⚙️ Admin
-        </a>
+        <a href="admin.html" class="nav-admin-btn">⚙️ Admin</a>
     </nav>
 
     <div class="top-right-bar">
@@ -167,8 +177,11 @@
         </div>
     </div>
 
+    <div class="header-section">
+        <h1></h1>
+    </div>
+
     <div class="grid-container">
-        
         <div class="glass-box">
             <div class="box-icon">📝</div>
             <div class="box-title">Available Exams</div>
@@ -200,18 +213,41 @@
             </p>
             <a href="answer-sheet.html" class="action-btn btn-green" style="text-align: center;">View Answer Sheet</a>
         </div>
-
     </div>
+
+    <button class="support-fab" id="openSupportBtn">🐞 Report Issue</button>
 
     <div class="footer">
         Developed by <span>UniDocs</span>
     </div>
 
+    <div class="support-modal" id="supportModal">
+        <div class="support-modal-content">
+            <span class="close-support-btn" id="closeSupportBtn">&times;</span>
+            <h2 style="color: #ffb74d; margin-bottom: 5px;">Support</h2>
+            <p style="color: #a0a0b0; font-size: 13px; margin-bottom: 20px;">Facing any issues? Let us know!</p>
+            
+            <form id="issueForm">
+                <input type="text" id="issueName" class="support-input" placeholder="Your Name or Roll Number" required>
+                <textarea id="issueDesc" class="support-input" rows="4" placeholder="Describe the problem..." required></textarea>
+                
+                <div class="file-upload-wrapper">
+                    <label>Attach Screenshot (Optional)</label>
+                    <input type="file" id="issueImage" class="file-input" accept="image/*" multiple>
+                    <span class="file-upload-note">Max 2 images. Limit: 4MB per image.</span>
+                </div>
+
+                <button type="submit" class="submit-issue-btn">Submit Report</button>
+            </form>
+            <p id="issueStatus" style="margin-top: 15px; font-size: 14px; font-weight: bold; text-align: center;"></p>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, orderBy, query, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, orderBy, query, where, addDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
 
-        // 🔴🔴 YOUR ORIGINAL FIREBASE CONFIG 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -223,6 +259,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const storage = getStorage(app); 
 
         // Apps Menu Logic
         const appsBtn = document.getElementById('appsMenuBtn');
@@ -233,8 +270,7 @@
         function formatResultTime(timestamp) {
             if (!timestamp) return "Not Scheduled";
             const d = new Date(timestamp);
-            const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
-            return d.toLocaleString('en-US', options);
+            return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
         }
 
         let allExamsData = {}; 
@@ -260,7 +296,6 @@
                     const exam = doc.data();
                     const examId = doc.id;
 
-                    // Exclude Drafts from Merit List Selection
                     if (exam.status !== "draft") {
                         allExamsData[examId] = exam;
                         const option = document.createElement('option');
@@ -270,15 +305,13 @@
                         publicExamSelector.appendChild(option);
                     }
 
-                    // Display active exams
                     if (exam.status === "active") {
                         activeExamFound = true;
                         let publishTextHTML = "";
                         if (exam.publishTime && currentTime >= exam.publishTime) {
                             publishTextHTML = `<span class="publish-time published-state">📢 Result: Published ✅</span>`;
                         } else {
-                            const publishTimeFormatted = formatResultTime(exam.publishTime);
-                            publishTextHTML = `<span class="publish-time">📢 Result: ${publishTimeFormatted}</span>`;
+                            publishTextHTML = `<span class="publish-time">📢 Result: ${formatResultTime(exam.publishTime)}</span>`;
                         }
                         
                         const item = document.createElement('div');
@@ -305,38 +338,22 @@
 
         publicExamSelector.addEventListener('change', async (e) => {
             const examId = e.target.value;
-            if (!examId) {
-                meritListDisplay.innerHTML = `<p style="color: #b3b3b3; font-size: 13px;">Select an exam to check status.</p>`;
-                return;
-            }
-
+            if (!examId) { meritListDisplay.innerHTML = `<p style="color: #b3b3b3; font-size: 13px;">Select an exam to check status.</p>`; return; }
             const exam = allExamsData[examId];
             const currentTime = new Date().getTime();
 
             if (exam.publishTime && currentTime < exam.publishTime) {
-                const publishTimeFormatted = formatResultTime(exam.publishTime);
-                meritListDisplay.innerHTML = `
-                    <p style="color: #ffb74d; font-size: 14px; font-weight: bold; background: rgba(255, 183, 77, 0.1); padding: 10px; border-radius: 8px; width: 100%; border: 1px solid rgba(255, 183, 77, 0.3);">
-                        🔒 Result will be published at:<br> <span style="color:#fff;">${publishTimeFormatted}</span>
-                    </p>`;
+                meritListDisplay.innerHTML = `<p style="color: #ffb74d; font-size: 14px; font-weight: bold; background: rgba(255, 183, 77, 0.1); padding: 10px; border-radius: 8px; width: 100%; border: 1px solid rgba(255, 183, 77, 0.3);">🔒 Result will be published at:<br> <span style="color:#fff;">${formatResultTime(exam.publishTime)}</span></p>`;
             } else {
-                meritListDisplay.innerHTML = `
-                    <button id="downloadMeritPdfBtn" class="action-btn" style="background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.5); color: #00e676; margin-top: 0; padding: 12px;">
-                        📥 Download Merit List (PDF)
-                    </button>`;
-                
-                document.getElementById('downloadMeritPdfBtn').addEventListener('click', async () => {
-                    await generateMeritListPDF(examId, exam.title, exam.publishTime);
-                });
+                meritListDisplay.innerHTML = `<button id="downloadMeritPdfBtn" class="action-btn" style="background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.5); color: #00e676; margin-top: 0; padding: 12px;">📥 Download Merit List (PDF)</button>`;
+                document.getElementById('downloadMeritPdfBtn').addEventListener('click', async () => { await generateMeritListPDF(examId, exam.title, exam.publishTime); });
             }
         });
 
-        // 🟢 PDF GENERATION LOGIC 🟢
         async function generateMeritListPDF(examId, examTitle, publishTime) {
             const btn = document.getElementById('downloadMeritPdfBtn');
             const originalText = btn.innerHTML;
-            btn.innerHTML = "⏳ Generating PDF...";
-            btn.disabled = true;
+            btn.innerHTML = "⏳ Generating PDF..."; btn.disabled = true;
 
             try {
                 const q = query(collection(db, "results"), where("examId", "==", examId));
@@ -344,7 +361,6 @@
                 if (snapshot.empty) { alert("No submissions found."); btn.innerHTML = originalText; btn.disabled = false; return; }
 
                 let onTimeSubmissions = []; let lateSubmissions = [];
-
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     let submittedAt = data.timestamp?.seconds ? data.timestamp.seconds * 1000 : new Date(data.timestamp).getTime();
@@ -354,9 +370,8 @@
                 onTimeSubmissions.sort((a, b) => b.score - a.score); lateSubmissions.sort((a, b) => b.score - a.score);
 
                 const { jsPDF } = window.jspdf; const doc = new jsPDF();
-                doc.setFontSize(18); doc.setTextColor(33, 33, 33); doc.text(`${examTitle} | Hridoy Bosunia`, 14, 20); let finalY = 25;
+                doc.setFontSize(18); doc.setTextColor(33, 33, 33); doc.text(`${examTitle} | Hridoy Boshunia`, 14, 20); let finalY = 25;
 
-                // 🔴 SECTION 1: On-Time Submissions
                 if (onTimeSubmissions.length > 0) {
                     doc.setFontSize(12); doc.setTextColor(46, 125, 50); doc.text("Official Merit List (On-Time Submissions)", 14, finalY + 8);
                     const onTimeData = onTimeSubmissions.map((row, index) => [ index + 1, row.rollNumber || "N/A", row.score ]);
@@ -364,28 +379,97 @@
                     finalY = doc.lastAutoTable.finalY;
                 } else { doc.setFontSize(11); doc.setTextColor(100, 100, 100); doc.text("No on-time submissions available.", 14, finalY + 8); finalY += 15; }
 
-                // 🔴 SECTION 2: Late Submissions (Styled Same as Section 1)
                 if (lateSubmissions.length > 0) {
                     doc.setFontSize(12); doc.setTextColor(46, 125, 50); doc.text("Late Submissions (Unranked)", 14, finalY + 15);
                     const lateData = lateSubmissions.map(row => [ row.rollNumber || "N/A", row.score ]);
-                    
-                    // Fixed header styling to match the first table
-                    doc.autoTable({ 
-                        startY: finalY + 20, 
-                        head: [['Roll Number', 'Total Score']], 
-                        body: lateData, 
-                        headStyles: { fillColor: [0, 188, 212] }, 
-                        styles: { halign: 'center' } 
-                    });
+                    doc.autoTable({ startY: finalY + 20, head: [['Roll Number', 'Total Score']], body: lateData, headStyles: { fillColor: [0, 188, 212] }, styles: { halign: 'center' } });
                 }
                 doc.save(`Merit_List_${examTitle.replace(/\s+/g, '_')}.pdf`);
             } catch (error) { alert("Failed to generate PDF."); }
             btn.innerHTML = originalText; btn.disabled = false;
         }
 
+        // 🟢 SUPPORT MODAL LOGIC 🟢
+        const supportModal = document.getElementById('supportModal');
+        document.getElementById('openSupportBtn').addEventListener('click', () => supportModal.classList.add('show'));
+        document.getElementById('closeSupportBtn').addEventListener('click', () => supportModal.classList.remove('show'));
+        window.addEventListener('click', (e) => { if (e.target === supportModal) supportModal.classList.remove('show'); });
+
+        // 🟢 ISSUE REPORTING LOGIC WITH PRECAUTIONS 🟢
+        document.getElementById('issueForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const statusMsg = document.getElementById('issueStatus');
+            
+            const name = document.getElementById('issueName').value;
+            const desc = document.getElementById('issueDesc').value;
+            const fileInput = document.getElementById('issueImage');
+            const files = fileInput.files;
+            
+            if (files.length > 2) {
+                statusMsg.style.color = "#ff5252";
+                statusMsg.innerText = "❌ Please upload a maximum of 2 images only.";
+                return;
+            }
+
+            const MAX_FILE_SIZE = 4 * 1024 * 1024;
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].size > MAX_FILE_SIZE) {
+                    statusMsg.style.color = "#ff5252";
+                    statusMsg.innerText = `❌ Image "${files[i].name}" is larger than 4MB. Please compress it.`;
+                    return;
+                }
+            }
+
+            btn.innerText = "Uploading & Submitting...";
+            btn.disabled = true;
+            statusMsg.innerText = "";
+            
+            try {
+                let imageUrls = [];
+                let storagePaths = [];
+
+                if (files.length > 0) {
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const path = `reported_issues_images/${Date.now()}_${file.name}`;
+                        const storageRef = ref(storage, path);
+                        
+                        await uploadBytes(storageRef, file);
+                        const url = await getDownloadURL(storageRef);
+                        
+                        imageUrls.push(url);
+                        storagePaths.push(path);
+                    }
+                }
+
+                await addDoc(collection(db, "reported_issues"), {
+                    name: name,
+                    description: desc,
+                    imageUrls: imageUrls, 
+                    storagePaths: storagePaths,
+                    timestamp: new Date()
+                });
+                
+                statusMsg.style.color = "#00e676";
+                statusMsg.innerText = "✅ Report submitted successfully!";
+                document.getElementById('issueForm').reset();
+                
+                setTimeout(() => {
+                    supportModal.classList.remove('show');
+                    statusMsg.innerText = "";
+                }, 2000);
+
+            } catch (error) {
+                console.error(error);
+                statusMsg.style.color = "#ff5252";
+                statusMsg.innerText = "❌ Failed to submit. Please check your connection.";
+            }
+            
+            btn.innerText = "Submit Report";
+            btn.disabled = false;
+        });
+
     </script>
 </body>
 </html>
-
-
-
