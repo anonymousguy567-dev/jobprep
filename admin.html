@@ -205,6 +205,15 @@
 
             <div id="tab-db" class="section-box tab-content" style="border-left: 4px solid #9c27b0;">
                 <h3 style="color: #9c27b0;">🗄️ Database Management</h3>
+                
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(0, 188, 212, 0.2);">
+                    <h4 style="color:#00bcd4; margin-bottom:10px; text-align: left; font-size: 16px;">🔍 Search Student History</h4>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="searchRollInput" placeholder="Enter Roll Number (e.g. 2101001)" style="flex: 1; border-color: rgba(0, 188, 212, 0.4);">
+                        <button id="searchRollBtn" class="submit-btn" style="margin-top: 0; width: auto; padding: 10px 25px; background: #00bcd4; color: #000;">Search</button>
+                    </div>
+                </div>
+
                 <div class="input-group">
                     <label>Select Exam to Manage:</label>
                     <select id="dbExamSelector"><option value="">-- Select an Exam --</option></select>
@@ -346,6 +355,8 @@
         });
         document.getElementById('cancelEditQBtn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('editQuestionFormBox').style.display = "none"; });
 
+
+        // 🟢🟢 DATABASE MANAGEMENT LOGIC 🟢🟢
         const dbWorkspace = document.getElementById('dbWorkspace');
         
         dbExamSelector.addEventListener('change', async (e) => {
@@ -406,7 +417,7 @@
                     html += `
                     <tr>
                         <td style="text-align:left;">
-                            <span class="clickable-roll" data-email="${row.email}" data-roll="${row.rollNumber || 'N/A'}" title="Click to view history">${row.rollNumber || "N/A"}</span><br>
+                            <span class="clickable-roll" data-roll="${row.rollNumber || 'N/A'}" title="Click to view history">${row.rollNumber || "N/A"}</span><br>
                             <span style="font-size:11px; color:#a0a0b0;">${row.email}</span>
                         </td>
                         <td>
@@ -448,9 +459,8 @@
 
                 document.querySelectorAll('.clickable-roll').forEach(el => {
                     el.addEventListener('click', (e) => {
-                        const email = e.target.getAttribute('data-email');
                         const roll = e.target.getAttribute('data-roll');
-                        showStudentHistory(email, roll);
+                        showStudentHistory(roll);
                     });
                 });
                 
@@ -460,14 +470,23 @@
             }
         }
 
+        // 🟢 MANUAL SEARCH BUTTON LOGIC 🟢
+        document.getElementById('searchRollBtn').addEventListener('click', () => {
+            const rollVal = document.getElementById('searchRollInput').value.trim();
+            if(!rollVal) {
+                alert("Please enter a roll number to search.");
+                return;
+            }
+            showStudentHistory(rollVal);
+        });
+
         // 🟢 Fetch & Show Student History Function (Based on ROLL NUMBER) 🟢
-        async function showStudentHistory(email, roll) {
+        async function showStudentHistory(roll) {
             historyModal.classList.add('show');
             historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:16px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#a0a0b0;">Fetching records...</span>`;
             historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#a0a0b0;">Fetching student records...</td></tr>';
 
             try {
-                // 1. Get all published/active/deleted exams (Skip drafts)
                 const examsSnap = await getDocs(query(collection(db, "exams"), orderBy("createdAt", "desc")));
                 let allExams = [];
                 examsSnap.forEach(doc => {
@@ -476,7 +495,6 @@
                     }
                 });
 
-                // 2. Get results based on ROLL NUMBER
                 const resultsSnap = await getDocs(query(collection(db, "results"), where("rollNumber", "==", roll)));
                 let studentResults = {};
                 let usedEmails = new Set(); 
@@ -487,12 +505,12 @@
                     if(data.email) usedEmails.add(data.email);
                 });
 
-                // Update UI to show all emails they used
                 if(usedEmails.size > 0) {
                     historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:16px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ffb74d; font-size:12px;">Emails Used: ${Array.from(usedEmails).join(', ')}</span>`;
+                } else {
+                    historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:16px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ff5252; font-size:12px;">No records found for this roll number.</span>`;
                 }
 
-                // 3. Match and Build the list
                 let html = "";
                 allExams.forEach(exam => {
                     let scoreHtml = "";
