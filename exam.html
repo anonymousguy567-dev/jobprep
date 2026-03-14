@@ -35,6 +35,20 @@
         .stat-item { text-align: center; }
         .stat-label { font-size: 14px; font-weight: bold; margin-bottom: 5px; }
         .stat-value { font-size: 24px; font-weight: bold; }
+        
+        .practice-badge { background: #00e676; color: #000; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-left: 10px; vertical-align: middle; display: none; }
+        
+        #practiceAnswers { display: none; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .review-card { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #333; }
+        .correct-ans-card { border-left-color: #00e676; }
+        .wrong-ans-card { border-left-color: #ff5252; }
+        .skipped-ans-card { border-left-color: #ffb74d; }
+        .review-q { font-weight: bold; margin-bottom: 8px; font-size: 15px;}
+        .review-a { font-size: 14px; color: #b3b3b3; }
+        .review-a span { font-weight: bold; }
+        
+        .show-answers-btn { width: 100%; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .show-answers-btn:hover { background: rgba(255,255,255,0.2); }
     </style>
 </head>
 <body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false">
@@ -47,11 +61,15 @@
         </div>
 
         <div id="exam-section">
-            <h2 id="mainExamTitle" style="color: #ffb74d; margin-bottom: 15px; text-transform: uppercase;">Loading Exam...</h2>
+            <h2 style="color: #ffb74d; margin-bottom: 15px; text-transform: uppercase;">
+                <span id="mainExamTitle">Loading Exam...</span>
+                <span id="practiceBadge" class="practice-badge">PRACTICE MODE</span>
+            </h2>
             
             <div class="marking-rules">
                 <span>⚠ Marking Scheme:</span> Correct: <b>+1</b> | Wrong: <b>-0.5</b> | Skipped: <b>0</b><br>
-                <span style="color: #ff5252; margin-top: 5px; display: block;">🚨  Do not switch tabs or minimize the browser. Your exam will auto-submit on the 6th attempt!</span>
+                <span id="antiCheatWarning" style="color: #ff5252; margin-top: 5px; display: block;">🚨  Do not switch tabs or minimize the browser. Your exam will auto-submit on the 6th attempt!</span>
+                <span id="practiceInfo" style="color: #00e676; margin-top: 5px; display: none;">✅ You are in Practice Mode. Anti-cheat is disabled and results will not be saved.</span>
             </div>
 
             <div class="user-info">
@@ -60,7 +78,7 @@
             </div>
             
             <form id="examForm">
-                <div class="roll-input-box">
+                <div class="roll-input-box" id="rollInputBox">
                     <label for="rollNumber">Enter Your Roll Number (Required):</label>
                     <input type="number" id="rollNumber" placeholder="e.g. 2101001" required>
                 </div>
@@ -71,7 +89,7 @@
         </div>
 
         <div id="result-section">
-            <h2 style="color: #00bcd4;">Exam Submitted Successfully!</h2>
+            <h2 id="resultTitle" style="color: #00bcd4;">Exam Submitted Successfully!</h2>
             <div class="score-display" id="scoreDisplay">0</div>
             
             <div class="breakdown-box">
@@ -80,7 +98,11 @@
                 <div class="stat-item" style="color: #ffb74d;"><div class="stat-label">Skipped (0)</div><div class="stat-value" id="countSkipped">0</div></div>
             </div>
 
-            <p style="text-align: center; color: #b3b3b3; margin-top: 15px;">Your answers have been securely recorded. You can view the full question-by-question breakdown in the Answer Sheet section once the result is published.</p>
+            <p id="resultSaveMsg" style="text-align: center; color: #b3b3b3; margin-top: 15px;">Your answers have been securely recorded. You can view the full question-by-question breakdown in the Answer Sheet section once the result is published.</p>
+            
+            <button id="showAnswersBtn" class="show-answers-btn" style="display: none;">👀 Show Correct Answers</button>
+            <div id="practiceAnswers"></div>
+
             <a href="index.html" style="display:block; text-align:center; color:#ffb74d; margin-top: 25px; font-weight: bold; text-decoration: none;">🔙 Back to Homepage</a>
         </div>
     </div>
@@ -90,7 +112,6 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, addDoc, doc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 FIREBASE CONFIG BOSHAO 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -99,35 +120,58 @@
             messagingSenderId: "977853699063",
             appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
         };
-        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig); 
+        const auth = getAuth(app); 
+        const provider = new GoogleAuthProvider(); 
+        const db = getFirestore(app);
 
         const urlParams = new URLSearchParams(window.location.search);
         const currentExamId = urlParams.get('id');
 
         if(!currentExamId) { alert("No exam selected!"); window.location.href = "index.html"; }
 
-        let userEmail = ""; let correctAnswersList = {}; let timeLeft = 0; let timerInterval, saveInterval;
+        let userEmail = ""; let correctAnswersList = {}; let questionsDataList = {}; let timeLeft = 0; let timerInterval, saveInterval;
+        let isPracticeMode = false;
         const loginSection = document.getElementById('login-section'); const examSection = document.getElementById('exam-section');
         const resultSection = document.getElementById('result-section'); const questionsContainer = document.getElementById('questionsContainer');
         
-        let tabSwitchCount = 0;
-        let isExamActive = false;
+        let tabSwitchCount = 0; let isExamActive = false;
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userEmail = user.email; document.getElementById('userName').innerText = user.displayName;
-                const resSnap = await getDocs(query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", currentExamId)));
-                if (!resSnap.empty) { alert("You have already submitted this exam!"); window.location.href = "index.html"; return; }
                 
-                loginSection.style.display = "none"; examSection.style.display = "block"; 
-                isExamActive = true; loadExamData(); 
+                const examDocSnap = await getDoc(doc(db, "exams", currentExamId)); 
+                if (!examDocSnap.exists()) { alert("Exam not found!"); window.location.href = "index.html"; return; }
+                
+                const examData = examDocSnap.data();
+                const currentTime = new Date().getTime();
+                
+                // 🟢 Practice Mode Logic (Time Passed OR Admin Hidden)
+                if ((examData.publishTime && currentTime >= examData.publishTime) || examData.status === "deleted") {
+                    isPracticeMode = true;
+                    document.getElementById('practiceBadge').style.display = "inline-block";
+                    document.getElementById('antiCheatWarning').style.display = "none";
+                    document.getElementById('practiceInfo').style.display = "block";
+                    document.getElementById('rollInputBox').style.display = "none";
+                    document.getElementById('rollNumber').removeAttribute('required'); 
+                }
+
+                // 🟢 ANTI-DUPLICATE FIX: Only block if it is NOT practice mode
+                if(!isPracticeMode) {
+                    const resSnap = await getDocs(query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", currentExamId)));
+                    if (!resSnap.empty) { alert("You have already submitted this live exam!"); window.location.href = "index.html"; return; }
+                }
+                
+                loginSection.style.display = "none"; examSection.style.display = "block"; isExamActive = true; 
+                loadExamData(examData); 
             } else { loginSection.style.display = "flex"; }
         });
 
         document.getElementById('loginBtn').addEventListener('click', () => { signInWithPopup(auth, provider).catch(console.error); });
 
         document.addEventListener("visibilitychange", () => {
-            if (document.hidden && isExamActive && timeLeft > 0) {
+            if (document.hidden && isExamActive && timeLeft > 0 && !isPracticeMode) {
                 tabSwitchCount++;
                 if (tabSwitchCount === 1) alert("⚠ WARNING (1/5): You have switched tabs! It is strictly prohibited.");
                 else if (tabSwitchCount > 1 && tabSwitchCount < 5) alert(`⚠ WARNING (${tabSwitchCount}/5): Do not switch tabs!`);
@@ -136,19 +180,17 @@
             }
         });
 
-        async function loadExamData() {
+        async function loadExamData(examData) {
             try {
-                const examDocSnap = await getDoc(doc(db, "exams", currentExamId)); let durationMinutes = 30; 
-                if (examDocSnap.exists()) { document.getElementById('mainExamTitle').innerText = examDocSnap.data().title; durationMinutes = examDocSnap.data().duration; } 
-                else { alert("Exam not found!"); window.location.href = "index.html"; return; }
-
+                let durationMinutes = examData.duration || 30; document.getElementById('mainExamTitle').innerText = examData.title;
                 startTimer(durationMinutes);
                 const querySnapshot = await getDocs(collection(db, "exams", currentExamId, "questions"));
                 let questionNumber = 1; questionsContainer.innerHTML = ""; 
                 if(querySnapshot.empty) { questionsContainer.innerHTML = "<p style='color:#ff5252;'>No questions found!</p>"; return; }
 
                 querySnapshot.forEach((doc) => {
-                    const data = doc.data(); const qId = doc.id; correctAnswersList[qId] = data.correctAnswer;
+                    const data = doc.data(); const qId = doc.id; 
+                    correctAnswersList[qId] = data.correctAnswer; questionsDataList[qId] = data; 
                     const qCard = document.createElement('div'); qCard.className = 'question-card';
                     qCard.innerHTML = `<div class="question-text">${questionNumber}. ${data.question}</div><label class="option-label"><input type="radio" name="${qId}" value="1"> ${data.options["1"]}</label><label class="option-label"><input type="radio" name="${qId}" value="2"> ${data.options["2"]}</label><label class="option-label"><input type="radio" name="${qId}" value="3"> ${data.options["3"]}</label><label class="option-label"><input type="radio" name="${qId}" value="4"> ${data.options["4"]}</label>`;
                     questionsContainer.appendChild(qCard); questionNumber++;
@@ -157,15 +199,21 @@
         }
 
         async function startTimer(totalMinutes) {
-            const timerDocId = userEmail + "_" + currentExamId; const timerRef = doc(db, "user_timers", timerDocId); const timerSnap = await getDoc(timerRef);
-            if (timerSnap.exists() && timerSnap.data().timeLeft !== undefined && timerSnap.data().timeLeft > 0) { timeLeft = timerSnap.data().timeLeft; } else { timeLeft = totalMinutes * 60; }
+            const timerDocId = userEmail + "_" + currentExamId; const timerRef = doc(db, "user_timers", timerDocId); 
+            if(!isPracticeMode) {
+                const timerSnap = await getDoc(timerRef);
+                if (timerSnap.exists() && timerSnap.data().timeLeft !== undefined && timerSnap.data().timeLeft > 0) { timeLeft = timerSnap.data().timeLeft; } else { timeLeft = totalMinutes * 60; }
+            } else { timeLeft = totalMinutes * 60; }
+            
             if (timeLeft <= 0) { alert("Time is up!"); submitExamCore(); return; }
             updateTimerUI();
+            
             timerInterval = setInterval(() => {
                 timeLeft--; updateTimerUI();
-                if (timeLeft <= 0) { clearInterval(timerInterval); clearInterval(saveInterval); alert("Time's up! Auto-submitting."); submitExamCore(); }
+                if (timeLeft <= 0) { clearInterval(timerInterval); if(!isPracticeMode) clearInterval(saveInterval); alert("Time's up! Auto-submitting."); submitExamCore(); }
             }, 1000);
-            saveInterval = setInterval(() => { setDoc(timerRef, { timeLeft: timeLeft }, { merge: true }); }, 5000);
+            
+            if(!isPracticeMode) { saveInterval = setInterval(() => { setDoc(timerRef, { timeLeft: timeLeft }, { merge: true }); }, 5000); }
         }
 
         function updateTimerUI() {
@@ -175,11 +223,10 @@
         document.getElementById('examForm').addEventListener('submit', function(e) { e.preventDefault(); submitExamCore(); });
 
         async function submitExamCore() {
-            isExamActive = false; 
-            clearInterval(timerInterval); clearInterval(saveInterval);
+            isExamActive = false; clearInterval(timerInterval); if(!isPracticeMode) clearInterval(saveInterval);
             const submitBtn = document.getElementById('submitBtn'); submitBtn.innerText = "Submitting..."; submitBtn.disabled = true;
             
-            const rollNum = document.getElementById('rollNumber').value || "N/A";
+            const rollNum = document.getElementById('rollNumber').value || "Practice";
             let score = 0; let correctCount = 0; let wrongCount = 0; let skippedCount = 0;
             let totalQuestions = Object.keys(correctAnswersList).length; let userSelectedAnswers = {}; 
 
@@ -187,45 +234,58 @@
                 const selectedOption = document.querySelector(`input[name="${qId}"]:checked`);
                 if (selectedOption) {
                     userSelectedAnswers[qId] = selectedOption.value; 
-                    
-                    // 🟢 BUG FIX: FORCE STRING CONVERSION FOR COMPARISON
-                    if (String(selectedOption.value) === String(correctAnswersList[qId])) { 
-                        score += 1; 
-                        correctCount++; 
-                    } else { 
-                        score -= 0.5; 
-                        wrongCount++; 
-                    }
-                } else { 
-                    userSelectedAnswers[qId] = null; 
-                    skippedCount++; 
-                }
+                    if (String(selectedOption.value) === String(correctAnswersList[qId])) { score += 1; correctCount++; } else { score -= 0.5; wrongCount++; }
+                } else { userSelectedAnswers[qId] = null; skippedCount++; }
             }
             score = parseFloat(score.toFixed(2));
 
             try {
-                await addDoc(collection(db, "results"), {
-                    email: userEmail, rollNumber: rollNum, score: score, total: totalQuestions, 
-                    correctCount: correctCount, wrongCount: wrongCount, skippedCount: skippedCount,
-                    userAnswers: userSelectedAnswers, examId: currentExamId, timestamp: new Date()
-                });
-                const timerDocId = userEmail + "_" + currentExamId;
-                await setDoc(doc(db, "user_timers", timerDocId), { timeLeft: 0 }, { merge: true });
+                if (!isPracticeMode) {
+                    await addDoc(collection(db, "results"), { email: userEmail, rollNumber: rollNum, score: score, total: totalQuestions, correctCount: correctCount, wrongCount: wrongCount, skippedCount: skippedCount, userAnswers: userSelectedAnswers, examId: currentExamId, timestamp: new Date() });
+                    const timerDocId = userEmail + "_" + currentExamId;
+                    await setDoc(doc(db, "user_timers", timerDocId), { timeLeft: 0 }, { merge: true });
+                } else {
+                    document.getElementById('resultTitle').innerText = "Practice Complete!";
+                    document.getElementById('resultTitle').style.color = "#00e676";
+                    document.getElementById('resultSaveMsg').innerText = "This was a practice attempt. Your score was not saved to the leaderboards.";
+                    generatePracticeReview(userSelectedAnswers);
+                }
 
-                examSection.style.display = "none"; 
-                resultSection.style.display = "block";
-                
+                examSection.style.display = "none"; resultSection.style.display = "block";
                 document.getElementById('scoreDisplay').innerText = `Final Score: ${score}`;
                 document.getElementById('countCorrect').innerText = correctCount;
                 document.getElementById('countWrong').innerText = wrongCount;
                 document.getElementById('countSkipped').innerText = skippedCount;
 
-            } catch (error) { 
-                alert("Error saving result!"); 
-                submitBtn.innerText = "Submit Exam"; submitBtn.disabled = false; 
+            } catch (error) { alert("Error submitting exam!"); submitBtn.innerText = "Submit Exam"; submitBtn.disabled = false; }
+        }
+
+        function generatePracticeReview(userAnswers) {
+            const reviewContainer = document.getElementById('practiceAnswers');
+            const showBtn = document.getElementById('showAnswersBtn');
+            showBtn.style.display = "block";
+            let html = '<h3 style="margin-bottom: 15px; color: #fff;">Answer Review:</h3>';
+            let qNum = 1;
+
+            for (let qId in questionsDataList) {
+                const qData = questionsDataList[qId]; const correctOpt = qData.correctAnswer; const userOpt = userAnswers[qId];
+                let cardClass = "skipped-ans-card"; let statusText = "<span style='color:#ffb74d;'>Skipped</span>";
+                
+                if (userOpt) {
+                    if (String(userOpt) === String(correctOpt)) { cardClass = "correct-ans-card"; statusText = "<span style='color:#00e676;'>Correct</span>"; } 
+                    else { cardClass = "wrong-ans-card"; statusText = `<span style='color:#ff5252;'>Wrong</span> (You chose: ${qData.options[userOpt]})`; }
+                }
+
+                html += `<div class="review-card ${cardClass}"><div class="review-q">Q${qNum}: ${qData.question}</div><div class="review-a">Status: ${statusText} <br><span style="color:#00e676;">Correct Answer: ${qData.options[correctOpt]}</span></div></div>`;
+                qNum++;
             }
+            reviewContainer.innerHTML = html;
+
+            showBtn.addEventListener('click', () => {
+                if(reviewContainer.style.display === "block") { reviewContainer.style.display = "none"; showBtn.innerText = "👀 Show Correct Answers"; } 
+                else { reviewContainer.style.display = "block"; showBtn.innerText = "🙈 Hide Correct Answers"; }
+            });
         }
     </script>
 </body>
 </html>
-
