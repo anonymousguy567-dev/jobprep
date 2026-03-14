@@ -17,7 +17,6 @@
             padding: 120px 20px 30px 20px; overflow-x: hidden; position: relative;
         }
 
-        /* 🟢 Background Blobs 🟢 */
         .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
         .blob { position: absolute; filter: blur(90px); opacity: 0.5; animation: float 12s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #00bcd4; top: -10%; left: -5%; animation-delay: 0s; }
@@ -26,7 +25,6 @@
 
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
 
-        /* 🟢 Top Navigation Bar 🟢 */
         .navbar {
             position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px;
             display: flex; justify-content: space-between; align-items: center;
@@ -43,7 +41,6 @@
         }
         .nav-admin-btn:hover { background: rgba(0, 188, 212, 0.15); border-color: #00bcd4; color: #00bcd4; box-shadow: 0 0 15px rgba(0, 188, 212, 0.3); transform: translateY(-2px); }
 
-        /* 🟢 NEW: Live Clock & Date (Desktop Only) 🟢 */
         .live-clock-container {
             position: absolute; top: 90px; left: 30px; z-index: 1000;
             background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(10px); 
@@ -55,7 +52,6 @@
         .clock-time { font-size: 20px; font-weight: bold; color: #00bcd4; letter-spacing: 2px; margin-bottom: 2px; font-variant-numeric: tabular-nums;}
         .clock-date { font-size: 11px; color: #a0a0b0; letter-spacing: 1px; text-transform: uppercase; font-weight: bold;}
 
-        /* 9-Dot Menu */
         .top-right-bar { position: absolute; top: 90px; right: 25px; z-index: 1000; }
         .apps-menu-btn { 
             position: relative; width: 45px; height: 45px; border-radius: 50%; background: rgba(20, 20, 25, 0.6); 
@@ -78,16 +74,13 @@
         .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; transition: 0.3s; background: rgba(255, 255, 255, 0.05); text-align: center; }
         .apps-link:hover { background: rgba(0, 188, 212, 0.15); color: #00bcd4; }
 
-        /* Header Section */
         .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; z-index: 10; position: relative;}
         h1 { background: linear-gradient(135deg, #00bcd4, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 36px; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; font-weight: 800; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 3 Box Grid Layout */
         .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 1100px; animation: slideUp 0.8s ease-out; z-index: 10; position: relative;}
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Glassy Box */
         .glass-box { 
             background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 188, 212, 0.3); border-radius: 20px; padding: 30px; text-align: center; 
@@ -99,7 +92,7 @@
         .box-icon { font-size: 40px; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
         .box-title { color: #fff; font-size: 22px; margin-bottom: 15px; font-weight: bold; }
 
-        .exam-list-wrapper { flex-grow: 1; overflow-y: auto; max-height: 220px; padding-right: 5px; text-align: left; }
+        .exam-list-wrapper { flex-grow: 1; overflow-y: auto; max-height: 180px; padding-right: 5px; text-align: left; }
         .exam-list-wrapper::-webkit-scrollbar { width: 6px; }
         .exam-list-wrapper::-webkit-scrollbar-thumb { background: rgba(0, 188, 212, 0.5); border-radius: 10px; }
 
@@ -110,16 +103,18 @@
         .exam-time { font-size: 12px; color: #00bcd4; font-weight: bold; }
         
         .publish-time { font-size: 11px; color: #ffb74d; background: rgba(255, 183, 77, 0.1); padding: 2px 6px; border-radius: 4px; display: inline-block; width: max-content; font-weight: bold;}
-        .published-state { color: #00e676; background: rgba(0, 230, 118, 0.1); }
 
-        .start-btn { background: linear-gradient(135deg, #00bcd4, #2196f3); color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; transition: 0.3s; }
+        .start-btn { background: linear-gradient(135deg, #00bcd4, #2196f3); color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; transition: 0.3s; border: none; cursor: pointer;}
         .start-btn:hover { box-shadow: 0 4px 15px rgba(0, 188, 212, 0.5); transform: scale(1.05); }
 
-        .action-btn { display: inline-block; width: 100%; padding: 15px; margin-top: auto; border-radius: 12px; text-decoration: none; color: white; font-size: 16px; font-weight: bold; transition: all 0.3s ease; border: none; cursor: pointer; }
+        .action-btn { display: inline-block; width: 100%; padding: 15px; border-radius: 12px; text-decoration: none; color: white; font-size: 15px; font-weight: bold; transition: all 0.3s ease; border: none; cursor: pointer; }
         .btn-green { background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.4); color: #00e676; }
         .btn-green:hover { background: rgba(0, 230, 118, 0.2); box-shadow: 0 0 20px rgba(0, 230, 118, 0.4); }
+        
+        .btn-practice { background: rgba(33, 150, 243, 0.1); border: 1px solid rgba(33, 150, 243, 0.5); color: #2196f3; padding: 12px;}
+        .btn-practice:hover { background: rgba(33, 150, 243, 0.2); box-shadow: 0 0 15px rgba(33, 150, 243, 0.4); }
 
-        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; font-size: 15px; margin-bottom: 20px; }
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; font-size: 14px; margin-bottom: 10px; }
         select option { background-color: #1a1a24; color: white; }
         select:focus { border-color: #00bcd4; }
 
@@ -128,11 +123,10 @@
         .footer { width: 100%; text-align: center; color: #888; font-size: 13px; z-index: 10; font-weight: 500; margin-top: 30px; margin-bottom: 10px;}
         .footer span { color: #00bcd4; font-weight: bold; letter-spacing: 0.5px; }
 
-        /* 📱 Mobile Hide Clock 📱 */
+        .sub-title { text-align: left; font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+
         @media (max-width: 768px) {
-            .live-clock-container {
-                display: none;
-            }
+            .live-clock-container { display: none; }
         }
 
     </style>
@@ -157,7 +151,7 @@
                 <svg viewBox="0 0 24 24"><path d="M12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-16 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg>
             </button>
             <div class="apps-dropdown" id="appsDropdown">
-                <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">UniDocs Generator | RUET</a>
+                <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">UniDocs Generator</a>
             </div>
         </div>
     </div>
@@ -167,22 +161,35 @@
     </div>
 
     <div class="grid-container">
+        
         <div class="glass-box">
             <div class="box-icon">📝</div>
-            <div class="box-title">Available Exams</div>
-            <div class="exam-list-wrapper" id="examsList">
-                <div class="loader"></div>
-                <p style="text-align: center; color: #b3b3b3; font-size: 14px;">Fetching live exams...</p>
+            <div class="box-title">Exams Board</div>
+            
+            <div style="margin-bottom: 15px;">
+                <div class="sub-title" style="color: #ff5252;">🔴 Live Exams</div>
+                <div class="exam-list-wrapper" id="liveExamsList">
+                    <div class="loader"></div>
+                    <p style="text-align: center; color: #b3b3b3; font-size: 13px;">Checking live exams...</p>
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; margin-top: auto;">
+                <div class="sub-title" style="color: #00e676;">🟢 Practice Exams</div>
+                <select id="practiceExamSelector">
+                    <option value="">-- Loading Practice Exams --</option>
+                </select>
+                <button id="startPracticeBtn" class="action-btn btn-practice">Start Practice</button>
             </div>
         </div>
 
         <div class="glass-box">
             <div class="box-icon">🏆</div>
-            <div class="box-title">Merit List</div>
+            <div class="box-title"> Merit List</div>
             <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
                 View and download the final merit list.
             </p>
-            <select id="publicExamSelector">
+            <select id="publicExamSelector" style="margin-bottom: 20px;">
                 <option value="">-- Select Exam --</option>
             </select>
             <div id="meritListDisplay" style="text-align: center; min-height: 55px; display: flex; align-items: flex-end; justify-content: center; width: 100%;">
@@ -196,7 +203,7 @@
             <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px; flex-grow: 1;">
                 Review your submitted answer sheets, check correct answers, and track your scores once the time is up.
             </p>
-            <a href="answer-sheet.html" class="action-btn btn-green" style="text-align: center;">View Answer Sheet</a>
+            <a href="answer-sheet.html" class="action-btn btn-green" style="text-align: center; margin-top: auto;">View Answer Sheet</a>
         </div>
     </div>
 
@@ -221,163 +228,193 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 🟢 Live Clock Logic 🟢
         function updateClock() {
             const now = new Date();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            let seconds = now.getSeconds();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
-            
-            hours = hours % 12;
-            hours = hours ? hours : 12; // convert 0 to 12
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
-            
+            let hours = now.getHours(); let minutes = now.getMinutes(); let seconds = now.getSeconds(); const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12; hours = hours ? hours : 12; 
+            minutes = minutes < 10 ? '0' + minutes : minutes; seconds = seconds < 10 ? '0' + seconds : seconds;
             const timeString = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-            
             const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
             const dateString = now.toLocaleDateString('en-US', options);
-            
-            const timeEl = document.getElementById('clockTime');
-            const dateEl = document.getElementById('clockDate');
-            
-            if(timeEl && dateEl) {
-                timeEl.innerText = timeString;
-                dateEl.innerText = dateString;
-            }
+            const timeEl = document.getElementById('clockTime'); const dateEl = document.getElementById('clockDate');
+            if(timeEl && dateEl) { timeEl.innerText = timeString; dateEl.innerText = dateString; }
         }
-        setInterval(updateClock, 1000);
-        updateClock(); // Initial call to show immediately
+        setInterval(updateClock, 1000); updateClock(); 
 
-        // Apps Menu Logic
-        const appsBtn = document.getElementById('appsMenuBtn');
-        const appsDropdown = document.getElementById('appsDropdown');
+        const appsBtn = document.getElementById('appsMenuBtn'); const appsDropdown = document.getElementById('appsDropdown');
         appsBtn.addEventListener('click', (e) => { e.stopPropagation(); appsDropdown.classList.toggle('show'); });
         window.addEventListener('click', (e) => { if (!appsBtn.contains(e.target)) appsDropdown.classList.remove('show'); });
 
         function formatResultTime(timestamp) {
             if (!timestamp) return "Not Scheduled";
-            const d = new Date(timestamp);
-            return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+            return new Date(timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
         }
 
         let allExamsData = {}; 
 
         async function loadAvailableExams() {
-            const examsListDiv = document.getElementById('examsList');
+            const liveExamsListDiv = document.getElementById('liveExamsList');
+            const practiceExamSelector = document.getElementById('practiceExamSelector');
             const publicExamSelector = document.getElementById('publicExamSelector');
+            const startPracticeBtn = document.getElementById('startPracticeBtn');
             
             try {
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 
+                liveExamsListDiv.innerHTML = ""; 
+                practiceExamSelector.innerHTML = '<option value="">-- Select a Practice Exam --</option>';
+                publicExamSelector.innerHTML = '<option value="">-- Select Exam --</option>';
+                
+                let liveExamsCount = 0; 
+                let practiceExamsCount = 0;
+                const currentTime = new Date().getTime();
+                
                 if (querySnapshot.empty) {
-                    examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams available right now.</p>";
+                    liveExamsListDiv.innerHTML = "<p style='color: #a0a0b0; font-size: 13px; text-align: center;'>No exams available right now.</p>";
+                    practiceExamSelector.innerHTML = '<option value="">-- No practice exams available --</option>';
+                    startPracticeBtn.disabled = true; startPracticeBtn.style.opacity = "0.5";
                     return;
                 }
 
-                examsListDiv.innerHTML = ""; 
-                let activeExamFound = false;
-                const currentTime = new Date().getTime();
-                
                 querySnapshot.forEach((doc) => {
-                    const exam = doc.data();
-                    const examId = doc.id;
+                    const exam = doc.data(); const examId = doc.id;
 
                     if (exam.status !== "draft") {
                         allExamsData[examId] = exam;
-                        const option = document.createElement('option');
-                        option.value = examId;
-                        let titleSuffix = exam.status === "deleted" ? " [Ended]" : "";
-                        option.innerText = exam.title + titleSuffix;
-                        publicExamSelector.appendChild(option);
-                    }
-
-                    if (exam.status === "active") {
-                        activeExamFound = true;
-                        let publishTextHTML = "";
-                        if (exam.publishTime && currentTime >= exam.publishTime) {
-                            publishTextHTML = `<span class="publish-time published-state">📢 Result: Published ✅</span>`;
-                        } else {
-                            publishTextHTML = `<span class="publish-time">📢 Result: ${formatResultTime(exam.publishTime)}</span>`;
-                        }
                         
-                        const item = document.createElement('div');
-                        item.className = 'exam-item';
-                        item.innerHTML = `
-                            <div class="meta-info">
-                                <div class="exam-name">${exam.title}</div>
-                                <div class="exam-time">⏱ ${exam.duration} Min</div>
-                                ${publishTextHTML}
-                            </div>
-                            <a href="exam.html?id=${examId}" class="start-btn">Start</a>
-                        `;
-                        examsListDiv.appendChild(item);
+                        if (exam.status === "deleted") {
+                            practiceExamsCount++;
+                            const optionPractice = document.createElement('option');
+                            optionPractice.value = examId;
+                            optionPractice.innerText = exam.title; 
+                            practiceExamSelector.appendChild(optionPractice);
+                        } 
+                        else if (exam.status === "active") {
+                            const optionMerit = document.createElement('option');
+                            optionMerit.value = examId; optionMerit.innerText = exam.title;
+                            publicExamSelector.appendChild(optionMerit);
+
+                            if (exam.publishTime && currentTime >= exam.publishTime) {
+                                practiceExamsCount++;
+                                const optionPractice = document.createElement('option');
+                                optionPractice.value = examId;
+                                optionPractice.innerText = exam.title; 
+                                practiceExamSelector.appendChild(optionPractice);
+                            } 
+                            else {
+                                liveExamsCount++;
+                                const publishTextHTML = `<span class="publish-time">📢 Result: ${formatResultTime(exam.publishTime)}</span>`;
+                                const item = document.createElement('div'); item.className = 'exam-item';
+                                item.innerHTML = `<div class="meta-info"><div class="exam-name">${exam.title}</div><div class="exam-time">⏱ ${exam.duration} Min</div>${publishTextHTML}</div><a href="exam.html?id=${examId}" class="start-btn">Start</a>`;
+                                liveExamsListDiv.appendChild(item);
+                            }
+                        }
                     }
                 });
-                if (!activeExamFound) { examsListDiv.innerHTML = "<p style='color: #ffb74d; text-align: center; margin-top: 20px;'>No exams active right now.</p>"; }
-            } catch (error) { examsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 20px;'>Error loading exams.</p>"; }
+
+                if (liveExamsCount === 0) { 
+                    liveExamsListDiv.innerHTML = "<p style='color: #a0a0b0; font-size: 13px; text-align: center; margin-top: 10px;'>No live exams right now.</p>"; 
+                }
+                
+                if (practiceExamsCount === 0) { 
+                    practiceExamSelector.innerHTML = '<option value="">-- No practice exams available --</option>'; 
+                    startPracticeBtn.disabled = true; startPracticeBtn.style.opacity = "0.5"; 
+                } else {
+                    startPracticeBtn.disabled = false; startPracticeBtn.style.opacity = "1";
+                }
+
+            } catch (error) { 
+                liveExamsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 10px;'>Error loading exams.</p>"; 
+            }
         }
         
         loadAvailableExams();
 
-        const meritListDisplay = document.getElementById('meritListDisplay');
-        const publicExamSelector = document.getElementById('publicExamSelector');
+        document.getElementById('startPracticeBtn').addEventListener('click', () => {
+            const selectedId = document.getElementById('practiceExamSelector').value;
+            if(selectedId) { window.location.href = `exam.html?id=${selectedId}`; } else { alert("Please select a practice exam from the list first."); }
+        });
 
+        const meritListDisplay = document.getElementById('meritListDisplay'); const publicExamSelector = document.getElementById('publicExamSelector');
         publicExamSelector.addEventListener('change', async (e) => {
             const examId = e.target.value;
             if (!examId) { meritListDisplay.innerHTML = `<p style="color: #b3b3b3; font-size: 13px;">Select an exam to check status.</p>`; return; }
-            const exam = allExamsData[examId];
-            const currentTime = new Date().getTime();
-
+            const exam = allExamsData[examId]; const currentTime = new Date().getTime();
             if (exam.publishTime && currentTime < exam.publishTime) {
                 meritListDisplay.innerHTML = `<p style="color: #ffb74d; font-size: 14px; font-weight: bold; background: rgba(255, 183, 77, 0.1); padding: 10px; border-radius: 8px; width: 100%; border: 1px solid rgba(255, 183, 77, 0.3);">🔒 Result will be published at:<br> <span style="color:#fff;">${formatResultTime(exam.publishTime)}</span></p>`;
             } else {
                 meritListDisplay.innerHTML = `<button id="downloadMeritPdfBtn" class="action-btn" style="background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.5); color: #00e676; margin-top: 0; padding: 12px;">📥 Download Merit List (PDF)</button>`;
-                document.getElementById('downloadMeritPdfBtn').addEventListener('click', async () => { await generateMeritListPDF(examId, exam.title, exam.publishTime); });
+                document.getElementById('downloadMeritPdfBtn').addEventListener('click', async () => { await generateMeritListPDF(examId, exam.title); });
             }
         });
 
-        async function generateMeritListPDF(examId, examTitle, publishTime) {
-            const btn = document.getElementById('downloadMeritPdfBtn');
-            const originalText = btn.innerHTML;
+        // 🟢 PDF Generation Modified (Removed Late logic & added Auto-generated Footer) 🟢
+        async function generateMeritListPDF(examId, examTitle) {
+            const btn = document.getElementById('downloadMeritPdfBtn'); 
+            const originalText = btn.innerHTML; 
             btn.innerHTML = "⏳ Generating PDF..."; btn.disabled = true;
-
+            
             try {
-                const q = query(collection(db, "results"), where("examId", "==", examId));
+                const q = query(collection(db, "results"), where("examId", "==", examId)); 
                 const snapshot = await getDocs(q);
-                if (snapshot.empty) { alert("No submissions found."); btn.innerHTML = originalText; btn.disabled = false; return; }
-
-                let onTimeSubmissions = []; let lateSubmissions = [];
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    let submittedAt = data.timestamp?.seconds ? data.timestamp.seconds * 1000 : new Date(data.timestamp).getTime();
-                    if (publishTime && submittedAt > publishTime) { lateSubmissions.push(data); } else { onTimeSubmissions.push(data); }
-                });
-
-                onTimeSubmissions.sort((a, b) => b.score - a.score); lateSubmissions.sort((a, b) => b.score - a.score);
-
-                const { jsPDF } = window.jspdf; const doc = new jsPDF();
-                doc.setFontSize(18); doc.setTextColor(33, 33, 33); doc.text(`${examTitle} | Hridoy Bosunia`, 14, 20); let finalY = 25;
-
-                if (onTimeSubmissions.length > 0) {
-                    doc.setFontSize(12); doc.setTextColor(46, 125, 50); doc.text("Official Merit List (On-Time Submissions)", 14, finalY + 8);
-                    const onTimeData = onTimeSubmissions.map((row, index) => [ index + 1, row.rollNumber || "N/A", row.score ]);
-                    doc.autoTable({ startY: finalY + 12, head: [['Position', 'Roll Number', 'Total Score']], body: onTimeData, headStyles: { fillColor: [0, 188, 212] }, styles: { halign: 'center' } });
-                    finalY = doc.lastAutoTable.finalY;
-                } else { doc.setFontSize(11); doc.setTextColor(100, 100, 100); doc.text("No on-time submissions available.", 14, finalY + 8); finalY += 15; }
-
-                if (lateSubmissions.length > 0) {
-                    doc.setFontSize(12); doc.setTextColor(46, 125, 50); doc.text("Late Submissions (Unranked)", 14, finalY + 15);
-                    const lateData = lateSubmissions.map(row => [ row.rollNumber || "N/A", row.score ]);
-                    doc.autoTable({ startY: finalY + 20, head: [['Roll Number', 'Total Score']], body: lateData, headStyles: { fillColor: [0, 188, 212] }, styles: { halign: 'center' } });
+                
+                if (snapshot.empty) { 
+                    alert("No submissions found."); 
+                    btn.innerHTML = originalText; btn.disabled = false; 
+                    return; 
                 }
+                
+                let submissions = [];
+                snapshot.forEach(doc => {
+                    submissions.push(doc.data()); 
+                });
+                
+                // Sort all submissions by score
+                submissions.sort((a, b) => b.score - a.score);
+                
+                const { jsPDF } = window.jspdf; 
+                const doc = new jsPDF();
+                
+                doc.setFontSize(18); 
+                doc.setTextColor(33, 33, 33); 
+                doc.text(`${examTitle} | Hridoy Bosunia`, 14, 20); 
+                
+                let finalY = 25;
+                
+                if (submissions.length > 0) {
+                    doc.setFontSize(12); 
+                    doc.setTextColor(46, 125, 50); 
+                    doc.text("Official Merit List", 14, finalY + 8);
+                    
+                    const tableData = submissions.map((row, index) => [ index + 1, row.rollNumber || "N/A", row.score ]);
+                    
+                    doc.autoTable({ 
+                        startY: finalY + 12, 
+                        head: [['Position', 'Roll Number', 'Total Score']], 
+                        body: tableData, 
+                        headStyles: { fillColor: [0, 188, 212] }, 
+                        styles: { halign: 'center' } 
+                    });
+                } else { 
+                    doc.setFontSize(11); 
+                    doc.setTextColor(100, 100, 100); 
+                    doc.text("No submissions available.", 14, finalY + 8); 
+                }
+
+                // 🟢 Added Automatic Generated Footer Text 🟢
+                const pageHeight = doc.internal.pageSize.getHeight();
+                doc.setFontSize(9);
+                doc.setTextColor(150, 150, 150);
+                doc.text("This PDF is automatically generated.", 14, pageHeight - 10);
+
                 doc.save(`Merit_List_${examTitle.replace(/\s+/g, '_')}.pdf`);
-            } catch (error) { alert("Failed to generate PDF."); }
+            } catch (error) { 
+                alert("Failed to generate PDF."); 
+                console.error(error);
+            }
             btn.innerHTML = originalText; btn.disabled = false;
         }
-
     </script>
 </body>
 </html>
