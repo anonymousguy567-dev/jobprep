@@ -359,7 +359,7 @@
                 onTimeSubmissions.sort((a, b) => b.score - a.score); lateSubmissions.sort((a, b) => b.score - a.score);
 
                 const { jsPDF } = window.jspdf; const doc = new jsPDF();
-                doc.setFontSize(18); doc.setTextColor(33, 33, 33); doc.text(`${examTitle} | Hridoy Boshunia`, 14, 20); let finalY = 25;
+                doc.setFontSize(18); doc.setTextColor(33, 33, 33); doc.text(`${examTitle} | Hridoy Bosunia`, 14, 20); let finalY = 25;
 
                 if (onTimeSubmissions.length > 0) {
                     doc.setFontSize(12); doc.setTextColor(46, 125, 50); doc.text("Official Merit List (On-Time Submissions)", 14, finalY + 8);
