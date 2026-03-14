@@ -91,7 +91,7 @@
                 <button id="btn-tab-create" class="tab-btn active">📝 Create Exam</button>
                 <button id="btn-tab-add-q" class="tab-btn">➕ Add Questions</button>
                 <button id="btn-tab-manage" class="tab-btn">⚙️ Manage & Results</button>
-                <button id="btn-tab-notice" class="tab-btn">📢 Notice</button>
+                <button id="btn-tab-db" class="tab-btn">🗄️ Database Mgt.</button>
             </div>
 
             <div id="tab-create" class="section-box tab-content" style="display: block; border-left: 4px solid #ffb74d;">
@@ -148,10 +148,10 @@
                         <div class="input-group"><label>Update Title:</label><input type="text" id="editExamTitle"></div>
                         <div class="input-group"><label>Update Duration (Mins):</label><input type="number" id="editExamDuration"></div>
                         <div class="input-group"><label>Update Publish Time:</label><input type="datetime-local" id="editExamPublishTime"></div>
+                        
                         <div class="action-buttons-row">
-                            <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63; margin-top: 0;">Save Time/Title</button>
+                            <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63; margin-top: 0;">Save Time/Title Settings</button>
                             <button id="publishExamBtn" class="submit-btn" style="background: #00e676; margin-top: 0; color:#000;">🚀 Publish Live</button>
-                            <button id="deleteEntireExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0;">Hide/End Exam</button>
                         </div>
                         <p id="updateSettingsStatus" class="status-msg"></p>
                     </div>
@@ -182,14 +182,42 @@
                 </div>
             </div>
 
-            <div id="tab-notice" class="section-box tab-content" style="border-left: 4px solid #00e676;">
-                <h3 style="color: #00e676;">Send Announcement</h3>
-                <form id="sendMsgForm">
-                    <div class="input-group"><label>Message Content:</label><textarea id="adminMessage" rows="4" required></textarea></div>
-                    <button type="submit" class="submit-btn" id="sendMsgBtn" style="background: linear-gradient(135deg, #00e676, #00c853);">Publish Message</button>
-                </form>
-                <p id="msgStatus" class="status-msg"></p>
+            <div id="tab-db" class="section-box tab-content" style="border-left: 4px solid #9c27b0;">
+                <h3 style="color: #9c27b0;">🗄️ Database Management</h3>
+                <div class="input-group">
+                    <label>Select Exam to Manage:</label>
+                    <select id="dbExamSelector"><option value="">-- Select an Exam --</option></select>
+                </div>
+                <div id="dbWorkspace" style="display:none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+                    <p id="dbExamStatus" style="margin-bottom: 20px; font-weight: bold; font-size: 16px;"></p>
+
+                    <div class="action-buttons-row">
+                        <button id="dbHideBtn" class="submit-btn" style="background: #ffb74d; color: #000; margin-top: 0;">Move to Practice (Hide Live)</button>
+                        <button id="dbDeleteExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0;">Permanently Delete Exam</button>
+                    </div>
+                    
+                    <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                        <h4 style="color:#00bcd4; margin-bottom: 15px; text-align: left;">📋 Individual Submissions</h4>
+                        <div style="overflow-x: auto;">
+                            <table class="res-table" style="width: 100%; min-width: 650px;">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;">Roll / Email</th>
+                                        <th>C / W / S</th>
+                                        <th>Score</th>
+                                        <th>Time</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dbSubmissionsBody">
+                                    <tr><td colspan="5" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -198,7 +226,7 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 FIREBASE CONFIG BOSHAO 🔴🔴
+        // 🔴🔴 YOUR ORIGINAL FIREBASE CONFIG 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -209,17 +237,32 @@
         };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); provider.setCustomParameters({ prompt: 'select_account' }); const db = getFirestore(app);
 
-        // 🔴🔴 ADMIN EMAILS BOSHAO 🔴🔴
         const ADMIN_EMAILS = [
             "hridoymeruet@gmail.com", 
             "mcqportal198@gmail.com"
         ]; 
 
-        function switchTab(tabId, btnId) { document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none'); document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active')); document.getElementById(tabId).style.display = 'block'; document.getElementById(btnId).classList.add('active'); }
-        document.getElementById('btn-tab-create').addEventListener('click', () => switchTab('tab-create', 'btn-tab-create')); document.getElementById('btn-tab-add-q').addEventListener('click', () => switchTab('tab-add-q', 'btn-tab-add-q')); document.getElementById('btn-tab-manage').addEventListener('click', () => switchTab('tab-manage', 'btn-tab-manage')); document.getElementById('btn-tab-notice').addEventListener('click', () => switchTab('tab-notice', 'btn-tab-notice'));
+        function switchTab(tabId, btnId) { 
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none'); 
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active')); 
+            document.getElementById(tabId).style.display = 'block'; 
+            document.getElementById(btnId).classList.add('active'); 
+        }
+        document.getElementById('btn-tab-create').addEventListener('click', () => switchTab('tab-create', 'btn-tab-create')); 
+        document.getElementById('btn-tab-add-q').addEventListener('click', () => switchTab('tab-add-q', 'btn-tab-add-q')); 
+        document.getElementById('btn-tab-manage').addEventListener('click', () => switchTab('tab-manage', 'btn-tab-manage')); 
+        document.getElementById('btn-tab-db').addEventListener('click', () => switchTab('tab-db', 'btn-tab-db'));
 
-        const loginSection = document.getElementById('loginSection'); const adminFormSection = document.getElementById('adminFormSection'); const examSelector = document.getElementById('examSelector'); const manageExamSelector = document.getElementById('manageExamSelector'); 
-        const viewLiveResultBtn = document.getElementById('adminViewLiveResultBtn'); const resultModal = document.getElementById('resultModal'); const closeResultModal = document.getElementById('closeResultModal'); const resultTableBody = document.getElementById('resultTableBody');
+        const loginSection = document.getElementById('loginSection'); 
+        const adminFormSection = document.getElementById('adminFormSection'); 
+        const examSelector = document.getElementById('examSelector'); 
+        const manageExamSelector = document.getElementById('manageExamSelector'); 
+        const dbExamSelector = document.getElementById('dbExamSelector'); 
+        
+        const viewLiveResultBtn = document.getElementById('adminViewLiveResultBtn'); 
+        const resultModal = document.getElementById('resultModal'); 
+        const closeResultModal = document.getElementById('closeResultModal'); 
+        const resultTableBody = document.getElementById('resultTableBody');
 
         closeResultModal.addEventListener('click', () => { resultModal.classList.remove('show'); }); window.addEventListener('click', (e) => { if(e.target === resultModal) resultModal.classList.remove('show'); });
 
@@ -227,7 +270,32 @@
         document.getElementById('adminLoginBtn').addEventListener('click', async () => { const btn = document.getElementById('adminLoginBtn'); btn.innerText = "Processing..."; try { await signInWithPopup(auth, provider); btn.innerText = "Login with Google"; } catch (error) { document.getElementById('errorMsg').innerText = "Login failed."; btn.innerText = "Login with Google"; } });
 
         async function loadExamsIntoDropdowns() {
-            try { const q = query(collection(db, "exams"), orderBy("createdAt", "desc")); const querySnapshot = await getDocs(q); let optionsHtml = '<option value="">-- Select an Exam --</option>'; querySnapshot.forEach((doc) => { const data = doc.data(); let titleStr = data.title; if(data.status === "deleted") { titleStr += " ❌ (Ended)"; } else if(data.status === "draft") { titleStr += " 📝 (Draft)"; } else { titleStr += " 🟢 (Live)"; } optionsHtml += `<option value="${doc.id}">${titleStr}</option>`; }); examSelector.innerHTML = optionsHtml; manageExamSelector.innerHTML = optionsHtml; } catch (error) { console.error("Error:", error); }
+            try { 
+                const q = query(collection(db, "exams"), orderBy("createdAt", "desc")); 
+                const querySnapshot = await getDocs(q); 
+                let optionsHtml = '<option value="">-- Select an Exam --</option>'; 
+                
+                const currentTime = new Date().getTime();
+
+                querySnapshot.forEach((doc) => { 
+                    const data = doc.data(); 
+                    let titleStr = data.title; 
+                    
+                    if(data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) { 
+                        titleStr += " 🟢 (Practice)"; 
+                    } 
+                    else if(data.status === "draft") { 
+                        titleStr += " 📝 (Draft)"; 
+                    } 
+                    else { 
+                        titleStr += " 🔴 (Live)"; 
+                    } 
+                    optionsHtml += `<option value="${doc.id}">${titleStr}</option>`; 
+                }); 
+                examSelector.innerHTML = optionsHtml; 
+                manageExamSelector.innerHTML = optionsHtml; 
+                dbExamSelector.innerHTML = optionsHtml; 
+            } catch (error) { console.error("Error:", error); }
         }
 
         document.getElementById('createExamForm').addEventListener('submit', async function(e) { e.preventDefault(); const statusMsg = document.getElementById('examCreateStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Creating..."; try { await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "draft" }); statusMsg.style.color = "#ffb74d"; statusMsg.innerText = "Exam Saved as DRAFT!"; document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error!"; } setTimeout(() => { statusMsg.innerText = ""; }, 4000); });
@@ -242,37 +310,170 @@
             try { const resQuery = query(collection(db, "results"), where("examId", "==", examId)); const resSnap = await getDocs(resQuery); participantCountEl.innerText = resSnap.size; if(resSnap.size > 0) { viewLiveResultBtn.style.display = "block"; } } catch (err) { console.error(err); } loadQuestionsForEdit(examId);
         });
 
-        // LIVE RESULT MODAL LOGIC ADDED BACK
         viewLiveResultBtn.addEventListener('click', async (e) => { e.preventDefault(); const examId = manageExamSelector.value; if(!examId) return; const originalText = viewLiveResultBtn.innerText; viewLiveResultBtn.innerText = "Loading..."; try { const q = query(collection(db, "results"), where("examId", "==", examId)); const snapshot = await getDocs(q); let resultsArray = []; snapshot.forEach(doc => { resultsArray.push(doc.data()); }); resultsArray.sort((a, b) => b.score - a.score); resultTableBody.innerHTML = ""; resultsArray.forEach((row, index) => { let tr = document.createElement('tr'); tr.innerHTML = `<td>#${index + 1}</td><td style="font-weight: bold; color: #ffb74d;">${row.rollNumber || "N/A"}</td><td style="font-weight: bold; color: #00e676;">${row.score}</td>`; resultTableBody.appendChild(tr); }); resultModal.classList.add('show'); } catch (error) { alert("Failed to load results."); } viewLiveResultBtn.innerText = originalText; });
 
-        document.getElementById('updateSettingsBtn').addEventListener('click', async () => { const examId = manageExamSelector.value; const statusMsg = document.getElementById('updateSettingsStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Updating..."; try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); statusMsg.style.color = "#00e676"; statusMsg.innerText = "Updated!"; loadExamsIntoDropdowns(); } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error!"; } setTimeout(() => { statusMsg.innerText = ""; }, 3000); });
+        document.getElementById('updateSettingsBtn').addEventListener('click', async () => { const examId = manageExamSelector.value; const statusMsg = document.getElementById('updateSettingsStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Updating..."; try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); statusMsg.style.color = "#00e676"; statusMsg.innerText = "Updated Settings Successfully!"; loadExamsIntoDropdowns(); } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error!"; } setTimeout(() => { statusMsg.innerText = ""; }, 3000); });
         
-        document.getElementById('publishExamBtn').addEventListener('click', async (e) => { e.preventDefault(); const examId = manageExamSelector.value; if(confirm("Publish this exam live?")) { try { await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true }); alert("LIVE!"); loadExamsIntoDropdowns(); } catch (error) { alert("Error"); } } });
-        document.getElementById('deleteEntireExamBtn').addEventListener('click', async (e) => { e.preventDefault(); const examId = manageExamSelector.value; if(confirm("End/Hide exam?")) { try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); alert("Hidden!"); document.getElementById('manageWorkspace').style.display = "none"; loadExamsIntoDropdowns(); } catch (error) { alert("Error"); } } });
+        document.getElementById('publishExamBtn').addEventListener('click', async (e) => { e.preventDefault(); const examId = manageExamSelector.value; if(confirm("Publish this exam live?")) { try { await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true }); alert("EXAM IS LIVE!"); loadExamsIntoDropdowns(); } catch (error) { alert("Error"); } } });
 
         async function loadQuestionsForEdit(examId) {
             const listDiv = document.getElementById('manageQuestionsList'); listDiv.innerHTML = ""; const qSnap = await getDocs(collection(db, "exams", examId, "questions")); if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#ff5252;'>No questions found.</p>"; return; }
             let count = 1; qSnap.forEach((docSnap) => { const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; item.innerHTML = `<div class="q-text">Q${count}: ${data.question}</div><div class="q-actions"><button class="btn-edit" data-id="${qId}">Edit</button><button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++;
-                item.querySelector('.btn-edit').addEventListener('click', () => {
-                    document.getElementById('editQuestionFormBox').style.display = "block"; document.getElementById('editQText').value = data.question; document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; document.getElementById('editQCorrect').value = data.correctAnswer || "1"; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId);
-                });
+                item.querySelector('.btn-edit').addEventListener('click', () => { document.getElementById('editQuestionFormBox').style.display = "block"; document.getElementById('editQText').value = data.question; document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; document.getElementById('editQCorrect').value = data.correctAnswer || "1"; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); });
                 item.querySelector('.btn-delete').addEventListener('click', async () => { if(confirm("Delete question?")) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } });
             });
         }
 
-        // Edit Bug Fixed Code
         document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => {
             e.preventDefault(); const btn = document.getElementById('saveEditedQBtn'); const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; btn.innerText = "Saving...";
-            try { 
-                await setDoc(doc(db, "exams", examId, "questions", qId), { 
-                    question: document.getElementById('editQText').value, 
-                    options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, 
-                    correctAnswer: document.getElementById('editQCorrect').value
-                }, { merge: true }); 
-                document.getElementById('editQuestionFormBox').style.display = "none"; loadQuestionsForEdit(examId); 
-            } catch (error) { alert("Error: " + error.message); } btn.innerText = "Save Changes";
+            try { await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQuestionFormBox').style.display = "none"; loadQuestionsForEdit(examId); } catch (error) { alert("Error: " + error.message); } btn.innerText = "Save Changes";
         });
         document.getElementById('cancelEditQBtn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('editQuestionFormBox').style.display = "none"; });
+
+
+        // 🟢🟢 NEW DATABASE MANAGEMENT LOGIC 🟢🟢
+        const dbWorkspace = document.getElementById('dbWorkspace');
+        
+        dbExamSelector.addEventListener('change', async (e) => {
+            const examId = e.target.value;
+            if(!examId) { dbWorkspace.style.display = "none"; return; }
+            dbWorkspace.style.display = "block";
+            
+            const docSnap = await getDoc(doc(db, "exams", examId));
+            if(docSnap.exists()) {
+                const data = docSnap.data();
+                const currentTime = new Date().getTime();
+                const statusEl = document.getElementById('dbExamStatus');
+                const hideBtn = document.getElementById('dbHideBtn');
+                
+                if (data.status === "draft") {
+                    statusEl.innerHTML = `<span style="color:#a0a0b0;">Status: 📝 Draft Exam (Not Published)</span>`;
+                    hideBtn.style.display = "none";
+                } else if (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) {
+                    statusEl.innerHTML = `<span style="color:#00e676;">Status: 🟢 Practice Exam (Time Passed / Moved)</span>`;
+                    hideBtn.style.display = "none";
+                } else {
+                    statusEl.innerHTML = `<span style="color:#ff5252;">Status: 🔴 Live Exam (Running)</span>`;
+                    hideBtn.style.display = "block";
+                }
+            }
+            
+            // Load Submissions Data
+            loadDbSubmissions(examId);
+        });
+
+        // Load Individual Submissions List
+        async function loadDbSubmissions(examId) {
+            const tbody = document.getElementById('dbSubmissionsBody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr>';
+            
+            try {
+                const q = query(collection(db, "results"), where("examId", "==", examId));
+                const snapshot = await getDocs(q);
+                
+                if(snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ffb74d;">No submissions found for this exam.</td></tr>';
+                    return;
+                }
+                
+                let html = "";
+                let resultsData = [];
+                snapshot.forEach(doc => {
+                    resultsData.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Sort by score (Highest first)
+                resultsData.sort((a, b) => b.score - a.score);
+                
+                resultsData.forEach((row) => {
+                    let timeStr = "N/A";
+                    if(row.timestamp) {
+                        let d = row.timestamp.seconds ? new Date(row.timestamp.seconds * 1000) : new Date(row.timestamp);
+                        timeStr = d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+                    }
+                    
+                    html += `
+                    <tr>
+                        <td style="text-align:left;">
+                            <span style="color:#ffb74d; font-weight:bold;">${row.rollNumber || "N/A"}</span><br>
+                            <span style="font-size:11px; color:#a0a0b0;">${row.email}</span>
+                        </td>
+                        <td>
+                            <span style="color:#00e676;" title="Correct">${row.correctCount||0}</span> / 
+                            <span style="color:#ff5252;" title="Wrong">${row.wrongCount||0}</span> / 
+                            <span style="color:#ffb74d;" title="Skipped">${row.skippedCount||0}</span>
+                        </td>
+                        <td style="color:#00bcd4; font-weight:bold; font-size: 16px;">${row.score}</td>
+                        <td style="font-size:12px; color:#b3b3b3;">${timeStr}</td>
+                        <td>
+                            <button class="btn-delete delete-sub-btn" data-id="${row.id}" data-email="${row.email}" data-exam="${row.examId}">Delete</button>
+                        </td>
+                    </tr>
+                    `;
+                });
+                
+                tbody.innerHTML = html;
+                
+                // Attach listeners to delete buttons
+                document.querySelectorAll('.delete-sub-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const docId = e.target.getAttribute('data-id');
+                        const email = e.target.getAttribute('data-email');
+                        const exId = e.target.getAttribute('data-exam');
+                        
+                        if(confirm("Are you sure you want to delete this student's submission? They will be able to retake the exam as a fresh start.")) {
+                            e.target.innerText = "Wait...";
+                            try {
+                                // 1. Delete result document
+                                await deleteDoc(doc(db, "results", docId));
+                                // 2. Clear timer document so they can re-enter completely fresh
+                                const timerDocId = email + "_" + exId;
+                                await deleteDoc(doc(db, "user_timers", timerDocId));
+                                
+                                // Reload table
+                                loadDbSubmissions(exId);
+                            } catch(err) {
+                                alert("Failed to delete.");
+                                e.target.innerText = "Delete";
+                            }
+                        }
+                    });
+                });
+                
+            } catch(error) {
+                console.error(error);
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ff5252;">Error loading data.</td></tr>';
+            }
+        }
+
+        // Hide Exam
+        document.getElementById('dbHideBtn').addEventListener('click', async () => {
+            const examId = dbExamSelector.value;
+            if(!examId) return;
+            if(confirm("Move this LIVE Exam to Practice Mode immediately?")) {
+                try {
+                    await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true });
+                    alert("✅ Exam successfully moved to Practice Mode!");
+                    loadExamsIntoDropdowns();
+                    dbWorkspace.style.display = "none";
+                } catch(e) { alert("Error!"); }
+            }
+        });
+
+        // Permanently Delete Exam
+        document.getElementById('dbDeleteExamBtn').addEventListener('click', async () => {
+            const examId = dbExamSelector.value;
+            if(!examId) return;
+            if(confirm("🚨 WARNING: This will permanently delete the entire exam from the database. This action CANNOT be undone. Proceed?")) {
+                try {
+                    await deleteDoc(doc(db, "exams", examId));
+                    alert("✅ Exam Deleted Permanently!");
+                    loadExamsIntoDropdowns();
+                    dbWorkspace.style.display = "none";
+                } catch(e) { alert("Error deleting exam!"); }
+            }
+        });
+
     </script>
 </body>
 </html>
