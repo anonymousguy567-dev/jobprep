@@ -9,116 +9,117 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body { 
-            background-color: #050508; color: #ffffff; min-height: 100vh; display: flex; 
+            background-color: #121218; color: #ffffff; min-height: 100vh; display: flex; 
             flex-direction: column; justify-content: center; align-items: center; 
             padding: 120px 20px 60px 20px; overflow-x: hidden; position: relative; 
         }
         
+        /* 🟢 Background Blobs 🟢 */
         .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
-        .blob { position: absolute; filter: blur(90px); opacity: 0.5; animation: float 12s infinite alternate ease-in-out; }
+        .blob { position: absolute; filter: blur(90px); opacity: 0.3; animation: float 12s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #00bcd4; top: -10%; left: -5%; animation-delay: 0s; }
         .blob2 { width: 400px; height: 400px; background: #2196f3; bottom: -10%; right: -5%; animation-delay: 3s; }
         .blob3 { width: 250px; height: 250px; background: #673ab7; top: 40%; left: 40%; animation-delay: 5s; }
 
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
 
-        /* 🟢 Top Navigation Bar 🟢 */
+        /* 🟢 CLAYMORPHISM: Top Navigation Bar 🟢 */
         .navbar {
-            position: absolute;
-            top: 0; left: 0; width: 100%;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(20, 20, 25, 0.4);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 188, 212, 0.2);
-            z-index: 2000;
+            position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: #181820; border-bottom: none; z-index: 2000;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 -2px 5px rgba(255,255,255,0.05);
         }
         
-        .nav-brand {
-            font-size: 24px;
-            font-weight: 800;
-            color: #00bcd4;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
+        .nav-brand { font-size: 24px; font-weight: 800; color: #00bcd4; letter-spacing: 1.5px; text-transform: uppercase; }
         
         .nav-admin-btn {
-            background: rgba(255, 255, 255, 0.05);
-            color: #e0e0e0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 24px; 
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 17px; 
-            transition: 0.3s;
-            display: flex; align-items: center; gap: 8px;
+            background: #202028; color: #00bcd4; padding: 10px 24px; border-radius: 12px; 
+            text-decoration: none; font-weight: bold; font-size: 17px; display: flex; align-items: center; gap: 8px; transition: 0.2s;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(255,255,255,0.1);
+            border: none;
         }
-        .nav-admin-btn:hover {
-            background: rgba(0, 188, 212, 0.15);
-            border-color: #00bcd4;
-            color: #00bcd4;
-            box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
-            transform: translateY(-2px);
-        }
+        .nav-admin-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px); }
 
         /* 🟢 9-Dot Menu 🟢 */
         .top-right-bar { position: absolute; top: 90px; right: 25px; z-index: 1000; }
         
         .apps-menu-btn { 
-            position: relative; width: 45px; height: 45px; border-radius: 50%; 
-            background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); display: flex; 
-            justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; outline: none;
+            position: relative; width: 45px; height: 45px; border-radius: 50%; background: #202028; 
+            display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; outline: none; border: none;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 5px rgba(255,255,255,0.1);
         }
-        .apps-menu-btn:hover { background: rgba(0, 188, 212, 0.2); border-color: rgba(0, 188, 212, 0.5); }
-        .apps-menu-btn svg { fill: #e0e0e0; width: 24px; height: 24px; transition: 0.3s; }
-        .apps-menu-btn:hover svg { fill: #00bcd4; }
+        .apps-menu-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px); }
+        .apps-menu-btn svg { fill: #00bcd4; width: 20px; height: 20px; transition: 0.3s; }
         
         .apps-dropdown { 
-            position: absolute; top: 55px; right: 0; background: rgba(20, 20, 25, 0.95); 
-            backdrop-filter: blur(15px); border: 1px solid rgba(0, 188, 212, 0.3); 
-            border-radius: 12px; padding: 10px; width: max-content; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: none; flex-direction: column; 
-            transform: translateY(-10px); opacity: 0; transition: all 0.3s ease;
+            position: absolute; top: 60px; right: 0; background: #181820; border-radius: 15px; padding: 10px; width: max-content; 
+            box-shadow: 8px 8px 16px rgba(0,0,0,0.5), -4px -4px 10px rgba(255,255,255,0.03); border: none; display: none; flex-direction: column; 
         }
-        .apps-dropdown.show { display: block; animation: fadeIn 0.2s ease; opacity: 1; transform: translateY(0); }
+        .apps-dropdown.show { display: block; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         
-        .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; transition: 0.3s; background: rgba(255, 255, 255, 0.05); text-align: center; }
-        .apps-link:hover { background: rgba(0, 188, 212, 0.15); color: #00bcd4; }
+        .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 10px; text-align: center; transition: 0.2s; }
+        .apps-link:hover { background: #202028; color: #00bcd4; box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4); }
 
-        /* Main Container */
-        .glass-container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; width: 100%; max-width: 800px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
+        /* 🟢 CLAYMORPHISM: Main Container 🟢 */
+        .glass-container { 
+            background: #1a1a22; border-radius: 30px; padding: 35px 30px; width: 100%; max-width: 800px; 
+            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 3px 3px 10px rgba(255,255,255,0.05);
+            border: none; position: relative; z-index: 10;
+        }
         h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; letter-spacing: 1px; }
         
         #timer-section, #result-section { display: none; flex-direction: column; align-items: center; text-align: center; padding: 10px 0; width: 100%; }
         
-        .login-btn, .action-btn { padding: 12px 25px; margin-top: 20px; border: none; border-radius: 8px; background: #ffffff; color: #333; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s;}
-        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
+        /* Buttons */
+        .login-btn, .action-btn { 
+            padding: 12px 25px; margin-top: 20px; border-radius: 14px; text-decoration: none; font-size: 15px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s;
+            background: #252530; color: #00bcd4; display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 2px 2px 5px rgba(255,255,255,0.05);
+        }
+        .login-btn:active, .action-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.02); transform: translateY(2px); }
         
-        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; font-size: 16px; margin-bottom: 20px;}
-        select option { background-color: #1a1a24; color: white; }
-        select:focus { border-color: #00bcd4; }
+        /* Select Dropdown */
+        select { 
+            width: 100%; padding: 14px; border-radius: 12px; border: none; background: #15151a; color: #fff; outline: none; font-size: 15px; margin-bottom: 20px; 
+            box-shadow: inset 5px 5px 10px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(255,255,255,0.02); cursor: pointer;
+        }
+        select option { background-color: #202028; color: white; }
         
-        .time-box { font-size: 20px; font-weight: bold; color: #ff5252; background: rgba(255, 82, 82, 0.1); padding: 15px 30px; border-radius: 10px; margin: 15px 0; border: 1px solid rgba(255, 82, 82, 0.2); }
-        .score-display { font-size: 40px; font-weight: bold; color: #00bcd4; margin: 15px 0 10px 0; }
+        /* Claymorphism Inner Boxes */
+        .login-box, .breakdown-box, .question-card {
+            background: #202028; padding: 25px; border-radius: 16px; margin-bottom: 20px; border: none;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.4), -2px -2px 5px rgba(255,255,255,0.02);
+        }
         
-        .breakdown-box { display: flex; justify-content: space-around; width: 100%; max-width: 500px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        .login-box { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        
+        .time-box { 
+            font-size: 18px; font-weight: bold; color: #ff5252; padding: 15px 30px; border-radius: 14px; margin: 15px 0; 
+            background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(255,255,255,0.02); border: none;
+        }
+
+        .score-display { font-size: 45px; font-weight: bold; color: #00bcd4; margin: 15px 0 10px 0; text-shadow: 0 0 10px rgba(0, 188, 212, 0.3); }
+        
+        .breakdown-box { display: flex; justify-content: space-around; width: 100%; max-width: 500px; padding: 20px; }
         .stat-item { text-align: center; }
-        .stat-label { font-size: 14px; font-weight: bold; margin-bottom: 5px; }
-        .stat-value { font-size: 24px; font-weight: bold; }
+        .stat-label { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #a0a0b0; }
+        .stat-value { font-size: 26px; font-weight: bold; }
         
-        .question-card { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.05); text-align: left; width: 100%; }
-        .question-text { font-size: 18px; margin-bottom: 10px; color: #e0e0e0; font-weight: bold; }
-        .option-div { background: rgba(255, 255, 255, 0.05); padding: 10px 15px; margin-bottom: 10px; border-radius: 6px; font-size: 15px; }
-        .correct-ans { background: rgba(0, 230, 118, 0.2) !important; border: 1px solid #00e676; color: #00e676; }
-        .wrong-ans { background: rgba(255, 82, 82, 0.2) !important; border: 1px solid #ff5252; color: #ff5252; }
-        .skipped-msg { color: #ffb74d; font-weight: bold; font-size: 14px; margin-bottom: 15px; display: block;}
+        .question-card { text-align: left; width: 100%; }
+        .question-text { font-size: 18px; margin-bottom: 15px; color: #e0e0e0; font-weight: bold; }
+
+        /* Inset Option Div */
+        .option-div { 
+            padding: 12px 15px; margin-bottom: 10px; border-radius: 12px; font-size: 15px; 
+            background: #15151a; border: none; color: #b3b3b3;
+            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4), inset -2px -2px 4px rgba(255,255,255,0.02);
+        }
+        .correct-ans { background: rgba(0, 230, 118, 0.1) !important; border: 1px solid #00e676; color: #00e676; box-shadow: inset 3px 3px 6px rgba(0,230,118,0.2); }
+        .wrong-ans { background: rgba(255, 82, 82, 0.1) !important; border: 1px solid #ff5252; color: #ff5252; box-shadow: inset 3px 3px 6px rgba(255,82,82,0.2); }
+        .skipped-msg { color: #ffb74d; font-weight: bold; font-size: 14px; margin-bottom: 15px; display: block; text-shadow: 0 0 5px rgba(255, 183, 77, 0.2);}
         
-        .login-box { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 30px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center;}
     </style>
 </head>
 <body>
@@ -127,9 +128,7 @@
 
     <nav class="navbar">
         <div class="nav-brand">MCQ Portal</div>
-        <a href="admin.html" class="nav-admin-btn">
-            ⚙️ Admin
-        </a>
+        <a href="admin.html" class="nav-admin-btn">⚙️ Admin</a>
     </nav>
 
     <div class="top-right-bar">
@@ -138,7 +137,7 @@
                 <svg viewBox="0 0 24 24"><path d="M12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-16 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg>
             </button>
             <div class="apps-dropdown" id="appsDropdown">
-                <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">UniDocs Generator | RUET</a>
+                <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">UniDocs Generator</a>
             </div>
         </div>
     </div>
@@ -159,13 +158,13 @@
             </select>
         </div>
         
-        <a href="index.html" id="homeLink" style="color:#b3b3b3; display:block; text-align:center; margin-top: 25px; text-decoration: none; font-size: 14px; font-weight: bold;">🔙 Back to Homepage</a>
+        <a href="index.html" id="homeLink" style="color:#b3b3b3; display:block; text-align:center; margin-top: 25px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.2s;">🔙 Back to Homepage</a>
 
         <div id="timer-section">
             <h2 style="color: #00e676;">Exam Submitted!</h2>
             
             <div id="earlyResultContainer" style="display: none; width: 100%; display: flex; flex-direction: column; align-items: center;">
-                <h3 style="color: #00bcd4; margin-top: 10px;">Your Score: <span id="earlyFinalScore" style="font-size: 36px; color: #00e676; display: block;">0</span></h3>
+                <h3 style="color: #00bcd4; margin-top: 10px;">Your Score: <span id="earlyFinalScore" style="font-size: 36px; color: #00e676; display: block; text-shadow: 0 0 10px rgba(0, 230, 118, 0.3);">0</span></h3>
                 
                 <div class="breakdown-box" style="margin-top: 10px;">
                     <div class="stat-item" style="color: #00e676;"><div class="stat-label">Correct (+1)</div><div class="stat-value" id="earlyCorrect">0</div></div>
@@ -176,7 +175,7 @@
 
             <p style="margin-top: 20px; color: #b3b3b3; font-size: 14px;">Detailed Answer Sheet will be visible below after the publish time.</p>
             <div class="time-box" id="countdown">Checking schedule...</div>
-            <button class="action-btn" onclick="window.location.reload()" style="background:rgba(255,255,255,0.1); color:#fff; width:auto; margin:auto; margin-top:10px; border: 1px solid rgba(255,255,255,0.2);">Go Back</button>
+            <button class="action-btn" onclick="window.location.reload()" style="width:auto; margin:auto; margin-top:15px;">Go Back</button>
         </div>
 
         <div id="result-section">
@@ -194,7 +193,7 @@
             <h3 style="margin-bottom: 20px; text-align: left; width: 100%;">Answer Breakdown:</h3>
             <div id="answersContainer" style="width: 100%;"></div>
             
-            <button class="action-btn" onclick="window.location.reload()" style="background:rgba(255,255,255,0.1); color:#fff; width:100%; border:1px solid rgba(255,255,255,0.2); margin-top:20px;">Back to Menu</button>
+            <button class="action-btn" onclick="window.location.reload()" style="width:100%; margin-top:20px;">Back to Menu</button>
         </div>
     </div>
 
@@ -245,7 +244,7 @@
                     allExamsCache[doc.id] = examData;
                     
                     let examTitle = examData.title; 
-                    if (examData.status === "deleted") { examTitle += " [Ended]"; }
+                    if (examData.status === "deleted") { examTitle += " [Ended/Practice]"; }
                     optionsHTML += `<option value="${doc.id}">${examTitle}</option>`;
                 });
                 
@@ -297,7 +296,7 @@
             
             if (!userData) {
                 document.getElementById('earlyResultContainer').style.display = "none"; countdownDisplay.innerText = "";
-                timerSection.innerHTML = "<h2 style='color:#ff5252;'>You haven't participated in this exam!</h2><button class='action-btn' onclick='window.location.reload()' style='background:rgba(255,255,255,0.1); color:#fff; width:auto; margin:auto; margin-top:20px; border: 1px solid rgba(255,255,255,0.2);'>Go Back</button>";
+                timerSection.innerHTML = "<h2 style='color:#ff5252;'>You haven't participated in this exam!</h2><button class='action-btn' onclick='window.location.reload()' style='width:auto; margin:auto; margin-top:20px;'>Go Back</button>";
                 return;
             }
 
@@ -312,7 +311,7 @@
                 let publishTime = examData ? examData.publishTime : 0;
 
                 const now = new Date().getTime();
-                if (now >= publishTime) { timerSection.style.display = "none"; showFullResult(examId, userData); return; }
+                if (now >= publishTime || examData.status === "deleted") { timerSection.style.display = "none"; showFullResult(examId, userData); return; }
 
                 if(timerInterval) clearInterval(timerInterval); 
                 timerInterval = setInterval(() => {
