@@ -26,29 +26,31 @@
 
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
 
-        /* 🟢 CLAYMORPHISM: Navbar 🟢 */
+        /* 🟢 CLAYMORPHISM: Navbar (Rounded squircle look) 🟢 */
         .navbar {
             position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px;
             display: flex; justify-content: space-between; align-items: center;
             background: #181820; border-bottom: none; z-index: 2000;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 -2px 5px rgba(255,255,255,0.05);
+            /* Doubled Inner Shadows for volume */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 3px 3px 8px rgba(255,255,255,0.05), inset -4px -4px 10px rgba(0,0,0,0.4);
         }
         
-        .nav-brand { font-size: 24px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #00bcd4; }
+        .nav-brand { font-size: 24px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.4);}
         
         .nav-admin-btn {
-            background: #202028; color: #00bcd4; padding: 10px 24px; border-radius: 12px; 
-            text-decoration: none; font-weight: bold; font-size: 17px; display: flex; align-items: center; gap: 8px; transition: 0.2s;
-            box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(255,255,255,0.1);
+            background: #202028; color: #00bcd4; padding: 10px 24px; border-radius: 18px; 
+            text-decoration: none; font-weight: bold; font-size: 17px; display: flex; align-items: center; gap: 8px; transition: 0.2s ease-in-out;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(255,255,255,0.1), inset -3px -3px 6px rgba(0,0,0,0.3);
             border: none;
         }
-        .nav-admin-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px); }
+        /* Active State: Squishy Pressed In look */
+        .nav-admin-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px) scale(0.96); }
 
         /* Claymorphism: Clock */
         .live-clock-container {
             position: absolute; top: 90px; left: 30px; z-index: 1000;
-            background: #181820; border-radius: 20px; padding: 10px 20px; display: flex; flex-direction: column; align-items: flex-start;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 2px 2px 5px rgba(255,255,255,0.05);
+            background: #181820; border-radius: 25px; padding: 10px 20px; display: flex; flex-direction: column; align-items: flex-start;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 3px 3px 6px rgba(255,255,255,0.05), inset -5px -5px 12px rgba(0,0,0,0.3);
             border: none;
         }
         .clock-time { font-size: 20px; font-weight: bold; color: #00bcd4; letter-spacing: 2px; margin-bottom: 2px; font-variant-numeric: tabular-nums;}
@@ -58,32 +60,33 @@
         .top-right-bar { position: absolute; top: 90px; right: 25px; z-index: 2000; }
         .apps-menu-btn { 
             position: relative; width: 45px; height: 45px; border-radius: 50%; background: #202028; 
-            display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; outline: none; border: none;
-            box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 5px rgba(255,255,255,0.1);
+            display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s ease-in-out; outline: none; border: none;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 5px rgba(255,255,255,0.1), inset -3px -3px 6px rgba(0,0,0,0.3);
         }
-        .apps-menu-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px); }
+        .apps-menu-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px) scale(0.96); }
         .apps-menu-btn svg { fill: #00bcd4; width: 20px; height: 20px; }
         
         .apps-dropdown { 
-            position: absolute; top: 60px; right: 0; background: #181820; border-radius: 15px; padding: 10px; width: max-content; 
-            box-shadow: 8px 8px 16px rgba(0,0,0,0.5), -4px -4px 10px rgba(255,255,255,0.03); border: none; display: none; flex-direction: column; 
+            position: absolute; top: 60px; right: 0; background: #181820; border-radius: 18px; padding: 10px; width: max-content; 
+            box-shadow: 8px 8px 16px rgba(0,0,0,0.5), -4px -4px 10px rgba(255,255,255,0.03), inset 3px 3px 6px rgba(255,255,255,0.05), inset -5px -5px 12px rgba(0,0,0,0.3); border: none; display: none; flex-direction: column; 
         }
         .apps-dropdown.show { display: block; animation: fadeIn 0.2s ease; }
         
-        .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 10px; text-align: center; transition: 0.2s; }
-        .apps-link:hover { background: #202028; color: #00bcd4; box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4); }
+        .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 12px; text-align: center; transition: 0.2s ease-in-out; }
+        .apps-link:hover { background: #202028; color: #00bcd4; box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4), inset -2px -2px 4px rgba(255,255,255,0.02); }
 
         .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; z-index: 10; position: relative;}
         h1 { background: linear-gradient(135deg, #00bcd4, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 36px; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; font-weight: 800; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 🟢 CLAYMORPHISM: Main Boxes (Smaller & Compact) 🟢 */
+        /* 🟢 CLAYMORPHISM: Main Boxes (Super Rounded) 🟢 */
         .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; z-index: 10; position: relative; margin-top: 10px;}
 
         .glass-box { 
-            background: #1a1a22; border-radius: 25px; padding: 25px 20px; text-align: center; 
+            background: #1a1a22; border-radius: 35px; padding: 25px 20px; text-align: center; 
             display: flex; flex-direction: column; justify-content: flex-start; min-height: 310px;
-            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 3px 3px 10px rgba(255,255,255,0.05);
+            /* Doubled Inner Shadows for volume */
+            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4);
             border: none; transition: transform 0.3s ease;
         }
         .glass-box:hover { transform: translateY(-5px); }
@@ -99,39 +102,40 @@
         /* Claymorphism: Exam Item */
         .exam-item { 
             display: flex; justify-content: space-between; align-items: center; background: #202028; padding: 12px; 
-            border-radius: 14px; margin-bottom: 12px; border: none;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.4), -2px -2px 5px rgba(255,255,255,0.02);
+            border-radius: 16px; margin-bottom: 12px; border: none;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.4), -2px -2px 5px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 6px rgba(0,0,0,0.3);
         }
         .exam-name { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 4px; }
         .meta-info { display: flex; flex-direction: column; gap: 4px; }
         .exam-time { font-size: 11px; color: #00bcd4; font-weight: bold; }
         
         .publish-time { 
-            font-size: 10px; color: #fff; background: #2c2c38; padding: 4px 8px; border-radius: 6px; 
+            font-size: 10px; color: #fff; background: #2c2c38; padding: 4px 8px; border-radius: 8px; 
             display: inline-block; width: max-content; font-weight: bold;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.4);
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.4), inset -1px -1px 3px rgba(255,255,255,0.02);
         }
         
         /* Claymorphism: Start Button */
         .start-btn { 
-            background: #00bcd4; color: #000; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 12px; border: none;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.4), -2px -2px 5px rgba(255,255,255,0.2), inset 2px 2px 4px rgba(255,255,255,0.3); transition: 0.2s;
+            background: #00bcd4; color: #000; padding: 8px 16px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 12px; border: none;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.4), -2px -2px 5px rgba(255,255,255,0.2), inset 2px 2px 4px rgba(255,255,255,0.3); transition: 0.1s ease-in-out;
         }
-        .start-btn:active { box-shadow: inset 3px 3px 8px rgba(0,0,0,0.5); transform: scale(0.95); }
+        .start-btn:active { box-shadow: inset 3px 3px 8px rgba(0,0,0,0.5), inset -2px -2px 4px rgba(255,255,255,0.02); transform: scale(0.95); }
 
         /* Claymorphism: Action Buttons */
         .action-btn { 
-            display: inline-block; width: 100%; padding: 12px; border-radius: 14px; text-decoration: none; font-size: 14px; font-weight: bold; border: none; cursor: pointer; margin-top: auto; transition: 0.2s;
+            display: inline-block; width: 100%; padding: 12px; border-radius: 18px; text-decoration: none; font-size: 14px; font-weight: bold; border: none; cursor: pointer; margin-top: auto; transition: 0.1s ease-in-out;
             background: #252530; color: #00bcd4;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 2px 2px 5px rgba(255,255,255,0.05);
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 3px 3px 6px rgba(255,255,255,0.05), inset -5px -5px 12px rgba(0,0,0,0.3);
         }
-        .action-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.02); transform: translateY(2px); }
-        .btn-green { color: #00e676; }
+        .action-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.02); transform: translateY(2px) scale(0.96); }
+        .btn-green { color: #00e676; box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(0,0,0,0.03), inset 3px 3px 6px rgba(0,230,118,0.05), inset -5px -5px 12px rgba(0,0,0,0.3); }
 
-        /* Claymorphism: Inset Select Box */
+        /* Claymorphism: Inset Select Box (Pressed In look) */
         select { 
-            width: 100%; padding: 12px; border-radius: 12px; border: none; background: #15151a; color: #fff; outline: none; font-size: 13px; margin-bottom: 15px; 
-            box-shadow: inset 5px 5px 10px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(255,255,255,0.02); cursor: pointer;
+            width: 100%; padding: 12px; border-radius: 16px; border: none; background: #15151a; color: #fff; outline: none; font-size: 13px; margin-bottom: 15px; 
+            /* Doubled Inner Shadows for volume */
+            box-shadow: inset 5px 5px 10px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); cursor: pointer;
         }
         select option { background-color: #202028; color: white; }
 
@@ -202,7 +206,7 @@
 
         <div class="glass-box">
             <div class="box-icon">🏆</div>
-            <div class="box-title">Merit List</div>
+            <div class="box-title"> Merit List</div>
             <p style="color: #888; font-size: 13px; margin-bottom: 15px; flex-grow: 1;">
                 View and download the final merit list.
             </p>
@@ -362,7 +366,7 @@
             if (!examId) { meritListDisplay.innerHTML = `<p style="color: #888; font-size: 12px;">Select an exam to check status.</p>`; return; }
             const exam = allExamsData[examId]; const currentTime = new Date().getTime();
             if (exam.publishTime && currentTime < exam.publishTime) {
-                meritListDisplay.innerHTML = `<p style="color: #ffb74d; font-size: 13px; font-weight: bold; background: #2c2c38; padding: 10px; border-radius: 10px; width: 100%; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);">🔒 Result will be published at:<br> <span style="color:#00bcd4;">${formatResultTime(exam.publishTime)}</span></p>`;
+                meritListDisplay.innerHTML = `<p style="color: #ffb74d; font-size: 13px; font-weight: bold; background: #2c2c38; padding: 10px; border-radius: 10px; width: 100%; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);">🔒 Merit list will be published at:<br> <span style="color:#00bcd4;">${formatResultTime(exam.publishTime)}</span></p>`;
             } else {
                 meritListDisplay.innerHTML = `<button id="downloadMeritPdfBtn" class="action-btn btn-green" style="margin-top: 0; padding: 12px;">📥 Download Merit List (PDF)</button>`;
                 document.getElementById('downloadMeritPdfBtn').addEventListener('click', async () => { await generateMeritListPDF(examId, exam.title); });
