@@ -368,7 +368,7 @@
             if (!examId) { meritListDisplay.innerHTML = `<p style="color: #888; font-size: 12px;">Select an exam to check status.</p>`; return; }
             const exam = allExamsData[examId]; const currentTime = new Date().getTime();
             if (exam.publishTime && currentTime < exam.publishTime) {
-                meritListDisplay.innerHTML = `<p style="color: #ffb74d; font-size: 13px; font-weight: bold; background: #2c2c38; padding: 10px; border-radius: 12px; width: 100%; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.02);">🔒 Result will be published at:<br> <span style="color:#00bcd4;">${formatResultTime(exam.publishTime)}</span></p>`;
+                meritListDisplay.innerHTML = `<p style="color: #ffb74d; font-size: 13px; font-weight: bold; background: #2c2c38; padding: 10px; border-radius: 12px; width: 100%; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.02);">🔒 Merit list will be published at:<br> <span style="color:#00bcd4;">${formatResultTime(exam.publishTime)}</span></p>`;
             } else {
                 meritListDisplay.innerHTML = `<button id="downloadMeritPdfBtn" class="action-btn btn-green" style="margin-top: 0; padding: 12px;">📥 Download Merit List (PDF)</button>`;
                 document.getElementById('downloadMeritPdfBtn').addEventListener('click', async () => { await generateMeritListPDF(examId, exam.title); });
