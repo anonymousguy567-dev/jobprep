@@ -47,12 +47,19 @@
         }
         
         /* Claymorphism: Inner Boxes */
-        .question-card, .marking-rules, .roll-input-box, .breakdown-box { 
+        .question-card { 
+            background: #202028; padding: 25px; border-radius: 20px; margin-bottom: 20px; border: none;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.3);
+            user-select: none; -webkit-user-select: none;
+        }
+        /* Clearfix for float elements inside question card */
+        .question-card::after { content: ""; display: table; clear: both; }
+
+        .marking-rules, .roll-input-box, .breakdown-box { 
             background: #202028; padding: 25px; border-radius: 20px; margin-bottom: 20px; border: none;
             box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.3);
         }
-        
-        .question-card { user-select: none; -webkit-user-select: none; }
+
         .question-text { font-size: 18px; margin-bottom: 15px; color: #e0e0e0; font-weight: bold; line-height: 1.4;}
         
         /* 🟢 Claymorphism: Inset Options 🟢 */
@@ -71,6 +78,13 @@
             transform: scale(1.02);
         }
         .option-label.selected input[type="radio"] { accent-color: #000; }
+
+        /* 🟢 CLEAR SELECTION BUTTON 🟢 */
+        .clear-selection-btn {
+            display: inline-block; float: right; margin-top: 5px; font-size: 13px; color: #ffb74d; 
+            cursor: pointer; transition: 0.2s; font-weight: bold; padding: 5px 10px; border-radius: 8px;
+        }
+        .clear-selection-btn:hover { color: #ff5252; background: rgba(255, 82, 82, 0.1); }
 
         /* Claymorphism: Buttons */
         .login-btn, .show-answers-btn { 
@@ -292,21 +306,37 @@
                     const data = doc.data(); const qId = doc.id; 
                     correctAnswersList[qId] = data.correctAnswer; questionsDataList[qId] = data; 
                     const qCard = document.createElement('div'); qCard.className = 'question-card';
+                    
+                    // 🟢 ADDED CLEAR SELECTION BUTTON 🟢
                     qCard.innerHTML = `<div class="question-text">${questionNumber}. ${data.question}</div>
                     <label class="option-label"><input type="radio" name="${qId}" value="1"> ${data.options["1"]}</label>
                     <label class="option-label"><input type="radio" name="${qId}" value="2"> ${data.options["2"]}</label>
                     <label class="option-label"><input type="radio" name="${qId}" value="3"> ${data.options["3"]}</label>
-                    <label class="option-label"><input type="radio" name="${qId}" value="4"> ${data.options["4"]}</label>`;
+                    <label class="option-label"><input type="radio" name="${qId}" value="4"> ${data.options["4"]}</label>
+                    <div class="clear-selection-btn" data-qid="${qId}">✖ Clear Selection</div>`;
+                    
                     questionsContainer.appendChild(qCard); questionNumber++;
                 });
             } catch (error) { console.error("Error loading exam: ", error); }
         }
 
+        // 🟢 Handle Option Selection & Clear Selection 🟢
         questionsContainer.addEventListener('change', (e) => {
             if(e.target.type === 'radio') {
                 const name = e.target.name;
                 document.querySelectorAll(`input[name="${name}"]`).forEach(radio => { radio.parentElement.classList.remove('selected'); });
                 e.target.parentElement.classList.add('selected');
+            }
+        });
+
+        questionsContainer.addEventListener('click', (e) => {
+            if(e.target.classList.contains('clear-selection-btn')) {
+                const qId = e.target.getAttribute('data-qid');
+                // Uncheck all radio buttons for this question and remove 'selected' class
+                document.querySelectorAll(`input[name="${qId}"]`).forEach(radio => { 
+                    radio.checked = false;
+                    radio.parentElement.classList.remove('selected'); 
+                });
             }
         });
 
