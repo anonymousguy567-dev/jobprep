@@ -326,7 +326,7 @@
                             } 
                             else {
                                 liveExamsCount++;
-                                const publishTextHTML = `<span class="publish-time">📢 Result: ${formatResultTime(exam.publishTime)}</span>`;
+                                const publishTextHTML = `<span class="publish-time">📢 End: ${formatResultTime(exam.publishTime)}</span>`;
                                 const item = document.createElement('div'); item.className = 'exam-item';
                                 item.innerHTML = `<div class="meta-info"><div class="exam-name">${exam.title}</div><div class="exam-time">⏱ ${exam.duration} Min</div>${publishTextHTML}</div><a href="exam.html?id=${examId}" class="start-btn">Start</a>`;
                                 liveExamsListDiv.appendChild(item);
