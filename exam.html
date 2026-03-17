@@ -6,6 +6,7 @@
     <title>Take Exam - UniDocs</title>
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -42,7 +43,7 @@
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: 6px 6px 12px rgba(0,0,0,0.5), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.4);
             backdrop-filter: blur(10px);
-            position: sticky; top: 15px; z-index: 9999; /* STICKY FEATURE */
+            position: sticky; top: 15px; z-index: 9999;
         }
         
         /* Claymorphism: Inner Boxes */
@@ -54,7 +55,7 @@
         .question-card { user-select: none; -webkit-user-select: none; }
         .question-text { font-size: 18px; margin-bottom: 15px; color: #e0e0e0; font-weight: bold; line-height: 1.4;}
         
-        /* 🟢 Claymorphism: Inset Options (Radio Buttons) 🟢 */
+        /* 🟢 Claymorphism: Inset Options 🟢 */
         .option-label { 
             display: flex; align-items: center; padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; 
             background: #15151a; border: none; color: #b3b3b3; transition: all 0.3s ease;
@@ -65,9 +66,7 @@
         
         /* 🟢 SELECTED OPTION COLOR CHANGE 🟢 */
         .option-label.selected {
-            background: #00bcd4;
-            color: #000;
-            font-weight: bold;
+            background: #00bcd4; color: #000; font-weight: bold;
             box-shadow: 4px 4px 10px rgba(0,188,212,0.4), inset 2px 2px 5px rgba(255,255,255,0.4);
             transform: scale(1.02);
         }
@@ -91,22 +90,18 @@
 
         .score-display { font-size: 55px; font-weight: bold; color: #00e676; text-align: center; margin: 30px 0; text-shadow: 0 0 20px rgba(0, 230, 118, 0.4);}
         
-        /* Timer */
         #examTimer { 
             font-size: 17px; font-weight: bold; color: #ff5252; padding: 10px 18px; border-radius: 14px; 
-            background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02);
-            letter-spacing: 1px;
+            background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); letter-spacing: 1px;
         }
         
         .marking-rules { border-left: 5px solid #ffb74d; }
         .marking-rules span { color: #ffb74d; font-weight: bold; }
         
-        /* Claymorphism: Inset Text Input */
         .roll-input-box label { display: block; margin-bottom: 12px; color: #00bcd4; font-weight: bold; font-size: 16px; }
         .roll-input-box input { 
             width: 100%; padding: 16px; border-radius: 16px; border: none; color: #fff; outline: none; font-size: 16px; font-weight: bold;
-            background: #15151a; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02);
-            transition: 0.3s;
+            background: #15151a; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); transition: 0.3s;
         }
         .roll-input-box input:focus { box-shadow: inset 6px 6px 12px rgba(0,0,0,0.9), 0 0 15px rgba(0, 188, 212, 0.3); }
 
@@ -115,13 +110,11 @@
         .stat-label { font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #a0a0b0; text-transform: uppercase;}
         .stat-value { font-size: 32px; font-weight: bold; }
         
-        /* Practice Badge */
         .practice-badge { 
             background: #00e676; color: #000; padding: 6px 15px; border-radius: 10px; font-size: 13px; font-weight: bold; margin-left: 12px; vertical-align: middle; display: none; 
             box-shadow: 3px 3px 8px rgba(0,230,118,0.3), inset 2px 2px 4px rgba(255,255,255,0.4);
         }
         
-        /* Answer Review Breakdown */
         #practiceAnswers { display: none; margin-top: 30px; border-top: 2px solid rgba(255,255,255,0.05); padding-top: 30px; }
         .review-card { 
             background: #202028; padding: 20px; border-radius: 16px; margin-bottom: 18px; border: none; border-left: 6px solid #333;
@@ -134,17 +127,9 @@
         .review-a { font-size: 15px; color: #b3b3b3; line-height: 1.5;}
         .review-a span { font-weight: bold; }
 
-        /* 🟢 SweetAlert2 Custom Claymorphism Theme 🟢 */
-        .swal2-popup {
-            background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important;
-            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important;
-        }
+        .swal2-popup { background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important; box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important; }
         .swal2-title { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
-        .swal2-confirm {
-            background: #00bcd4 !important; color: #000 !important; font-weight: bold !important; border-radius: 12px !important;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.3) !important;
-        }
-        
+        .swal2-confirm { background: #00bcd4 !important; color: #000 !important; font-weight: bold !important; border-radius: 12px !important; box-shadow: 3px 3px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.3) !important; }
     </style>
 </head>
 <body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false">
@@ -226,24 +211,27 @@
         const urlParams = new URLSearchParams(window.location.search);
         const currentExamId = urlParams.get('id');
 
-        if(!currentExamId) { 
-            Swal.fire({ icon: 'error', title: 'Oops...', text: 'No exam selected!' }).then(() => { window.location.href = "index.html"; });
-        }
+        if(!currentExamId) { window.location.replace("index.html"); }
 
         let userEmail = ""; let correctAnswersList = {}; let questionsDataList = {}; let timeLeft = 0; let timerInterval, saveInterval;
+        let examDurationMinutes = 0; 
         let isPracticeMode = false;
+        
+        // 🟢 MULTIPLE SUBMISSION FIX (LOCK VARIABLE) 🟢
+        let isSubmitting = false; 
+        
         const loginSection = document.getElementById('login-section'); const examSection = document.getElementById('exam-section');
         const resultSection = document.getElementById('result-section'); const questionsContainer = document.getElementById('questionsContainer');
         
         let tabSwitchCount = 0; let isExamActive = false;
 
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
+            if (user && currentExamId) {
                 userEmail = user.email; document.getElementById('userName').innerText = user.displayName;
                 
                 const examDocSnap = await getDoc(doc(db, "exams", currentExamId)); 
                 if (!examDocSnap.exists()) { 
-                    Swal.fire({ icon: 'error', title: 'Not Found', text: 'Exam not found or deleted!' }).then(() => { window.location.href = "index.html"; }); 
+                    Swal.fire({ icon: 'error', title: 'Not Found', text: 'Exam not found!' }).then(() => { window.location.href = "index.html"; }); 
                     return; 
                 }
                 
@@ -269,7 +257,9 @@
                 
                 loginSection.style.display = "none"; examSection.style.display = "block"; isExamActive = true; 
                 loadExamData(examData); 
-            } else { loginSection.style.display = "flex"; }
+            } else if (!user && currentExamId) { 
+                loginSection.style.display = "flex"; 
+            }
         });
 
         document.getElementById('loginBtn').addEventListener('click', () => { signInWithPopup(auth, provider).catch(console.error); });
@@ -277,7 +267,7 @@
         // 🟢 SWEETALERT ANTI-CHEAT 🟢
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && isExamActive && timeLeft > 0 && !isPracticeMode) {
-                tabSwitchCount++;
+                tabSwitchCount++; // Tracks cheating amount
                 if (tabSwitchCount === 1) Swal.fire({ icon: 'warning', title: 'WARNING (1/5)', text: 'You have switched tabs! It is strictly prohibited.' });
                 else if (tabSwitchCount > 1 && tabSwitchCount < 5) Swal.fire({ icon: 'warning', title: `WARNING (${tabSwitchCount}/5)`, text: 'Do not switch tabs or minimize the browser!' });
                 else if (tabSwitchCount === 5) Swal.fire({ icon: 'error', title: 'FINAL WARNING (5/5)', text: 'ONE MORE TIME, and exam will auto-submit.' });
@@ -290,8 +280,10 @@
 
         async function loadExamData(examData) {
             try {
-                let durationMinutes = examData.duration || 30; document.getElementById('mainExamTitle').innerText = examData.title;
-                startTimer(durationMinutes);
+                examDurationMinutes = examData.duration || 30; 
+                document.getElementById('mainExamTitle').innerText = examData.title;
+                startTimer(examDurationMinutes);
+                
                 const querySnapshot = await getDocs(collection(db, "exams", currentExamId, "questions"));
                 let questionNumber = 1; questionsContainer.innerHTML = ""; 
                 if(querySnapshot.empty) { questionsContainer.innerHTML = "<p style='color:#ff5252; text-align:center;'>No questions found!</p>"; return; }
@@ -310,15 +302,10 @@
             } catch (error) { console.error("Error loading exam: ", error); }
         }
 
-        // 🟢 HIGHLIGHT SELECTED OPTION LOGIC 🟢
         questionsContainer.addEventListener('change', (e) => {
             if(e.target.type === 'radio') {
                 const name = e.target.name;
-                // Remove 'selected' class from all labels in this question
-                document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
-                    radio.parentElement.classList.remove('selected');
-                });
-                // Add 'selected' class to the clicked label
+                document.querySelectorAll(`input[name="${name}"]`).forEach(radio => { radio.parentElement.classList.remove('selected'); });
                 e.target.parentElement.classList.add('selected');
             }
         });
@@ -352,25 +339,19 @@
             let m = Math.floor(timeLeft / 60); let s = timeLeft % 60; m = m < 10 ? "0" + m : m; s = s < 10 ? "0" + s : s; document.getElementById('examTimer').innerText = `Time Left: ${m}:${s}`;
         }
 
+        // 🟢 DIRECT SUBMISSION (NO POPUP) 🟢
         document.getElementById('examForm').addEventListener('submit', function(e) { 
             e.preventDefault(); 
-            // 🟢 SweetAlert Confirmation before Submit 🟢
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to change your answers!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#00bcd4',
-                cancelButtonColor: '#ff5252',
-                confirmButtonText: 'Yes, submit it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    submitExamCore();
-                }
-            });
+            // Prevent if already submitting to stop multiple requests
+            if(isSubmitting) return; 
+            submitExamCore(); 
         });
 
         async function submitExamCore() {
+            // 🟢 PREVENT DOUBLE CLICK SUBMISSION 🟢
+            if (isSubmitting) return; 
+            isSubmitting = true; 
+
             isExamActive = false; clearInterval(timerInterval); if(!isPracticeMode) clearInterval(saveInterval);
             const submitBtn = document.getElementById('submitBtn'); submitBtn.innerText = "Submitting..."; submitBtn.disabled = true;
             
@@ -387,11 +368,17 @@
             }
             score = parseFloat(score.toFixed(2));
 
-            // 🟢 DEVICE TRACKER LOGIC 🟢
-            let userDevice = "Desktop 💻";
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                userDevice = "Mobile 📱";
-            }
+            // 🟢 DETAILED DEVICE & OS TRACKER 🟢
+            let ua = navigator.userAgent;
+            let os = "Unknown OS"; let browser = "Unknown Browser";
+            if(ua.includes("Win")) os = "Windows"; else if(ua.includes("Mac")) os = "MacOS"; else if(ua.includes("Android")) os = "Android"; else if(ua.includes("iPhone") || ua.includes("iPad")) os = "iOS"; else if(ua.includes("Linux")) os = "Linux";
+            
+            if(ua.includes("Chrome") && !ua.includes("Edg") && !ua.includes("OPR")) browser = "Chrome"; else if(ua.includes("Safari") && !ua.includes("Chrome")) browser = "Safari"; else if(ua.includes("Firefox")) browser = "Firefox"; else if(ua.includes("Edg")) browser = "Edge"; else if(ua.includes("OPR") || ua.includes("Opera")) browser = "Opera";
+            let detailedDevice = `${browser} on ${os}`;
+
+            // 🟢 TIME TAKEN TRACKER 🟢
+            let timeTakenSec = (examDurationMinutes * 60) - timeLeft;
+            let timeTakenStr = `${Math.floor(timeTakenSec / 60)}m ${timeTakenSec % 60}s`;
 
             try {
                 if (!isPracticeMode) {
@@ -399,7 +386,9 @@
                         email: userEmail, rollNumber: rollNum, score: score, total: totalQuestions, 
                         correctCount: correctCount, wrongCount: wrongCount, skippedCount: skippedCount, 
                         userAnswers: userSelectedAnswers, examId: currentExamId, timestamp: new Date(),
-                        device: userDevice // 🟢 ADDED DEVICE TO DATABASE 🟢
+                        device: detailedDevice, // Track OS & Browser
+                        timeTaken: timeTakenStr, // Track exam duration taken by user
+                        cheatCount: tabSwitchCount // Track tab switches
                     });
                     const timerDocId = userEmail + "_" + currentExamId;
                     await setDoc(doc(db, "user_timers", timerDocId), { timeLeft: 0 }, { merge: true });
@@ -416,12 +405,13 @@
                 document.getElementById('countWrong').innerText = wrongCount;
                 document.getElementById('countSkipped').innerText = skippedCount;
                 
-                // Show Success Popup
                 Swal.fire({ icon: 'success', title: 'Success!', text: 'Your exam has been submitted.', confirmButtonText: 'Great' });
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00bcd4', '#00e676', '#ff5252'] });
 
             } catch (error) { 
                 Swal.fire({ icon: 'error', title: 'Oops...', text: 'Error submitting exam. Check your connection.' });
                 submitBtn.innerText = "Submit Exam"; submitBtn.disabled = false; 
+                isSubmitting = false; // Free the lock if error happens
             }
         }
 
