@@ -7,6 +7,8 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -129,7 +131,7 @@
         .action-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.02); transform: translateY(2px) scale(0.96); }
         .btn-green { color: #00e676; box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(0,0,0,0.03), inset 3px 3px 6px rgba(0,230,118,0.05), inset -5px -5px 12px rgba(0,0,0,0.3); }
 
-        /* Claymorphism: Inset Select Box (Pressed In look) */
+        /* Claymorphism: Inset Select Box */
         select { 
             width: 100%; padding: 12px; border-radius: 16px; border: none; background: #15151a; color: #fff; outline: none; font-size: 13px; margin-bottom: 15px; 
             box-shadow: inset 5px 5px 10px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); cursor: pointer;
@@ -143,6 +145,17 @@
         .footer span { color: #00bcd4; }
 
         .sub-title { text-align: left; font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; color: #888;}
+
+        /* 🟢 SweetAlert2 Custom Claymorphism Theme 🟢 */
+        .swal2-popup {
+            background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important;
+            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important;
+        }
+        .swal2-title { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
+        .swal2-confirm {
+            background: #00bcd4 !important; color: #000 !important; font-weight: bold !important; border-radius: 12px !important;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.3) !important;
+        }
 
         @media (max-width: 768px) { .live-clock-container { display: none; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -203,7 +216,7 @@
 
         <div class="glass-box">
             <div class="box-icon">🏆</div>
-            <div class="box-title">Merit List</div>
+            <div class="box-title"> Merit List</div>
             <p class="sub-title" style="text-transform: none; margin-bottom: 15px; flex-grow: 1;">
                 View and download the final merit list. No login required! 
             </p>
@@ -277,10 +290,11 @@
             const practiceExamSelector = document.getElementById('practiceExamSelector');
             const publicExamSelector = document.getElementById('publicExamSelector');
             const startPracticeBtn = document.getElementById('startPracticeBtn');
-            const liveExamCountDisplay = document.getElementById('liveExamCountDisplay'); // <-- COUNTER SPAN
+            const liveExamCountDisplay = document.getElementById('liveExamCountDisplay');
             
             try {
-                const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
+                // 🟢 Change "desc" to "asc" to show the oldest live exam at the top 🟢
+                const q = query(collection(db, "exams"), orderBy("createdAt", "asc"));
                 const querySnapshot = await getDocs(q);
                 
                 liveExamsListDiv.innerHTML = ""; 
@@ -295,7 +309,7 @@
                     liveExamsListDiv.innerHTML = "<p style='color: #888; font-size: 13px; text-align: center;'>No exams available right now.</p>";
                     practiceExamSelector.innerHTML = '<option value="">-- No practice exams available --</option>';
                     startPracticeBtn.disabled = true; startPracticeBtn.style.opacity = "0.5";
-                    if (liveExamCountDisplay) liveExamCountDisplay.innerText = `(0)`; // <-- UPDATE COUNTER TO 0
+                    if (liveExamCountDisplay) liveExamCountDisplay.innerText = `(0)`; 
                     return;
                 }
 
@@ -335,7 +349,6 @@
                     }
                 });
 
-                // 🟢 UPDATE COUNTER TEXT 🟢
                 if (liveExamCountDisplay) liveExamCountDisplay.innerText = `(${liveExamsCount})`;
 
                 if (liveExamsCount === 0) { 
@@ -358,7 +371,17 @@
 
         document.getElementById('startPracticeBtn').addEventListener('click', () => {
             const selectedId = document.getElementById('practiceExamSelector').value;
-            if(selectedId) { window.location.href = `exam.html?id=${selectedId}`; } else { alert("Please select a practice exam from the list first."); }
+            if(selectedId) { 
+                window.location.href = `exam.html?id=${selectedId}`; 
+            } else { 
+                // 🟢 Custom SweetAlert Popup 🟢
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please select a practice exam from the list first.',
+                    confirmButtonText: 'OK'
+                });
+            }
         });
 
         // Merit List PDF Logic
@@ -379,7 +402,17 @@
             const btn = document.getElementById('downloadMeritPdfBtn'); const originalText = btn.innerHTML; btn.innerHTML = "⏳ Generating PDF..."; btn.disabled = true;
             try {
                 const q = query(collection(db, "results"), where("examId", "==", examId)); const snapshot = await getDocs(q);
-                if (snapshot.empty) { alert("No submissions found."); btn.innerHTML = originalText; btn.disabled = false; return; }
+                if (snapshot.empty) { 
+                    // 🟢 Custom SweetAlert Popup 🟢
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Empty List',
+                        text: 'No submissions found for this exam yet.',
+                        confirmButtonText: 'OK'
+                    });
+                    btn.innerHTML = originalText; btn.disabled = false; 
+                    return; 
+                }
                 let submissions = [];
                 snapshot.forEach(doc => { submissions.push(doc.data()); });
                 submissions.sort((a, b) => b.score - a.score);
@@ -396,7 +429,16 @@
                 const pageHeight = doc.internal.pageSize.getHeight();
                 doc.setFontSize(9); doc.setTextColor(150, 150, 150); doc.text("This PDF is automatically generated.", 14, pageHeight - 10);
                 doc.save(`Merit_List_${examTitle.replace(/\s+/g, '_')}.pdf`);
-            } catch (error) { alert("Failed to generate PDF."); console.error(error); }
+            } catch (error) { 
+                // 🟢 Custom SweetAlert Popup 🟢
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error Generating PDF',
+                    text: 'Failed to generate PDF. Please try again later.',
+                    confirmButtonText: 'OK'
+                });
+                console.error(error); 
+            }
             btn.innerHTML = originalText; btn.disabled = false;
         }
     </script>
