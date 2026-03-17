@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Device Tracker</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { 
+            background-color: #121218; color: #ffffff; min-height: 100vh; display: flex; 
+            flex-direction: column; align-items: center; padding: 40px 20px;
+        }
+
+        /* 🟢 Claymorphism Box 🟢 */
+        .glass-box { 
+            background: #1a1a22; border-radius: 25px; padding: 30px; text-align: center; 
+            width: 100%; max-width: 800px; margin-top: 20px;
+            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4);
+        }
+
+        /* Buttons & Inputs */
+        .btn { 
+            padding: 12px 24px; border-radius: 12px; font-size: 15px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s;
+            background: #00bcd4; color: #000; box-shadow: 4px 4px 10px rgba(0,188,212,0.3), inset 2px 2px 4px rgba(255,255,255,0.4);
+        }
+        .btn:active { box-shadow: inset 4px 4px 10px rgba(0,0,0,0.5); transform: scale(0.95); }
+        .btn-danger { background: #ff5252; box-shadow: 4px 4px 10px rgba(255,82,82,0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
+
+        select { 
+            width: 100%; max-width: 400px; padding: 12px; border-radius: 12px; border: none; background: #15151a; color: #fff; outline: none; margin-bottom: 20px; 
+            box-shadow: inset 5px 5px 10px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); cursor: pointer;
+        }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border-radius: 12px; overflow: hidden; box-shadow: 4px 4px 10px rgba(0,0,0,0.5); }
+        th, td { padding: 12px; text-align: center; border-bottom: 1px solid #2a2a35; }
+        th { background-color: #00bcd4; color: #000; font-weight: bold; text-transform: uppercase; font-size: 13px; }
+        tr:nth-child(even) { background-color: #202028; }
+        tr:nth-child(odd) { background-color: #1a1a22; }
+        
+        .device-badge { background: #2c2c38; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5); }
+
+        /* SweetAlert Custom Theme */
+        .swal2-popup { background: #1a1a22 !important; border-radius: 20px !important; color: #fff !important; }
+        .swal2-title { color: #ff5252 !important; }
+        .swal2-confirm { background: #00bcd4 !important; color: #000 !important; font-weight: bold !important; border-radius: 10px !important; }
+    </style>
+</head>
+<body>
+
+    <div id="loginSection" class="glass-box" style="max-width: 400px; margin-top: 100px;">
+        <h2 style="color: #ff5252; margin-bottom: 10px;">🔒 Admin Access</h2>
+        <p style="color: #888; font-size: 14px; margin-bottom: 25px;">Only authorized admin can view this page.</p>
+        <button id="loginBtn" class="btn">Sign in with Google</button>
+    </div>
+
+    <div id="dashboardSection" style="display: none; width: 100%; flex-direction: column; align-items: center;">
+        
+        <div style="width: 100%; max-width: 800px; display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <h2 style="color: #00bcd4;">Device Tracker</h2>
+            <button id="logoutBtn" class="btn btn-danger" style="padding: 8px 16px; font-size: 13px;">Logout</button>
+        </div>
+
+        <div class="glass-box" style="margin-top: 0;">
+            <p style="color: #a0a0b0; font-size: 14px; margin-bottom: 20px;">Select an exam to check candidates' devices.</p>
+            
+            <select id="examSelector">
+                <option value="">-- Loading Exams... --</option>
+            </select>
+
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Roll / Name</th>
+                            <th>Score</th>
+                            <th>Device Used</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody">
+                        <tr><td colspan="4" style="color: #888;">Select an exam to view data</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+        // 🔴 YOUR FIREBASE CONFIG 🔴
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
+            authDomain: "mcq-portal-904fd.firebaseapp.com",
+            projectId: "mcq-portal-904fd",
+            storageBucket: "mcq-portal-904fd.firebasestorage.app",
+            messagingSenderId: "977853699063",
+            appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' }); // Forces account selection
+        const db = getFirestore(app);
+
+        // UI Elements
+        const loginSection = document.getElementById('loginSection');
+        const dashboardSection = document.getElementById('dashboardSection');
+        const examSelector = document.getElementById('examSelector');
+        const tableBody = document.getElementById('dataTableBody');
+
+        // 🟢 ADMIN EMAIL 🟢
+        const ADMIN_EMAIL = "mcqportal198@gmail.com";
+
+        // Check Auth State
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (user.email.toLowerCase() === ADMIN_EMAIL) {
+                    // Success! Show dashboard
+                    loginSection.style.display = "none";
+                    dashboardSection.style.display = "flex";
+                    loadExams(); 
+                } else {
+                    // Wrong email -> Show Error & Logout
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Access Denied!',
+                        text: `The email ${user.email} is not authorized.`,
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        signOut(auth);
+                    });
+                }
+            } else {
+                // Not logged in
+                loginSection.style.display = "block";
+                dashboardSection.style.display = "none";
+            }
+        });
+
+        // Login Click
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'Error', text: error.message });
+            }
+        });
+
+        // Logout Click
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        // Load Exams
+        async function loadExams() {
+            try {
+                const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
+                const snapshot = await getDocs(q);
+                examSelector.innerHTML = '<option value="">-- Select Exam --</option>';
+                snapshot.forEach(doc => {
+                    examSelector.innerHTML += `<option value="${doc.id}">${doc.data().title}</option>`;
+                });
+            } catch (error) {
+                console.error("Error loading exams:", error);
+            }
+        }
+
+        // Fetch Data on Selection
+        examSelector.addEventListener('change', async (e) => {
+            const examId = e.target.value;
+            if(!examId) {
+                tableBody.innerHTML = '<tr><td colspan="4" style="color: #888;">Select an exam to view data</td></tr>';
+                return;
+            }
+
+            tableBody.innerHTML = '<tr><td colspan="4" style="color: #00bcd4;">Loading data...</td></tr>';
+
+            try {
+                const q = query(collection(db, "results"), where("examId", "==", examId));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    tableBody.innerHTML = '<tr><td colspan="4" style="color: #ffb74d;">No submissions yet.</td></tr>';
+                    return;
+                }
+
+                let submissions = [];
+                snapshot.forEach(doc => submissions.push(doc.data()));
+                submissions.sort((a, b) => b.score - a.score); // Highest score first
+
+                tableBody.innerHTML = "";
+                submissions.forEach((sub, index) => {
+                    const deviceName = sub.device ? sub.device : "Unknown ❓";
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td style="font-weight:bold; color: #fff;">${sub.rollNumber || "N/A"}</td>
+                            <td style="color:#00e676; font-weight:bold;">${sub.score}</td>
+                            <td><span class="device-badge">${deviceName}</span></td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                tableBody.innerHTML = '<tr><td colspan="4" style="color: #ff5252;">Error fetching data.</td></tr>';
+            }
+        });
+    </script>
+</body>
+</html>
