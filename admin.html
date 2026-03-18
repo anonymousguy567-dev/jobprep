@@ -3,78 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Multi Exam System</title>
+    <title>Admin Panel - Premium MCQ Portal</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0d0d12; background-image: radial-gradient(circle at 15% 50%, rgba(45, 21, 82, 0.4), transparent 25%), radial-gradient(circle at 85% 30%, rgba(21, 64, 82, 0.4), transparent 25%); color: #ffffff; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
-        .glass-container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; width: 100%; max-width: 800px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); margin-bottom: 20px;}
-        h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; }
-        .input-group { margin-bottom: 15px; width: 100%; }
-        label { display: block; margin-bottom: 5px; font-size: 14px; color: #b3b3b3; font-weight: bold;}
-        input, textarea, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.3s; color-scheme: dark; font-size: 14px;}
-        input:focus, textarea:focus, select:focus { border-color: #00bcd4; background: rgba(0, 0, 0, 0.5); }
-        select option { background-color: #1a1a24; color: white; }
-        .submit-btn, .login-btn { width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 8px; background: linear-gradient(135deg, #00bcd4, #2196f3); color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .submit-btn:hover, .login-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4); }
+        
+        body { 
+            background-color: #121218; color: #ffffff; min-height: 100vh; display: flex; 
+            justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-x: hidden; position: relative;
+        }
+
+        /* 🟢 Background Blobs 🟢 */
+        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
+        .blob { position: absolute; filter: blur(90px); opacity: 0.2; animation: float 12s infinite alternate ease-in-out; }
+        .blob1 { width: 350px; height: 350px; background: #e91e63; top: -10%; left: -5%; animation-delay: 0s; }
+        .blob2 { width: 400px; height: 400px; background: #00bcd4; bottom: -10%; right: -5%; animation-delay: 3s; }
+
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
+
+        /* 🟢 PREMIUM CLAYMORPHISM: Main Container 🟢 */
+        .glass-container { 
+            background: #1a1a22; border-radius: 35px; padding: 40px 30px; width: 100%; max-width: 900px; 
+            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4);
+            border: none; position: relative; z-index: 10;
+        }
+
+        h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.3);}
+        
+        .input-group { margin-bottom: 20px; width: 100%; }
+        label { display: block; margin-bottom: 8px; font-size: 14px; color: #00bcd4; font-weight: bold;}
+        
+        /* 🟢 Claymorphism Inputs 🟢 */
+        input, textarea, select { 
+            width: 100%; padding: 14px; border-radius: 16px; border: none; color: #fff; outline: none; transition: 0.3s; font-size: 15px; font-weight: bold;
+            background: #15151a; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); color-scheme: dark;
+        }
+        input:focus, textarea:focus, select:focus { box-shadow: inset 6px 6px 12px rgba(0,0,0,0.9), 0 0 15px rgba(0, 188, 212, 0.3); }
+        select option { background-color: #1a1a22; color: white; }
+
+        /* 🟢 Claymorphism Buttons 🟢 */
+        .submit-btn, .login-btn { 
+            width: 100%; padding: 16px; margin-top: 10px; border-radius: 16px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s;
+            background: #00bcd4; color: #000; letter-spacing: 1px;
+            box-shadow: 6px 6px 15px rgba(0,188,212,0.3), -4px -4px 10px rgba(255,255,255,0.05), inset 3px 3px 6px rgba(255,255,255,0.4), inset -4px -4px 10px rgba(0,0,0,0.2);
+        }
+        .submit-btn:active, .login-btn:active { box-shadow: inset 6px 6px 15px rgba(0,0,0,0.4), inset -2px -2px 5px rgba(255,255,255,0.1); transform: scale(0.96) translateY(2px); }
+        
         #adminFormSection { display: none; width: 100%; }
         #loginSection { text-align: center; padding: 40px 0; width: 100%; max-width: 500px; margin: auto; }
-        .section-box { background: rgba(0, 0, 0, 0.2); padding: 25px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .status-msg { text-align: center; margin-top: 10px; font-weight: bold; font-size: 14px; }
         
-        .q-list-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 10px;}
-        .q-text { font-weight: bold; color: #e0e0e0; font-size: 15px;}
+        /* 🟢 Claymorphism Inner Boxes 🟢 */
+        .section-box { 
+            background: #202028; padding: 30px; border-radius: 20px; border: none; margin-top: 20px;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.3);
+        }
+
+        .q-list-item { 
+            background: #1a1a22; padding: 20px; border-radius: 16px; margin-bottom: 15px; border: none; display: flex; flex-direction: column; gap: 12px;
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02);
+        }
+        .q-text { font-weight: bold; color: #e0e0e0; font-size: 16px; line-height: 1.4;}
         .q-actions { display: flex; gap: 10px; }
-        .btn-edit { background: #ffb74d; color: #000; padding: 6px 12px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; font-size: 13px;}
-        .btn-delete { background: #ff5252; color: #fff; padding: 6px 12px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; font-size: 13px;}
-        .edit-form-box { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid #ffb74d; margin-top: 15px;}
-        .action-buttons-row { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; }
+        
+        .btn-edit, .btn-delete { padding: 8px 16px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
+        .btn-edit { background: #ffb74d; color: #000; box-shadow: 3px 3px 8px rgba(255,183,77,0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
+        .btn-delete { background: #ff5252; color: #fff; box-shadow: 3px 3px 8px rgba(255,82,82,0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
+        .btn-edit:active, .btn-delete:active { transform: scale(0.95); box-shadow: inset 3px 3px 8px rgba(0,0,0,0.4); }
+
+        .action-buttons-row { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
         .action-buttons-row button { flex: 1; min-width: 150px; }
 
-        .stats-banner { background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.3); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .stats-banner h4 { margin: 0; color: #e0e0e0; font-size: 16px; font-weight: normal;}
-        .stats-banner .count { font-size: 26px; font-weight: bold; color: #00e676; }
-        .btn-live-excel { background: rgba(33, 150, 243, 0.2); border: 1px solid rgba(33, 150, 243, 0.6); color: #2196f3; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; display: none; }
-        .btn-live-excel:hover { background: rgba(33, 150, 243, 0.4); box-shadow: 0 0 15px rgba(33, 150, 243, 0.4); color: #fff; }
+        .stats-banner { 
+            background: #15151a; padding: 20px; border-radius: 16px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); border-left: 5px solid #00e676;
+        }
+        .stats-banner h4 { margin: 0; color: #a0a0b0; font-size: 15px; font-weight: bold; text-align: left; text-shadow: none;}
+        .stats-banner .count { font-size: 35px; font-weight: bold; color: #00e676; margin-top: 5px;}
+        
+        .btn-live-excel { 
+            background: #2196f3; color: #fff; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; display: none; border: none;
+            box-shadow: 4px 4px 10px rgba(33,150,243,0.3), inset 2px 2px 5px rgba(255,255,255,0.4);
+        }
+        .btn-live-excel:active { transform: scale(0.95); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4); }
 
-        /* Modals */
-        .result-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 1000; display: none; justify-content: center; align-items: center; }
+        /* 🟢 Custom Modals & Popups 🟢 */
+        .result-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; display: none; justify-content: center; align-items: center; }
         .result-modal.show { display: flex; animation: fadeIn 0.3s ease; }
-        .result-modal-content { background: rgba(20, 20, 25, 0.95); border: 1px solid rgba(0, 188, 212, 0.4); border-radius: 16px; padding: 25px; width: 90%; max-width: 450px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5); transform: translateY(-20px); transition: 0.3s ease; max-height: 80vh; display: flex; flex-direction: column; }
+        .result-modal-content { 
+            background: #1a1a22; border-radius: 25px; padding: 30px; width: 90%; max-width: 600px; position: relative; 
+            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05); transform: translateY(-20px); transition: 0.3s ease; max-height: 90vh; display: flex; flex-direction: column; 
+        }
         .result-modal.show .result-modal-content { transform: translateY(0); }
-        .result-close-btn { position: absolute; top: 15px; right: 20px; color: #ff5252; font-size: 28px; cursor: pointer; font-weight: bold; transition: 0.3s; line-height: 1; }
-        .result-close-btn:hover { transform: scale(1.2); text-shadow: 0 0 10px #ff5252; }
-        .result-table-wrapper { overflow-y: auto; margin-top: 15px; padding-right: 5px; flex-grow: 1; }
-        .result-table-wrapper::-webkit-scrollbar { width: 6px; }
-        .result-table-wrapper::-webkit-scrollbar-thumb { background: rgba(0, 188, 212, 0.5); border-radius: 10px; }
+        .result-close-btn { position: absolute; top: 20px; right: 25px; color: #ff5252; font-size: 32px; cursor: pointer; font-weight: bold; transition: 0.2s; line-height: 1; z-index: 10;}
+        .result-close-btn:hover { transform: scale(1.1); text-shadow: 0 0 15px rgba(255,82,82,0.5); }
+        
+        .result-table-wrapper { overflow-y: auto; margin-top: 15px; padding-right: 5px; flex-grow: 1; border-radius: 12px; background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);}
+        .result-table-wrapper::-webkit-scrollbar { width: 8px; }
+        .result-table-wrapper::-webkit-scrollbar-thumb { background: #00bcd4; border-radius: 10px; }
         
         .res-table { width: 100%; border-collapse: collapse; text-align: center; }
-        .res-table th { background: rgba(0, 188, 212, 0.2); padding: 12px; color: #00bcd4; position: sticky; top: 0; z-index: 1; font-size: 15px;}
-        .res-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e0e0e0; font-size: 15px;}
-        .res-table tr:hover { background: rgba(255,255,255,0.05); }
+        .res-table th { background: #202028; padding: 15px; color: #00bcd4; position: sticky; top: 0; z-index: 1; font-size: 14px; text-transform: uppercase;}
+        .res-table td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e0e0e0; font-size: 15px;}
+        .res-table tr:hover { background: rgba(0, 188, 212, 0.1); }
 
-        /* Tabs CSS */
-        .admin-tabs { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.1); scrollbar-width: none; }
+        /* 🟢 Claymorphism Tabs 🟢 */
+        .admin-tabs { display: flex; gap: 12px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
         .admin-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { flex: 1; min-width: 140px; padding: 12px; border: none; border-radius: 8px 8px 0 0; background: transparent; color: #a0a0b0; font-weight: bold; cursor: pointer; transition: 0.3s; white-space: nowrap; font-size: 14px; position: relative; }
-        .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
-        .tab-btn.active { color: #00bcd4; background: rgba(0, 188, 212, 0.1); }
-        .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; background: #00bcd4; border-radius: 3px 3px 0 0; }
+        .tab-btn { 
+            flex: 1; min-width: 150px; padding: 14px; border: none; border-radius: 16px; background: #202028; color: #a0a0b0; font-weight: bold; cursor: pointer; transition: 0.3s; white-space: nowrap; font-size: 15px;
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.05);
+        }
+        .tab-btn:hover { color: #fff; background: #252530; }
+        .tab-btn.active { 
+            color: #00bcd4; background: #15151a; 
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); border: 1px solid rgba(0, 188, 212, 0.2);
+        }
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
         
-        /* Clickable Roll Design */
         .clickable-roll { color: #ffb74d; font-weight: bold; cursor: pointer; text-decoration: underline; transition: 0.3s; }
         .clickable-roll:hover { color: #fff; text-shadow: 0 0 10px rgba(255, 183, 77, 0.8); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* 🟢 Live Counter Styling 🟢 */
+        .live-counter-box {
+            background: rgba(0, 188, 212, 0.1); border: 1px dashed #00bcd4; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 16px; color: #00bcd4;
+        }
+
+        /* 🟢 Edit Question Compact Style 🟢 */
+        .compact-input-group { margin-bottom: 12px; width: 100%; }
+        .compact-input-group label { margin-bottom: 4px; font-size: 13px; }
+        .compact-input-group input, .compact-input-group textarea, .compact-input-group select { padding: 10px; font-size: 14px; border-radius: 10px;}
+
+        /* 🟢 SweetAlert Custom Theme 🟢 */
+        .swal2-popup { background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important; box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important; }
+        .swal2-title { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
+        .swal2-input { background: #15151a !important; color: #fff !important; border: 1px solid rgba(0, 188, 212, 0.4) !important; border-radius: 12px !important; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6) !important; }
+        .swal2-input:focus { border: 1px solid #00bcd4 !important; box-shadow: 0 0 10px rgba(0, 188, 212, 0.3) !important; }
     </style>
 </head>
 <body>
 
+    <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div></div>
+
     <div class="result-modal" id="resultModal">
         <div class="result-modal-content">
             <span class="result-close-btn" id="closeResultModal">&times;</span>
-            <h3 style="color: #00bcd4; margin-bottom: 5px; text-align: center;">📊 Live Result Board</h3>
-            <p style="color: #a0a0b0; font-size: 13px; text-align: center; margin-bottom: 10px;">Results are sorted by highest score.</p>
+            <h3 style="color: #00bcd4; margin-bottom: 5px; text-align: center; text-shadow: none;">📊 Live Result Board</h3>
+            <p style="color: #a0a0b0; font-size: 14px; text-align: center; margin-bottom: 15px;">Results sorted by highest score.</p>
             <div class="result-table-wrapper">
                 <table class="res-table">
                     <thead><tr><th>Rank</th><th>Roll Number</th><th>Total Score</th></tr></thead>
@@ -87,53 +163,80 @@
     <div class="result-modal" id="historyModal">
         <div class="result-modal-content">
             <span class="result-close-btn" id="closeHistoryModal">&times;</span>
-            <h3 style="color: #ffb74d; margin-bottom: 5px; text-align: center;">👤 Student History</h3>
-            <p id="historyStudentDetails" style="color: #a0a0b0; font-size: 13px; text-align: center; margin-bottom: 10px;"></p>
+            <h3 style="color: #ffb74d; margin-bottom: 5px; text-align: center; text-shadow: none;">👤 Student History</h3>
+            <p id="historyStudentDetails" style="color: #a0a0b0; font-size: 14px; text-align: center; margin-bottom: 15px;"></p>
             <div class="result-table-wrapper">
                 <table class="res-table">
-                    <thead><tr><th style="text-align: left;">Exam Title</th><th>Status / Score</th></tr></thead>
+                    <thead><tr><th style="text-align: left;">Exam Title</th><th>Score</th></tr></thead>
                     <tbody id="historyTableBody"></tbody>
                 </table>
             </div>
         </div>
     </div>
 
+    <div class="result-modal" id="editQModal">
+        <div class="result-modal-content" style="max-width: 500px; padding: 25px;">
+            <span class="result-close-btn" id="closeEditQModal">&times;</span>
+            <h3 style="color:#ffb74d; margin-bottom:10px; text-align: center; text-shadow: none;">✏️ Edit Question</h3>
+            <div class="result-table-wrapper" style="padding: 10px; background: transparent; box-shadow: none; overflow-y: auto; margin-top: 0;">
+                <div class="compact-input-group"><label>Question:</label><textarea id="editQText" rows="2" required></textarea></div>
+                <div class="compact-input-group"><label>Option 1:</label><input type="text" id="editQOpt1" required></div>
+                <div class="compact-input-group"><label>Option 2:</label><input type="text" id="editQOpt2" required></div>
+                <div class="compact-input-group"><label>Option 3:</label><input type="text" id="editQOpt3" required></div>
+                <div class="compact-input-group"><label>Option 4:</label><input type="text" id="editQOpt4" required></div>
+                <div class="compact-input-group">
+                    <label>Correct Answer:</label>
+                    <select id="editQCorrect" required>
+                        <option value="1">Option 1</option><option value="2">Option 2</option>
+                        <option value="3">Option 3</option><option value="4">Option 4</option>
+                    </select>
+                </div>
+                <button id="saveEditedQBtn" class="submit-btn" style="background:#ffb74d; color:#000; margin-top:5px; padding: 12px;">Update Question</button>
+            </div>
+        </div>
+    </div>
+
+
     <div class="glass-container" id="mainContainer">
         
         <div id="loginSection">
-            <h2>Admin Login Required</h2>
-            <p style="color:#b3b3b3; font-size:14px; margin-bottom:15px;">Select your authorized Admin Gmail account.</p>
+            <h1 style="color: #ff5252; margin-bottom: 10px;">🔒 Admin Access</h1>
+            <p style="color:#b3b3b3; font-size:15px; margin-bottom:25px;">Select your authorized Admin Gmail account to continue.</p>
             <button id="adminLoginBtn" class="login-btn">Login with Google</button>
-            <p id="errorMsg" style="color:#ff5252; margin-top: 15px;"></p>
+            <p id="errorMsg" style="color:#ff5252; margin-top: 15px; font-weight: bold;"></p>
         </div>
 
         <div id="adminFormSection">
             <div class="admin-tabs">
                 <button id="btn-tab-create" class="tab-btn active">📝 Create Exam</button>
                 <button id="btn-tab-add-q" class="tab-btn">➕ Add Questions</button>
-                <button id="btn-tab-manage" class="tab-btn">⚙️ Manage & Results</button>
+                <button id="btn-tab-manage" class="tab-btn">⚙️ Management</button>
                 <button id="btn-tab-db" class="tab-btn">🗄️ Database Mgt.</button>
             </div>
 
-            <div id="tab-create" class="section-box tab-content" style="display: block; border-left: 4px solid #ffb74d;">
+            <div id="tab-create" class="section-box tab-content" style="display: block; border-top: 4px solid #ffb74d;">
                 <h3 style="color: #ffb74d;">Create New Exam (Draft)</h3>
                 <form id="createExamForm">
-                    <div class="input-group"><label>Exam Title:</label><input type="text" id="newExamTitle" required></div>
-                    <div class="input-group"><label>Exam Duration (Minutes):</label><input type="number" id="newExamDuration" required></div>
+                    <div class="input-group"><label>Exam Title:</label><input type="text" id="newExamTitle" required placeholder="Enter Exam Title"></div>
+                    <div class="input-group"><label>Exam Duration (Minutes):</label><input type="number" id="newExamDuration" required placeholder="Enter Duration"></div>
                     <div class="input-group"><label>Result Publish Date & Time:</label><input type="datetime-local" id="newExamPublishTime" required></div>
-                    <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #ffb74d, #ff9800);">Create Exam (Draft)</button>
+                    <button type="submit" class="submit-btn" style="background: #ffb74d; color: #000;">Create Exam (Draft)</button>
                 </form>
-                <p id="examCreateStatus" class="status-msg"></p>
             </div>
 
-            <div id="tab-add-q" class="section-box tab-content" style="border-left: 4px solid #00bcd4;">
+            <div id="tab-add-q" class="section-box tab-content" style="border-top: 4px solid #00bcd4;">
                 <h3 style="color: #00bcd4;">Add Questions to Exam</h3>
                 <div class="input-group">
                     <label>Select Exam:</label>
                     <select id="examSelector" required><option value="">-- Loading Exams... --</option></select>
                 </div>
+                
+                <div id="liveQuestionCounterBox" class="live-counter-box" style="display: none;">
+                    Adding Question No: <span id="liveQuestionNumber">1</span>
+                </div>
+
                 <form id="questionForm">
-                    <div class="input-group"><label>Question:</label><textarea id="question" rows="3" required></textarea></div>
+                    <div class="input-group"><label>Question:</label><textarea id="question" rows="3" required placeholder="Type your question here..."></textarea></div>
                     <div class="input-group"><label>Option 1:</label><input type="text" id="option1" required></div>
                     <div class="input-group"><label>Option 2:</label><input type="text" id="option2" required></div>
                     <div class="input-group"><label>Option 3:</label><input type="text" id="option3" required></div>
@@ -148,88 +251,68 @@
                     </div>
                     <button type="submit" class="submit-btn" id="saveQuestionBtn">Save Question</button>
                 </form>
-                <p id="questionStatus" class="status-msg"></p>
             </div>
 
-            <div id="tab-manage" class="section-box tab-content" style="border-left: 4px solid #e91e63;">
-                <h3 style="color: #e91e63;">Edit, Publish & Live Results</h3>
+            <div id="tab-manage" class="section-box tab-content" style="border-top: 4px solid #e91e63;">
+                <h3 style="color: #e91e63;">Manage Exam & Results</h3>
                 <div class="input-group">
                     <label>Select Exam to Manage:</label>
                     <select id="manageExamSelector"><option value="">-- Select an Exam --</option></select>
                 </div>
+                
                 <div id="manageWorkspace" style="display:none;">
                     
                     <div class="stats-banner">
-                        <div><h4>👥 Total Participants Submitted:</h4><div class="count" id="participantCount">...</div></div>
-                        <button id="adminViewLiveResultBtn" class="btn-live-excel">👁️ View Live Result</button>
+                        <div><h4>👥 Total Submissions</h4><div class="count" id="participantCount">...</div></div>
+                        <button id="adminViewLiveResultBtn" class="btn-live-excel">👁️ View Leaderboard</button>
                     </div>
 
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                        <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Update Settings</h4>
+                    <div id="updateSettingsBox" style="background: #15151a; padding: 25px; border-radius: 16px; margin-bottom: 25px; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6); display: none;">
+                        <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Update Running Settings</h4>
+                        <p style="color: #a0a0b0; font-size: 13px; margin-bottom: 15px;">You can update details for this currently running (or draft) exam.</p>
+                        
                         <div class="input-group"><label>Update Title:</label><input type="text" id="editExamTitle"></div>
                         <div class="input-group"><label>Update Duration (Mins):</label><input type="number" id="editExamDuration"></div>
-                        <div class="input-group"><label>Update Publish Time:</label><input type="datetime-local" id="editExamPublishTime"></div>
+                        <div class="input-group"><label>Update Publish Time (End Time):</label><input type="datetime-local" id="editExamPublishTime"></div>
                         
                         <div class="action-buttons-row">
-                            <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63; margin-top: 0;">Save Time/Title Settings</button>
-                            <button id="publishExamBtn" class="submit-btn" style="background: #00e676; margin-top: 0; color:#000;">🚀 Publish Live</button>
+                            <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63; margin-top: 0; color: #fff;">Save Changes Only</button>
+                            <button id="publishDraftBtn" class="submit-btn" style="background: #00e676; margin-top: 0; color: #000; display: none;">🚀 Publish Live</button>
                         </div>
-                        <p id="updateSettingsStatus" class="status-msg"></p>
                     </div>
 
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
-                        <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Edit / Delete Questions</h4>
+                    <div style="background: #15151a; padding: 25px; border-radius: 16px; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);">
+                        <h4 style="color:#ffb74d; margin-bottom:15px; text-align: left;">Edit / Delete Questions</h4>
                         <div id="manageQuestionsList"><p style="color:#b3b3b3;">Loading questions...</p></div>
-                        <div id="editQuestionFormBox" class="edit-form-box" style="display:none;">
-                            <h4 style="color:#ffb74d;">Editing Question</h4>
-                            <div class="input-group"><label>Question:</label><textarea id="editQText" rows="2" required></textarea></div>
-                            <div class="input-group"><label>Opt 1:</label><input type="text" id="editQOpt1" required></div>
-                            <div class="input-group"><label>Opt 2:</label><input type="text" id="editQOpt2" required></div>
-                            <div class="input-group"><label>Opt 3:</label><input type="text" id="editQOpt3" required></div>
-                            <div class="input-group"><label>Opt 4:</label><input type="text" id="editQOpt4" required></div>
-                            <div class="input-group">
-                                <label>Correct Answer:</label>
-                                <select id="editQCorrect" required>
-                                    <option value="1">Option 1</option><option value="2">Option 2</option>
-                                    <option value="3">Option 3</option><option value="4">Option 4</option>
-                                </select>
-                            </div>
-                            <div style="display: flex; gap: 10px;">
-                                <button id="saveEditedQBtn" class="submit-btn" style="background:#ffb74d; color:#000;">Save Changes</button>
-                                <button id="cancelEditQBtn" class="submit-btn" style="background:transparent; border:1px solid #fff;">Cancel</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <div id="tab-db" class="section-box tab-content" style="border-left: 4px solid #9c27b0;">
+            <div id="tab-db" class="section-box tab-content" style="border-top: 4px solid #9c27b0;">
                 <h3 style="color: #9c27b0;">🗄️ Database Management</h3>
                 
-                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(0, 188, 212, 0.2);">
-                    <h4 style="color:#00bcd4; margin-bottom:10px; text-align: left; font-size: 16px;">🔍 Search Student History</h4>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="number" id="searchRollInput" placeholder="Enter Roll Number (e.g. 2101001)" style="flex: 1; border-color: rgba(0, 188, 212, 0.4);">
-                        <button id="searchRollBtn" class="submit-btn" style="margin-top: 0; width: auto; padding: 10px 25px; background: #00bcd4; color: #000;">Search</button>
+                <div style="background: #15151a; padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px dashed #00bcd4; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);">
+                    <h4 style="color:#00bcd4; margin-bottom:15px; text-align: left;">🔍 Search Student History</h4>
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <input type="number" id="searchRollInput" placeholder="Enter Roll Number" style="flex: 1; margin: 0;">
+                        <button id="searchRollBtn" class="submit-btn" style="margin: 0; width: auto; padding: 14px 30px;">Search</button>
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label>Select Exam to Manage:</label>
+                    <label>Select Exam to Manage Database:</label>
                     <select id="dbExamSelector"><option value="">-- Select an Exam --</option></select>
                 </div>
-                <div id="dbWorkspace" style="display:none; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
-                    <p id="dbExamStatus" style="margin-bottom: 20px; font-weight: bold; font-size: 16px;"></p>
+                
+                <div id="dbWorkspace" style="display:none; background: #15151a; padding: 25px; border-radius: 16px; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);">
+                    <p id="dbExamStatus" style="margin-bottom: 20px; font-weight: bold; font-size: 16px; text-align: center;"></p>
 
-                    <div class="action-buttons-row">
-                        <button id="dbHideBtn" class="submit-btn" style="background: #ffb74d; color: #000; margin-top: 0;">Move to Practice (Hide Live)</button>
-                        <button id="dbDeleteExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0;">Permanently Delete Exam</button>
-                    </div>
+                    <div id="dbActionButtons" class="action-buttons-row"></div>
                     
-                    <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                        <h4 style="color:#00bcd4; margin-bottom: 15px; text-align: left;">📋 Individual Submissions</h4>
-                        <p style="font-size: 12px; color: #a0a0b0; margin-bottom: 10px;">* Click on a Roll Number to view the student's full exam history.</p>
-                        <div style="overflow-x: auto;">
+                    <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px;">
+                        <h4 style="color:#00bcd4; margin-bottom: 10px; text-align: left;">📋 Individual Submissions</h4>
+                        <p style="font-size: 13px; color: #a0a0b0; margin-bottom: 15px;">* Click on a Roll Number to view the student's full history.</p>
+                        <div style="overflow-x: auto; border-radius: 12px; box-shadow: 4px 4px 10px rgba(0,0,0,0.4);">
                             <table class="res-table" style="width: 100%; min-width: 650px;">
                                 <thead>
                                     <tr>
@@ -257,7 +340,7 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 YOUR ORIGINAL FIREBASE CONFIG 🔴🔴
+        // 🔴 YOUR FIREBASE CONFIG 🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -273,6 +356,7 @@
             "mcqportal198@gmail.com"
         ]; 
 
+        // 🟢 Tab Switcher Logic 🟢
         function switchTab(tabId, btnId) { 
             document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none'); 
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active')); 
@@ -291,6 +375,8 @@
         const dbExamSelector = document.getElementById('dbExamSelector'); 
         
         const viewLiveResultBtn = document.getElementById('adminViewLiveResultBtn'); 
+        
+        // 🟢 Modal Elements 🟢
         const resultModal = document.getElementById('resultModal'); 
         const closeResultModal = document.getElementById('closeResultModal'); 
         const resultTableBody = document.getElementById('resultTableBody');
@@ -300,12 +386,39 @@
         const historyTableBody = document.getElementById('historyTableBody');
         const historyStudentDetails = document.getElementById('historyStudentDetails');
 
-        closeResultModal.addEventListener('click', () => { resultModal.classList.remove('show'); }); window.addEventListener('click', (e) => { if(e.target === resultModal) resultModal.classList.remove('show'); });
-        closeHistoryModal.addEventListener('click', () => { historyModal.classList.remove('show'); }); window.addEventListener('click', (e) => { if(e.target === historyModal) historyModal.classList.remove('show'); });
+        const editQModal = document.getElementById('editQModal');
+        const closeEditQModal = document.getElementById('closeEditQModal');
 
-        onAuthStateChanged(auth, (user) => { if (user) { if (ADMIN_EMAILS.includes(user.email)) { loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); } else { document.getElementById('errorMsg').innerText = "Access Denied!"; signOut(auth); } } else { loginSection.style.display = "block"; adminFormSection.style.display = "none"; } });
-        document.getElementById('adminLoginBtn').addEventListener('click', async () => { const btn = document.getElementById('adminLoginBtn'); btn.innerText = "Processing..."; try { await signInWithPopup(auth, provider); btn.innerText = "Login with Google"; } catch (error) { document.getElementById('errorMsg').innerText = "Login failed."; btn.innerText = "Login with Google"; } });
+        // Modal Close Listeners
+        closeResultModal.addEventListener('click', () => { resultModal.classList.remove('show'); }); 
+        closeHistoryModal.addEventListener('click', () => { historyModal.classList.remove('show'); }); 
+        closeEditQModal.addEventListener('click', () => { editQModal.classList.remove('show'); }); 
 
+        window.addEventListener('click', (e) => { 
+            if(e.target === resultModal) resultModal.classList.remove('show'); 
+            if(e.target === historyModal) historyModal.classList.remove('show'); 
+            if(e.target === editQModal) editQModal.classList.remove('show'); 
+        });
+
+        // 🟢 Auth System 🟢
+        onAuthStateChanged(auth, (user) => { 
+            if (user) { 
+                if (ADMIN_EMAILS.includes(user.email)) { 
+                    loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); 
+                } else { 
+                    Swal.fire('Access Denied!', 'You are not authorized.', 'error'); signOut(auth); 
+                } 
+            } else { 
+                loginSection.style.display = "block"; adminFormSection.style.display = "none"; 
+            } 
+        });
+        document.getElementById('adminLoginBtn').addEventListener('click', async () => { 
+            const btn = document.getElementById('adminLoginBtn'); btn.innerText = "Processing..."; 
+            try { await signInWithPopup(auth, provider); btn.innerText = "Login with Google"; } 
+            catch (error) { Swal.fire('Error', 'Login failed.', 'error'); btn.innerText = "Login with Google"; } 
+        });
+
+        // 🟢 Load Exams 🟢
         async function loadExamsIntoDropdowns() {
             try { 
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc")); 
@@ -314,50 +427,214 @@
                 const currentTime = new Date().getTime();
                 querySnapshot.forEach((doc) => { 
                     const data = doc.data(); let titleStr = data.title; 
-                    if(data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) { titleStr += " 🟢 (Practice)"; } 
+                    
+                    if(data.status === "hidden") { titleStr += " 🙈 (Hidden)"; }
+                    else if(data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) { titleStr += " 🟢 (Practice)"; } 
                     else if(data.status === "draft") { titleStr += " 📝 (Draft)"; } 
                     else { titleStr += " 🔴 (Live)"; } 
+                    
                     optionsHtml += `<option value="${doc.id}">${titleStr}</option>`; 
                 }); 
                 examSelector.innerHTML = optionsHtml; manageExamSelector.innerHTML = optionsHtml; dbExamSelector.innerHTML = optionsHtml; 
             } catch (error) { console.error("Error:", error); }
         }
 
-        document.getElementById('createExamForm').addEventListener('submit', async function(e) { e.preventDefault(); const statusMsg = document.getElementById('examCreateStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Creating..."; try { await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "draft" }); statusMsg.style.color = "#ffb74d"; statusMsg.innerText = "Exam Saved as DRAFT!"; document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error!"; } setTimeout(() => { statusMsg.innerText = ""; }, 4000); });
-        
-        document.getElementById('questionForm').addEventListener('submit', async function(e) { e.preventDefault(); const statusMsg = document.getElementById('questionStatus'); const selectedExamId = examSelector.value; if(!selectedExamId) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Please select an Exam!"; return; } document.getElementById('saveQuestionBtn').innerText = "Saving..."; try { await addDoc(collection(db, "exams", selectedExamId, "questions"), { question: document.getElementById('question').value, options: { "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, "3": document.getElementById('option3').value, "4": document.getElementById('option4').value }, correctAnswer: document.getElementById('correctOption').value, timestamp: new Date() }); statusMsg.style.color = "#00e676"; statusMsg.innerText = "Question Saved!"; document.getElementById('questionForm').reset(); } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error!"; } document.getElementById('saveQuestionBtn').innerText = "Save Question"; setTimeout(() => { statusMsg.innerText = ""; }, 3000); });
-        
         function formatTimeForInput(timestamp) { const d = new Date(timestamp); const offset = d.getTimezoneOffset() * 60000; return new Date(d - offset).toISOString().slice(0, 16); }
 
-        manageExamSelector.addEventListener('change', async (e) => {
-            const examId = e.target.value; const workspace = document.getElementById('manageWorkspace'); const participantCountEl = document.getElementById('participantCount'); if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block"; document.getElementById('manageQuestionsList').innerHTML = "<p>Loading...</p>"; document.getElementById('editQuestionFormBox').style.display = "none"; participantCountEl.innerText = "Loading..."; viewLiveResultBtn.style.display = "none";
-            const examDoc = await getDoc(doc(db, "exams", examId)); if(examDoc.exists()) { const data = examDoc.data(); document.getElementById('editExamTitle').value = data.title; document.getElementById('editExamDuration').value = data.duration; document.getElementById('editExamPublishTime').value = formatTimeForInput(data.publishTime); const pubBtn = document.getElementById('publishExamBtn'); if(data.status === "draft") { pubBtn.style.display = "block"; } else { pubBtn.style.display = "none"; } }
-            try { const resQuery = query(collection(db, "results"), where("examId", "==", examId)); const resSnap = await getDocs(resQuery); participantCountEl.innerText = resSnap.size; if(resSnap.size > 0) { viewLiveResultBtn.style.display = "block"; } } catch (err) { console.error(err); } loadQuestionsForEdit(examId);
+        // 🟢 Create Exam 🟢
+        document.getElementById('createExamForm').addEventListener('submit', async function(e) { 
+            e.preventDefault(); 
+            const btn = document.querySelector('#createExamForm button'); btn.innerText = "Creating...";
+            try { 
+                await addDoc(collection(db, "exams"), { 
+                    title: document.getElementById('newExamTitle').value, 
+                    duration: parseInt(document.getElementById('newExamDuration').value), 
+                    publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), 
+                    createdAt: new Date().getTime(), status: "draft" 
+                }); 
+                Swal.fire('Created!', 'Exam Saved as DRAFT successfully.', 'success');
+                document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
+            } catch (error) { Swal.fire('Error', 'Failed to create exam.', 'error'); } 
+            btn.innerText = "Create Exam (Draft)";
+        });
+        
+        // 🟢 Add Question Logic 🟢
+        examSelector.addEventListener('change', async (e) => {
+            const examId = e.target.value; const counterBox = document.getElementById('liveQuestionCounterBox');
+            if(!examId) { counterBox.style.display = "none"; return; }
+            counterBox.style.display = "block"; document.getElementById('liveQuestionNumber').innerText = "...";
+            const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
+            document.getElementById('liveQuestionNumber').innerText = qSnap.size + 1;
         });
 
-        viewLiveResultBtn.addEventListener('click', async (e) => { e.preventDefault(); const examId = manageExamSelector.value; if(!examId) return; const originalText = viewLiveResultBtn.innerText; viewLiveResultBtn.innerText = "Loading..."; try { const q = query(collection(db, "results"), where("examId", "==", examId)); const snapshot = await getDocs(q); let resultsArray = []; snapshot.forEach(doc => { resultsArray.push(doc.data()); }); resultsArray.sort((a, b) => b.score - a.score); resultTableBody.innerHTML = ""; resultsArray.forEach((row, index) => { let tr = document.createElement('tr'); tr.innerHTML = `<td>#${index + 1}</td><td style="font-weight: bold; color: #ffb74d;">${row.rollNumber || "N/A"}</td><td style="font-weight: bold; color: #00e676;">${row.score}</td>`; resultTableBody.appendChild(tr); }); resultModal.classList.add('show'); } catch (error) { alert("Failed to load results."); } viewLiveResultBtn.innerText = originalText; });
+        document.getElementById('questionForm').addEventListener('submit', async function(e) { 
+            e.preventDefault(); 
+            const selectedExamId = examSelector.value; 
+            if(!selectedExamId) { Swal.fire('Wait!', 'Please select an Exam first!', 'warning'); return; } 
+            const btn = document.getElementById('saveQuestionBtn'); btn.innerText = "Saving..."; 
+            
+            try { 
+                await addDoc(collection(db, "exams", selectedExamId, "questions"), { 
+                    question: document.getElementById('question').value, 
+                    options: { "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, "3": document.getElementById('option3').value, "4": document.getElementById('option4').value }, 
+                    correctAnswer: document.getElementById('correctOption').value, timestamp: new Date() 
+                }); 
+                Swal.fire({ icon: 'success', title: 'Saved!', text: 'Question added successfully.', timer: 1500, showConfirmButton: false });
+                
+                let currentNum = parseInt(document.getElementById('liveQuestionNumber').innerText);
+                document.getElementById('liveQuestionNumber').innerText = currentNum + 1;
+                document.getElementById('questionForm').reset(); 
+            } catch (error) { Swal.fire('Error', 'Failed to save question.', 'error'); } 
+            btn.innerText = "Save Question"; 
+        });
 
-        document.getElementById('updateSettingsBtn').addEventListener('click', async () => { const examId = manageExamSelector.value; const statusMsg = document.getElementById('updateSettingsStatus'); statusMsg.style.color = "#b3b3b3"; statusMsg.innerText = "Updating..."; try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); statusMsg.style.color = "#00e676"; statusMsg.innerText = "Updated Settings Successfully!"; loadExamsIntoDropdowns(); } catch (error) { statusMsg.style.color = "#ff5252"; statusMsg.innerText = "Error!"; } setTimeout(() => { statusMsg.innerText = ""; }, 3000); });
-        
-        document.getElementById('publishExamBtn').addEventListener('click', async (e) => { e.preventDefault(); const examId = manageExamSelector.value; if(confirm("Publish this exam live?")) { try { await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true }); alert("EXAM IS LIVE!"); loadExamsIntoDropdowns(); } catch (error) { alert("Error"); } } });
+        // 🟢 Manage Exam Dropdown Change (Smart Logic to hide update box if Practice, Show Publish if Draft) 🟢
+        manageExamSelector.addEventListener('change', async (e) => {
+            const examId = e.target.value; const workspace = document.getElementById('manageWorkspace'); const participantCountEl = document.getElementById('participantCount'); 
+            if(!examId) { workspace.style.display = "none"; return; } 
+            workspace.style.display = "block"; document.getElementById('manageQuestionsList').innerHTML = "<p style='color:#b3b3b3;'>Loading...</p>"; participantCountEl.innerText = "Loading..."; viewLiveResultBtn.style.display = "none";
+            
+            const examDoc = await getDoc(doc(db, "exams", examId)); 
+            if(examDoc.exists()) { 
+                const data = examDoc.data(); 
+                const currentTime = new Date().getTime();
+                const updateBox = document.getElementById('updateSettingsBox');
+                const publishDraftBtn = document.getElementById('publishDraftBtn');
+                
+                document.getElementById('editExamTitle').value = data.title; 
+                document.getElementById('editExamDuration').value = data.duration; 
+                document.getElementById('editExamPublishTime').value = formatTimeForInput(data.publishTime); 
+                
+                let isPractice = false;
+                if(data.status === "hidden" || data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) {
+                    isPractice = true;
+                }
+                
+                // Hide if Practice/Hidden
+                if(isPractice) {
+                    updateBox.style.display = "none";
+                } else {
+                    updateBox.style.display = "block";
+                    // Show 'Publish Live' button ONLY if status is Draft
+                    if(data.status === "draft") {
+                        publishDraftBtn.style.display = "block";
+                    } else {
+                        publishDraftBtn.style.display = "none";
+                    }
+                }
+            }
+            
+            try { 
+                const resQuery = query(collection(db, "results"), where("examId", "==", examId)); 
+                const resSnap = await getDocs(resQuery); participantCountEl.innerText = resSnap.size; 
+                if(resSnap.size > 0) { viewLiveResultBtn.style.display = "block"; } 
+            } catch (err) { console.error(err); } 
+            loadQuestionsForEdit(examId);
+        });
 
+        // 🟢 View Leaderboard 🟢
+        viewLiveResultBtn.addEventListener('click', async (e) => { 
+            e.preventDefault(); const examId = manageExamSelector.value; if(!examId) return; 
+            const originalText = viewLiveResultBtn.innerText; viewLiveResultBtn.innerText = "Loading..."; 
+            try { 
+                const q = query(collection(db, "results"), where("examId", "==", examId)); 
+                const snapshot = await getDocs(q); let resultsArray = []; snapshot.forEach(doc => { resultsArray.push(doc.data()); }); 
+                resultsArray.sort((a, b) => b.score - a.score); resultTableBody.innerHTML = ""; 
+                resultsArray.forEach((row, index) => { 
+                    let tr = document.createElement('tr'); 
+                    tr.innerHTML = `<td>#${index + 1}</td><td style="font-weight: bold; color: #ffb74d;">${row.rollNumber || "N/A"}</td><td style="font-weight: bold; color: #00e676; font-size:18px;">${row.score}</td>`; 
+                    resultTableBody.appendChild(tr); 
+                }); 
+                resultModal.classList.add('show'); 
+            } catch (error) { Swal.fire('Error', 'Failed to load results.', 'error'); } 
+            viewLiveResultBtn.innerText = originalText; 
+        });
+
+        // 🟢 Save Changes Only (For Live/Draft Exams) 🟢
+        document.getElementById('updateSettingsBtn').addEventListener('click', async () => { 
+            const examId = manageExamSelector.value; 
+            if(!examId) return;
+            try { 
+                await updateDoc(doc(db, "exams", examId), { 
+                    title: document.getElementById('editExamTitle').value, 
+                    duration: parseInt(document.getElementById('editExamDuration').value), 
+                    publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() 
+                }); 
+                Swal.fire('Updated', 'Settings updated successfully.', 'success'); loadExamsIntoDropdowns(); 
+            } catch (error) { Swal.fire('Error', 'Failed to update.', 'error'); } 
+        });
+
+        // 🟢 PUBLISH DRAFT EXAM 🟢
+        document.getElementById('publishDraftBtn').addEventListener('click', async () => { 
+            const examId = manageExamSelector.value; 
+            if(!examId) return;
+            Swal.fire({
+                title: 'Publish this Exam?',
+                text: "This will change the status from Draft to LIVE. Students will be able to take it.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#00e676',
+                cancelButtonColor: '#333',
+                confirmButtonText: 'Yes, Publish it!'
+            }).then(async (result) => {
+                if(result.isConfirmed) {
+                    try { 
+                        await setDoc(doc(db, "exams", examId), { 
+                            title: document.getElementById('editExamTitle').value, 
+                            duration: parseInt(document.getElementById('editExamDuration').value), 
+                            publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime(),
+                            status: "active" 
+                        }, { merge: true }); 
+                        Swal.fire('Published!', 'Exam is now LIVE for students.', 'success'); 
+                        loadExamsIntoDropdowns();
+                        manageExamSelector.dispatchEvent(new Event('change')); // Trigger reload to update UI
+                    } catch (error) { Swal.fire('Error', 'Failed to publish exam.', 'error'); } 
+                }
+            });
+        });
+
+        // 🟢 Load Questions for Edit 🟢
         async function loadQuestionsForEdit(examId) {
-            const listDiv = document.getElementById('manageQuestionsList'); listDiv.innerHTML = ""; const qSnap = await getDocs(collection(db, "exams", examId, "questions")); if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#ff5252;'>No questions found.</p>"; return; }
-            let count = 1; qSnap.forEach((docSnap) => { const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; item.innerHTML = `<div class="q-text">Q${count}: ${data.question}</div><div class="q-actions"><button class="btn-edit" data-id="${qId}">Edit</button><button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++;
-                item.querySelector('.btn-edit').addEventListener('click', () => { document.getElementById('editQuestionFormBox').style.display = "block"; document.getElementById('editQText').value = data.question; document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; document.getElementById('editQCorrect').value = data.correctAnswer || "1"; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); });
-                item.querySelector('.btn-delete').addEventListener('click', async () => { if(confirm("Delete question?")) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } });
+            const listDiv = document.getElementById('manageQuestionsList'); listDiv.innerHTML = ""; 
+            const qSnap = await getDocs(collection(db, "exams", examId, "questions")); 
+            if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#ffb74d;'>No questions found.</p>"; return; }
+            let count = 1; 
+            qSnap.forEach((docSnap) => { 
+                const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; 
+                item.innerHTML = `<div class="q-text">Q${count}: ${data.question}</div><div class="q-actions"><button class="btn-edit" data-id="${qId}">Edit</button><button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++;
+                
+                // 🟢 EDIT BUTTON: Opens Compact Popup 🟢
+                item.querySelector('.btn-edit').addEventListener('click', () => { 
+                    editQModal.classList.add('show'); 
+                    document.getElementById('editQText').value = data.question; 
+                    document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; 
+                    document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; 
+                    document.getElementById('editQCorrect').value = data.correctAnswer || "1"; 
+                    document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); 
+                });
+                
+                item.querySelector('.btn-delete').addEventListener('click', async () => { 
+                    Swal.fire({ title: 'Delete Question?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Yes, delete it!' }).then(async (res) => {
+                        if(res.isConfirmed) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); }
+                    });
+                });
             });
         }
 
+        // 🟢 Save Edited Question 🟢
         document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => {
             e.preventDefault(); const btn = document.getElementById('saveEditedQBtn'); const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; btn.innerText = "Saving...";
-            try { await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQuestionFormBox').style.display = "none"; loadQuestionsForEdit(examId); } catch (error) { alert("Error: " + error.message); } btn.innerText = "Save Changes";
+            try { 
+                await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); 
+                editQModal.classList.remove('show'); 
+                loadQuestionsForEdit(examId); 
+                Swal.fire({icon: 'success', title: 'Updated', timer: 1000, showConfirmButton: false});
+            } catch (error) { Swal.fire('Error', error.message, 'error'); } btn.innerText = "Update Question";
         });
-        document.getElementById('cancelEditQBtn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('editQuestionFormBox').style.display = "none"; });
-
 
         // 🟢🟢 DATABASE MANAGEMENT LOGIC 🟢🟢
         const dbWorkspace = document.getElementById('dbWorkspace');
+        const dbActionButtons = document.getElementById('dbActionButtons');
         
         dbExamSelector.addEventListener('change', async (e) => {
             const examId = e.target.value;
@@ -366,53 +643,118 @@
             
             const docSnap = await getDoc(doc(db, "exams", examId));
             if(docSnap.exists()) {
-                const data = docSnap.data();
-                const currentTime = new Date().getTime();
-                const statusEl = document.getElementById('dbExamStatus');
-                const hideBtn = document.getElementById('dbHideBtn');
+                const data = docSnap.data(); const currentTime = new Date().getTime(); const statusEl = document.getElementById('dbExamStatus');
                 
+                let buttonsHtml = '';
+
                 if (data.status === "draft") {
-                    statusEl.innerHTML = `<span style="color:#a0a0b0;">Status: 📝 Draft Exam (Not Published)</span>`;
-                    hideBtn.style.display = "none";
-                } else if (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) {
-                    statusEl.innerHTML = `<span style="color:#00e676;">Status: 🟢 Practice Exam (Time Passed / Moved)</span>`;
-                    hideBtn.style.display = "none";
-                } else {
-                    statusEl.innerHTML = `<span style="color:#ff5252;">Status: 🔴 Live Exam (Running)</span>`;
-                    hideBtn.style.display = "block";
+                    statusEl.innerHTML = `<span style="color:#b3b3b3;">Status: 📝 Draft Exam (Not Published)</span>`; 
+                } 
+                else if (data.status === "hidden") {
+                    statusEl.innerHTML = `<span style="color:#ffb74d;">Status: 🙈 Hidden (Removed from Practice)</span>`; 
+                    buttonsHtml += `<button id="dbRestorePracticeBtn" class="submit-btn" style="background: #ffb74d; color: #000; margin-top: 0;">♻️ Restore to Practice</button>`;
                 }
+                else if (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) {
+                    statusEl.innerHTML = `<span style="color:#00e676;">Status: 🟢 Practice Exam (Time Passed / Moved)</span>`; 
+                    buttonsHtml += `
+                        <button id="dbMakeLiveAgainBtn" class="submit-btn" style="background: #00e676; color: #000; margin-top: 0;">🚀 Make Live Again</button>
+                        <button id="dbHideFromStudentsBtn" class="submit-btn" style="background: #e91e63; color: #fff; margin-top: 0;">🙈 Hide Practice Exam</button>
+                    `;
+                } 
+                else {
+                    statusEl.innerHTML = `<span style="color:#ff5252;">Status: 🔴 Live Exam (Running)</span>`; 
+                    buttonsHtml += `<button id="dbHideBtn" class="submit-btn" style="background: #ffb74d; color: #000; margin-top: 0;">Move to Practice (Hide Live)</button>`;
+                }
+                
+                buttonsHtml += `<button id="dbDeleteExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0; color:#fff;">🗑️ Permanently Delete</button>`;
+                
+                dbActionButtons.innerHTML = buttonsHtml;
             }
-            
             loadDbSubmissions(examId);
         });
 
-        async function loadDbSubmissions(examId) {
-            const tbody = document.getElementById('dbSubmissionsBody');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr>';
-            
-            try {
-                const q = query(collection(db, "results"), where("examId", "==", examId));
-                const snapshot = await getDocs(q);
+        // 🟢 Dynamic Buttons Logic (Event Delegation) 🟢
+        dbActionButtons.addEventListener('click', async (e) => {
+            const examId = dbExamSelector.value;
+            if(!examId) return;
+
+            // 1. MAKE LIVE AGAIN (Popup)
+            if(e.target.id === 'dbMakeLiveAgainBtn') {
+                const docSnap = await getDoc(doc(db, "exams", examId));
+                const data = docSnap.data();
+                const timeVal = formatTimeForInput(data.publishTime || new Date().getTime());
                 
-                if(snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ffb74d;">No submissions found for this exam.</td></tr>';
-                    return;
-                }
-                
-                let html = "";
-                let resultsData = [];
-                snapshot.forEach(doc => {
-                    resultsData.push({ id: doc.id, ...doc.data() });
+                Swal.fire({
+                    title: '🚀 Make Live Again',
+                    html: `
+                        <div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Title:</label><input id="swal-title" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${data.title}"></div>
+                        <div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Duration (Mins):</label><input id="swal-duration" type="number" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${data.duration}"></div>
+                        <div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Publish Time:</label><input id="swal-time" type="datetime-local" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${timeVal}"></div>
+                    `,
+                    showCancelButton: true, confirmButtonColor: '#00e676', confirmButtonText: 'Publish Live',
+                    preConfirm: () => {
+                        return { title: document.getElementById('swal-title').value, duration: parseInt(document.getElementById('swal-duration').value), publishTime: new Date(document.getElementById('swal-time').value).getTime() }
+                    }
+                }).then(async (result) => {
+                    if(result.isConfirmed) {
+                        try {
+                            await setDoc(doc(db, "exams", examId), { title: result.value.title, duration: result.value.duration, publishTime: result.value.publishTime, status: "active" }, { merge: true });
+                            Swal.fire('Success', 'Exam is now LIVE!', 'success'); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change'));
+                        } catch(err) { Swal.fire('Error', 'Failed to make live.', 'error'); }
+                    }
                 });
+            }
+
+            // 2. HIDE PRACTICE EXAM FROM STUDENTS
+            if(e.target.id === 'dbHideFromStudentsBtn') {
+                Swal.fire({ title: 'Hide Practice Exam?', text: "This exam will be completely hidden from students.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e91e63', confirmButtonText: 'Yes, Hide it!' }).then(async (res) => {
+                    if(res.isConfirmed) {
+                        try { await setDoc(doc(db, "exams", examId), { status: "hidden" }, { merge: true }); Swal.fire('Hidden', 'Exam is now hidden.', 'success'); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
+                        catch(err) { Swal.fire('Error', 'Failed to hide.', 'error'); }
+                    }
+                });
+            }
+
+            // 3. RESTORE TO PRACTICE
+            if(e.target.id === 'dbRestorePracticeBtn') {
+                try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire('Restored', 'Exam is back in Practice mode.', 'success'); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
+                catch(err) { Swal.fire('Error', 'Failed to restore.', 'error'); }
+            }
+
+            // 4. MOVE TO PRACTICE (Hide Live)
+            if(e.target.id === 'dbHideBtn') {
+                Swal.fire({ title: 'Hide Live Exam?', text: "Move the LIVE exam to Practice Mode immediately?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ffb74d', confirmButtonText: 'Yes, Move it!' }).then(async (res) => {
+                    if(res.isConfirmed) {
+                        try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire('Success', 'Exam moved to Practice Mode!', 'success'); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
+                        catch(err) { Swal.fire('Error', 'Failed to move.', 'error'); }
+                    }
+                });
+            }
+
+            // 5. PERMANENT DELETE
+            if(e.target.id === 'dbDeleteExamBtn') {
+                Swal.fire({ title: 'Permanently Delete?', text: "This will completely wipe out the exam.", icon: 'error', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Delete Permanently!' }).then(async (res) => {
+                    if(res.isConfirmed) {
+                        try { await deleteDoc(doc(db, "exams", examId)); Swal.fire('Deleted!', 'Exam deleted permanently.', 'success'); loadExamsIntoDropdowns(); dbWorkspace.style.display = "none"; } 
+                        catch(err) { Swal.fire('Error', 'Error deleting exam.', 'error'); }
+                    }
+                });
+            }
+        });
+
+        async function loadDbSubmissions(examId) {
+            const tbody = document.getElementById('dbSubmissionsBody'); tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr>';
+            try {
+                const q = query(collection(db, "results"), where("examId", "==", examId)); const snapshot = await getDocs(q);
+                if(snapshot.empty) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ffb74d;">No submissions found for this exam.</td></tr>'; return; }
                 
+                let html = ""; let resultsData = [];
+                snapshot.forEach(doc => { resultsData.push({ id: doc.id, ...doc.data() }); });
                 resultsData.sort((a, b) => b.score - a.score);
                 
                 resultsData.forEach((row) => {
                     let timeStr = "N/A";
-                    if(row.timestamp) {
-                        let d = row.timestamp.seconds ? new Date(row.timestamp.seconds * 1000) : new Date(row.timestamp);
-                        timeStr = d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
-                    }
+                    if(row.timestamp) { let d = row.timestamp.seconds ? new Date(row.timestamp.seconds * 1000) : new Date(row.timestamp); timeStr = d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }); }
                     
                     html += `
                     <tr>
@@ -427,60 +769,32 @@
                         </td>
                         <td style="color:#00bcd4; font-weight:bold; font-size: 16px;">${row.score}</td>
                         <td style="font-size:12px; color:#b3b3b3;">${timeStr}</td>
-                        <td>
-                            <button class="btn-delete delete-sub-btn" data-id="${row.id}" data-email="${row.email}" data-exam="${row.examId}">Delete</button>
-                        </td>
-                    </tr>
-                    `;
+                        <td><button class="btn-delete delete-sub-btn" data-id="${row.id}" data-email="${row.email}" data-exam="${row.examId}">Delete</button></td>
+                    </tr>`;
                 });
-                
                 tbody.innerHTML = html;
                 
                 document.querySelectorAll('.delete-sub-btn').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
-                        const docId = e.target.getAttribute('data-id');
-                        const email = e.target.getAttribute('data-email');
-                        const exId = e.target.getAttribute('data-exam');
-                        
-                        if(confirm("Are you sure you want to delete this student's submission? They will be able to retake the exam as a fresh start.")) {
-                            e.target.innerText = "Wait...";
-                            try {
-                                await deleteDoc(doc(db, "results", docId));
-                                const timerDocId = email + "_" + exId;
-                                await deleteDoc(doc(db, "user_timers", timerDocId));
-                                loadDbSubmissions(exId);
-                            } catch(err) {
-                                alert("Failed to delete.");
-                                e.target.innerText = "Delete";
-                            }
-                        }
+                        const docId = e.target.getAttribute('data-id'); const email = e.target.getAttribute('data-email'); const exId = e.target.getAttribute('data-exam');
+                        Swal.fire({ title: 'Delete Submission?', text: "Student will be able to retake the exam as a fresh start.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Yes, delete it!' }).then(async (res) => {
+                            if(res.isConfirmed) { e.target.innerText = "Wait..."; try { await deleteDoc(doc(db, "results", docId)); await deleteDoc(doc(db, "user_timers", email + "_" + exId)); loadDbSubmissions(exId); Swal.fire('Deleted!', 'Submission removed.', 'success'); } catch(err) { Swal.fire('Error', 'Failed to delete.', 'error'); e.target.innerText = "Delete"; } }
+                        });
                     });
                 });
 
-                document.querySelectorAll('.clickable-roll').forEach(el => {
-                    el.addEventListener('click', (e) => {
-                        const roll = e.target.getAttribute('data-roll');
-                        showStudentHistory(roll);
-                    });
-                });
-                
-            } catch(error) {
-                console.error(error);
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ff5252;">Error loading data.</td></tr>';
-            }
+                document.querySelectorAll('.clickable-roll').forEach(el => { el.addEventListener('click', (e) => { showStudentHistory(e.target.getAttribute('data-roll')); }); });
+            } catch(error) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ff5252;">Error loading data.</td></tr>'; }
         }
 
         // 🟢 MANUAL SEARCH BUTTON LOGIC 🟢
         document.getElementById('searchRollBtn').addEventListener('click', () => {
             const rollVal = document.getElementById('searchRollInput').value.trim();
-            if(!rollVal) {
-                alert("Please enter a roll number to search.");
-                return;
-            }
+            if(!rollVal) { Swal.fire('Missing input', 'Please enter a roll number to search.', 'warning'); return; }
             showStudentHistory(rollVal);
         });
 
-        // 🟢 Fetch & Show Student History Function (Based on ROLL NUMBER) 🟢
+        // 🟢 Fetch & Show Student History 🟢
         async function showStudentHistory(roll) {
             historyModal.classList.add('show');
             historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:16px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#a0a0b0;">Fetching records...</span>`;
@@ -488,75 +802,26 @@
 
             try {
                 const examsSnap = await getDocs(query(collection(db, "exams"), orderBy("createdAt", "desc")));
-                let allExams = [];
-                examsSnap.forEach(doc => {
-                    if (doc.data().status !== "draft") {
-                        allExams.push({ id: doc.id, title: doc.data().title });
-                    }
-                });
+                let allExams = []; examsSnap.forEach(doc => { if (doc.data().status !== "draft" && doc.data().status !== "hidden") { allExams.push({ id: doc.id, title: doc.data().title }); } });
 
                 const resultsSnap = await getDocs(query(collection(db, "results"), where("rollNumber", "==", roll)));
-                let studentResults = {};
-                let usedEmails = new Set(); 
+                let studentResults = {}; let usedEmails = new Set(); 
 
-                resultsSnap.forEach(doc => {
-                    const data = doc.data();
-                    studentResults[data.examId] = data.score;
-                    if(data.email) usedEmails.add(data.email);
-                });
+                resultsSnap.forEach(doc => { const data = doc.data(); studentResults[data.examId] = data.score; if(data.email) usedEmails.add(data.email); });
 
-                if(usedEmails.size > 0) {
-                    historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:16px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ffb74d; font-size:12px;">Emails Used: ${Array.from(usedEmails).join(', ')}</span>`;
-                } else {
-                    historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:16px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ff5252; font-size:12px;">No records found for this roll number.</span>`;
-                }
+                if(usedEmails.size > 0) { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ffb74d; font-size:13px;">Emails Used: ${Array.from(usedEmails).join(', ')}</span>`; } 
+                else { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ff5252; font-size:13px;">No records found for this roll number.</span>`; }
 
                 let html = "";
                 allExams.forEach(exam => {
-                    let scoreHtml = "";
-                    if (studentResults[exam.id] !== undefined) {
-                        scoreHtml = `<span style="color:#00e676; font-weight:bold; font-size:16px;">${studentResults[exam.id]}</span>`;
-                    } else {
-                        scoreHtml = `<span style="color:#ff5252; font-weight:bold;">❌ Missed</span>`;
-                    }
+                    let scoreHtml = studentResults[exam.id] !== undefined ? `<span style="color:#00e676; font-weight:bold; font-size:18px;">${studentResults[exam.id]}</span>` : `<span style="color:#ff5252; font-weight:bold;">❌ Missed</span>`;
                     html += `<tr><td style="text-align:left;">${exam.title}</td><td>${scoreHtml}</td></tr>`;
                 });
 
                 if(allExams.length === 0) html = '<tr><td colspan="2" style="color:#ffb74d;">No exams found in database.</td></tr>';
-                
                 historyTableBody.innerHTML = html;
-
-            } catch(e) {
-                console.error(e);
-                historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#ff5252;">Failed to load history.</td></tr>';
-            }
+            } catch(e) { historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#ff5252;">Failed to load history.</td></tr>'; }
         }
-
-        document.getElementById('dbHideBtn').addEventListener('click', async () => {
-            const examId = dbExamSelector.value;
-            if(!examId) return;
-            if(confirm("Move this LIVE Exam to Practice Mode immediately?")) {
-                try {
-                    await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true });
-                    alert("✅ Exam successfully moved to Practice Mode!");
-                    loadExamsIntoDropdowns();
-                    dbWorkspace.style.display = "none";
-                } catch(e) { alert("Error!"); }
-            }
-        });
-
-        document.getElementById('dbDeleteExamBtn').addEventListener('click', async () => {
-            const examId = dbExamSelector.value;
-            if(!examId) return;
-            if(confirm("🚨 WARNING: This will permanently delete the entire exam from the database. This action CANNOT be undone. Proceed?")) {
-                try {
-                    await deleteDoc(doc(db, "exams", examId));
-                    alert("✅ Exam Deleted Permanently!");
-                    loadExamsIntoDropdowns();
-                    dbWorkspace.style.display = "none";
-                } catch(e) { alert("Error deleting exam!"); }
-            }
-        });
 
     </script>
 </body>
