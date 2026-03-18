@@ -37,13 +37,23 @@
         
         #exam-section, #result-section { display: none; }
         
-        /* 🟢 STICKY TIMER & User Info 🟢 */
+        /* 🟢 STICKY TIMER & PROGRESS TRACKER (Centered) 🟢 */
         .user-info { 
             background: rgba(32, 32, 40, 0.95); padding: 15px 25px; border-radius: 20px; margin-bottom: 25px; border: none;
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px;
             box-shadow: 6px 6px 12px rgba(0,0,0,0.5), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.4);
             backdrop-filter: blur(10px);
             position: sticky; top: 15px; z-index: 9999;
+        }
+        
+        #examTimer { 
+            font-size: 20px; font-weight: bold; color: #ff5252; padding: 10px 25px; border-radius: 14px; 
+            background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); letter-spacing: 2px;
+            text-align: center; width: 100%; max-width: 250px;
+        }
+
+        #progressTracker {
+            font-size: 14px; font-weight: bold; color: #00bcd4; letter-spacing: 1px; transition: color 0.3s;
         }
         
         /* Claymorphism: Inner Boxes */
@@ -52,7 +62,6 @@
             box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.3);
             user-select: none; -webkit-user-select: none;
         }
-        /* Clearfix for float elements inside question card */
         .question-card::after { content: ""; display: table; clear: both; }
 
         .marking-rules, .roll-input-box, .breakdown-box { 
@@ -103,11 +112,6 @@
         .submit-btn:active { box-shadow: inset 6px 6px 15px rgba(0,0,0,0.4), inset -2px -2px 5px rgba(255,255,255,0.1); transform: scale(0.96) translateY(2px); }
 
         .score-display { font-size: 55px; font-weight: bold; color: #00e676; text-align: center; margin: 30px 0; text-shadow: 0 0 20px rgba(0, 230, 118, 0.4);}
-        
-        #examTimer { 
-            font-size: 17px; font-weight: bold; color: #ff5252; padding: 10px 18px; border-radius: 14px; 
-            background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); letter-spacing: 1px;
-        }
         
         .marking-rules { border-left: 5px solid #ffb74d; }
         .marking-rules span { color: #ffb74d; font-weight: bold; }
@@ -164,14 +168,14 @@
             </h2>
             
             <div class="user-info">
-                <span id="userName" style="font-weight: bold; color: #00bcd4; font-size: 16px;">Student Name</span>
                 <div id="examTimer">Time: --:--</div>
+                <div id="progressTracker">Loading questions...</div>
             </div>
             
             <div class="marking-rules">
                 <span style="font-size: 16px;">⚠ Marking Scheme:</span><br> Correct: <b style="color:#00e676;">+1</b> | Wrong: <b style="color:#ff5252;">-0.5</b> | Skipped: <b style="color:#ffb74d;">0</b><br>
                 <span id="antiCheatWarning" style="color: #ff5252; margin-top: 10px; display: block; font-size: 14px;">🚨 Do not switch tabs or minimize the browser. Your exam will auto-submit on the 6th attempt!</span>
-                <span id="practiceInfo" style="color: #00e676; margin-top: 10px; display: none; font-size: 14px;"></span>
+                <span id="practiceInfo" style="color: #00e676; margin-top: 10px; display: none; font-size: 14px;">Relax, this is a practice exam. Take your time!</span>
             </div>
 
             <form id="examForm">
@@ -231,17 +235,28 @@
         let examDurationMinutes = 0; 
         let isPracticeMode = false;
         
-        // 🟢 MULTIPLE SUBMISSION FIX (LOCK VARIABLE) 🟢
         let isSubmitting = false; 
+        let totalQCount = 0; // For Live Progress Tracker
         
         const loginSection = document.getElementById('login-section'); const examSection = document.getElementById('exam-section');
         const resultSection = document.getElementById('result-section'); const questionsContainer = document.getElementById('questionsContainer');
+        const progressTracker = document.getElementById('progressTracker');
         
         let tabSwitchCount = 0; let isExamActive = false;
+        
+        // 🟢 SPLIT SCREEN TRACKER 🟢
+        let usedSplitScreen = "No";
+        function checkWindowSize() {
+            if (window.innerWidth < window.screen.width * 0.8) {
+                usedSplitScreen = "Yes";
+            }
+        }
+        window.addEventListener('resize', checkWindowSize);
+        checkWindowSize(); 
 
         onAuthStateChanged(auth, async (user) => {
             if (user && currentExamId) {
-                userEmail = user.email; document.getElementById('userName').innerText = user.displayName;
+                userEmail = user.email; 
                 
                 const examDocSnap = await getDoc(doc(db, "exams", currentExamId)); 
                 if (!examDocSnap.exists()) { 
@@ -281,7 +296,7 @@
         // 🟢 SWEETALERT ANTI-CHEAT 🟢
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && isExamActive && timeLeft > 0 && !isPracticeMode) {
-                tabSwitchCount++; // Tracks cheating amount
+                tabSwitchCount++; 
                 if (tabSwitchCount === 1) Swal.fire({ icon: 'warning', title: 'WARNING (1/5)', text: 'You have switched tabs! It is strictly prohibited.' });
                 else if (tabSwitchCount > 1 && tabSwitchCount < 5) Swal.fire({ icon: 'warning', title: `WARNING (${tabSwitchCount}/5)`, text: 'Do not switch tabs or minimize the browser!' });
                 else if (tabSwitchCount === 5) Swal.fire({ icon: 'error', title: 'FINAL WARNING (5/5)', text: 'ONE MORE TIME, and exam will auto-submit.' });
@@ -307,7 +322,6 @@
                     correctAnswersList[qId] = data.correctAnswer; questionsDataList[qId] = data; 
                     const qCard = document.createElement('div'); qCard.className = 'question-card';
                     
-                    // 🟢 ADDED CLEAR SELECTION BUTTON 🟢
                     qCard.innerHTML = `<div class="question-text">${questionNumber}. ${data.question}</div>
                     <label class="option-label"><input type="radio" name="${qId}" value="1"> ${data.options["1"]}</label>
                     <label class="option-label"><input type="radio" name="${qId}" value="2"> ${data.options["2"]}</label>
@@ -317,26 +331,45 @@
                     
                     questionsContainer.appendChild(qCard); questionNumber++;
                 });
+
+                // Set initial progress tracker count
+                totalQCount = Object.keys(questionsDataList).length;
+                updateProgress();
+
             } catch (error) { console.error("Error loading exam: ", error); }
         }
 
-        // 🟢 Handle Option Selection & Clear Selection 🟢
+        // 🟢 LIVE PROGRESS TRACKER LOGIC 🟢
+        function updateProgress() {
+            if(totalQCount === 0) return;
+            // Count how many questions have at least one radio button checked
+            const answeredCount = Object.keys(questionsDataList).filter(qId => document.querySelector(`input[name="${qId}"]:checked`)).length;
+            progressTracker.innerText = `Answered: ${answeredCount} / ${totalQCount}`;
+            
+            if(answeredCount === totalQCount) {
+                progressTracker.style.color = "#00e676"; // Green when all answered
+            } else {
+                progressTracker.style.color = "#00bcd4"; // Cyan normally
+            }
+        }
+
         questionsContainer.addEventListener('change', (e) => {
             if(e.target.type === 'radio') {
                 const name = e.target.name;
                 document.querySelectorAll(`input[name="${name}"]`).forEach(radio => { radio.parentElement.classList.remove('selected'); });
                 e.target.parentElement.classList.add('selected');
+                updateProgress(); // Update progress when an option is selected
             }
         });
 
         questionsContainer.addEventListener('click', (e) => {
             if(e.target.classList.contains('clear-selection-btn')) {
                 const qId = e.target.getAttribute('data-qid');
-                // Uncheck all radio buttons for this question and remove 'selected' class
                 document.querySelectorAll(`input[name="${qId}"]`).forEach(radio => { 
                     radio.checked = false;
                     radio.parentElement.classList.remove('selected'); 
                 });
+                updateProgress(); // Update progress when an option is cleared
             }
         });
 
@@ -369,16 +402,13 @@
             let m = Math.floor(timeLeft / 60); let s = timeLeft % 60; m = m < 10 ? "0" + m : m; s = s < 10 ? "0" + s : s; document.getElementById('examTimer').innerText = `Time Left: ${m}:${s}`;
         }
 
-        // 🟢 DIRECT SUBMISSION (NO POPUP) 🟢
         document.getElementById('examForm').addEventListener('submit', function(e) { 
             e.preventDefault(); 
-            // Prevent if already submitting to stop multiple requests
             if(isSubmitting) return; 
             submitExamCore(); 
         });
 
         async function submitExamCore() {
-            // 🟢 PREVENT DOUBLE CLICK SUBMISSION 🟢
             if (isSubmitting) return; 
             isSubmitting = true; 
 
@@ -406,6 +436,12 @@
             if(ua.includes("Chrome") && !ua.includes("Edg") && !ua.includes("OPR")) browser = "Chrome"; else if(ua.includes("Safari") && !ua.includes("Chrome")) browser = "Safari"; else if(ua.includes("Firefox")) browser = "Firefox"; else if(ua.includes("Edg")) browser = "Edge"; else if(ua.includes("OPR") || ua.includes("Opera")) browser = "Opera";
             let detailedDevice = `${browser} on ${os}`;
 
+            // 🟢 NETWORK TYPE TRACKER 🟢
+            let networkType = "Unknown Net";
+            if (navigator.connection && navigator.connection.effectiveType) {
+                networkType = navigator.connection.effectiveType.toUpperCase(); 
+            }
+
             // 🟢 TIME TAKEN TRACKER 🟢
             let timeTakenSec = (examDurationMinutes * 60) - timeLeft;
             let timeTakenStr = `${Math.floor(timeTakenSec / 60)}m ${timeTakenSec % 60}s`;
@@ -416,9 +452,11 @@
                         email: userEmail, rollNumber: rollNum, score: score, total: totalQuestions, 
                         correctCount: correctCount, wrongCount: wrongCount, skippedCount: skippedCount, 
                         userAnswers: userSelectedAnswers, examId: currentExamId, timestamp: new Date(),
-                        device: detailedDevice, // Track OS & Browser
-                        timeTaken: timeTakenStr, // Track exam duration taken by user
-                        cheatCount: tabSwitchCount // Track tab switches
+                        device: detailedDevice,
+                        network: networkType, 
+                        splitScreen: usedSplitScreen, 
+                        timeTaken: timeTakenStr, 
+                        cheatCount: tabSwitchCount
                     });
                     const timerDocId = userEmail + "_" + currentExamId;
                     await setDoc(doc(db, "user_timers", timerDocId), { timeLeft: 0 }, { merge: true });
@@ -441,7 +479,7 @@
             } catch (error) { 
                 Swal.fire({ icon: 'error', title: 'Oops...', text: 'Error submitting exam. Check your connection.' });
                 submitBtn.innerText = "Submit Exam"; submitBtn.disabled = false; 
-                isSubmitting = false; // Free the lock if error happens
+                isSubmitting = false; 
             }
         }
 
