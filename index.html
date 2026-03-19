@@ -75,10 +75,6 @@
         .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 12px; text-align: center; transition: 0.2s ease-in-out; }
         .apps-link:hover { background: #202028; color: #00bcd4; box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4), inset -2px -2px 4px rgba(255,255,255,0.02); }
 
-        .header-section { text-align: center; margin-bottom: 40px; animation: slideDown 0.8s ease-out; z-index: 10; position: relative;}
-        h1 { background: linear-gradient(135deg, #00bcd4, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 36px; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; font-weight: 800; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-
         /* 🟢 CLAYMORPHISM: Main Boxes (Super Rounded & Compact) 🟢 */
         .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; z-index: 10; position: relative; margin-top: 10px;}
 
@@ -157,7 +153,34 @@
             box-shadow: 3px 3px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.3) !important;
         }
 
-        @media (max-width: 768px) { .live-clock-container { display: none; } }
+        /* 🟢 Dropdown Notification Banner 🟢 */
+        .notification-banner {
+            position: fixed;
+            top: -100px; /* Hidden above screen initially */
+            left: 50%;
+            transform: translateX(-50%);
+            background: #202028;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 15px;
+            z-index: 9999;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6), inset 3px 3px 8px rgba(255,255,255,0.05), inset -4px -4px 10px rgba(0,0,0,0.4);
+            border: 1px solid rgba(0, 188, 212, 0.3);
+            transition: top 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+        }
+        .notification-banner.show { top: 30px; }
+        .notification-banner span { color: #00bcd4; font-size: 16px; }
+
+        @media (max-width: 768px) { 
+            .live-clock-container { display: none; } 
+            .notification-banner { width: 90%; font-size: 13px; padding: 12px 20px;}
+        }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
     </style>
@@ -165,6 +188,8 @@
 <body>
 
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
+
+    <div id="notificationBanner" class="notification-banner"></div>
 
     <nav class="navbar">
         <div class="nav-brand">MCQ Portal</div>
@@ -185,10 +210,6 @@
                 <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">UniDocs Generator</a>
             </div>
         </div>
-    </div>
-
-    <div class="header-section">
-        <h1></h1>
     </div>
 
     <div class="grid-container">
@@ -259,6 +280,16 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // 🟢 Notification Banner Logic 🟢
+        function showNotification(message) {
+            const banner = document.getElementById('notificationBanner');
+            banner.innerHTML = message;
+            banner.classList.add('show');
+            setTimeout(() => {
+                banner.classList.remove('show');
+            }, 10000); // Hides after 10 seconds
+        }
+
         // Live Clock
         function updateClock() {
             const now = new Date();
@@ -293,7 +324,6 @@
             const liveExamCountDisplay = document.getElementById('liveExamCountDisplay');
             
             try {
-                // 🟢 FETCHING DESCENDING (Newest First) so Dropdowns show Newest at the top 🟢
                 const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 
@@ -305,6 +335,9 @@
                 let practiceExamsCount = 0;
                 const currentTime = new Date().getTime();
                 
+                let newlyLiveExam = null;
+                let newlyPublishedExam = null;
+
                 if (querySnapshot.empty) {
                     liveExamsListDiv.innerHTML = "<p style='color: #888; font-size: 13px; text-align: center;'>No exams available right now.</p>";
                     practiceExamSelector.innerHTML = '<option value="">-- No practice exams available --</option>';
@@ -316,10 +349,14 @@
                 querySnapshot.forEach((doc) => {
                     const exam = doc.data(); const examId = doc.id;
 
-                    if (exam.status !== "draft") {
+                    if (exam.status !== "draft" && exam.status !== "hidden") {
                         allExamsData[examId] = exam;
                         
-                        // 🟢 Because query is 'desc', appendChild keeps newest at top for dropdowns 🟢
+                        const optionMerit = document.createElement('option');
+                        optionMerit.value = examId;
+                        optionMerit.innerText = exam.title + (exam.status === "deleted" || (exam.publishTime && currentTime >= exam.publishTime) ? " (Practice)" : "");
+                        publicExamSelector.appendChild(optionMerit);
+
                         if (exam.status === "deleted") {
                             practiceExamsCount++;
                             const optionPractice = document.createElement('option');
@@ -328,11 +365,23 @@
                             practiceExamSelector.appendChild(optionPractice);
                         } 
                         else if (exam.status === "active") {
-                            const optionMerit = document.createElement('option');
-                            optionMerit.value = examId; optionMerit.innerText = exam.title;
-                            publicExamSelector.appendChild(optionMerit);
+                            
+                            // 🟢 SMART NOTIFICATION LOGIC (Fixed bug to only show newest) 🟢
+                            if (exam.publishTime && currentTime < exam.publishTime) {
+                                // It is Live Now
+                                if (!localStorage.getItem('notified_live_' + examId)) {
+                                    if (!newlyLiveExam) newlyLiveExam = exam.title; // Lock to only the newest one
+                                    localStorage.setItem('notified_live_' + examId, 'true');
+                                }
+                            }
 
                             if (exam.publishTime && currentTime >= exam.publishTime) {
+                                // Result Published
+                                if (!localStorage.getItem('notified_result_' + examId)) {
+                                    if (!newlyPublishedExam) newlyPublishedExam = exam.title; // Lock to only the newest one
+                                    localStorage.setItem('notified_result_' + examId, 'true');
+                                }
+
                                 practiceExamsCount++;
                                 const optionPractice = document.createElement('option');
                                 optionPractice.value = examId;
@@ -345,7 +394,6 @@
                                 const item = document.createElement('div'); item.className = 'exam-item';
                                 item.innerHTML = `<div class="meta-info"><div class="exam-name">${exam.title}</div><div class="exam-time">⏱ ${exam.duration} Min</div>${publishTextHTML}</div><a href="exam.html?id=${examId}" class="start-btn">Start</a>`;
                                 
-                                // 🟢 SMART FIX: prepend() puts older items on top for the Live Exams list 🟢
                                 liveExamsListDiv.prepend(item);
                             }
                         }
@@ -365,6 +413,13 @@
                     startPracticeBtn.disabled = false; startPracticeBtn.style.opacity = "1";
                 }
 
+                // 🟢 TRIGGER NOTIFICATIONS 🟢
+                if (newlyLiveExam) {
+                    showNotification(`🚀 <span>New Exam Live:</span> ${newlyLiveExam}`);
+                } else if (newlyPublishedExam) {
+                    showNotification(`🏆 <span>Merit List Published:</span> ${newlyPublishedExam}`);
+                }
+
             } catch (error) { 
                 liveExamsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 10px;'>Error loading exams.</p>"; 
             }
@@ -377,7 +432,6 @@
             if(selectedId) { 
                 window.location.href = `exam.html?id=${selectedId}`; 
             } else { 
-                // 🟢 Custom SweetAlert Popup 🟢
                 Swal.fire({
                     icon: 'warning',
                     title: 'Oops...',
@@ -394,7 +448,7 @@
             if (!examId) { meritListDisplay.innerHTML = `<p style="color: #888; font-size: 12px;">Select an exam to check status.</p>`; return; }
             const exam = allExamsData[examId]; const currentTime = new Date().getTime();
             if (exam.publishTime && currentTime < exam.publishTime) {
-                meritListDisplay.innerHTML = `<p style="color: #ffb74d; font-size: 13px; font-weight: bold; background: #2c2c38; padding: 10px; border-radius: 12px; width: 100%; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.02);">🔒 Merit List will be published at:<br> <span style="color:#00bcd4;">${formatResultTime(exam.publishTime)}</span></p>`;
+                meritListDisplay.innerHTML = `<p style="color: #ffb74d; font-size: 13px; font-weight: bold; background: #2c2c38; padding: 10px; border-radius: 12px; width: 100%; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.02);">🔒 Merit list will be published at:<br> <span style="color:#00bcd4;">${formatResultTime(exam.publishTime)}</span></p>`;
             } else {
                 meritListDisplay.innerHTML = `<button id="downloadMeritPdfBtn" class="action-btn btn-green" style="margin-top: 0; padding: 12px;">📥 Download Merit List (PDF)</button>`;
                 document.getElementById('downloadMeritPdfBtn').addEventListener('click', async () => { await generateMeritListPDF(examId, exam.title); });
@@ -406,7 +460,6 @@
             try {
                 const q = query(collection(db, "results"), where("examId", "==", examId)); const snapshot = await getDocs(q);
                 if (snapshot.empty) { 
-                    // 🟢 Custom SweetAlert Popup 🟢
                     Swal.fire({
                         icon: 'info',
                         title: 'Empty List',
@@ -433,7 +486,6 @@
                 doc.setFontSize(9); doc.setTextColor(150, 150, 150); doc.text("This PDF is automatically generated.", 14, pageHeight - 10);
                 doc.save(`Merit_List_${examTitle.replace(/\s+/g, '_')}.pdf`);
             } catch (error) { 
-                // 🟢 Custom SweetAlert Popup 🟢
                 Swal.fire({
                     icon: 'error',
                     title: 'Error Generating PDF',
