@@ -5,30 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniDocs MCQ Portal</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TNSE25JEYN"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-TNSE25JEYN');
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
+        /* 🟢 DEFAULT DARK MODE 🟢 */
         body { 
             background-color: #121218; color: #ffffff; min-height: 100vh; display: flex; 
             flex-direction: column; justify-content: center; align-items: center; 
-            padding: 120px 20px 60px 20px; overflow-x: hidden; position: relative;
+            padding: 120px 20px 60px 20px; overflow-x: hidden; position: relative; transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* 🟢 Background Blobs 🟢 */
-        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
+        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; transition: 0.4s; }
         .blob { position: absolute; filter: blur(90px); opacity: 0.3; animation: float 12s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #00bcd4; top: -10%; left: -5%; animation-delay: 0s; }
         .blob2 { width: 400px; height: 400px; background: #2196f3; bottom: -10%; right: -5%; animation-delay: 3s; }
@@ -36,109 +38,184 @@
 
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
 
-        /* 🟢 CLAYMORPHISM: Navbar 🟢 */
+        /* 🟢 Clean Scattered Stars (8 on Desktop, 4 on Mobile) 🟢 */
+        .bg-star { position: absolute; pointer-events: none; z-index: 25; filter: drop-shadow(0 0 10px rgba(255,215,0,0.6)); transition: 0.4s;}
+        .star-1 { top: 12%; left: 10%; font-size: 24px; }
+        .star-2 { top: 25%; right: 15%; font-size: 30px; }
+        .star-3 { top: 45%; left: 20%; font-size: 18px; }
+        .star-4 { top: 60%; right: 10%; font-size: 26px; }
+        .star-5 { top: 75%; left: 15%; font-size: 22px; }
+        .star-6 { top: 15%; right: 35%; font-size: 16px; }
+        .star-7 { top: 85%; right: 25%; font-size: 28px; }
+        .star-8 { top: 35%; left: 5%; font-size: 20px; }
+
+        /* 🟢 Navbar 🟢 */
         .navbar {
             position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px;
             display: flex; justify-content: space-between; align-items: center;
             background: #181820; border-bottom: none; z-index: 2000;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 3px 3px 8px rgba(255,255,255,0.05), inset -4px -4px 10px rgba(0,0,0,0.4);
+            transition: 0.4s ease;
         }
         
-        .nav-brand { font-size: 24px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.4);}
+        .nav-brand { font-size: 24px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.4); transition: opacity 0.4s ease, color 0.4s ease, font-size 0.4s ease;}
+        .nav-brand.eid-text { font-family: 'Aref Ruqaa', serif; color: #FFD700; font-size: 22px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.4); letter-spacing: 1px; text-transform: none;}
         
-        .nav-admin-btn {
-            background: #202028; color: #00bcd4; padding: 10px 24px; border-radius: 18px; 
-            text-decoration: none; font-weight: bold; font-size: 17px; display: flex; align-items: center; gap: 8px; transition: 0.2s ease-in-out;
+        .nav-buttons { display: flex; gap: 15px; align-items: center; }
+        .nav-btn {
+            background: #202028; padding: 10px 20px; border-radius: 18px; 
+            text-decoration: none; font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 8px; transition: 0.3s ease-in-out;
             box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(255,255,255,0.1), inset -3px -3px 6px rgba(0,0,0,0.3);
-            border: none;
+            border: 1px solid rgba(255,255,255,0.03); cursor: pointer; color: #fff;
         }
-        .nav-admin-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px) scale(0.96); }
+        .nav-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px) scale(0.96); }
+        
+        .btn-admin { color: #00bcd4; }
+        .btn-talk { color: #00e676; }
+        .btn-others { color: #ffb74d; }
+        .btn-theme { color: #ffd700; }
 
-        /* Claymorphism: Clock */
+        .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; padding: 5px; z-index: 3000; }
+        .hamburger-btn svg { width: 30px; height: 30px; fill: #00bcd4; transition: 0.4s;}
+
+        /* 🟢 Mobile Slide Menu 🟢 */
+        .slide-menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+            z-index: 2500; opacity: 0; visibility: hidden; transition: 0.3s ease; backdrop-filter: blur(3px);
+        }
+        .slide-menu-overlay.active { opacity: 1; visibility: visible; }
+
+        .slide-menu {
+            position: fixed; top: 0; right: -300px; width: 250px; height: 100%; background: #181820;
+            z-index: 2600; box-shadow: -10px 0 30px rgba(0,0,0,0.8); transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.4s;
+            display: flex; flex-direction: column; padding: 60px 20px 20px 20px; gap: 15px; overflow-y: auto;
+            border-left: 1px solid rgba(255,255,255,0.05);
+        }
+        .slide-menu.active { right: 0; }
+
+        .close-menu-btn {
+            position: absolute; top: 20px; right: 20px; background: #252530; border: none; width: 35px; height: 35px; border-radius: 50%;
+            color: #ff5252; font-size: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.5), -2px -2px 5px rgba(255,255,255,0.05); transition: 0.3s;
+        }
+        .close-menu-btn:active { box-shadow: inset 3px 3px 6px rgba(0,0,0,0.6); transform: scale(0.95); }
+        .slide-menu .nav-btn { width: 100%; justify-content: center; padding: 15px; font-size: 16px; }
+
+        .mobile-others-content {
+            display: none; flex-direction: column; gap: 10px; padding: 10px; background: #15151a; border-radius: 15px;
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); animation: fadeIn 0.3s ease; transition: 0.4s;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .mobile-others-content.show { display: flex; }
+
+        /* 🟢 Clock & Apps 🟢 */
         .live-clock-container {
             position: absolute; top: 90px; left: 30px; z-index: 1000;
             background: #181820; border-radius: 25px; padding: 10px 20px; display: flex; flex-direction: column; align-items: flex-start;
             box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 3px 3px 6px rgba(255,255,255,0.05), inset -5px -5px 12px rgba(0,0,0,0.3);
-            border: none;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.4s;
         }
-        .clock-time { font-size: 20px; font-weight: bold; color: #00bcd4; letter-spacing: 2px; margin-bottom: 2px; font-variant-numeric: tabular-nums;}
-        .clock-date { font-size: 11px; color: #a0a0b0; letter-spacing: 1px; text-transform: uppercase; font-weight: bold;}
+        .clock-time { font-size: 20px; font-weight: bold; color: #00bcd4; letter-spacing: 2px; margin-bottom: 2px; transition: 0.4s;}
+        .clock-date { font-size: 11px; color: #a0a0b0; letter-spacing: 1px; text-transform: uppercase; font-weight: bold; transition: 0.4s;}
 
-        /* Menu */
-        .top-right-bar { position: absolute; top: 90px; right: 25px; z-index: 2000; }
+        .top-right-bar { position: absolute; top: 90px; right: 25px; z-index: 1000; }
         .apps-menu-btn { 
             position: relative; width: 45px; height: 45px; border-radius: 50%; background: #202028; 
-            display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s ease-in-out; outline: none; border: none;
+            display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s ease-in-out; outline: none; border: none;
             box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 5px rgba(255,255,255,0.1), inset -3px -3px 6px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
         }
         .apps-menu-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px) scale(0.96); }
-        .apps-menu-btn svg { fill: #00bcd4; width: 20px; height: 20px; }
+        .apps-menu-btn svg { fill: #00bcd4; width: 20px; height: 20px; transition: 0.4s;}
         
         .apps-dropdown { 
             position: absolute; top: 60px; right: 0; background: #181820; border-radius: 18px; padding: 10px; width: max-content; 
-            box-shadow: 8px 8px 16px rgba(0,0,0,0.5), -4px -4px 10px rgba(255,255,255,0.03), inset 3px 3px 6px rgba(255,255,255,0.05), inset -5px -5px 12px rgba(0,0,0,0.3); border: none; display: none; flex-direction: column; 
+            box-shadow: 8px 8px 16px rgba(0,0,0,0.5), -4px -4px 10px rgba(255,255,255,0.03), inset 3px 3px 6px rgba(255,255,255,0.05), inset -5px -5px 12px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); display: none; flex-direction: column; transition: 0.4s;
         }
         .apps-dropdown.show { display: block; animation: fadeIn 0.2s ease; }
-        
-        .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 12px; text-align: center; transition: 0.2s ease-in-out; }
+        .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 12px; text-align: center; transition: 0.3s ease-in-out; }
         .apps-link:hover { background: #202028; color: #00bcd4; box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4), inset -2px -2px 4px rgba(255,255,255,0.02); }
 
-        /* 🟢 CLAYMORPHISM: Main Boxes (Super Rounded & Compact) 🟢 */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; z-index: 10; position: relative; margin-top: 10px;}
+        /* 🟢 NEW: Eid Calligraphy Heading with 2 Hanging Lanterns 🟢 */
+        .header-section { 
+            text-align: center; margin-bottom: 25px; margin-top: 10px; z-index: 10; position: relative;
+        }
+        .header-section h1 { 
+            font-family: 'Aref Ruqaa', serif; font-size: 45px; color: #FFD700; font-weight: 700; 
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.4); letter-spacing: 2px; transition: 0.4s;
+            display: flex; justify-content: center; align-items: center; gap: 15px; 
+        }
+        /* The Hanging Rope effect applied to the lanterns in the heading */
+        .heading-lantern { 
+            font-size: 40px; 
+            filter: drop-shadow(0 0 8px rgba(255,215,0,0.5)); 
+            position: relative; 
+            display: inline-block; 
+        }
+        .heading-lantern::before {
+            content: ''; 
+            position: absolute; 
+            bottom: 85%; /* Rope attaches to the top of the lantern */
+            left: 50%; 
+            width: 2px; 
+            height: 100vh; /* Reaches up and off screen */
+            background: linear-gradient(to top, rgba(255,215,0,0.6), transparent 80%); 
+            transform: translateX(-50%); 
+            z-index: -1;
+        }
+
+        /* 🟢 Main Boxes 🟢 */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; z-index: 10; position: relative;}
 
         .glass-box { 
             background: #1a1a22; border-radius: 35px; padding: 25px 20px; text-align: center; 
             display: flex; flex-direction: column; justify-content: flex-start; min-height: 310px;
-            /* Doubled Inner Shadows for volume */
             box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4);
-            border: none; transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.06); 
+            transition: transform 0.3s ease, background 0.4s, box-shadow 0.4s, border 0.4s;
         }
-        .glass-box:hover { transform: translateY(-5px); }
-        
+        .glass-box:hover { transform: translateY(-5px); border-color: rgba(255, 255, 255, 0.12); }
         .box-icon { font-size: 40px; margin-bottom: 10px; filter: drop-shadow(4px 4px 6px rgba(0,0,0,0.5)); }
-        .box-title { color: #fff; font-size: 20px; margin-bottom: 15px; font-weight: bold; }
+        .box-title { color: #fff; font-size: 20px; margin-bottom: 15px; font-weight: bold; transition: 0.4s;}
+        .sub-title { text-align: left; font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; color: #888; transition: 0.4s;}
 
-        /* Inner Content */
         .exam-list-wrapper { flex-grow: 1; overflow-y: auto; max-height: 150px; padding-right: 8px; text-align: left; }
         .exam-list-wrapper::-webkit-scrollbar { width: 6px; }
         .exam-list-wrapper::-webkit-scrollbar-thumb { background: #00bcd4; border-radius: 10px; }
 
-        /* Claymorphism: Exam Item */
         .exam-item { 
             display: flex; justify-content: space-between; align-items: center; background: #202028; padding: 12px; 
-            border-radius: 16px; margin-bottom: 12px; border: none;
+            border-radius: 16px; margin-bottom: 12px; 
+            border: 1px solid rgba(255, 255, 255, 0.04); 
             box-shadow: 4px 4px 10px rgba(0,0,0,0.4), -2px -2px 5px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 6px rgba(0,0,0,0.3);
+            transition: 0.4s;
         }
-        .exam-name { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 4px; }
+        .exam-name { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 4px; transition: 0.4s;}
         .meta-info { display: flex; flex-direction: column; gap: 4px; }
-        .exam-time { font-size: 11px; color: #00bcd4; font-weight: bold; }
-        
+        .exam-time { font-size: 11px; color: #00bcd4; font-weight: bold; transition: 0.4s;}
         .publish-time { 
             font-size: 10px; color: #fff; background: #2c2c38; padding: 4px 8px; border-radius: 8px; 
             display: inline-block; width: max-content; font-weight: bold;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.4), inset -1px -1px 3px rgba(255,255,255,0.02);
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.4), inset -1px -1px 3px rgba(255,255,255,0.02); transition: 0.4s; border: 1px solid rgba(255,255,255,0.03);
         }
         
-        /* Claymorphism: Start Button */
-        .start-btn { 
-            background: #00bcd4; color: #000; padding: 8px 16px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 12px; border: none;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.4), -2px -2px 5px rgba(255,255,255,0.2), inset 2px 2px 4px rgba(255,255,255,0.3); transition: 0.1s ease-in-out;
+        .start-btn, .action-btn, .submit-btn { 
+            padding: 8px 16px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 12px; border: none; cursor: pointer; transition: 0.3s ease-in-out;
         }
+        .start-btn { background: #00bcd4; color: #000; box-shadow: 3px 3px 8px rgba(0,0,0,0.4), -2px -2px 5px rgba(255,255,255,0.2), inset 2px 2px 4px rgba(255,255,255,0.3); }
         .start-btn:active { box-shadow: inset 3px 3px 8px rgba(0,0,0,0.5), inset -2px -2px 4px rgba(255,255,255,0.02); transform: scale(0.95); }
 
-        /* Claymorphism: Action Buttons */
         .action-btn { 
-            display: inline-block; width: 100%; padding: 12px; border-radius: 18px; text-decoration: none; font-size: 14px; font-weight: bold; border: none; cursor: pointer; margin-top: auto; transition: 0.1s ease-in-out;
-            background: #252530; color: #00bcd4;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 3px 3px 6px rgba(255,255,255,0.05), inset -5px -5px 12px rgba(0,0,0,0.3);
+            width: 100%; padding: 12px; border-radius: 18px; font-size: 14px; margin-top: auto;
+            background: #252530; color: #00bcd4; box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 3px 3px 6px rgba(255,255,255,0.05), inset -5px -5px 12px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.04);
         }
         .action-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.02); transform: translateY(2px) scale(0.96); }
         .btn-green { color: #00e676; box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(0,0,0,0.03), inset 3px 3px 6px rgba(0,230,118,0.05), inset -5px -5px 12px rgba(0,0,0,0.3); }
 
-        /* Claymorphism: Inset Select Box */
         select { 
-            width: 100%; padding: 12px; border-radius: 16px; border: none; background: #15151a; color: #fff; outline: none; font-size: 13px; margin-bottom: 15px; 
-            box-shadow: inset 5px 5px 10px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); cursor: pointer;
+            width: 100%; padding: 12px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.04); background: #15151a; color: #fff; outline: none; font-size: 13px; margin-bottom: 15px; 
+            box-shadow: inset 5px 5px 10px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); cursor: pointer; transition: 0.4s;
         }
         select option { background-color: #202028; color: white; }
 
@@ -146,70 +223,224 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .footer { position: absolute; bottom: 15px; width: 100%; text-align: center; color: #666; font-size: 12px; z-index: 10; font-weight: bold;}
-        .footer span { color: #00bcd4; }
+        .footer span { color: #00bcd4; transition: 0.4s;}
 
-        .sub-title { text-align: left; font-size: 12px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; color: #888;}
-
-        /* 🟢 SweetAlert2 Custom Claymorphism Theme 🟢 */
-        .swal2-popup {
-            background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important;
-            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important;
+        /* Contact Form Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 4000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+        .contact-modal {
+            background: #16161e; padding: 40px; border-radius: 25px; width: 90%; max-width: 450px; position: relative;
+            box-shadow: 15px 15px 30px rgba(0,0,0,0.8), inset 2px 2px 8px rgba(255,255,255,0.05), inset -4px -4px 15px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex; flex-direction: column; gap: 20px; transition: 0.4s;
         }
-        .swal2-title { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
-        .swal2-confirm {
-            background: #00bcd4 !important; color: #000 !important; font-weight: bold !important; border-radius: 12px !important;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.3) !important;
+        .modal-close { position: absolute; top: 15px; right: 20px; color: #888; font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .modal-close:hover { color: #ff5252; }
+        .modal-title { color: #00e676; text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 10px; transition: 0.4s;}
+        
+        #contactForm { display: flex; flex-direction: column; gap: 15px; }
+        .contact-modal input[type="email"], .contact-modal textarea {
+            width: 100%; padding: 15px 20px; border-radius: 18px; background: #121218; color: #fff; font-size: 14px;
+            box-shadow: inset 6px 6px 12px rgba(0,0,0,0.8), inset -2px -2px 5px rgba(255,255,255,0.03); outline: none; transition: 0.4s;
+            border: 1px solid rgba(255,255,255,0.04);
         }
+        .contact-modal textarea { resize: vertical; min-height: 120px; }
+        .anon-checkbox-wrapper { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #a0a0b0; margin-bottom: 5px; transition: 0.4s;}
+        .anon-checkbox-wrapper input[type="checkbox"] { accent-color: #00e676; width: 16px; height: 16px; cursor: pointer; transition: 0.4s;}
+        
+        .submit-btn {
+            background: #1a1a22; color: #fff; padding: 15px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); font-weight: bold; font-size: 16px; cursor: pointer;
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.5), -4px -4px 10px rgba(255,255,255,0.03); transition: 0.3s; margin-top: 5px;
+        }
+        .submit-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.6); transform: scale(0.97); color: #00e676;}
+        .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        /* 🟢 Dropdown Notification Banner 🟢 */
+        /* 🟢 CELEBRATE BUTTON 🟢 */
+        .celebrate-btn {
+            position: fixed; bottom: 25px; right: 25px; background: linear-gradient(135deg, #FFD700, #ffb74d); color: #000; border: none;
+            padding: 14px 22px; border-radius: 30px; font-weight: bold; font-size: 15px; cursor: pointer; z-index: 9999;
+            box-shadow: 0 5px 15px rgba(255, 183, 77, 0.5), inset 2px 2px 5px rgba(255,255,255,0.6); transition: 0.3s;
+            overflow: hidden; 
+        }
+        .celebrate-btn::after {
+            content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.4), rgba(255,255,255,0));
+            transform: skewX(-25deg); animation: shimmer 3.5s infinite;
+        }
+        .celebrate-btn:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255, 183, 77, 0.7); }
+
+        /* Notification Banner */
         .notification-banner {
-            position: fixed;
-            top: -100px; /* Hidden above screen initially */
-            left: 50%;
-            transform: translateX(-50%);
-            background: #202028;
-            color: #fff;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 15px;
-            z-index: 9999;
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #202028; color: #fff; padding: 15px 30px;
+            border-radius: 25px; font-weight: bold; font-size: 15px; z-index: 9999;
             box-shadow: 0 15px 30px rgba(0,0,0,0.6), inset 3px 3px 8px rgba(255,255,255,0.05), inset -4px -4px 10px rgba(0,0,0,0.4);
-            border: 1px solid rgba(0, 188, 212, 0.3);
-            transition: top 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-align: center;
+            border: 1px solid rgba(0, 188, 212, 0.3); transition: top 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), background 0.4s, color 0.4s;
+            display: flex; align-items: center; gap: 12px; text-align: center;
         }
         .notification-banner.show { top: 30px; }
-        .notification-banner span { color: #00bcd4; font-size: 16px; }
+        .notification-banner span { color: #00bcd4; font-size: 16px; transition: 0.4s;}
 
+        /* 🟡🟢 LIGHT MODE STYLES 🟢🟡 */
+        body.light-mode { background-color: #FFFFF0; color: #4A3B2C; background-image: none; } 
+        body.light-mode .bg-blobs { opacity: 0.1; filter: blur(100px); }
+        
+        body.light-mode .navbar { background: #FDFCF9; border-bottom: 1px solid rgba(102, 76, 40, 0.1); box-shadow: 0 10px 20px rgba(102, 76, 40, 0.1), inset 3px 3px 8px #ffffff, inset -4px -4px 10px rgba(102, 76, 40, 0.05); }
+        body.light-mode .nav-brand { color: #664C28; text-shadow: 0 0 10px rgba(102, 76, 40, 0.2); }
+        body.light-mode .nav-brand.eid-text { color: #664C28; text-shadow: 0 0 10px rgba(102, 76, 40, 0.2); } 
+        
+        body.light-mode .nav-btn, body.light-mode .apps-menu-btn, body.light-mode .live-clock-container, body.light-mode .close-menu-btn, body.light-mode .slide-menu, body.light-mode .mobile-others-content {
+            background: #F0EBE1; color: #664C28; border-color: rgba(102, 76, 40, 0.2);
+            box-shadow: 5px 5px 10px rgba(102, 76, 40, 0.15), -3px -3px 8px #ffffff, inset 2px 2px 4px #ffffff, inset -3px -3px 6px rgba(102, 76, 40, 0.05);
+        }
+        body.light-mode .nav-btn:active, body.light-mode .apps-menu-btn:active, body.light-mode .close-menu-btn:active { box-shadow: inset 5px 5px 10px rgba(102, 76, 40, 0.15), inset -3px -3px 8px #ffffff; }
+        
+        body.light-mode .slide-menu { border-left: 1px solid rgba(102, 76, 40, 0.2); }
+        body.light-mode .btn-talk, body.light-mode .btn-others, body.light-mode .btn-theme { color: #664C28; }
+        body.light-mode .apps-menu-btn svg, body.light-mode .hamburger-btn svg { fill: #664C28; }
+        body.light-mode .clock-time { color: #664C28; }
+        body.light-mode .clock-date { color: #8A7254; }
+
+        body.light-mode .header-section h1 { color: #664C28; text-shadow: 0 0 10px rgba(102, 76, 40, 0.2); }
+
+        body.light-mode .glass-box {
+            background: #FDFCF9; border: 1px solid rgba(102, 76, 40, 0.4);
+            box-shadow: 12px 12px 24px rgba(102, 76, 40, 0.15), -8px -8px 20px #ffffff, inset 4px 4px 10px #ffffff, inset -8px -8px 18px rgba(102, 76, 40, 0.05);
+        }
+        body.light-mode .box-title { color: #664C28; }
+        body.light-mode .sub-title { color: #8A7254; }
+        body.light-mode .footer { color: #8A7254; }
+        body.light-mode .footer span { color: #664C28; }
+        
+        body.light-mode .exam-item {
+            background: #F0EBE1; border: 1px solid rgba(102, 76, 40, 0.3); 
+            box-shadow: 4px 4px 10px rgba(102, 76, 40, 0.15), -2px -2px 5px #ffffff, inset 2px 2px 4px #ffffff, inset -3px -3px 6px rgba(102, 76, 40, 0.05);
+        }
+        body.light-mode .exam-name { color: #4A3B2C; }
+        body.light-mode .exam-time { color: #664C28; }
+        body.light-mode .publish-time { background: #E8E0D5; color: #664C28; border-color: rgba(102, 76, 40, 0.1); box-shadow: inset 2px 2px 5px rgba(102, 76, 40, 0.1), inset -1px -1px 3px #ffffff; }
+        
+        body.light-mode .start-btn, body.light-mode .action-btn, body.light-mode .submit-btn {
+            background: #664C28; color: #FFFFF0; border-color: rgba(102, 76, 40, 0.4);
+            box-shadow: 4px 4px 10px rgba(102, 76, 40, 0.3), -2px -2px 5px #ffffff, inset 2px 2px 4px rgba(255,255,255,0.2);
+        }
+        body.light-mode .start-btn:active, body.light-mode .action-btn:active, body.light-mode .submit-btn:active { box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4); color: #FFFFF0;}
+        
+        body.light-mode select {
+            background: #F0EBE1; color: #4A3B2C; border: 1px solid rgba(102, 76, 40, 0.3);
+            box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff;
+        }
+        body.light-mode select option { background: #F0EBE1; color: #4A3B2C; }
+
+        body.light-mode .apps-dropdown { background: #FDFCF9; border-color: rgba(102, 76, 40, 0.2); }
+        body.light-mode .apps-link { color: #664C28; }
+        body.light-mode .apps-link:hover { background: #E8E0D5; box-shadow: inset 2px 2px 5px rgba(102, 76, 40, 0.1); }
+
+        body.light-mode .contact-modal {
+            background: #FDFCF9; border: 1px solid rgba(102, 76, 40, 0.4); 
+            box-shadow: 15px 15px 30px rgba(102, 76, 40, 0.2), inset 2px 2px 8px #ffffff, inset -4px -4px 15px rgba(102, 76, 40, 0.1);
+        }
+        body.light-mode .modal-title { color: #664C28; }
+        body.light-mode .contact-modal input, body.light-mode .contact-modal textarea {
+            background: #F0EBE1; color: #4A3B2C; border: 1px solid rgba(102, 76, 40, 0.3);
+            box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff;
+        }
+        body.light-mode .contact-modal input::placeholder, body.light-mode .contact-modal textarea::placeholder { color: #A89B8C; }
+        body.light-mode .anon-checkbox-wrapper { color: #664C28; }
+        body.light-mode .anon-checkbox-wrapper input[type="checkbox"] { accent-color: #664C28; }
+        body.light-mode .modal-close { color: #A89B8C; }
+        
+        body.light-mode .notification-banner { background: #FDFCF9; color: #4A3B2C; border-color: rgba(102, 76, 40, 0.2); }
+        body.light-mode .notification-banner span { color: #664C28; }
+
+        /* 📱 Mobile Specific Rules 📱 */
         @media (max-width: 768px) { 
             .live-clock-container { display: none; } 
             .notification-banner { width: 90%; font-size: 13px; padding: 12px 20px;}
+            
+            .nav-buttons { display: none; }
+            .top-right-bar { display: none; }
+            .hamburger-btn { display: block; }
+            
+            /* Hide Calligraphy Heading & Reduce Decors on Mobile */
+            .header-section h1 { font-size: 28px; gap: 8px; }
+            .heading-lantern { font-size: 26px; }
+
+            .star-5, .star-6, .star-7, .star-8 { display: none; } 
+            
+            .star-1 { top: 15%; left: 10%; font-size: 20px; }
+            .star-2 { top: 25%; right: 10%; font-size: 24px; }
+            .star-3 { top: 75%; left: 15%; font-size: 16px; }
+            .star-4 { top: 80%; right: 15%; font-size: 22px; }
+
+            .celebrate-btn { bottom: 15px; right: 15px; padding: 10px 15px; font-size: 12px; }
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     </style>
 </head>
 <body>
+
+  
 
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
 
     <div id="notificationBanner" class="notification-banner"></div>
 
     <nav class="navbar">
-        <div class="nav-brand">MCQ Portal</div>
-        <a href="admin.html" class="nav-admin-btn">⚙️ Admin</a>
+        <div class="nav-brand" id="navBrandText">MCQ Portal</div>
+        
+        <div class="nav-buttons">
+            <button class="nav-btn btn-theme" id="themeToggleDesktop">🌞 Light Mode</button>
+            <button class="nav-btn btn-talk" id="openTalkModalDesktop">📝 Drop a Note</button>
+            <a href="admin.html" class="nav-btn btn-admin">⚙️ Admin</a>
+        </div>
+
+        <button class="hamburger-btn" id="hamburgerBtn">
+            <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
     </nav>
+
+    <div class="slide-menu-overlay" id="slideMenuOverlay"></div>
+    <div class="slide-menu" id="slideMenu">
+        <button class="close-menu-btn" id="closeMenuBtn">✖</button>
+        <button class="nav-btn btn-theme" id="themeToggleMobile" style="margin-top: 20px;">🌞 Light Mode</button>
+        <button class="nav-btn btn-talk" id="openTalkModalMobile">📝 Drop a Note</button>
+        <a href="admin.html" class="nav-btn btn-admin">⚙️ Admin</a>
+        
+        <button class="nav-btn btn-others" id="mobileOthersBtn">📦 Others</button>
+        <div class="mobile-others-content" id="mobileOthersContent">
+            <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link" style="background: transparent;">UniDocs Generator</a>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="talkModalOverlay">
+        <div class="contact-modal">
+            <span class="modal-close" id="closeTalkModal">✖</span>
+            <div class="modal-title">Drop a Note</div>
+            
+            <form id="contactForm">
+                <input type="hidden" name="access_key" value="0de001eb-3823-4fb8-881c-b992c7dbe041">
+                <input type="hidden" name="subject" value="New Note from MCQ Portal">
+                <input type="hidden" name="from_name" id="formFromName" value="MCQ Portal User">
+                
+                <div class="anon-checkbox-wrapper">
+                    <input type="checkbox" id="anonCheckbox">
+                    <label for="anonCheckbox">I want to send message anonymously</label>
+                </div>
+
+                <input type="email" name="email" id="userEmailInput" placeholder="Your Email address" required>
+                <textarea name="message" placeholder="Ideas, Advice, or Bugs..." required></textarea>
+                <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+            </form>
+        </div>
+    </div>
 
     <div class="live-clock-container">
         <div class="clock-time" id="clockTime">00:00:00 AM</div>
         <div class="clock-date" id="clockDate">Loading Date...</div>
     </div>
 
-    <div class="top-right-bar">
+    <div class="top-right-bar" style="top: 90px;"> 
         <div style="position: relative;">
             <button class="apps-menu-btn" id="appsMenuBtn">
                 <svg viewBox="0 0 24 24"><path d="M12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-16 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-8 0c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/></svg>
@@ -218,6 +449,10 @@
                 <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">UniDocs Generator</a>
             </div>
         </div>
+    </div>
+
+    <div class="header-section">
+        <h1><span class="heading-lantern">🏮</span> Eid Mubarak <span class="heading-lantern">🏮</span></h1>
     </div>
 
     <div class="grid-container">
@@ -267,6 +502,8 @@
         </div>
     </div>
 
+    <button id="confettiBtn" class="celebrate-btn">🎉</button>
+
     <div class="footer">
         Developed by <span>UniDocs</span>
     </div>
@@ -275,7 +512,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getFirestore, collection, getDocs, orderBy, query, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 YOUR ORIGINAL FIREBASE CONFIG 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -288,14 +524,157 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 🟢 Notification Banner Logic 🟢
+        // 🟢 Navbar Eid Text Alternator (Every 3 seconds on ALL screens) 🟢
+        const navBrandText = document.getElementById('navBrandText');
+        let showEidText = false;
+        
+        setInterval(() => {
+            showEidText = !showEidText;
+            navBrandText.style.opacity = 0; 
+            
+            setTimeout(() => {
+                if(showEidText) {
+                    navBrandText.innerText = "✨ Eid Mubarak ✨";
+                    navBrandText.classList.add('eid-text');
+                } else {
+                    navBrandText.innerText = "MCQ Portal";
+                    navBrandText.classList.remove('eid-text');
+                }
+                navBrandText.style.opacity = 1; 
+            }, 400); 
+        }, 3000);
+
+        // 🟢 Confetti Celebrate Logic (3 seconds) 🟢
+        const confettiBtn = document.getElementById('confettiBtn');
+        if(confettiBtn) {
+            confettiBtn.addEventListener('click', () => {
+                const duration = 3000; 
+                const end = Date.now() + duration;
+
+                (function frame() {
+                    confetti({ particleCount: 6, angle: 60, spread: 60, origin: { x: 0 }, colors: ['#FFD700', '#00e676', '#ff5252', '#00bcd4'] });
+                    confetti({ particleCount: 6, angle: 120, spread: 60, origin: { x: 1 }, colors: ['#FFD700', '#00e676', '#ff5252', '#00bcd4'] });
+                    if (Date.now() < end) { requestAnimationFrame(frame); }
+                }());
+            });
+        }
+
+        // Theme Toggle Logic
+        const body = document.body;
+        const themeToggleDesktop = document.getElementById('themeToggleDesktop');
+        const themeToggleMobile = document.getElementById('themeToggleMobile');
+
+        if (localStorage.getItem('theme') === 'light') {
+            body.classList.add('light-mode');
+            themeToggleDesktop.innerHTML = '🌙 Dark Mode';
+            themeToggleMobile.innerHTML = '🌙 Dark Mode';
+        }
+
+        function toggleTheme() {
+            body.classList.toggle('light-mode');
+            const isLight = body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            const btnText = isLight ? '🌙 ' : '🌞 ';
+            themeToggleDesktop.innerHTML = btnText;
+            themeToggleMobile.innerHTML = btnText;
+        }
+
+        themeToggleDesktop.addEventListener('click', toggleTheme);
+        themeToggleMobile.addEventListener('click', toggleTheme);
+
+        // Mobile Menu & Others Button Logic
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const slideMenu = document.getElementById('slideMenu');
+        const slideMenuOverlay = document.getElementById('slideMenuOverlay');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileOthersBtn = document.getElementById('mobileOthersBtn');
+        const mobileOthersContent = document.getElementById('mobileOthersContent');
+
+        function toggleMenu() {
+            slideMenu.classList.toggle('active');
+            slideMenuOverlay.classList.toggle('active');
+            if(!slideMenu.classList.contains('active')) { mobileOthersContent.classList.remove('show'); }
+        }
+
+        hamburgerBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+        slideMenuOverlay.addEventListener('click', toggleMenu);
+
+        mobileOthersBtn.addEventListener('click', () => { mobileOthersContent.classList.toggle('show'); });
+
+        // Contact Form Modal & AJAX Submit Logic
+        const talkModalOverlay = document.getElementById('talkModalOverlay');
+        const closeTalkModal = document.getElementById('closeTalkModal');
+        const openTalkModalDesktop = document.getElementById('openTalkModalDesktop');
+        const openTalkModalMobile = document.getElementById('openTalkModalMobile');
+        const anonCheckbox = document.getElementById('anonCheckbox');
+        const userEmailInput = document.getElementById('userEmailInput');
+        const formFromName = document.getElementById('formFromName');
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function openModal() {
+            talkModalOverlay.classList.add('active');
+            if(slideMenu.classList.contains('active')) toggleMenu(); 
+        }
+
+        openTalkModalDesktop.addEventListener('click', openModal);
+        openTalkModalMobile.addEventListener('click', openModal);
+        closeTalkModal.addEventListener('click', () => { talkModalOverlay.classList.remove('active'); });
+        talkModalOverlay.addEventListener('click', (e) => { if (e.target === talkModalOverlay) talkModalOverlay.classList.remove('active'); });
+
+        anonCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                userEmailInput.value = "anonymous@mcqportal.com"; 
+                userEmailInput.disabled = true;
+                userEmailInput.style.opacity = "0.5";
+                formFromName.value = "Anonymous Student";
+            } else {
+                userEmailInput.value = "";
+                userEmailInput.disabled = false;
+                userEmailInput.style.opacity = "1";
+                formFromName.value = "MCQ Portal User";
+            }
+        });
+
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            const wasEmailDisabled = userEmailInput.disabled;
+            if (wasEmailDisabled) userEmailInput.disabled = false; 
+
+            const formData = new FormData(contactForm);
+            if (wasEmailDisabled) userEmailInput.disabled = true; 
+
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Sending..."; submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData });
+                if (response.ok) {
+                    talkModalOverlay.classList.remove('active');
+                    contactForm.reset();
+                    if(anonCheckbox.checked) {
+                        anonCheckbox.checked = false; userEmailInput.disabled = false; userEmailInput.style.opacity = "1"; formFromName.value = "MCQ Portal User";
+                    }
+                    Swal.fire({
+                        icon: 'success', title: 'Sent!', text: 'Your note has been securely dropped to the admin.', confirmButtonText: 'Great!',
+                        background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                        color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
+                    });
+                } else { throw new Error("Submission failed"); }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error', title: 'Oops!', text: 'Something went wrong. Please try again later.',
+                    background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                    color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
+                });
+            } finally { submitBtn.innerText = originalText; submitBtn.disabled = false; }
+        });
+
         function showNotification(message) {
             const banner = document.getElementById('notificationBanner');
-            banner.innerHTML = message;
-            banner.classList.add('show');
-            setTimeout(() => {
-                banner.classList.remove('show');
-            }, 3000); // Hides after 3 seconds
+            banner.innerHTML = message; banner.classList.add('show');
+            setTimeout(() => { banner.classList.remove('show'); }, 3000); 
         }
 
         // Live Clock
@@ -323,7 +702,6 @@
 
         let allExamsData = {}; 
 
-        // Load Exams
         async function loadAvailableExams() {
             const liveExamsListDiv = document.getElementById('liveExamsList');
             const practiceExamSelector = document.getElementById('practiceExamSelector');
@@ -339,12 +717,8 @@
                 practiceExamSelector.innerHTML = '<option value="">-- Select a Practice Exam --</option>';
                 publicExamSelector.innerHTML = '<option value="">-- Select Exam --</option>';
                 
-                let liveExamsCount = 0; 
-                let practiceExamsCount = 0;
-                const currentTime = new Date().getTime();
-                
-                let newlyLiveExam = null;
-                let newlyPublishedExam = null;
+                let liveExamsCount = 0; let practiceExamsCount = 0; const currentTime = new Date().getTime();
+                let newlyLiveExam = null; let newlyPublishedExam = null;
 
                 if (querySnapshot.empty) {
                     liveExamsListDiv.innerHTML = "<p style='color: #888; font-size: 13px; text-align: center;'>No exams available right now.</p>";
@@ -373,23 +747,17 @@
                             practiceExamSelector.appendChild(optionPractice);
                         } 
                         else if (exam.status === "active") {
-                            
-                            // 🟢 SMART NOTIFICATION LOGIC (Fixed bug to only show newest) 🟢
                             if (exam.publishTime && currentTime < exam.publishTime) {
-                                // It is Live Now
                                 if (!localStorage.getItem('notified_live_' + examId)) {
-                                    if (!newlyLiveExam) newlyLiveExam = exam.title; // Lock to only the newest one
+                                    if (!newlyLiveExam) newlyLiveExam = exam.title; 
                                     localStorage.setItem('notified_live_' + examId, 'true');
                                 }
                             }
-
                             if (exam.publishTime && currentTime >= exam.publishTime) {
-                                // Result Published
                                 if (!localStorage.getItem('notified_result_' + examId)) {
-                                    if (!newlyPublishedExam) newlyPublishedExam = exam.title; // Lock to only the newest one
+                                    if (!newlyPublishedExam) newlyPublishedExam = exam.title; 
                                     localStorage.setItem('notified_result_' + examId, 'true');
                                 }
-
                                 practiceExamsCount++;
                                 const optionPractice = document.createElement('option');
                                 optionPractice.value = examId;
@@ -401,7 +769,6 @@
                                 const publishTextHTML = `<span class="publish-time">📢 End: ${formatResultTime(exam.publishTime)}</span>`;
                                 const item = document.createElement('div'); item.className = 'exam-item';
                                 item.innerHTML = `<div class="meta-info"><div class="exam-name">${exam.title}</div><div class="exam-time">⏱ ${exam.duration} Min</div>${publishTextHTML}</div><a href="exam.html?id=${examId}" class="start-btn">Start</a>`;
-                                
                                 liveExamsListDiv.prepend(item);
                             }
                         }
@@ -409,54 +776,41 @@
                 });
 
                 if (liveExamCountDisplay) liveExamCountDisplay.innerText = `(${liveExamsCount})`;
+                if (liveExamsCount === 0) liveExamsListDiv.innerHTML = "<p style='color: #888; font-size: 13px; text-align: center; margin-top: 10px;'>No live exams right now.</p>"; 
+                if (practiceExamsCount === 0) { practiceExamSelector.innerHTML = '<option value="">-- No practice exams available --</option>'; startPracticeBtn.disabled = true; startPracticeBtn.style.opacity = "0.5"; } 
+                else { startPracticeBtn.disabled = false; startPracticeBtn.style.opacity = "1"; }
 
-                if (liveExamsCount === 0) { 
-                    liveExamsListDiv.innerHTML = "<p style='color: #888; font-size: 13px; text-align: center; margin-top: 10px;'>No live exams right now.</p>"; 
-                }
-                
-                if (practiceExamsCount === 0) { 
-                    practiceExamSelector.innerHTML = '<option value="">-- No practice exams available --</option>'; 
-                    startPracticeBtn.disabled = true; startPracticeBtn.style.opacity = "0.5"; 
-                } else {
-                    startPracticeBtn.disabled = false; startPracticeBtn.style.opacity = "1";
-                }
+                if (newlyLiveExam) showNotification(`🚀 <span>New Exam Live:</span> ${newlyLiveExam}`);
+                else if (newlyPublishedExam) showNotification(`🏆 <span>Merit List Published:</span> ${newlyPublishedExam}`);
 
-                // 🟢 TRIGGER NOTIFICATIONS 🟢
-                if (newlyLiveExam) {
-                    showNotification(`🚀 <span>New Exam Live:</span> ${newlyLiveExam}`);
-                } else if (newlyPublishedExam) {
-                    showNotification(`🏆 <span>Merit List Published:</span> ${newlyPublishedExam}`);
-                }
-
-            } catch (error) { 
-                liveExamsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 10px;'>Error loading exams.</p>"; 
-            }
+            } catch (error) { liveExamsListDiv.innerHTML = "<p style='color: #ff5252; text-align: center; margin-top: 10px;'>Error loading exams.</p>"; }
         }
         
         loadAvailableExams();
 
         document.getElementById('startPracticeBtn').addEventListener('click', () => {
             const selectedId = document.getElementById('practiceExamSelector').value;
-            if(selectedId) { 
-                window.location.href = `exam.html?id=${selectedId}`; 
-            } else { 
+            if(selectedId) { window.location.href = `exam.html?id=${selectedId}`; } 
+            else { 
                 Swal.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Please select a practice exam from the list first.',
-                    confirmButtonText: 'OK'
+                    icon: 'warning', title: 'Oops...', text: 'Please select a practice exam from the list first.', confirmButtonText: 'OK',
+                    background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                    color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
                 });
             }
         });
 
-        // Merit List PDF Logic
+        // Merit List PDF
         const meritListDisplay = document.getElementById('meritListDisplay'); const publicExamSelector = document.getElementById('publicExamSelector');
         publicExamSelector.addEventListener('change', async (e) => {
             const examId = e.target.value;
             if (!examId) { meritListDisplay.innerHTML = `<p style="color: #888; font-size: 12px;">Select an exam to check status.</p>`; return; }
             const exam = allExamsData[examId]; const currentTime = new Date().getTime();
             if (exam.publishTime && currentTime < exam.publishTime) {
-                meritListDisplay.innerHTML = `<p style="color: #ffb74d; font-size: 13px; font-weight: bold; background: #2c2c38; padding: 10px; border-radius: 12px; width: 100%; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.02);">🔒 Merit list will be published at:<br> <span style="color:#00bcd4;">${formatResultTime(exam.publishTime)}</span></p>`;
+                const isLight = document.body.classList.contains('light-mode');
+                const bg = isLight ? '#E8E0D5' : '#2c2c38';
+                const textCol = isLight ? '#664C28' : '#ffb74d';
+                meritListDisplay.innerHTML = `<p style="color: ${textCol}; font-size: 13px; font-weight: bold; background: ${bg}; padding: 10px; border-radius: 12px; width: 100%; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2), inset -1px -1px 3px rgba(255,255,255,0.1);">🔒 Merit list will be published at:<br> <span style="color:#00bcd4;">${formatResultTime(exam.publishTime)}</span></p>`;
             } else {
                 meritListDisplay.innerHTML = `<button id="downloadMeritPdfBtn" class="action-btn btn-green" style="margin-top: 0; padding: 12px;">📥 Download Merit List (PDF)</button>`;
                 document.getElementById('downloadMeritPdfBtn').addEventListener('click', async () => { await generateMeritListPDF(examId, exam.title); });
@@ -469,17 +823,13 @@
                 const q = query(collection(db, "results"), where("examId", "==", examId)); const snapshot = await getDocs(q);
                 if (snapshot.empty) { 
                     Swal.fire({
-                        icon: 'info',
-                        title: 'Empty List',
-                        text: 'No submissions found for this exam yet.',
-                        confirmButtonText: 'OK'
+                        icon: 'info', title: 'Empty List', text: 'No submissions found for this exam yet.', confirmButtonText: 'OK',
+                        background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                        color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
                     });
-                    btn.innerHTML = originalText; btn.disabled = false; 
-                    return; 
+                    btn.innerHTML = originalText; btn.disabled = false; return; 
                 }
-                let submissions = [];
-                snapshot.forEach(doc => { submissions.push(doc.data()); });
-                submissions.sort((a, b) => b.score - a.score);
+                let submissions = []; snapshot.forEach(doc => { submissions.push(doc.data()); }); submissions.sort((a, b) => b.score - a.score);
                 
                 const { jsPDF } = window.jspdf; const doc = new jsPDF();
                 doc.setFontSize(18); doc.setTextColor(33, 33, 33); doc.text(`${examTitle} | Hridoy Bosunia`, 14, 20); let finalY = 25;
@@ -495,12 +845,10 @@
                 doc.save(`Merit_List_${examTitle.replace(/\s+/g, '_')}.pdf`);
             } catch (error) { 
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Error Generating PDF',
-                    text: 'Failed to generate PDF. Please try again later.',
-                    confirmButtonText: 'OK'
+                    icon: 'error', title: 'Error Generating PDF', text: 'Failed to generate PDF. Please try again later.', confirmButtonText: 'OK',
+                    background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                    color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
                 });
-                console.error(error); 
             }
             btn.innerHTML = originalText; btn.disabled = false;
         }
