@@ -14,10 +14,11 @@
         body { 
             background-color: #121218; color: #ffffff; min-height: 100vh; display: flex; 
             justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-x: hidden; position: relative;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         /* 🟢 Background Blobs 🟢 */
-        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
+        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; transition: 0.4s; }
         .blob { position: absolute; filter: blur(90px); opacity: 0.3; animation: float 12s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #00bcd4; top: -10%; left: -5%; animation-delay: 0s; }
         .blob2 { width: 400px; height: 400px; background: #2196f3; bottom: -10%; right: -5%; animation-delay: 3s; }
@@ -29,27 +30,26 @@
         .glass-container { 
             background: #1a1a22; border-radius: 35px; padding: 40px 30px; width: 100%; max-width: 800px; 
             box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4);
-            border: none; position: relative; z-index: 10;
+            border: 1px solid rgba(255,255,255,0.02); position: relative; z-index: 10; transition: 0.4s;
         }
 
-        h1, h2 { text-align: center; margin-bottom: 20px; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.3);}
+        h1, h2 { text-align: center; margin-bottom: 20px; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.3); transition: 0.4s;}
         #login-section { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 50px 0; }
         
         #exam-section, #result-section { display: none; }
         
         /* 🟢 STICKY TIMER & PROGRESS TRACKER (Centered) 🟢 */
         .user-info { 
-            background: rgba(32, 32, 40, 0.95); padding: 15px 25px; border-radius: 20px; margin-bottom: 25px; border: none;
+            background: rgba(32, 32, 40, 0.95); padding: 15px 25px; border-radius: 20px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.02);
             display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px;
             box-shadow: 6px 6px 12px rgba(0,0,0,0.5), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px);
-            position: sticky; top: 15px; z-index: 9999;
+            backdrop-filter: blur(10px); position: sticky; top: 15px; z-index: 9999; transition: 0.4s;
         }
         
         #examTimer { 
             font-size: 20px; font-weight: bold; color: #ff5252; padding: 10px 25px; border-radius: 14px; 
             background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); letter-spacing: 2px;
-            text-align: center; width: 100%; max-width: 250px;
+            text-align: center; width: 100%; max-width: 250px; transition: 0.4s;
         }
 
         #progressTracker {
@@ -58,31 +58,32 @@
         
         /* Claymorphism: Inner Boxes */
         .question-card { 
-            background: #202028; padding: 25px; border-radius: 20px; margin-bottom: 20px; border: none;
+            background: #202028; padding: 25px; border-radius: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.02);
             box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.3);
-            user-select: none; -webkit-user-select: none;
+            user-select: none; -webkit-user-select: none; transition: 0.4s;
         }
         .question-card::after { content: ""; display: table; clear: both; }
 
         .marking-rules, .roll-input-box, .breakdown-box { 
-            background: #202028; padding: 25px; border-radius: 20px; margin-bottom: 20px; border: none;
+            background: #202028; padding: 25px; border-radius: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.02);
             box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.3);
+            transition: 0.4s;
         }
 
-        .question-text { font-size: 18px; margin-bottom: 15px; color: #e0e0e0; font-weight: bold; line-height: 1.4;}
+        .question-text { font-size: 18px; margin-bottom: 15px; color: #e0e0e0; font-weight: bold; line-height: 1.4; transition: 0.4s;}
         
         /* 🟢 Claymorphism: Inset Options 🟢 */
         .option-label { 
             display: flex; align-items: center; padding: 14px 18px; margin-bottom: 12px; border-radius: 16px; cursor: pointer; 
-            background: #15151a; border: none; color: #b3b3b3; transition: all 0.3s ease;
+            background: #15151a; border: 1px solid rgba(255,255,255,0.02); color: #b3b3b3; transition: all 0.3s ease;
             box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02);
         }
         .option-label:hover { background: #1a1a20; color: #fff; }
-        input[type="radio"] { margin-right: 15px; accent-color: #00bcd4; transform: scale(1.3); cursor: pointer;}
+        input[type="radio"] { margin-right: 15px; accent-color: #00bcd4; transform: scale(1.3); cursor: pointer; transition: 0.4s;}
         
         /* 🟢 SELECTED OPTION COLOR CHANGE 🟢 */
         .option-label.selected {
-            background: #00bcd4; color: #000; font-weight: bold;
+            background: #00bcd4; color: #000; font-weight: bold; border-color: #00bcd4;
             box-shadow: 4px 4px 10px rgba(0,188,212,0.4), inset 2px 2px 5px rgba(255,255,255,0.4);
             transform: scale(1.02);
         }
@@ -97,7 +98,7 @@
 
         /* Claymorphism: Buttons */
         .login-btn, .show-answers-btn { 
-            padding: 14px 28px; border-radius: 16px; text-decoration: none; font-size: 16px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s;
+            padding: 14px 28px; border-radius: 16px; text-decoration: none; font-size: 16px; font-weight: bold; border: 1px solid rgba(255,255,255,0.02); cursor: pointer; transition: 0.3s;
             background: #252530; color: #00bcd4;
             box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 2px 2px 5px rgba(255,255,255,0.05), inset -4px -4px 8px rgba(0,0,0,0.3);
         }
@@ -105,9 +106,9 @@
         .show-answers-btn { width: 100%; margin-top: 20px; }
 
         .submit-btn { 
-            width: 100%; padding: 18px; margin-top: 25px; border-radius: 18px; text-decoration: none; font-weight: bold; font-size: 18px; border: none; cursor: pointer;
+            width: 100%; padding: 18px; margin-top: 25px; border-radius: 18px; text-decoration: none; font-weight: bold; font-size: 18px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;
             background: #00bcd4; color: #000; letter-spacing: 1px; text-transform: uppercase;
-            box-shadow: 6px 6px 15px rgba(0,188,212,0.3), -4px -4px 10px rgba(255,255,255,0.05), inset 3px 3px 6px rgba(255,255,255,0.4), inset -4px -4px 10px rgba(0,0,0,0.2); transition: 0.2s;
+            box-shadow: 6px 6px 15px rgba(0,188,212,0.3), -4px -4px 10px rgba(255,255,255,0.05), inset 3px 3px 6px rgba(255,255,255,0.4), inset -4px -4px 10px rgba(0,0,0,0.2); transition: 0.3s;
         }
         .submit-btn:active { box-shadow: inset 6px 6px 15px rgba(0,0,0,0.4), inset -2px -2px 5px rgba(255,255,255,0.1); transform: scale(0.96) translateY(2px); }
 
@@ -116,16 +117,16 @@
         .marking-rules { border-left: 5px solid #ffb74d; }
         .marking-rules span { color: #ffb74d; font-weight: bold; }
         
-        .roll-input-box label { display: block; margin-bottom: 12px; color: #00bcd4; font-weight: bold; font-size: 16px; }
+        .roll-input-box label { display: block; margin-bottom: 12px; color: #00bcd4; font-weight: bold; font-size: 16px; transition: 0.4s;}
         .roll-input-box input { 
-            width: 100%; padding: 16px; border-radius: 16px; border: none; color: #fff; outline: none; font-size: 16px; font-weight: bold;
-            background: #15151a; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); transition: 0.3s;
+            width: 100%; padding: 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.02); color: #fff; outline: none; font-size: 16px; font-weight: bold;
+            background: #15151a; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); transition: 0.4s;
         }
         .roll-input-box input:focus { box-shadow: inset 6px 6px 12px rgba(0,0,0,0.9), 0 0 15px rgba(0, 188, 212, 0.3); }
 
         .breakdown-box { display: flex; justify-content: space-around; width: 100%; padding: 30px 20px; margin-bottom: 25px; }
         .stat-item { text-align: center; }
-        .stat-label { font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #a0a0b0; text-transform: uppercase;}
+        .stat-label { font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #a0a0b0; text-transform: uppercase; transition: 0.4s;}
         .stat-value { font-size: 32px; font-weight: bold; }
         
         .practice-badge { 
@@ -133,24 +134,66 @@
             box-shadow: 3px 3px 8px rgba(0,230,118,0.3), inset 2px 2px 4px rgba(255,255,255,0.4);
         }
         
-        #practiceAnswers { display: none; margin-top: 30px; border-top: 2px solid rgba(255,255,255,0.05); padding-top: 30px; }
+        #practiceAnswers { display: none; margin-top: 30px; border-top: 2px solid rgba(255,255,255,0.05); padding-top: 30px; transition: 0.4s;}
         .review-card { 
-            background: #202028; padding: 20px; border-radius: 16px; margin-bottom: 18px; border: none; border-left: 6px solid #333;
-            box-shadow: 5px 5px 12px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.03);
+            background: #202028; padding: 20px; border-radius: 16px; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.02); border-left: 6px solid #333;
+            box-shadow: 5px 5px 12px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.03); transition: 0.4s;
         }
         .correct-ans-card { border-left-color: #00e676; }
         .wrong-ans-card { border-left-color: #ff5252; }
         .skipped-ans-card { border-left-color: #ffb74d; }
         .review-q { font-weight: bold; margin-bottom: 10px; font-size: 16px; line-height: 1.4;}
-        .review-a { font-size: 15px; color: #b3b3b3; line-height: 1.5;}
+        .review-a { font-size: 15px; color: #b3b3b3; line-height: 1.5; transition: 0.4s;}
         .review-a span { font-weight: bold; }
 
         .swal2-popup { background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important; box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important; }
         .swal2-title { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
         .swal2-confirm { background: #00bcd4 !important; color: #000 !important; font-weight: bold !important; border-radius: 12px !important; box-shadow: 3px 3px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.3) !important; }
+
+        /* 🟡🟢 LIGHT MODE STYLES (Imported from index.html) 🟢🟡 */
+        body.light-mode { background-color: #FFFFF0; color: #4A3B2C; background-image: none; } 
+        body.light-mode .bg-blobs { opacity: 0.1; filter: blur(100px); }
+        
+        body.light-mode .glass-container { background: #FDFCF9; border: 1px solid rgba(102, 76, 40, 0.4); box-shadow: 12px 12px 24px rgba(102, 76, 40, 0.15), -8px -8px 20px #ffffff, inset 4px 4px 10px #ffffff, inset -8px -8px 18px rgba(102, 76, 40, 0.05); }
+        body.light-mode h1, body.light-mode h2 { color: #664C28; text-shadow: 0 0 10px rgba(102, 76, 40, 0.2); }
+        
+        body.light-mode .user-info { background: rgba(253, 252, 249, 0.95); border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: 6px 6px 12px rgba(102, 76, 40, 0.15), -4px -4px 10px #ffffff, inset 2px 2px 4px #ffffff, inset -3px -3px 8px rgba(102, 76, 40, 0.05); }
+        body.light-mode #examTimer { background: #F0EBE1; box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 4px #ffffff; }
+        body.light-mode #progressTracker { color: #664C28; }
+        
+        body.light-mode .question-card, body.light-mode .marking-rules, body.light-mode .roll-input-box, body.light-mode .breakdown-box { background: #F0EBE1; border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: 6px 6px 12px rgba(102, 76, 40, 0.15), -4px -4px 10px #ffffff, inset 2px 2px 4px #ffffff, inset -3px -3px 8px rgba(102, 76, 40, 0.05); }
+        body.light-mode .question-text { color: #4A3B2C; }
+        
+        body.light-mode .option-label { background: #FDFCF9; color: #664C28; border: 1px solid rgba(102, 76, 40, 0.2); box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.1), inset -2px -2px 4px #ffffff; }
+        body.light-mode .option-label:hover { background: #E8E0D5; }
+        body.light-mode .option-label.selected { background: #664C28; color: #FFFFF0; box-shadow: 4px 4px 10px rgba(102, 76, 40, 0.4), inset 2px 2px 5px rgba(255,255,255,0.2); border-color: #664C28; }
+        body.light-mode .option-label.selected input[type="radio"] { accent-color: #FFFFF0; }
+        
+        body.light-mode .clear-selection-btn { color: #8A7254; }
+        body.light-mode .clear-selection-btn:hover { background: rgba(102, 76, 40, 0.1); color: #ff5252; }
+        
+        body.light-mode .login-btn, body.light-mode .show-answers-btn { background: #F0EBE1; color: #664C28; border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: 6px 6px 12px rgba(102, 76, 40, 0.15), -4px -4px 10px #ffffff, inset 2px 2px 5px #ffffff, inset -4px -4px 8px rgba(102, 76, 40, 0.05); }
+        body.light-mode .submit-btn { background: #664C28; color: #FFFFF0; border: 1px solid rgba(102, 76, 40, 0.4); box-shadow: 4px 4px 10px rgba(102, 76, 40, 0.3), -2px -2px 5px #ffffff, inset 2px 2px 4px rgba(255,255,255,0.2); }
+        body.light-mode .submit-btn:active { box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4); color: #FFFFF0;}
+        
+        body.light-mode .roll-input-box label { color: #664C28; }
+        body.light-mode .roll-input-box input { background: #FDFCF9; color: #4A3B2C; border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff; }
+        body.light-mode .roll-input-box input:focus { box-shadow: inset 6px 6px 12px rgba(102, 76, 40, 0.2), 0 0 15px rgba(102, 76, 40, 0.2); }
+        
+        body.light-mode .stat-label { color: #8A7254; }
+        
+        body.light-mode .review-card { background: #F0EBE1; box-shadow: 5px 5px 12px rgba(102, 76, 40, 0.15), -3px -3px 8px #ffffff, inset 2px 2px 4px #ffffff; border-right: 1px solid rgba(102, 76, 40, 0.2); border-top: 1px solid rgba(102, 76, 40, 0.2); border-bottom: 1px solid rgba(102, 76, 40, 0.2); }
+        body.light-mode .review-a { color: #664C28; }
+        body.light-mode #resultSaveMsg { color: #8A7254; }
+        body.light-mode a { color: #664C28 !important; }
+        body.light-mode #practiceAnswers { border-color: rgba(102, 76, 40, 0.2); }
     </style>
 </head>
 <body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false">
+
+    <script>
+        if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }
+    </script>
 
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
 
@@ -236,7 +279,7 @@
         let isPracticeMode = false;
         
         let isSubmitting = false; 
-        let totalQCount = 0; // For Live Progress Tracker
+        let totalQCount = 0; 
         
         const loginSection = document.getElementById('login-section'); const examSection = document.getElementById('exam-section');
         const resultSection = document.getElementById('result-section'); const questionsContainer = document.getElementById('questionsContainer');
@@ -244,7 +287,6 @@
         
         let tabSwitchCount = 0; let isExamActive = false;
         
-        // 🟢 SPLIT SCREEN TRACKER 🟢
         let usedSplitScreen = "No";
         function checkWindowSize() {
             if (window.innerWidth < window.screen.width * 0.8) {
@@ -260,7 +302,11 @@
                 
                 const examDocSnap = await getDoc(doc(db, "exams", currentExamId)); 
                 if (!examDocSnap.exists()) { 
-                    Swal.fire({ icon: 'error', title: 'Not Found', text: 'Exam not found!' }).then(() => { window.location.href = "index.html"; }); 
+                    Swal.fire({ 
+                        icon: 'error', title: 'Not Found', text: 'Exam not found!', 
+                        background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                        color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
+                    }).then(() => { window.location.href = "index.html"; }); 
                     return; 
                 }
                 
@@ -279,7 +325,11 @@
                 if(!isPracticeMode) {
                     const resSnap = await getDocs(query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", currentExamId)));
                     if (!resSnap.empty) { 
-                        Swal.fire({ icon: 'info', title: 'Already Submitted', text: 'You have already submitted this live exam!' }).then(() => { window.location.href = "index.html"; }); 
+                        Swal.fire({ 
+                            icon: 'info', title: 'Already Submitted', text: 'You have already submitted this live exam!',
+                            background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                            color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
+                        }).then(() => { window.location.href = "index.html"; }); 
                         return; 
                     }
                 }
@@ -293,15 +343,17 @@
 
         document.getElementById('loginBtn').addEventListener('click', () => { signInWithPopup(auth, provider).catch(console.error); });
 
-        // 🟢 SWEETALERT ANTI-CHEAT 🟢
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && isExamActive && timeLeft > 0 && !isPracticeMode) {
                 tabSwitchCount++; 
-                if (tabSwitchCount === 1) Swal.fire({ icon: 'warning', title: 'WARNING (1/5)', text: 'You have switched tabs! It is strictly prohibited.' });
-                else if (tabSwitchCount > 1 && tabSwitchCount < 5) Swal.fire({ icon: 'warning', title: `WARNING (${tabSwitchCount}/5)`, text: 'Do not switch tabs or minimize the browser!' });
-                else if (tabSwitchCount === 5) Swal.fire({ icon: 'error', title: 'FINAL WARNING (5/5)', text: 'ONE MORE TIME, and exam will auto-submit.' });
+                const bgCol = document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22';
+                const textCol = document.body.classList.contains('light-mode') ? '#664C28' : '#fff';
+
+                if (tabSwitchCount === 1) Swal.fire({ icon: 'warning', title: 'WARNING (1/5)', text: 'You have switched tabs! It is strictly prohibited.', background: bgCol, color: textCol });
+                else if (tabSwitchCount > 1 && tabSwitchCount < 5) Swal.fire({ icon: 'warning', title: `WARNING (${tabSwitchCount}/5)`, text: 'Do not switch tabs or minimize the browser!', background: bgCol, color: textCol });
+                else if (tabSwitchCount === 5) Swal.fire({ icon: 'error', title: 'FINAL WARNING (5/5)', text: 'ONE MORE TIME, and exam will auto-submit.', background: bgCol, color: textCol });
                 else if (tabSwitchCount >= 6) { 
-                    Swal.fire({ icon: 'error', title: 'Terminated', text: 'Exam auto-submitted due to rule violation.' }); 
+                    Swal.fire({ icon: 'error', title: 'Terminated', text: 'Exam auto-submitted due to rule violation.', background: bgCol, color: textCol }); 
                     submitExamCore(); 
                 }
             }
@@ -332,24 +384,21 @@
                     questionsContainer.appendChild(qCard); questionNumber++;
                 });
 
-                // Set initial progress tracker count
                 totalQCount = Object.keys(questionsDataList).length;
                 updateProgress();
 
             } catch (error) { console.error("Error loading exam: ", error); }
         }
 
-        // 🟢 LIVE PROGRESS TRACKER LOGIC 🟢
         function updateProgress() {
             if(totalQCount === 0) return;
-            // Count how many questions have at least one radio button checked
             const answeredCount = Object.keys(questionsDataList).filter(qId => document.querySelector(`input[name="${qId}"]:checked`)).length;
             progressTracker.innerText = `Answered: ${answeredCount} / ${totalQCount}`;
             
             if(answeredCount === totalQCount) {
-                progressTracker.style.color = "#00e676"; // Green when all answered
+                progressTracker.style.color = "#00e676"; 
             } else {
-                progressTracker.style.color = "#00bcd4"; // Cyan normally
+                progressTracker.style.color = document.body.classList.contains('light-mode') ? "#664C28" : "#00bcd4"; 
             }
         }
 
@@ -358,7 +407,7 @@
                 const name = e.target.name;
                 document.querySelectorAll(`input[name="${name}"]`).forEach(radio => { radio.parentElement.classList.remove('selected'); });
                 e.target.parentElement.classList.add('selected');
-                updateProgress(); // Update progress when an option is selected
+                updateProgress(); 
             }
         });
 
@@ -369,7 +418,7 @@
                     radio.checked = false;
                     radio.parentElement.classList.remove('selected'); 
                 });
-                updateProgress(); // Update progress when an option is cleared
+                updateProgress(); 
             }
         });
 
@@ -381,7 +430,11 @@
             } else { timeLeft = totalMinutes * 60; }
             
             if (timeLeft <= 0) { 
-                Swal.fire({ icon: 'warning', title: 'Time is up!', text: 'Your time has already expired.', confirmButtonText: 'OK' }).then(() => submitExamCore()); 
+                Swal.fire({ 
+                    icon: 'warning', title: 'Time is up!', text: 'Your time has already expired.', confirmButtonText: 'OK',
+                    background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                    color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
+                }).then(() => submitExamCore()); 
                 return; 
             }
             updateTimerUI();
@@ -390,7 +443,11 @@
                 timeLeft--; updateTimerUI();
                 if (timeLeft <= 0) { 
                     clearInterval(timerInterval); if(!isPracticeMode) clearInterval(saveInterval); 
-                    Swal.fire({ icon: 'info', title: "Time's up!", text: 'Auto-submitting your exam.', showConfirmButton: false, timer: 3000 }); 
+                    Swal.fire({ 
+                        icon: 'info', title: "Time's up!", text: 'Auto-submitting your exam.', showConfirmButton: false, timer: 3000,
+                        background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                        color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
+                    }); 
                     submitExamCore(); 
                 }
             }, 1000);
@@ -428,7 +485,6 @@
             }
             score = parseFloat(score.toFixed(2));
 
-            // 🟢 DETAILED DEVICE & OS TRACKER 🟢
             let ua = navigator.userAgent;
             let os = "Unknown OS"; let browser = "Unknown Browser";
             if(ua.includes("Win")) os = "Windows"; else if(ua.includes("Mac")) os = "MacOS"; else if(ua.includes("Android")) os = "Android"; else if(ua.includes("iPhone") || ua.includes("iPad")) os = "iOS"; else if(ua.includes("Linux")) os = "Linux";
@@ -436,13 +492,11 @@
             if(ua.includes("Chrome") && !ua.includes("Edg") && !ua.includes("OPR")) browser = "Chrome"; else if(ua.includes("Safari") && !ua.includes("Chrome")) browser = "Safari"; else if(ua.includes("Firefox")) browser = "Firefox"; else if(ua.includes("Edg")) browser = "Edge"; else if(ua.includes("OPR") || ua.includes("Opera")) browser = "Opera";
             let detailedDevice = `${browser} on ${os}`;
 
-            // 🟢 NETWORK TYPE TRACKER 🟢
             let networkType = "Unknown Net";
             if (navigator.connection && navigator.connection.effectiveType) {
                 networkType = navigator.connection.effectiveType.toUpperCase(); 
             }
 
-            // 🟢 TIME TAKEN TRACKER 🟢
             let timeTakenSec = (examDurationMinutes * 60) - timeLeft;
             let timeTakenStr = `${Math.floor(timeTakenSec / 60)}m ${timeTakenSec % 60}s`;
 
@@ -461,8 +515,9 @@
                     const timerDocId = userEmail + "_" + currentExamId;
                     await setDoc(doc(db, "user_timers", timerDocId), { timeLeft: 0 }, { merge: true });
                 } else {
-                    document.getElementById('resultTitle').innerText = "Practice Complete!";
-                    document.getElementById('resultTitle').style.color = "#00e676";
+                    const resTitle = document.getElementById('resultTitle');
+                    resTitle.innerText = "Practice Complete!";
+                    resTitle.style.color = "#00e676";
                     document.getElementById('resultSaveMsg').innerText = "This was a practice attempt. Your score was not saved to the leaderboards.";
                     generatePracticeReview(userSelectedAnswers);
                 }
@@ -473,11 +528,19 @@
                 document.getElementById('countWrong').innerText = wrongCount;
                 document.getElementById('countSkipped').innerText = skippedCount;
                 
-                Swal.fire({ icon: 'success', title: 'Success!', text: 'Your exam has been submitted.', confirmButtonText: 'Great' });
+                Swal.fire({ 
+                    icon: 'success', title: 'Success!', text: 'Your exam has been submitted.', confirmButtonText: 'Great',
+                    background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                    color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
+                });
                 confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#00bcd4', '#00e676', '#ff5252'] });
 
             } catch (error) { 
-                Swal.fire({ icon: 'error', title: 'Oops...', text: 'Error submitting exam. Check your connection.' });
+                Swal.fire({ 
+                    icon: 'error', title: 'Oops...', text: 'Error submitting exam. Check your connection.',
+                    background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                    color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
+                });
                 submitBtn.innerText = "Submit Exam"; submitBtn.disabled = false; 
                 isSubmitting = false; 
             }
@@ -487,7 +550,7 @@
             const reviewContainer = document.getElementById('practiceAnswers');
             const showBtn = document.getElementById('showAnswersBtn');
             showBtn.style.display = "block";
-            let html = '<h3 style="margin-bottom: 20px; color: #00bcd4;">Detailed Answer Review:</h3>';
+            let html = `<h3 style="margin-bottom: 20px; color: ${document.body.classList.contains('light-mode') ? '#664C28' : '#00bcd4'};">Detailed Answer Review:</h3>`;
             let qNum = 1;
 
             for (let qId in questionsDataList) {
