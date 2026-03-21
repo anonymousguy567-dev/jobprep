@@ -5,20 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniDocs MCQ Portal</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
-    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TNSE25JEYN"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
+
       gtag('config', 'G-TNSE25JEYN');
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -38,18 +36,7 @@
 
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
 
-        /* 🟢 Clean Scattered Stars (8 on Desktop, 4 on Mobile) 🟢 */
-        .bg-star { position: absolute; pointer-events: none; z-index: 25; filter: drop-shadow(0 0 10px rgba(255,215,0,0.6)); transition: 0.4s;}
-        .star-1 { top: 12%; left: 10%; font-size: 24px; }
-        .star-2 { top: 25%; right: 15%; font-size: 30px; }
-        .star-3 { top: 45%; left: 20%; font-size: 18px; }
-        .star-4 { top: 60%; right: 10%; font-size: 26px; }
-        .star-5 { top: 75%; left: 15%; font-size: 22px; }
-        .star-6 { top: 15%; right: 35%; font-size: 16px; }
-        .star-7 { top: 85%; right: 25%; font-size: 28px; }
-        .star-8 { top: 35%; left: 5%; font-size: 20px; }
-
-        /* 🟢 Navbar 🟢 */
+        /* Navbar */
         .navbar {
             position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px;
             display: flex; justify-content: space-between; align-items: center;
@@ -57,9 +44,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 3px 3px 8px rgba(255,255,255,0.05), inset -4px -4px 10px rgba(0,0,0,0.4);
             transition: 0.4s ease;
         }
-        
-        .nav-brand { font-size: 24px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.4); transition: opacity 0.4s ease, color 0.4s ease, font-size 0.4s ease;}
-        .nav-brand.eid-text { font-family: 'Aref Ruqaa', serif; color: #FFD700; font-size: 22px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.4); letter-spacing: 1px; text-transform: none;}
+        .nav-brand { font-size: 24px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.4); transition: 0.4s ease;}
         
         .nav-buttons { display: flex; gap: 15px; align-items: center; }
         .nav-btn {
@@ -73,12 +58,12 @@
         .btn-admin { color: #00bcd4; }
         .btn-talk { color: #00e676; }
         .btn-others { color: #ffb74d; }
-        .btn-theme { color: #ffd700; }
+        .btn-theme { color: #ffd700; padding: 10px 15px; } /* Adjusted padding slightly for the icon */
 
         .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; padding: 5px; z-index: 3000; }
         .hamburger-btn svg { width: 30px; height: 30px; fill: #00bcd4; transition: 0.4s;}
 
-        /* 🟢 Mobile Slide Menu 🟢 */
+        /* Mobile Slide Menu */
         .slide-menu-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
             z-index: 2500; opacity: 0; visibility: hidden; transition: 0.3s ease; backdrop-filter: blur(3px);
@@ -108,7 +93,7 @@
         }
         .mobile-others-content.show { display: flex; }
 
-        /* 🟢 Clock & Apps 🟢 */
+        /* Clock & Apps */
         .live-clock-container {
             position: absolute; top: 90px; left: 30px; z-index: 1000;
             background: #181820; border-radius: 25px; padding: 10px 20px; display: flex; flex-direction: column; align-items: flex-start;
@@ -136,36 +121,8 @@
         .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 12px; text-align: center; transition: 0.3s ease-in-out; }
         .apps-link:hover { background: #202028; color: #00bcd4; box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4), inset -2px -2px 4px rgba(255,255,255,0.02); }
 
-        /* 🟢 NEW: Eid Calligraphy Heading with 2 Hanging Lanterns 🟢 */
-        .header-section { 
-            text-align: center; margin-bottom: 25px; margin-top: 10px; z-index: 10; position: relative;
-        }
-        .header-section h1 { 
-            font-family: 'Aref Ruqaa', serif; font-size: 45px; color: #FFD700; font-weight: 700; 
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.4); letter-spacing: 2px; transition: 0.4s;
-            display: flex; justify-content: center; align-items: center; gap: 15px; 
-        }
-        /* The Hanging Rope effect applied to the lanterns in the heading */
-        .heading-lantern { 
-            font-size: 40px; 
-            filter: drop-shadow(0 0 8px rgba(255,215,0,0.5)); 
-            position: relative; 
-            display: inline-block; 
-        }
-        .heading-lantern::before {
-            content: ''; 
-            position: absolute; 
-            bottom: 85%; /* Rope attaches to the top of the lantern */
-            left: 50%; 
-            width: 2px; 
-            height: 100vh; /* Reaches up and off screen */
-            background: linear-gradient(to top, rgba(255,215,0,0.6), transparent 80%); 
-            transform: translateX(-50%); 
-            z-index: -1;
-        }
-
         /* 🟢 Main Boxes 🟢 */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; z-index: 10; position: relative;}
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1100px; z-index: 10; position: relative; margin-top: 10px;}
 
         .glass-box { 
             background: #1a1a22; border-radius: 35px; padding: 25px 20px; text-align: center; 
@@ -255,20 +212,6 @@
         .submit-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.6); transform: scale(0.97); color: #00e676;}
         .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        /* 🟢 CELEBRATE BUTTON 🟢 */
-        .celebrate-btn {
-            position: fixed; bottom: 25px; right: 25px; background: linear-gradient(135deg, #FFD700, #ffb74d); color: #000; border: none;
-            padding: 14px 22px; border-radius: 30px; font-weight: bold; font-size: 15px; cursor: pointer; z-index: 9999;
-            box-shadow: 0 5px 15px rgba(255, 183, 77, 0.5), inset 2px 2px 5px rgba(255,255,255,0.6); transition: 0.3s;
-            overflow: hidden; 
-        }
-        .celebrate-btn::after {
-            content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.4), rgba(255,255,255,0));
-            transform: skewX(-25deg); animation: shimmer 3.5s infinite;
-        }
-        .celebrate-btn:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255, 183, 77, 0.7); }
-
         /* Notification Banner */
         .notification-banner {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #202028; color: #fff; padding: 15px 30px;
@@ -280,13 +223,13 @@
         .notification-banner.show { top: 30px; }
         .notification-banner span { color: #00bcd4; font-size: 16px; transition: 0.4s;}
 
-        /* 🟡🟢 LIGHT MODE STYLES 🟢🟡 */
+
+        /* 🟡🟢 LIGHT MODE STYLES (Ivory & Donkey Brown) 🟢🟡 */
         body.light-mode { background-color: #FFFFF0; color: #4A3B2C; background-image: none; } 
         body.light-mode .bg-blobs { opacity: 0.1; filter: blur(100px); }
         
         body.light-mode .navbar { background: #FDFCF9; border-bottom: 1px solid rgba(102, 76, 40, 0.1); box-shadow: 0 10px 20px rgba(102, 76, 40, 0.1), inset 3px 3px 8px #ffffff, inset -4px -4px 10px rgba(102, 76, 40, 0.05); }
         body.light-mode .nav-brand { color: #664C28; text-shadow: 0 0 10px rgba(102, 76, 40, 0.2); }
-        body.light-mode .nav-brand.eid-text { color: #664C28; text-shadow: 0 0 10px rgba(102, 76, 40, 0.2); } 
         
         body.light-mode .nav-btn, body.light-mode .apps-menu-btn, body.light-mode .live-clock-container, body.light-mode .close-menu-btn, body.light-mode .slide-menu, body.light-mode .mobile-others-content {
             background: #F0EBE1; color: #664C28; border-color: rgba(102, 76, 40, 0.2);
@@ -300,10 +243,10 @@
         body.light-mode .clock-time { color: #664C28; }
         body.light-mode .clock-date { color: #8A7254; }
 
-        body.light-mode .header-section h1 { color: #664C28; text-shadow: 0 0 10px rgba(102, 76, 40, 0.2); }
-
+        /* 🟢 INCREASED BORDER VISIBILITY FOR LIGHT MODE 🟢 */
         body.light-mode .glass-box {
-            background: #FDFCF9; border: 1px solid rgba(102, 76, 40, 0.4);
+            background: #FDFCF9;
+            border: 1px solid rgba(102, 76, 40, 0.4); /* Made border darker/more opaque */
             box-shadow: 12px 12px 24px rgba(102, 76, 40, 0.15), -8px -8px 20px #ffffff, inset 4px 4px 10px #ffffff, inset -8px -8px 18px rgba(102, 76, 40, 0.05);
         }
         body.light-mode .box-title { color: #664C28; }
@@ -312,7 +255,8 @@
         body.light-mode .footer span { color: #664C28; }
         
         body.light-mode .exam-item {
-            background: #F0EBE1; border: 1px solid rgba(102, 76, 40, 0.3); 
+            background: #F0EBE1;
+            border: 1px solid rgba(102, 76, 40, 0.3); /* Made border darker */
             box-shadow: 4px 4px 10px rgba(102, 76, 40, 0.15), -2px -2px 5px #ffffff, inset 2px 2px 4px #ffffff, inset -3px -3px 6px rgba(102, 76, 40, 0.05);
         }
         body.light-mode .exam-name { color: #4A3B2C; }
@@ -326,7 +270,7 @@
         body.light-mode .start-btn:active, body.light-mode .action-btn:active, body.light-mode .submit-btn:active { box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4); color: #FFFFF0;}
         
         body.light-mode select {
-            background: #F0EBE1; color: #4A3B2C; border: 1px solid rgba(102, 76, 40, 0.3);
+            background: #F0EBE1; color: #4A3B2C; border: 1px solid rgba(102, 76, 40, 0.3); /* Made border darker */
             box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff;
         }
         body.light-mode select option { background: #F0EBE1; color: #4A3B2C; }
@@ -336,12 +280,12 @@
         body.light-mode .apps-link:hover { background: #E8E0D5; box-shadow: inset 2px 2px 5px rgba(102, 76, 40, 0.1); }
 
         body.light-mode .contact-modal {
-            background: #FDFCF9; border: 1px solid rgba(102, 76, 40, 0.4); 
+            background: #FDFCF9; border: 1px solid rgba(102, 76, 40, 0.4); /* Made border darker */
             box-shadow: 15px 15px 30px rgba(102, 76, 40, 0.2), inset 2px 2px 8px #ffffff, inset -4px -4px 15px rgba(102, 76, 40, 0.1);
         }
         body.light-mode .modal-title { color: #664C28; }
         body.light-mode .contact-modal input, body.light-mode .contact-modal textarea {
-            background: #F0EBE1; color: #4A3B2C; border: 1px solid rgba(102, 76, 40, 0.3);
+            background: #F0EBE1; color: #4A3B2C; border: 1px solid rgba(102, 76, 40, 0.3); /* Made border darker */
             box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff;
         }
         body.light-mode .contact-modal input::placeholder, body.light-mode .contact-modal textarea::placeholder { color: #A89B8C; }
@@ -352,7 +296,6 @@
         body.light-mode .notification-banner { background: #FDFCF9; color: #4A3B2C; border-color: rgba(102, 76, 40, 0.2); }
         body.light-mode .notification-banner span { color: #664C28; }
 
-        /* 📱 Mobile Specific Rules 📱 */
         @media (max-width: 768px) { 
             .live-clock-container { display: none; } 
             .notification-banner { width: 90%; font-size: 13px; padding: 12px 20px;}
@@ -360,19 +303,6 @@
             .nav-buttons { display: none; }
             .top-right-bar { display: none; }
             .hamburger-btn { display: block; }
-            
-            /* Hide Calligraphy Heading & Reduce Decors on Mobile */
-            .header-section h1 { font-size: 28px; gap: 8px; }
-            .heading-lantern { font-size: 26px; }
-
-            .star-5, .star-6, .star-7, .star-8 { display: none; } 
-            
-            .star-1 { top: 15%; left: 10%; font-size: 20px; }
-            .star-2 { top: 25%; right: 10%; font-size: 24px; }
-            .star-3 { top: 75%; left: 15%; font-size: 16px; }
-            .star-4 { top: 80%; right: 15%; font-size: 22px; }
-
-            .celebrate-btn { bottom: 15px; right: 15px; padding: 10px 15px; font-size: 12px; }
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -380,17 +310,15 @@
 </head>
 <body>
 
-  
-
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
 
     <div id="notificationBanner" class="notification-banner"></div>
 
     <nav class="navbar">
-        <div class="nav-brand" id="navBrandText">MCQ Portal</div>
+        <div class="nav-brand">MCQ Portal</div>
         
         <div class="nav-buttons">
-            <button class="nav-btn btn-theme" id="themeToggleDesktop">🌞 Light Mode</button>
+            <button class="nav-btn btn-theme" id="themeToggleDesktop">🌞</button>
             <button class="nav-btn btn-talk" id="openTalkModalDesktop">📝 Drop a Note</button>
             <a href="admin.html" class="nav-btn btn-admin">⚙️ Admin</a>
         </div>
@@ -403,7 +331,7 @@
     <div class="slide-menu-overlay" id="slideMenuOverlay"></div>
     <div class="slide-menu" id="slideMenu">
         <button class="close-menu-btn" id="closeMenuBtn">✖</button>
-        <button class="nav-btn btn-theme" id="themeToggleMobile" style="margin-top: 20px;">🌞 Light Mode</button>
+        <button class="nav-btn btn-theme" id="themeToggleMobile" style="margin-top: 20px;">🌞</button>
         <button class="nav-btn btn-talk" id="openTalkModalMobile">📝 Drop a Note</button>
         <a href="admin.html" class="nav-btn btn-admin">⚙️ Admin</a>
         
@@ -429,6 +357,7 @@
                 </div>
 
                 <input type="email" name="email" id="userEmailInput" placeholder="Your Email address" required>
+                
                 <textarea name="message" placeholder="Ideas, Advice, or Bugs..." required></textarea>
                 <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
             </form>
@@ -449,10 +378,6 @@
                 <a href="https://anonymousguy567-dev.github.io/UniDOCS/" target="_blank" class="apps-link">UniDocs Generator</a>
             </div>
         </div>
-    </div>
-
-    <div class="header-section">
-        <h1></h1>
     </div>
 
     <div class="grid-container">
@@ -502,8 +427,6 @@
         </div>
     </div>
 
-    <button id="confettiBtn" class="celebrate-btn">🎉</button>
-
     <div class="footer">
         Developed by <span>UniDocs</span>
     </div>
@@ -524,57 +447,27 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 🟢 Navbar Eid Text Alternator (Every 3 seconds on ALL screens) 🟢
-        const navBrandText = document.getElementById('navBrandText');
-        let showEidText = false;
-        
-        setInterval(() => {
-            showEidText = !showEidText;
-            navBrandText.style.opacity = 0; 
-            
-            setTimeout(() => {
-                if(showEidText) {
-                    navBrandText.innerText = "✨ Eid Mubarak ✨";
-                    navBrandText.classList.add('eid-text');
-                } else {
-                    navBrandText.innerText = "MCQ Portal";
-                    navBrandText.classList.remove('eid-text');
-                }
-                navBrandText.style.opacity = 1; 
-            }, 400); 
-        }, 3000);
-
-        // 🟢 Confetti Celebrate Logic (3 seconds) 🟢
-        const confettiBtn = document.getElementById('confettiBtn');
-        if(confettiBtn) {
-            confettiBtn.addEventListener('click', () => {
-                const duration = 3000; 
-                const end = Date.now() + duration;
-
-                (function frame() {
-                    confetti({ particleCount: 6, angle: 60, spread: 60, origin: { x: 0 }, colors: ['#FFD700', '#00e676', '#ff5252', '#00bcd4'] });
-                    confetti({ particleCount: 6, angle: 120, spread: 60, origin: { x: 1 }, colors: ['#FFD700', '#00e676', '#ff5252', '#00bcd4'] });
-                    if (Date.now() < end) { requestAnimationFrame(frame); }
-                }());
-            });
-        }
-
-        // Theme Toggle Logic
+        // 🟢 Theme Toggle Logic (Light / Dark Mode) 🟢
         const body = document.body;
         const themeToggleDesktop = document.getElementById('themeToggleDesktop');
         const themeToggleMobile = document.getElementById('themeToggleMobile');
 
+        // Check if light mode is saved in LocalStorage
         if (localStorage.getItem('theme') === 'light') {
             body.classList.add('light-mode');
-            themeToggleDesktop.innerHTML = '🌙 Dark Mode';
-            themeToggleMobile.innerHTML = '🌙 Dark Mode';
+            themeToggleDesktop.innerHTML = '🌙';
+            themeToggleMobile.innerHTML = '🌙';
         }
 
         function toggleTheme() {
             body.classList.toggle('light-mode');
             const isLight = body.classList.contains('light-mode');
+            
+            // Save preference
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            const btnText = isLight ? '🌙 ' : '🌞 ';
+            
+            // Update button texts
+            const btnText = isLight ? '🌙' : '🌞';
             themeToggleDesktop.innerHTML = btnText;
             themeToggleMobile.innerHTML = btnText;
         }
@@ -582,7 +475,7 @@
         themeToggleDesktop.addEventListener('click', toggleTheme);
         themeToggleMobile.addEventListener('click', toggleTheme);
 
-        // Mobile Menu & Others Button Logic
+        // 🟢 Mobile Menu & Others Button Logic 🟢
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const slideMenu = document.getElementById('slideMenu');
         const slideMenuOverlay = document.getElementById('slideMenuOverlay');
@@ -593,16 +486,20 @@
         function toggleMenu() {
             slideMenu.classList.toggle('active');
             slideMenuOverlay.classList.toggle('active');
-            if(!slideMenu.classList.contains('active')) { mobileOthersContent.classList.remove('show'); }
+            if(!slideMenu.classList.contains('active')) {
+                mobileOthersContent.classList.remove('show'); 
+            }
         }
 
         hamburgerBtn.addEventListener('click', toggleMenu);
         closeMenuBtn.addEventListener('click', toggleMenu);
         slideMenuOverlay.addEventListener('click', toggleMenu);
 
-        mobileOthersBtn.addEventListener('click', () => { mobileOthersContent.classList.toggle('show'); });
+        mobileOthersBtn.addEventListener('click', () => {
+            mobileOthersContent.classList.toggle('show');
+        });
 
-        // Contact Form Modal & AJAX Submit Logic
+        // 🟢 Contact Form Modal & AJAX Submit Logic 🟢
         const talkModalOverlay = document.getElementById('talkModalOverlay');
         const closeTalkModal = document.getElementById('closeTalkModal');
         const openTalkModalDesktop = document.getElementById('openTalkModalDesktop');
@@ -620,9 +517,11 @@
 
         openTalkModalDesktop.addEventListener('click', openModal);
         openTalkModalMobile.addEventListener('click', openModal);
+
         closeTalkModal.addEventListener('click', () => { talkModalOverlay.classList.remove('active'); });
         talkModalOverlay.addEventListener('click', (e) => { if (e.target === talkModalOverlay) talkModalOverlay.classList.remove('active'); });
 
+        // Anonymous Checkbox
         anonCheckbox.addEventListener('change', function() {
             if (this.checked) {
                 userEmailInput.value = "anonymous@mcqportal.com"; 
@@ -637,8 +536,10 @@
             }
         });
 
+        // AJAX Form Submission (No Redirect)
         contactForm.addEventListener('submit', async function(e) {
             e.preventDefault(); 
+
             const wasEmailDisabled = userEmailInput.disabled;
             if (wasEmailDisabled) userEmailInput.disabled = false; 
 
@@ -646,34 +547,51 @@
             if (wasEmailDisabled) userEmailInput.disabled = true; 
 
             const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Sending..."; submitBtn.disabled = true;
+            submitBtn.innerText = "Sending...";
+            submitBtn.disabled = true;
 
             try {
                 const response = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData });
+
                 if (response.ok) {
                     talkModalOverlay.classList.remove('active');
                     contactForm.reset();
+                    
                     if(anonCheckbox.checked) {
-                        anonCheckbox.checked = false; userEmailInput.disabled = false; userEmailInput.style.opacity = "1"; formFromName.value = "MCQ Portal User";
+                        anonCheckbox.checked = false;
+                        userEmailInput.disabled = false;
+                        userEmailInput.style.opacity = "1";
+                        formFromName.value = "MCQ Portal User";
                     }
+
                     Swal.fire({
-                        icon: 'success', title: 'Sent!', text: 'Your note has been securely dropped to the admin.', confirmButtonText: 'Great!',
+                        icon: 'success',
+                        title: 'Sent!',
+                        text: 'Your note has been securely dropped to the admin.',
+                        confirmButtonText: 'Great!',
                         background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
                         color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
                     });
-                } else { throw new Error("Submission failed"); }
+                } else {
+                    throw new Error("Submission failed");
+                }
             } catch (error) {
                 Swal.fire({
                     icon: 'error', title: 'Oops!', text: 'Something went wrong. Please try again later.',
                     background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
                     color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
                 });
-            } finally { submitBtn.innerText = originalText; submitBtn.disabled = false; }
+            } finally {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
         });
 
+        // Notification Banner
         function showNotification(message) {
             const banner = document.getElementById('notificationBanner');
-            banner.innerHTML = message; banner.classList.add('show');
+            banner.innerHTML = message;
+            banner.classList.add('show');
             setTimeout(() => { banner.classList.remove('show'); }, 3000); 
         }
 
@@ -691,6 +609,7 @@
         }
         setInterval(updateClock, 1000); updateClock(); 
 
+        // Desktop Apps Menu Logic
         const appsBtn = document.getElementById('appsMenuBtn'); const appsDropdown = document.getElementById('appsDropdown');
         appsBtn.addEventListener('click', (e) => { e.stopPropagation(); appsDropdown.classList.toggle('show'); });
         window.addEventListener('click', (e) => { if (!appsBtn.contains(e.target)) appsDropdown.classList.remove('show'); });
@@ -760,8 +679,7 @@
                                 }
                                 practiceExamsCount++;
                                 const optionPractice = document.createElement('option');
-                                optionPractice.value = examId;
-                                optionPractice.innerText = exam.title; 
+                                optionPractice.value = examId; optionPractice.innerText = exam.title; 
                                 practiceExamSelector.appendChild(optionPractice);
                             } 
                             else {
