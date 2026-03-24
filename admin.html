@@ -13,10 +13,11 @@
         body { 
             background-color: #121218; color: #ffffff; min-height: 100vh; display: flex; 
             justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-x: hidden; position: relative;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         /* 🟢 Background Blobs 🟢 */
-        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
+        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; transition: 0.4s;}
         .blob { position: absolute; filter: blur(90px); opacity: 0.2; animation: float 12s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #e91e63; top: -10%; left: -5%; animation-delay: 0s; }
         .blob2 { width: 400px; height: 400px; background: #00bcd4; bottom: -10%; right: -5%; animation-delay: 3s; }
@@ -27,25 +28,23 @@
         .glass-container { 
             background: #1a1a22; border-radius: 35px; padding: 40px 30px; width: 100%; max-width: 900px; 
             box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4);
-            border: none; position: relative; z-index: 10;
+            border: 1px solid rgba(255,255,255,0.02); position: relative; z-index: 10; transition: 0.4s;
         }
 
-        h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.3);}
+        h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.3); transition: 0.4s;}
         
         .input-group { margin-bottom: 20px; width: 100%; }
-        label { display: block; margin-bottom: 8px; font-size: 14px; color: #00bcd4; font-weight: bold;}
+        label { display: block; margin-bottom: 8px; font-size: 14px; color: #00bcd4; font-weight: bold; transition: 0.4s;}
         
-        /* 🟢 Claymorphism Inputs 🟢 */
         input, textarea, select { 
-            width: 100%; padding: 14px; border-radius: 16px; border: none; color: #fff; outline: none; transition: 0.3s; font-size: 15px; font-weight: bold;
+            width: 100%; padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.02); color: #fff; outline: none; transition: 0.4s; font-size: 15px; font-weight: bold;
             background: #15151a; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); color-scheme: dark;
         }
         input:focus, textarea:focus, select:focus { box-shadow: inset 6px 6px 12px rgba(0,0,0,0.9), 0 0 15px rgba(0, 188, 212, 0.3); }
         select option { background-color: #1a1a22; color: white; }
 
-        /* 🟢 Claymorphism Buttons 🟢 */
         .submit-btn, .login-btn { 
-            width: 100%; padding: 16px; margin-top: 10px; border-radius: 16px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s;
+            width: 100%; padding: 16px; margin-top: 10px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s;
             background: #00bcd4; color: #000; letter-spacing: 1px;
             box-shadow: 6px 6px 15px rgba(0,188,212,0.3), -4px -4px 10px rgba(255,255,255,0.05), inset 3px 3px 6px rgba(255,255,255,0.4), inset -4px -4px 10px rgba(0,0,0,0.2);
         }
@@ -54,17 +53,17 @@
         #adminFormSection { display: none; width: 100%; }
         #loginSection { text-align: center; padding: 40px 0; width: 100%; max-width: 500px; margin: auto; }
         
-        /* 🟢 Claymorphism Inner Boxes 🟢 */
         .section-box { 
-            background: #202028; padding: 30px; border-radius: 20px; border: none; margin-top: 20px;
+            background: #202028; padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.04); margin-top: 20px;
             box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.3);
+            transition: 0.4s;
         }
 
         .q-list-item { 
-            background: #1a1a22; padding: 20px; border-radius: 16px; margin-bottom: 15px; border: none; display: flex; flex-direction: column; gap: 12px;
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02);
+            background: #1a1a22; padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px;
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); transition: 0.4s;
         }
-        .q-text { font-weight: bold; color: #e0e0e0; font-size: 16px; line-height: 1.4;}
+        .q-text { font-weight: bold; color: #e0e0e0; font-size: 16px; line-height: 1.4; transition: 0.4s;}
         .q-actions { display: flex; gap: 10px; }
         
         .btn-edit, .btn-delete { padding: 8px 16px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
@@ -77,9 +76,9 @@
 
         .stats-banner { 
             background: #15151a; padding: 20px; border-radius: 16px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); border-left: 5px solid #00e676;
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); border-left: 5px solid #00e676; transition: 0.4s;
         }
-        .stats-banner h4 { margin: 0; color: #a0a0b0; font-size: 15px; font-weight: bold; text-align: left; text-shadow: none;}
+        .stats-banner h4 { margin: 0; color: #a0a0b0; font-size: 15px; font-weight: bold; text-align: left; text-shadow: none; transition: 0.4s;}
         .stats-banner .count { font-size: 35px; font-weight: bold; color: #00e676; margin-top: 5px;}
         
         .btn-live-excel { 
@@ -88,31 +87,29 @@
         }
         .btn-live-excel:active { transform: scale(0.95); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4); }
 
-        /* 🟢 Custom Modals & Popups 🟢 */
-        .result-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; display: none; justify-content: center; align-items: center; }
+        .result-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 4000; display: none; justify-content: center; align-items: center; transition: 0.4s;}
         .result-modal.show { display: flex; animation: fadeIn 0.3s ease; }
         .result-modal-content { 
             background: #1a1a22; border-radius: 25px; padding: 30px; width: 90%; max-width: 600px; position: relative; 
-            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05); transform: translateY(-20px); transition: 0.3s ease; max-height: 90vh; display: flex; flex-direction: column; 
+            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05); transform: translateY(-20px); transition: 0.4s ease; max-height: 90vh; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.04);
         }
         .result-modal.show .result-modal-content { transform: translateY(0); }
         .result-close-btn { position: absolute; top: 20px; right: 25px; color: #ff5252; font-size: 32px; cursor: pointer; font-weight: bold; transition: 0.2s; line-height: 1; z-index: 10;}
         .result-close-btn:hover { transform: scale(1.1); text-shadow: 0 0 15px rgba(255,82,82,0.5); }
         
-        .result-table-wrapper { overflow-y: auto; margin-top: 15px; padding-right: 5px; flex-grow: 1; border-radius: 12px; background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);}
+        .result-table-wrapper { overflow-y: auto; margin-top: 15px; padding-right: 5px; flex-grow: 1; border-radius: 12px; background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6); transition: 0.4s;}
         .result-table-wrapper::-webkit-scrollbar { width: 8px; }
         .result-table-wrapper::-webkit-scrollbar-thumb { background: #00bcd4; border-radius: 10px; }
         
         .res-table { width: 100%; border-collapse: collapse; text-align: center; }
-        .res-table th { background: #202028; padding: 15px; color: #00bcd4; position: sticky; top: 0; z-index: 1; font-size: 14px; text-transform: uppercase;}
-        .res-table td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e0e0e0; font-size: 15px;}
+        .res-table th { background: #202028; padding: 15px; color: #00bcd4; position: sticky; top: 0; z-index: 1; font-size: 14px; text-transform: uppercase; transition: 0.4s;}
+        .res-table td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e0e0e0; font-size: 15px; transition: 0.4s;}
         .res-table tr:hover { background: rgba(0, 188, 212, 0.1); }
 
-        /* 🟢 Claymorphism Tabs 🟢 */
         .admin-tabs { display: flex; gap: 12px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
         .admin-tabs::-webkit-scrollbar { display: none; }
         .tab-btn { 
-            flex: 1; min-width: 150px; padding: 14px; border: none; border-radius: 16px; background: #202028; color: #a0a0b0; font-weight: bold; cursor: pointer; transition: 0.3s; white-space: nowrap; font-size: 15px;
+            flex: 1; min-width: 150px; padding: 14px; border: 1px solid rgba(255,255,255,0.02); border-radius: 16px; background: #202028; color: #a0a0b0; font-weight: bold; cursor: pointer; transition: 0.4s; white-space: nowrap; font-size: 15px;
             box-shadow: 4px 4px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.05);
         }
         .tab-btn:hover { color: #fff; background: #252530; }
@@ -125,31 +122,142 @@
         .clickable-roll { color: #ffb74d; font-weight: bold; cursor: pointer; text-decoration: underline; transition: 0.3s; }
         .clickable-roll:hover { color: #fff; text-shadow: 0 0 10px rgba(255, 183, 77, 0.8); }
 
-        /* 🟢 Live Counter Styling 🟢 */
-        .live-counter-box {
-            background: rgba(0, 188, 212, 0.1); border: 1px dashed #00bcd4; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 16px; color: #00bcd4;
-        }
-
-        /* 🟢 Edit Question Compact Style 🟢 */
+        .live-counter-box { background: rgba(0, 188, 212, 0.1); border: 1px dashed #00bcd4; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 16px; color: #00bcd4; transition: 0.4s;}
+        
         .compact-input-group { margin-bottom: 12px; width: 100%; }
         .compact-input-group label { margin-bottom: 4px; font-size: 13px; }
         .compact-input-group input, .compact-input-group textarea, .compact-input-group select { padding: 10px; font-size: 14px; border-radius: 10px;}
+
+        /* 🟢 Navbar & Slide Menu (For Theme Toggle) 🟢 */
+        .navbar {
+            position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px;
+            display: flex; justify-content: flex-end; align-items: center;
+            background: transparent; border-bottom: none; z-index: 2000; transition: 0.4s ease;
+        }
+        
+        .nav-btn.btn-theme {
+            background: #202028; padding: 10px 15px; border-radius: 18px; 
+            text-decoration: none; font-weight: bold; font-size: 15px; transition: 0.3s ease-in-out;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(255,255,255,0.1), inset -3px -3px 6px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.03); cursor: pointer; color: #ffd700;
+        }
+        .nav-btn.btn-theme:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px) scale(0.96); }
+        
+        .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; padding: 5px; z-index: 3000; }
+        .hamburger-btn svg { width: 30px; height: 30px; fill: #00bcd4; transition: 0.4s;}
+
+        .slide-menu-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+            z-index: 2500; opacity: 0; visibility: hidden; transition: 0.3s ease; backdrop-filter: blur(3px);
+        }
+        .slide-menu-overlay.active { opacity: 1; visibility: visible; }
+
+        .slide-menu {
+            position: fixed; top: 0; right: -300px; width: 250px; height: 100%; background: #181820;
+            z-index: 2600; box-shadow: -10px 0 30px rgba(0,0,0,0.8); transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.4s;
+            display: flex; flex-direction: column; padding: 60px 20px 20px 20px; gap: 15px; overflow-y: auto;
+            border-left: 1px solid rgba(255,255,255,0.05);
+        }
+        .slide-menu.active { right: 0; }
+        .slide-menu .nav-btn { width: 100%; justify-content: center; padding: 15px; font-size: 16px; }
+        
+        .close-menu-btn {
+            position: absolute; top: 20px; right: 20px; background: #252530; border: none; width: 35px; height: 35px; border-radius: 50%;
+            color: #ff5252; font-size: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.5), -2px -2px 5px rgba(255,255,255,0.05); transition: 0.3s;
+        }
 
         /* 🟢 SweetAlert Custom Theme 🟢 */
         .swal2-popup { background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important; box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important; }
         .swal2-title { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
         .swal2-input { background: #15151a !important; color: #fff !important; border: 1px solid rgba(0, 188, 212, 0.4) !important; border-radius: 12px !important; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6) !important; }
         .swal2-input:focus { border: 1px solid #00bcd4 !important; box-shadow: 0 0 10px rgba(0, 188, 212, 0.3) !important; }
+
+        /* 🟡🟢 NEW LIGHT MODE STYLES (Cornsilk, Earth Yellow, Jet Stream) 🟢🟡 */
+        body.light-mode { background-color: #FFF8DC; color: #333; } 
+        body.light-mode .bg-blobs { opacity: 0.1; filter: blur(100px); }
+        
+        body.light-mode .glass-container, body.light-mode .section-box, body.light-mode .result-modal-content, body.light-mode .slide-menu {
+            background: #FFF8DC; border: 1px solid #E1A95F;
+            box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), -8px -8px 20px #ffffff, inset 4px 4px 10px #ffffff, inset -8px -8px 18px rgba(225, 169, 95, 0.1);
+        }
+        
+        body.light-mode h1, body.light-mode h2, body.light-mode h3, body.light-mode h4, body.light-mode label { color: #E1A95F; text-shadow: none; }
+        
+        body.light-mode input, body.light-mode textarea, body.light-mode select {
+            background: #FFF8DC; color: #333; border: 1px solid #B2D4D4;
+            box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2), inset -2px -2px 5px #ffffff;
+        }
+        body.light-mode input:focus, body.light-mode textarea:focus, body.light-mode select:focus { box-shadow: inset 6px 6px 12px rgba(225, 169, 95, 0.3), 0 0 15px rgba(225, 169, 95, 0.3); border-color: #E1A95F;}
+        body.light-mode select option { background: #FFF8DC; color: #333; }
+        
+        body.light-mode .tab-btn { background: #FFF8DC; color: #555; border-color: #B2D4D4; box-shadow: 4px 4px 8px rgba(225, 169, 95, 0.2), inset 2px 2px 4px #ffffff; }
+        body.light-mode .tab-btn:hover { background: #B2D4D4; color: #333; }
+        body.light-mode .tab-btn.active { background: #B2D4D4; color: #333; border: 1px solid #E1A95F; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.1); }
+        
+        body.light-mode .q-list-item { background: #FFF8DC; border: 1px solid #B2D4D4; box-shadow: 4px 4px 10px rgba(225, 169, 95, 0.2), inset 2px 2px 4px #ffffff; }
+        body.light-mode .q-text { color: #333; }
+        
+        body.light-mode .stats-banner { background: #FFF8DC; border-color: #B2D4D4; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2), inset -2px -2px 4px #ffffff; border-left-color: #E1A95F;}
+        body.light-mode .stats-banner .count { color: #E1A95F; }
+        
+        body.light-mode .res-table th { background: #B2D4D4; color: #333; border-bottom: 1px solid rgba(225, 169, 95, 0.3); }
+        body.light-mode .res-table td { color: #555; border-bottom: 1px solid rgba(178, 212, 212, 0.5); }
+        body.light-mode .res-table tr:hover { background: rgba(225, 169, 95, 0.1); }
+        
+        body.light-mode .result-table-wrapper { background: #FFF8DC; border: 1px solid #E1A95F; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2); }
+        body.light-mode .clickable-roll { color: #E1A95F; }
+        body.light-mode .clickable-roll:hover { color: #333; text-shadow: none; }
+        
+        body.light-mode .submit-btn, body.light-mode .login-btn { background: #E1A95F; color: #fff; border-color: #E1A95F; box-shadow: 4px 4px 10px rgba(225, 169, 95, 0.4), inset 2px 2px 4px rgba(255,255,255,0.4); }
+        body.light-mode .submit-btn:active, body.light-mode .login-btn:active { box-shadow: inset 4px 4px 10px rgba(0,0,0,0.2); color: #fff;}
+        
+        body.light-mode .nav-btn { background: #FFF8DC; color: #E1A95F; border-color: #E1A95F; box-shadow: 4px 4px 8px rgba(225, 169, 95, 0.2), inset 2px 2px 4px #ffffff; }
+        body.light-mode .nav-btn:active { box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2); }
+        body.light-mode .hamburger-btn svg { fill: #E1A95F; }
+
+        body.light-mode .live-counter-box { background: rgba(178, 212, 212, 0.3); border-color: #B2D4D4; color: #E1A95F; }
+        body.light-mode .result-modal { background: rgba(255, 248, 220, 0.8); }
+        
+        body.light-mode .swal2-popup { background: #FFF8DC !important; color: #333 !important; box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), inset 4px 4px 10px #ffffff !important; border: 1px solid #E1A95F !important;}
+        body.light-mode .swal2-title { color: #E1A95F !important; text-shadow: none !important;}
+        body.light-mode .swal2-input { background: #FFF8DC !important; color: #333 !important; border: 1px solid #B2D4D4 !important; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2) !important; }
+        body.light-mode .swal2-input:focus { border: 1px solid #E1A95F !important; box-shadow: 0 0 10px rgba(225, 169, 95, 0.3) !important; }
+
+        @media (max-width: 768px) { 
+            .nav-buttons { display: none; }
+            .hamburger-btn { display: block; }
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
+    <script>
+        if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }
+    </script>
+
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div></div>
+
+    <nav class="navbar">
+        <div class="nav-buttons">
+            <button class="nav-btn btn-theme" id="themeToggleDesktop">🌞</button>
+        </div>
+        <button class="hamburger-btn" id="hamburgerBtn">
+            <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
+    </nav>
+
+    <div class="slide-menu-overlay" id="slideMenuOverlay"></div>
+    <div class="slide-menu" id="slideMenu">
+        <button class="close-menu-btn" id="closeMenuBtn">✖</button>
+        <button class="nav-btn btn-theme" id="themeToggleMobile" style="margin-top: 20px;">🌞</button>
+    </div>
 
     <div class="result-modal" id="resultModal">
         <div class="result-modal-content">
             <span class="result-close-btn" id="closeResultModal">&times;</span>
-            <h3 style="color: #00bcd4; margin-bottom: 5px; text-align: center; text-shadow: none;">📊 Live Result Board</h3>
+            <h3 style="margin-bottom: 5px; text-align: center; text-shadow: none;">📊 Live Result Board</h3>
             <p style="color: #a0a0b0; font-size: 14px; text-align: center; margin-bottom: 15px;">Results sorted by highest score.</p>
             <div class="result-table-wrapper">
                 <table class="res-table">
@@ -163,7 +271,7 @@
     <div class="result-modal" id="historyModal">
         <div class="result-modal-content">
             <span class="result-close-btn" id="closeHistoryModal">&times;</span>
-            <h3 style="color: #ffb74d; margin-bottom: 5px; text-align: center; text-shadow: none;">👤 Student History</h3>
+            <h3 style="margin-bottom: 5px; text-align: center; text-shadow: none;">👤 Student History</h3>
             <p id="historyStudentDetails" style="color: #a0a0b0; font-size: 14px; text-align: center; margin-bottom: 15px;"></p>
             <div class="result-table-wrapper">
                 <table class="res-table">
@@ -177,8 +285,8 @@
     <div class="result-modal" id="editQModal">
         <div class="result-modal-content" style="max-width: 500px; padding: 25px;">
             <span class="result-close-btn" id="closeEditQModal">&times;</span>
-            <h3 style="color:#ffb74d; margin-bottom:10px; text-align: center; text-shadow: none;">✏️ Edit Question</h3>
-            <div class="result-table-wrapper" style="padding: 10px; background: transparent; box-shadow: none; overflow-y: auto; margin-top: 0;">
+            <h3 style="margin-bottom:10px; text-align: center; text-shadow: none;">✏️ Edit Question</h3>
+            <div class="result-table-wrapper" style="padding: 10px; background: transparent; box-shadow: none; overflow-y: auto; margin-top: 0; border: none;">
                 <div class="compact-input-group"><label>Question:</label><textarea id="editQText" rows="2" required></textarea></div>
                 <div class="compact-input-group"><label>Option 1:</label><input type="text" id="editQOpt1" required></div>
                 <div class="compact-input-group"><label>Option 2:</label><input type="text" id="editQOpt2" required></div>
@@ -195,7 +303,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="glass-container" id="mainContainer">
         
@@ -215,7 +322,7 @@
             </div>
 
             <div id="tab-create" class="section-box tab-content" style="display: block; border-top: 4px solid #ffb74d;">
-                <h3 style="color: #ffb74d;">Create New Exam (Draft)</h3>
+                <h3>Create New Exam (Draft)</h3>
                 <form id="createExamForm">
                     <div class="input-group"><label>Exam Title:</label><input type="text" id="newExamTitle" required placeholder="Enter Exam Title"></div>
                     <div class="input-group"><label>Exam Duration (Minutes):</label><input type="number" id="newExamDuration" required placeholder="Enter Duration"></div>
@@ -225,7 +332,7 @@
             </div>
 
             <div id="tab-add-q" class="section-box tab-content" style="border-top: 4px solid #00bcd4;">
-                <h3 style="color: #00bcd4;">Add Questions to Exam</h3>
+                <h3>Add Questions to Exam</h3>
                 <div class="input-group">
                     <label>Select Exam:</label>
                     <select id="examSelector" required><option value="">-- Loading Exams... --</option></select>
@@ -254,7 +361,7 @@
             </div>
 
             <div id="tab-manage" class="section-box tab-content" style="border-top: 4px solid #e91e63;">
-                <h3 style="color: #e91e63;">Manage Exam & Results</h3>
+                <h3>Manage Exam & Results</h3>
                 <div class="input-group">
                     <label>Select Exam to Manage:</label>
                     <select id="manageExamSelector"><option value="">-- Select an Exam --</option></select>
@@ -267,8 +374,8 @@
                         <button id="adminViewLiveResultBtn" class="btn-live-excel">👁️ View Leaderboard</button>
                     </div>
 
-                    <div id="updateSettingsBox" style="background: #15151a; padding: 25px; border-radius: 16px; margin-bottom: 25px; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6); display: none;">
-                        <h4 style="color:#e91e63; margin-bottom:15px; text-align: left;">Update Running Settings</h4>
+                    <div id="updateSettingsBox" style="background: transparent; padding: 0; border: none; margin-bottom: 25px; box-shadow: none; display: none;">
+                        <h4 style="margin-bottom:15px; text-align: left;">Update Running Settings</h4>
                         <p style="color: #a0a0b0; font-size: 13px; margin-bottom: 15px;">You can update details for this currently running (or draft) exam.</p>
                         
                         <div class="input-group"><label>Update Title:</label><input type="text" id="editExamTitle"></div>
@@ -281,18 +388,18 @@
                         </div>
                     </div>
 
-                    <div style="background: #15151a; padding: 25px; border-radius: 16px; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);">
-                        <h4 style="color:#ffb74d; margin-bottom:15px; text-align: left;">Edit / Delete Questions</h4>
+                    <div style="background: transparent; padding: 0; border: none; box-shadow: none;">
+                        <h4 style="margin-bottom:15px; text-align: left;">Edit / Delete Questions</h4>
                         <div id="manageQuestionsList"><p style="color:#b3b3b3;">Loading questions...</p></div>
                     </div>
                 </div>
             </div>
 
             <div id="tab-db" class="section-box tab-content" style="border-top: 4px solid #9c27b0;">
-                <h3 style="color: #9c27b0;">🗄️ Database Management</h3>
+                <h3>🗄️ Database Management</h3>
                 
-                <div style="background: #15151a; padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px dashed #00bcd4; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);">
-                    <h4 style="color:#00bcd4; margin-bottom:15px; text-align: left;">🔍 Search Student History</h4>
+                <div style="background: transparent; padding: 0; border: none; margin-bottom: 25px; box-shadow: none;">
+                    <h4 style="margin-bottom:15px; text-align: left;">🔍 Search Student History</h4>
                     <div style="display: flex; gap: 15px; align-items: center;">
                         <input type="number" id="searchRollInput" placeholder="Enter Roll Number" style="flex: 1; margin: 0;">
                         <button id="searchRollBtn" class="submit-btn" style="margin: 0; width: auto; padding: 14px 30px;">Search</button>
@@ -304,15 +411,15 @@
                     <select id="dbExamSelector"><option value="">-- Select an Exam --</option></select>
                 </div>
                 
-                <div id="dbWorkspace" style="display:none; background: #15151a; padding: 25px; border-radius: 16px; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);">
+                <div id="dbWorkspace" style="display:none; background: transparent; padding: 0; border: none; box-shadow: none;">
                     <p id="dbExamStatus" style="margin-bottom: 20px; font-weight: bold; font-size: 16px; text-align: center;"></p>
 
                     <div id="dbActionButtons" class="action-buttons-row"></div>
                     
-                    <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px;">
-                        <h4 style="color:#00bcd4; margin-bottom: 10px; text-align: left;">📋 Individual Submissions</h4>
+                    <div style="margin-top: 30px; padding-top: 25px;">
+                        <h4 style="margin-bottom: 10px; text-align: left;">📋 Individual Submissions</h4>
                         <p style="font-size: 13px; color: #a0a0b0; margin-bottom: 15px;">* Click on a Roll Number to view the student's full history.</p>
-                        <div style="overflow-x: auto; border-radius: 12px; box-shadow: 4px 4px 10px rgba(0,0,0,0.4);">
+                        <div class="result-table-wrapper" style="box-shadow: none; border: none;">
                             <table class="res-table" style="width: 100%; min-width: 650px;">
                                 <thead>
                                     <tr>
@@ -339,6 +446,45 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+        // 🟢 Theme Check & Init 🟢
+        const themeToggleDesktop = document.getElementById('themeToggleDesktop');
+        const themeToggleMobile = document.getElementById('themeToggleMobile');
+        
+        if (localStorage.getItem('theme') === 'light') {
+            themeToggleDesktop.innerHTML = '🌙';
+            themeToggleMobile.innerHTML = '🌙';
+        } else {
+            themeToggleDesktop.innerHTML = '🌞';
+            themeToggleMobile.innerHTML = '🌞';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            const icon = isLight ? '🌙' : '🌞';
+            themeToggleDesktop.innerHTML = icon;
+            themeToggleMobile.innerHTML = icon;
+        }
+
+        themeToggleDesktop.addEventListener('click', toggleTheme);
+        themeToggleMobile.addEventListener('click', toggleTheme);
+
+        // 🟢 Mobile Menu Logic 🟢
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const slideMenu = document.getElementById('slideMenu');
+        const slideMenuOverlay = document.getElementById('slideMenuOverlay');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+        function toggleMenu() {
+            slideMenu.classList.toggle('active');
+            slideMenuOverlay.classList.toggle('active');
+        }
+
+        hamburgerBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+        slideMenuOverlay.addEventListener('click', toggleMenu);
 
         // 🔴 YOUR FIREBASE CONFIG 🔴
         const firebaseConfig = {
@@ -406,7 +552,8 @@
                 if (ADMIN_EMAILS.includes(user.email)) { 
                     loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); 
                 } else { 
-                    Swal.fire('Access Denied!', 'You are not authorized.', 'error'); signOut(auth); 
+                    Swal.fire({title: 'Access Denied!', text: 'You are not authorized.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); 
+                    signOut(auth); 
                 } 
             } else { 
                 loginSection.style.display = "block"; adminFormSection.style.display = "none"; 
@@ -415,7 +562,7 @@
         document.getElementById('adminLoginBtn').addEventListener('click', async () => { 
             const btn = document.getElementById('adminLoginBtn'); btn.innerText = "Processing..."; 
             try { await signInWithPopup(auth, provider); btn.innerText = "Login with Google"; } 
-            catch (error) { Swal.fire('Error', 'Login failed.', 'error'); btn.innerText = "Login with Google"; } 
+            catch (error) { Swal.fire({title: 'Error', text: 'Login failed.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); btn.innerText = "Login with Google"; } 
         });
 
         // 🟢 Load Exams 🟢
@@ -452,9 +599,9 @@
                     publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), 
                     createdAt: new Date().getTime(), status: "draft" 
                 }); 
-                Swal.fire('Created!', 'Exam Saved as DRAFT successfully.', 'success');
+                Swal.fire({title: 'Created!', text: 'Exam Saved as DRAFT successfully.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'});
                 document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
-            } catch (error) { Swal.fire('Error', 'Failed to create exam.', 'error'); } 
+            } catch (error) { Swal.fire({title: 'Error', text: 'Failed to create exam.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } 
             btn.innerText = "Create Exam (Draft)";
         });
         
@@ -470,7 +617,7 @@
         document.getElementById('questionForm').addEventListener('submit', async function(e) { 
             e.preventDefault(); 
             const selectedExamId = examSelector.value; 
-            if(!selectedExamId) { Swal.fire('Wait!', 'Please select an Exam first!', 'warning'); return; } 
+            if(!selectedExamId) { Swal.fire({title: 'Wait!', text: 'Please select an Exam first!', icon: 'warning', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); return; } 
             const btn = document.getElementById('saveQuestionBtn'); btn.innerText = "Saving..."; 
             
             try { 
@@ -479,16 +626,16 @@
                     options: { "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, "3": document.getElementById('option3').value, "4": document.getElementById('option4').value }, 
                     correctAnswer: document.getElementById('correctOption').value, timestamp: new Date() 
                 }); 
-                Swal.fire({ icon: 'success', title: 'Saved!', text: 'Question added successfully.', timer: 1500, showConfirmButton: false });
+                Swal.fire({ icon: 'success', title: 'Saved!', text: 'Question added successfully.', timer: 1500, showConfirmButton: false, background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' });
                 
                 let currentNum = parseInt(document.getElementById('liveQuestionNumber').innerText);
                 document.getElementById('liveQuestionNumber').innerText = currentNum + 1;
                 document.getElementById('questionForm').reset(); 
-            } catch (error) { Swal.fire('Error', 'Failed to save question.', 'error'); } 
+            } catch (error) { Swal.fire({title: 'Error', text: 'Failed to save question.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } 
             btn.innerText = "Save Question"; 
         });
 
-        // 🟢 Manage Exam Dropdown Change (Smart Logic to hide update box if Practice, Show Publish if Draft) 🟢
+        // 🟢 Manage Exam Dropdown Change 🟢
         manageExamSelector.addEventListener('change', async (e) => {
             const examId = e.target.value; const workspace = document.getElementById('manageWorkspace'); const participantCountEl = document.getElementById('participantCount'); 
             if(!examId) { workspace.style.display = "none"; return; } 
@@ -510,12 +657,10 @@
                     isPractice = true;
                 }
                 
-                // Hide if Practice/Hidden
                 if(isPractice) {
                     updateBox.style.display = "none";
                 } else {
                     updateBox.style.display = "block";
-                    // Show 'Publish Live' button ONLY if status is Draft
                     if(data.status === "draft") {
                         publishDraftBtn.style.display = "block";
                     } else {
@@ -542,11 +687,11 @@
                 resultsArray.sort((a, b) => b.score - a.score); resultTableBody.innerHTML = ""; 
                 resultsArray.forEach((row, index) => { 
                     let tr = document.createElement('tr'); 
-                    tr.innerHTML = `<td>#${index + 1}</td><td style="font-weight: bold; color: #ffb74d;">${row.rollNumber || "N/A"}</td><td style="font-weight: bold; color: #00e676; font-size:18px;">${row.score}</td>`; 
+                    tr.innerHTML = `<td>#${index + 1}</td><td style="font-weight: bold; color: #E1A95F;">${row.rollNumber || "N/A"}</td><td style="font-weight: bold; color: #00e676; font-size:18px;">${row.score}</td>`; 
                     resultTableBody.appendChild(tr); 
                 }); 
                 resultModal.classList.add('show'); 
-            } catch (error) { Swal.fire('Error', 'Failed to load results.', 'error'); } 
+            } catch (error) { Swal.fire({title: 'Error', text: 'Failed to load results.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } 
             viewLiveResultBtn.innerText = originalText; 
         });
 
@@ -560,8 +705,8 @@
                     duration: parseInt(document.getElementById('editExamDuration').value), 
                     publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() 
                 }); 
-                Swal.fire('Updated', 'Settings updated successfully.', 'success'); loadExamsIntoDropdowns(); 
-            } catch (error) { Swal.fire('Error', 'Failed to update.', 'error'); } 
+                Swal.fire({title: 'Updated', text: 'Settings updated successfully.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); 
+            } catch (error) { Swal.fire({title: 'Error', text: 'Failed to update.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } 
         });
 
         // 🟢 PUBLISH DRAFT EXAM 🟢
@@ -575,7 +720,9 @@
                 showCancelButton: true,
                 confirmButtonColor: '#00e676',
                 cancelButtonColor: '#333',
-                confirmButtonText: 'Yes, Publish it!'
+                confirmButtonText: 'Yes, Publish it!',
+                background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22',
+                color: document.body.classList.contains('light-mode') ? '#333' : '#fff'
             }).then(async (result) => {
                 if(result.isConfirmed) {
                     try { 
@@ -585,10 +732,10 @@
                             publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime(),
                             status: "active" 
                         }, { merge: true }); 
-                        Swal.fire('Published!', 'Exam is now LIVE for students.', 'success'); 
+                        Swal.fire({title: 'Published!', text: 'Exam is now LIVE for students.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); 
                         loadExamsIntoDropdowns();
-                        manageExamSelector.dispatchEvent(new Event('change')); // Trigger reload to update UI
-                    } catch (error) { Swal.fire('Error', 'Failed to publish exam.', 'error'); } 
+                        manageExamSelector.dispatchEvent(new Event('change')); 
+                    } catch (error) { Swal.fire({title: 'Error', text: 'Failed to publish exam.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } 
                 }
             });
         });
@@ -597,13 +744,12 @@
         async function loadQuestionsForEdit(examId) {
             const listDiv = document.getElementById('manageQuestionsList'); listDiv.innerHTML = ""; 
             const qSnap = await getDocs(collection(db, "exams", examId, "questions")); 
-            if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#ffb74d;'>No questions found.</p>"; return; }
+            if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#E1A95F;'>No questions found.</p>"; return; }
             let count = 1; 
             qSnap.forEach((docSnap) => { 
                 const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; 
                 item.innerHTML = `<div class="q-text">Q${count}: ${data.question}</div><div class="q-actions"><button class="btn-edit" data-id="${qId}">Edit</button><button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++;
                 
-                // 🟢 EDIT BUTTON: Opens Compact Popup 🟢
                 item.querySelector('.btn-edit').addEventListener('click', () => { 
                     editQModal.classList.add('show'); 
                     document.getElementById('editQText').value = data.question; 
@@ -614,7 +760,7 @@
                 });
                 
                 item.querySelector('.btn-delete').addEventListener('click', async () => { 
-                    Swal.fire({ title: 'Delete Question?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Yes, delete it!' }).then(async (res) => {
+                    Swal.fire({ title: 'Delete Question?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Yes, delete it!', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' }).then(async (res) => {
                         if(res.isConfirmed) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); }
                     });
                 });
@@ -628,8 +774,8 @@
                 await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); 
                 editQModal.classList.remove('show'); 
                 loadQuestionsForEdit(examId); 
-                Swal.fire({icon: 'success', title: 'Updated', timer: 1000, showConfirmButton: false});
-            } catch (error) { Swal.fire('Error', error.message, 'error'); } btn.innerText = "Update Question";
+                Swal.fire({icon: 'success', title: 'Updated', timer: 1000, showConfirmButton: false, background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'});
+            } catch (error) { Swal.fire({title: 'Error', text: error.message, icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } btn.innerText = "Update Question";
         });
 
         // 🟢🟢 DATABASE MANAGEMENT LOGIC 🟢🟢
@@ -651,8 +797,8 @@
                     statusEl.innerHTML = `<span style="color:#b3b3b3;">Status: 📝 Draft Exam (Not Published)</span>`; 
                 } 
                 else if (data.status === "hidden") {
-                    statusEl.innerHTML = `<span style="color:#ffb74d;">Status: 🙈 Hidden (Removed from Practice)</span>`; 
-                    buttonsHtml += `<button id="dbRestorePracticeBtn" class="submit-btn" style="background: #ffb74d; color: #000; margin-top: 0;">♻️ Restore to Practice</button>`;
+                    statusEl.innerHTML = `<span style="color:#E1A95F;">Status: 🙈 Hidden (Removed from Practice)</span>`; 
+                    buttonsHtml += `<button id="dbRestorePracticeBtn" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">♻️ Restore to Practice</button>`;
                 }
                 else if (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) {
                     statusEl.innerHTML = `<span style="color:#00e676;">Status: 🟢 Practice Exam (Time Passed / Moved)</span>`; 
@@ -663,9 +809,11 @@
                 } 
                 else {
                     statusEl.innerHTML = `<span style="color:#ff5252;">Status: 🔴 Live Exam (Running)</span>`; 
-                    buttonsHtml += `<button id="dbHideBtn" class="submit-btn" style="background: #ffb74d; color: #000; margin-top: 0;">Move to Practice (Hide Live)</button>`;
+                    buttonsHtml += `<button id="dbHideBtn" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">Move to Practice (Hide Live)</button>`;
                 }
                 
+                // 🟢 NEW: Clear Merit List Button 🟢
+                buttonsHtml += `<button id="dbClearMeritBtn" class="submit-btn" style="background: #ffb74d; margin-top: 0; color:#000;">🧹 Clear Merit List</button>`;
                 buttonsHtml += `<button id="dbDeleteExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0; color:#fff;">🗑️ Permanently Delete</button>`;
                 
                 dbActionButtons.innerHTML = buttonsHtml;
@@ -678,7 +826,40 @@
             const examId = dbExamSelector.value;
             if(!examId) return;
 
-            // 1. MAKE LIVE AGAIN (Popup)
+            // 0. CLEAR MERIT LIST 🟢
+            if(e.target.id === 'dbClearMeritBtn') {
+                Swal.fire({
+                    title: 'Clear Merit List?',
+                    text: "Old merit list will be refreshed and a new merit list will be generated from future submissions.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#E1A95F',
+                    cancelButtonColor: '#ff5252',
+                    confirmButtonText: 'Yes, Clear it!',
+                    background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22',
+                    color: document.body.classList.contains('light-mode') ? '#333' : '#fff'
+                }).then(async (res) => {
+                    if(res.isConfirmed) {
+                        try {
+                            const resQuery = query(collection(db, "results"), where("examId", "==", examId));
+                            const snapshot = await getDocs(resQuery);
+                            const batchDeletes = [];
+                            snapshot.forEach(docSnap => {
+                                batchDeletes.push(deleteDoc(docSnap.ref));
+                                const email = docSnap.data().email;
+                                if(email) batchDeletes.push(deleteDoc(doc(db, "user_timers", email + "_" + examId)));
+                            });
+                            await Promise.all(batchDeletes);
+                            Swal.fire({title: 'Cleared!', text: 'Merit list has been reset.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'});
+                            loadDbSubmissions(examId); 
+                        } catch(err) {
+                            Swal.fire({title: 'Error', text: 'Failed to clear merit list.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'});
+                        }
+                    }
+                });
+            }
+
+            // 1. MAKE LIVE AGAIN
             if(e.target.id === 'dbMakeLiveAgainBtn') {
                 const docSnap = await getDoc(doc(db, "exams", examId));
                 const data = docSnap.data();
@@ -692,6 +873,8 @@
                         <div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Publish Time:</label><input id="swal-time" type="datetime-local" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${timeVal}"></div>
                     `,
                     showCancelButton: true, confirmButtonColor: '#00e676', confirmButtonText: 'Publish Live',
+                    background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22',
+                    color: document.body.classList.contains('light-mode') ? '#333' : '#fff',
                     preConfirm: () => {
                         return { title: document.getElementById('swal-title').value, duration: parseInt(document.getElementById('swal-duration').value), publishTime: new Date(document.getElementById('swal-time').value).getTime() }
                     }
@@ -699,44 +882,44 @@
                     if(result.isConfirmed) {
                         try {
                             await setDoc(doc(db, "exams", examId), { title: result.value.title, duration: result.value.duration, publishTime: result.value.publishTime, status: "active" }, { merge: true });
-                            Swal.fire('Success', 'Exam is now LIVE!', 'success'); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change'));
-                        } catch(err) { Swal.fire('Error', 'Failed to make live.', 'error'); }
+                            Swal.fire({title: 'Success', text: 'Exam is now LIVE!', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change'));
+                        } catch(err) { Swal.fire({title: 'Error', text: 'Failed to make live.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); }
                     }
                 });
             }
 
             // 2. HIDE PRACTICE EXAM FROM STUDENTS
             if(e.target.id === 'dbHideFromStudentsBtn') {
-                Swal.fire({ title: 'Hide Practice Exam?', text: "This exam will be completely hidden from students.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e91e63', confirmButtonText: 'Yes, Hide it!' }).then(async (res) => {
+                Swal.fire({ title: 'Hide Practice Exam?', text: "This exam will be completely hidden from students.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e91e63', confirmButtonText: 'Yes, Hide it!', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' }).then(async (res) => {
                     if(res.isConfirmed) {
-                        try { await setDoc(doc(db, "exams", examId), { status: "hidden" }, { merge: true }); Swal.fire('Hidden', 'Exam is now hidden.', 'success'); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
-                        catch(err) { Swal.fire('Error', 'Failed to hide.', 'error'); }
+                        try { await setDoc(doc(db, "exams", examId), { status: "hidden" }, { merge: true }); Swal.fire({title: 'Hidden', text: 'Exam is now hidden.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
+                        catch(err) { Swal.fire({title: 'Error', text: 'Failed to hide.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); }
                     }
                 });
             }
 
             // 3. RESTORE TO PRACTICE
             if(e.target.id === 'dbRestorePracticeBtn') {
-                try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire('Restored', 'Exam is back in Practice mode.', 'success'); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
-                catch(err) { Swal.fire('Error', 'Failed to restore.', 'error'); }
+                try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire({title: 'Restored', text: 'Exam is back in Practice mode.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
+                catch(err) { Swal.fire({title: 'Error', text: 'Failed to restore.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); }
             }
 
             // 4. MOVE TO PRACTICE (Hide Live)
             if(e.target.id === 'dbHideBtn') {
-                Swal.fire({ title: 'Hide Live Exam?', text: "Move the LIVE exam to Practice Mode immediately?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ffb74d', confirmButtonText: 'Yes, Move it!' }).then(async (res) => {
+                Swal.fire({ title: 'Hide Live Exam?', text: "Move the LIVE exam to Practice Mode immediately?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#E1A95F', confirmButtonText: 'Yes, Move it!', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' }).then(async (res) => {
                     if(res.isConfirmed) {
-                        try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire('Success', 'Exam moved to Practice Mode!', 'success'); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
-                        catch(err) { Swal.fire('Error', 'Failed to move.', 'error'); }
+                        try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire({title: 'Success', text: 'Exam moved to Practice Mode!', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
+                        catch(err) { Swal.fire({title: 'Error', text: 'Failed to move.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); }
                     }
                 });
             }
 
             // 5. PERMANENT DELETE
             if(e.target.id === 'dbDeleteExamBtn') {
-                Swal.fire({ title: 'Permanently Delete?', text: "This will completely wipe out the exam.", icon: 'error', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Delete Permanently!' }).then(async (res) => {
+                Swal.fire({ title: 'Permanently Delete?', text: "This will completely wipe out the exam.", icon: 'error', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Delete Permanently!', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' }).then(async (res) => {
                     if(res.isConfirmed) {
-                        try { await deleteDoc(doc(db, "exams", examId)); Swal.fire('Deleted!', 'Exam deleted permanently.', 'success'); loadExamsIntoDropdowns(); dbWorkspace.style.display = "none"; } 
-                        catch(err) { Swal.fire('Error', 'Error deleting exam.', 'error'); }
+                        try { await deleteDoc(doc(db, "exams", examId)); Swal.fire({title: 'Deleted!', text: 'Exam deleted permanently.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); dbWorkspace.style.display = "none"; } 
+                        catch(err) { Swal.fire({title: 'Error', text: 'Error deleting exam.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); }
                     }
                 });
             }
@@ -746,7 +929,7 @@
             const tbody = document.getElementById('dbSubmissionsBody'); tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr>';
             try {
                 const q = query(collection(db, "results"), where("examId", "==", examId)); const snapshot = await getDocs(q);
-                if(snapshot.empty) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ffb74d;">No submissions found for this exam.</td></tr>'; return; }
+                if(snapshot.empty) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#E1A95F;">No submissions found for this exam.</td></tr>'; return; }
                 
                 let html = ""; let resultsData = [];
                 snapshot.forEach(doc => { resultsData.push({ id: doc.id, ...doc.data() }); });
@@ -777,8 +960,8 @@
                 document.querySelectorAll('.delete-sub-btn').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
                         const docId = e.target.getAttribute('data-id'); const email = e.target.getAttribute('data-email'); const exId = e.target.getAttribute('data-exam');
-                        Swal.fire({ title: 'Delete Submission?', text: "Student will be able to retake the exam as a fresh start.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Yes, delete it!' }).then(async (res) => {
-                            if(res.isConfirmed) { e.target.innerText = "Wait..."; try { await deleteDoc(doc(db, "results", docId)); await deleteDoc(doc(db, "user_timers", email + "_" + exId)); loadDbSubmissions(exId); Swal.fire('Deleted!', 'Submission removed.', 'success'); } catch(err) { Swal.fire('Error', 'Failed to delete.', 'error'); e.target.innerText = "Delete"; } }
+                        Swal.fire({ title: 'Delete Submission?', text: "Student will be able to retake the exam as a fresh start.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Yes, delete it!', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' }).then(async (res) => {
+                            if(res.isConfirmed) { e.target.innerText = "Wait..."; try { await deleteDoc(doc(db, "results", docId)); await deleteDoc(doc(db, "user_timers", email + "_" + exId)); loadDbSubmissions(exId); Swal.fire({title: 'Deleted!', text: 'Submission removed.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } catch(err) { Swal.fire({title: 'Error', text: 'Failed to delete.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); e.target.innerText = "Delete"; } }
                         });
                     });
                 });
@@ -790,7 +973,7 @@
         // 🟢 MANUAL SEARCH BUTTON LOGIC 🟢
         document.getElementById('searchRollBtn').addEventListener('click', () => {
             const rollVal = document.getElementById('searchRollInput').value.trim();
-            if(!rollVal) { Swal.fire('Missing input', 'Please enter a roll number to search.', 'warning'); return; }
+            if(!rollVal) { Swal.fire({title: 'Missing input', text: 'Please enter a roll number to search.', icon: 'warning', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); return; }
             showStudentHistory(rollVal);
         });
 
@@ -809,7 +992,7 @@
 
                 resultsSnap.forEach(doc => { const data = doc.data(); studentResults[data.examId] = data.score; if(data.email) usedEmails.add(data.email); });
 
-                if(usedEmails.size > 0) { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ffb74d; font-size:13px;">Emails Used: ${Array.from(usedEmails).join(', ')}</span>`; } 
+                if(usedEmails.size > 0) { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#E1A95F; font-size:13px;">Emails Used: ${Array.from(usedEmails).join(', ')}</span>`; } 
                 else { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ff5252; font-size:13px;">No records found for this roll number.</span>`; }
 
                 let html = "";
@@ -818,7 +1001,7 @@
                     html += `<tr><td style="text-align:left;">${exam.title}</td><td>${scoreHtml}</td></tr>`;
                 });
 
-                if(allExams.length === 0) html = '<tr><td colspan="2" style="color:#ffb74d;">No exams found in database.</td></tr>';
+                if(allExams.length === 0) html = '<tr><td colspan="2" style="color:#E1A95F;">No exams found in database.</td></tr>';
                 historyTableBody.innerHTML = html;
             } catch(e) { historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#ff5252;">Failed to load history.</td></tr>'; }
         }
