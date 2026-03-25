@@ -150,7 +150,7 @@
         .swal2-title { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
         .swal2-confirm { background: #00bcd4 !important; color: #000 !important; font-weight: bold !important; border-radius: 12px !important; box-shadow: 3px 3px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.3) !important; }
 
-        /* 🟡🟢 LIGHT MODE STYLES (Imported from index.html) 🟢🟡 */
+        /* 🟡🟢 LIGHT MODE STYLES 🟢🟡 */
         body.light-mode { background-color: #FFFFF0; color: #4A3B2C; background-image: none; } 
         body.light-mode .bg-blobs { opacity: 0.1; filter: blur(100px); }
         
@@ -173,7 +173,7 @@
         body.light-mode .clear-selection-btn:hover { background: rgba(102, 76, 40, 0.1); color: #ff5252; }
         
         body.light-mode .login-btn, body.light-mode .show-answers-btn { background: #F0EBE1; color: #664C28; border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: 6px 6px 12px rgba(102, 76, 40, 0.15), -4px -4px 10px #ffffff, inset 2px 2px 5px #ffffff, inset -4px -4px 8px rgba(102, 76, 40, 0.05); }
-        body.light-mode .submit-btn { background: #664C28; color: #FFFFF0; border: 1px solid rgba(102, 76, 40, 0.4); box-shadow: 4px 4px 10px rgba(102, 76, 40, 0.3), -2px -2px 5px #ffffff, inset 2px 2px 4px rgba(255,255,255,0.2); }
+        body.light-mode .submit-btn { background: #664C28; color: #FFFFF0; border-color: rgba(102, 76, 40, 0.4); box-shadow: 4px 4px 10px rgba(102, 76, 40, 0.3), -2px -2px 5px #ffffff, inset 2px 2px 4px rgba(255,255,255,0.2); }
         body.light-mode .submit-btn:active { box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4); color: #FFFFF0;}
         
         body.light-mode .roll-input-box label { color: #664C28; }
@@ -187,6 +187,13 @@
         body.light-mode #resultSaveMsg { color: #8A7254; }
         body.light-mode a { color: #664C28 !important; }
         body.light-mode #practiceAnswers { border-color: rgba(102, 76, 40, 0.2); }
+
+        /* SweetAlert Light Mode */
+        body.light-mode .swal2-popup { background: #FDFCF9 !important; color: #4A3B2C !important; box-shadow: 12px 12px 24px rgba(102, 76, 40, 0.15), inset 4px 4px 10px #ffffff !important; border: 1px solid rgba(102, 76, 40, 0.3) !important;}
+        body.light-mode .swal2-title { color: #664C28 !important; text-shadow: none !important;}
+        body.light-mode .swal2-html-container { color: #4A3B2C !important; }
+        body.light-mode .swal2-confirm { background: #664C28 !important; color: #FFFFF0 !important; }
+        body.light-mode .swal2-cancel { background: #ff5252 !important; color: #FFFFF0 !important; }
     </style>
 </head>
 <body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false">
@@ -296,6 +303,63 @@
         window.addEventListener('resize', checkWindowSize);
         checkWindowSize(); 
 
+        // 🟢 AUTO-SAVE FUNCTION 🟢
+        function saveProgressLocally() {
+            if (!currentExamId || !userEmail) return;
+            const storageKey = 'exam_progress_' + currentExamId + '_' + userEmail;
+            
+            const rollBox = document.getElementById('rollNumber');
+            const roll = rollBox ? rollBox.value : "";
+            const answers = {};
+            
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                answers[radio.name] = radio.value;
+            });
+            
+            const progress = {
+                roll: roll,
+                answers: answers,
+                timestamp: new Date().getTime()
+            };
+            
+            localStorage.setItem(storageKey, JSON.stringify(progress));
+        }
+
+        // 🟢 RESUME FUNCTION 🟢
+        function restoreProgressLocally() {
+            if (!currentExamId || !userEmail) return;
+            const storageKey = 'exam_progress_' + currentExamId + '_' + userEmail;
+            const savedStr = localStorage.getItem(storageKey);
+            
+            if (savedStr) {
+                try {
+                    const savedProgress = JSON.parse(savedStr);
+                    
+                    if (savedProgress.roll) {
+                        const rollBox = document.getElementById('rollNumber');
+                        if (rollBox) rollBox.value = savedProgress.roll;
+                    }
+                    
+                    if (savedProgress.answers) {
+                        for (let qId in savedProgress.answers) {
+                            const val = savedProgress.answers[qId];
+                            const radio = document.querySelector(`input[name="${qId}"][value="${val}"]`);
+                            if (radio) {
+                                radio.checked = true;
+                                radio.parentElement.classList.add('selected');
+                            }
+                        }
+                    }
+                    updateProgress(); 
+                    
+                    // Small toast notification
+                    const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
+                    Toast.fire({ icon: 'info', title: 'Previous progress restored!' });
+
+                } catch (e) { console.error("Error restoring progress", e); }
+            }
+        }
+
         onAuthStateChanged(auth, async (user) => {
             if (user && currentExamId) {
                 userEmail = user.email; 
@@ -387,6 +451,9 @@
                 totalQCount = Object.keys(questionsDataList).length;
                 updateProgress();
 
+                // 🟢 Call Restore Function after questions are loaded 🟢
+                restoreProgressLocally();
+
             } catch (error) { console.error("Error loading exam: ", error); }
         }
 
@@ -402,12 +469,16 @@
             }
         }
 
+        // 🟢 Trigger Auto-Save on Actions 🟢
+        document.getElementById('rollNumber').addEventListener('input', saveProgressLocally);
+
         questionsContainer.addEventListener('change', (e) => {
             if(e.target.type === 'radio') {
                 const name = e.target.name;
                 document.querySelectorAll(`input[name="${name}"]`).forEach(radio => { radio.parentElement.classList.remove('selected'); });
                 e.target.parentElement.classList.add('selected');
                 updateProgress(); 
+                saveProgressLocally(); // Save on radio click
             }
         });
 
@@ -419,6 +490,7 @@
                     radio.parentElement.classList.remove('selected'); 
                 });
                 updateProgress(); 
+                saveProgressLocally(); // Save on clear click
             }
         });
 
@@ -462,6 +534,19 @@
         document.getElementById('examForm').addEventListener('submit', function(e) { 
             e.preventDefault(); 
             if(isSubmitting) return; 
+            
+            // 🟢 OFFLINE CHECKER 🟢
+            if (!navigator.onLine) {
+                Swal.fire({
+                    icon: 'warning', title: 'You are Offline! 🌐',
+                    text: 'Your answers are auto-saved locally. Please restore your internet connection and click submit again.',
+                    confirmButtonText: 'Got it',
+                    background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                    color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
+                });
+                return;
+            }
+
             submitExamCore(); 
         });
 
@@ -521,6 +606,9 @@
                     document.getElementById('resultSaveMsg').innerText = "This was a practice attempt. Your score was not saved to the leaderboards.";
                     generatePracticeReview(userSelectedAnswers);
                 }
+
+                // 🟢 Clear Auto-Save Cache on Success 🟢
+                localStorage.removeItem('exam_progress_' + currentExamId + '_' + userEmail);
 
                 examSection.style.display = "none"; resultSection.style.display = "block";
                 document.getElementById('scoreDisplay').innerText = `Final Score: ${score}`;
