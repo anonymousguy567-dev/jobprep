@@ -16,7 +16,6 @@
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* 🟢 Background Blobs 🟢 */
         .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; transition: 0.4s;}
         .blob { position: absolute; filter: blur(90px); opacity: 0.2; animation: float 12s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #e91e63; top: -10%; left: -5%; animation-delay: 0s; }
@@ -24,7 +23,6 @@
 
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
 
-        /* 🟢 PREMIUM CLAYMORPHISM: Main Container 🟢 */
         .glass-container { 
             background: #1a1a22; border-radius: 35px; padding: 40px 30px; width: 100%; max-width: 900px; 
             box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4);
@@ -40,6 +38,7 @@
             width: 100%; padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.02); color: #fff; outline: none; transition: 0.4s; font-size: 15px; font-weight: bold;
             background: #15151a; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); color-scheme: dark;
         }
+        input[type="file"] { padding: 10px; font-size: 14px; background: #202028; cursor: pointer; }
         input:focus, textarea:focus, select:focus { box-shadow: inset 6px 6px 12px rgba(0,0,0,0.9), 0 0 15px rgba(0, 188, 212, 0.3); }
         select option { background-color: #1a1a22; color: white; }
 
@@ -59,48 +58,38 @@
             transition: 0.4s;
         }
 
-        .q-list-item { 
-            background: #1a1a22; padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px;
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); transition: 0.4s;
-        }
+        .q-list-item { background: #1a1a22; padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); transition: 0.4s; }
         .q-text { font-weight: bold; color: #e0e0e0; font-size: 16px; line-height: 1.4; transition: 0.4s;}
         .q-actions { display: flex; gap: 10px; }
-        
-        .btn-edit, .btn-delete { padding: 8px 16px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
+        .btn-edit, .btn-delete, .btn-eval { padding: 8px 16px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
         .btn-edit { background: #ffb74d; color: #000; box-shadow: 3px 3px 8px rgba(255,183,77,0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
         .btn-delete { background: #ff5252; color: #fff; box-shadow: 3px 3px 8px rgba(255,82,82,0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
-        .btn-edit:active, .btn-delete:active { transform: scale(0.95); box-shadow: inset 3px 3px 8px rgba(0,0,0,0.4); }
-
+        .btn-eval { background: #00e676; color: #000; box-shadow: 3px 3px 8px rgba(0,230,118,0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
+        .btn-edit:active, .btn-delete:active, .btn-eval:active { transform: scale(0.95); box-shadow: inset 3px 3px 8px rgba(0,0,0,0.4); }
         .action-buttons-row { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
         .action-buttons-row button { flex: 1; min-width: 150px; }
 
-        .stats-banner { 
-            background: #15151a; padding: 20px; border-radius: 16px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); border-left: 5px solid #00e676; transition: 0.4s;
-        }
+        .stats-banner { background: #15151a; padding: 20px; border-radius: 16px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); border-left: 5px solid #00e676; transition: 0.4s; }
         .stats-banner h4 { margin: 0; color: #a0a0b0; font-size: 15px; font-weight: bold; text-align: left; text-shadow: none; transition: 0.4s;}
         .stats-banner .count { font-size: 35px; font-weight: bold; color: #00e676; margin-top: 5px;}
         
-        .btn-live-excel { 
-            background: #2196f3; color: #fff; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; display: none; border: none;
-            box-shadow: 4px 4px 10px rgba(33,150,243,0.3), inset 2px 2px 5px rgba(255,255,255,0.4);
-        }
+        .btn-live-excel { background: #2196f3; color: #fff; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; display: none; border: none; box-shadow: 4px 4px 10px rgba(33,150,243,0.3), inset 2px 2px 5px rgba(255,255,255,0.4); }
         .btn-live-excel:active { transform: scale(0.95); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4); }
 
         .result-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 4000; display: none; justify-content: center; align-items: center; transition: 0.4s;}
         .result-modal.show { display: flex; animation: fadeIn 0.3s ease; }
+        
         .result-modal-content { 
-            background: #1a1a22; border-radius: 25px; padding: 30px; width: 90%; max-width: 600px; position: relative; 
-            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05); transform: translateY(-20px); transition: 0.4s ease; max-height: 90vh; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.04);
+            background: #1a1a22; border-radius: 25px; padding: 30px; width: 90%; position: relative; 
+            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05); 
+            transform: translateY(-20px); transition: 0.4s ease; border: 1px solid rgba(255,255,255,0.04); 
         }
+        
         .result-modal.show .result-modal-content { transform: translateY(0); }
         .result-close-btn { position: absolute; top: 20px; right: 25px; color: #ff5252; font-size: 32px; cursor: pointer; font-weight: bold; transition: 0.2s; line-height: 1; z-index: 10;}
         .result-close-btn:hover { transform: scale(1.1); text-shadow: 0 0 15px rgba(255,82,82,0.5); }
         
-        .result-table-wrapper { overflow-y: auto; margin-top: 15px; padding-right: 5px; flex-grow: 1; border-radius: 12px; background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6); transition: 0.4s;}
-        .result-table-wrapper::-webkit-scrollbar { width: 8px; }
-        .result-table-wrapper::-webkit-scrollbar-thumb { background: #00bcd4; border-radius: 10px; }
-        
+        .result-table-wrapper { margin-top: 15px; padding-right: 5px; flex-grow: 1; border-radius: 12px; background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6); transition: 0.4s;}
         .res-table { width: 100%; border-collapse: collapse; text-align: center; }
         .res-table th { background: #202028; padding: 15px; color: #00bcd4; position: sticky; top: 0; z-index: 1; font-size: 14px; text-transform: uppercase; transition: 0.4s;}
         .res-table td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e0e0e0; font-size: 15px; transition: 0.4s;}
@@ -108,126 +97,57 @@
 
         .admin-tabs { display: flex; gap: 12px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
         .admin-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { 
-            flex: 1; min-width: 150px; padding: 14px; border: 1px solid rgba(255,255,255,0.02); border-radius: 16px; background: #202028; color: #a0a0b0; font-weight: bold; cursor: pointer; transition: 0.4s; white-space: nowrap; font-size: 15px;
-            box-shadow: 4px 4px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.05);
-        }
+        .tab-btn { flex: 1; min-width: 130px; padding: 14px; border: 1px solid rgba(255,255,255,0.02); border-radius: 16px; background: #202028; color: #a0a0b0; font-weight: bold; cursor: pointer; transition: 0.4s; white-space: nowrap; font-size: 14px; box-shadow: 4px 4px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.05); }
         .tab-btn:hover { color: #fff; background: #252530; }
-        .tab-btn.active { 
-            color: #00bcd4; background: #15151a; 
-            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); border: 1px solid rgba(0, 188, 212, 0.2);
-        }
+        .tab-btn.active { color: #00bcd4; background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); border: 1px solid rgba(0, 188, 212, 0.2); }
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
-        
-        .clickable-roll { color: #ffb74d; font-weight: bold; cursor: pointer; text-decoration: underline; transition: 0.3s; }
-        .clickable-roll:hover { color: #fff; text-shadow: 0 0 10px rgba(255, 183, 77, 0.8); }
 
-        .live-counter-box { background: rgba(0, 188, 212, 0.1); border: 1px dashed #00bcd4; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 16px; color: #00bcd4; transition: 0.4s;}
-        
-        .compact-input-group { margin-bottom: 12px; width: 100%; }
-        .compact-input-group label { margin-bottom: 4px; font-size: 13px; }
-        .compact-input-group input, .compact-input-group textarea, .compact-input-group select { padding: 10px; font-size: 14px; border-radius: 10px;}
+        /* 🟢 Drawing Canvas CSS 🟢 */
+        .draw-canvas {
+            border-radius: 8px; cursor: crosshair; touch-action: none; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4); max-width: 100%; border: 2px solid #00e676; background: #fff;
+        }
 
-        /* 🟢 Navbar & Slide Menu (For Theme Toggle) 🟢 */
-        .navbar {
-            position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px;
-            display: flex; justify-content: flex-end; align-items: center;
-            background: transparent; border-bottom: none; z-index: 2000; transition: 0.4s ease;
-        }
-        
-        .nav-btn.btn-theme {
-            background: #202028; padding: 10px 15px; border-radius: 18px; 
-            text-decoration: none; font-weight: bold; font-size: 15px; transition: 0.3s ease-in-out;
-            box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(255,255,255,0.1), inset -3px -3px 6px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.03); cursor: pointer; color: #ffd700;
-        }
+        .navbar { position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px; display: flex; justify-content: flex-end; align-items: center; background: transparent; border-bottom: none; z-index: 2000; transition: 0.4s ease; }
+        .nav-btn.btn-theme { background: #202028; padding: 10px 15px; border-radius: 18px; text-decoration: none; font-weight: bold; font-size: 15px; transition: 0.3s ease-in-out; box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(255,255,255,0.1), inset -3px -3px 6px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; color: #ffd700; }
         .nav-btn.btn-theme:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px) scale(0.96); }
-        
         .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; padding: 5px; z-index: 3000; }
         .hamburger-btn svg { width: 30px; height: 30px; fill: #00bcd4; transition: 0.4s;}
 
-        .slide-menu-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
-            z-index: 2500; opacity: 0; visibility: hidden; transition: 0.3s ease; backdrop-filter: blur(3px);
-        }
-        .slide-menu-overlay.active { opacity: 1; visibility: visible; }
-
-        .slide-menu {
-            position: fixed; top: 0; right: -300px; width: 250px; height: 100%; background: #181820;
-            z-index: 2600; box-shadow: -10px 0 30px rgba(0,0,0,0.8); transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.4s;
-            display: flex; flex-direction: column; padding: 60px 20px 20px 20px; gap: 15px; overflow-y: auto;
-            border-left: 1px solid rgba(255,255,255,0.05);
-        }
-        .slide-menu.active { right: 0; }
-        .slide-menu .nav-btn { width: 100%; justify-content: center; padding: 15px; font-size: 16px; }
-        
-        .close-menu-btn {
-            position: absolute; top: 20px; right: 20px; background: #252530; border: none; width: 35px; height: 35px; border-radius: 50%;
-            color: #ff5252; font-size: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.5), -2px -2px 5px rgba(255,255,255,0.05); transition: 0.3s;
-        }
-
-        /* 🟢 SweetAlert Custom Theme 🟢 */
         .swal2-popup { background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important; box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important; }
         .swal2-title { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
-        .swal2-input { background: #15151a !important; color: #fff !important; border: 1px solid rgba(0, 188, 212, 0.4) !important; border-radius: 12px !important; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6) !important; }
-        .swal2-input:focus { border: 1px solid #00bcd4 !important; box-shadow: 0 0 10px rgba(0, 188, 212, 0.3) !important; }
+        .swal2-input, .swal2-textarea { background: #15151a !important; color: #fff !important; border: 1px solid rgba(0, 188, 212, 0.4) !important; border-radius: 12px !important; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6) !important; }
+        .swal2-input:focus, .swal2-textarea:focus { border: 1px solid #00bcd4 !important; box-shadow: 0 0 10px rgba(0, 188, 212, 0.3) !important; }
 
-        /* 🟡🟢 NEW LIGHT MODE STYLES (Cornsilk, Earth Yellow, Jet Stream) 🟢🟡 */
+        /* 🟡🟢 LIGHT MODE STYLES 🟢🟡 */
         body.light-mode { background-color: #FFF8DC; color: #333; } 
         body.light-mode .bg-blobs { opacity: 0.1; filter: blur(100px); }
-        
-        body.light-mode .glass-container, body.light-mode .section-box, body.light-mode .result-modal-content, body.light-mode .slide-menu {
-            background: #FFF8DC; border: 1px solid #E1A95F;
-            box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), -8px -8px 20px #ffffff, inset 4px 4px 10px #ffffff, inset -8px -8px 18px rgba(225, 169, 95, 0.1);
-        }
-        
+        body.light-mode .glass-container, body.light-mode .section-box, body.light-mode .result-modal-content { background: #FFF8DC; border: 1px solid #E1A95F; box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), -8px -8px 20px #ffffff, inset 4px 4px 10px #ffffff, inset -8px -8px 18px rgba(225, 169, 95, 0.1); }
         body.light-mode h1, body.light-mode h2, body.light-mode h3, body.light-mode h4, body.light-mode label { color: #E1A95F; text-shadow: none; }
-        
-        body.light-mode input, body.light-mode textarea, body.light-mode select {
-            background: #FFF8DC; color: #333; border: 1px solid #B2D4D4;
-            box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2), inset -2px -2px 5px #ffffff;
-        }
+        body.light-mode input, body.light-mode textarea, body.light-mode select { background: #FFF8DC; color: #333; border: 1px solid #B2D4D4; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2), inset -2px -2px 5px #ffffff; }
         body.light-mode input:focus, body.light-mode textarea:focus, body.light-mode select:focus { box-shadow: inset 6px 6px 12px rgba(225, 169, 95, 0.3), 0 0 15px rgba(225, 169, 95, 0.3); border-color: #E1A95F;}
         body.light-mode select option { background: #FFF8DC; color: #333; }
-        
         body.light-mode .tab-btn { background: #FFF8DC; color: #555; border-color: #B2D4D4; box-shadow: 4px 4px 8px rgba(225, 169, 95, 0.2), inset 2px 2px 4px #ffffff; }
         body.light-mode .tab-btn:hover { background: #B2D4D4; color: #333; }
         body.light-mode .tab-btn.active { background: #B2D4D4; color: #333; border: 1px solid #E1A95F; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.1); }
-        
         body.light-mode .q-list-item { background: #FFF8DC; border: 1px solid #B2D4D4; box-shadow: 4px 4px 10px rgba(225, 169, 95, 0.2), inset 2px 2px 4px #ffffff; }
         body.light-mode .q-text { color: #333; }
-        
         body.light-mode .stats-banner { background: #FFF8DC; border-color: #B2D4D4; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2), inset -2px -2px 4px #ffffff; border-left-color: #E1A95F;}
         body.light-mode .stats-banner .count { color: #E1A95F; }
-        
         body.light-mode .res-table th { background: #B2D4D4; color: #333; border-bottom: 1px solid rgba(225, 169, 95, 0.3); }
         body.light-mode .res-table td { color: #555; border-bottom: 1px solid rgba(178, 212, 212, 0.5); }
         body.light-mode .res-table tr:hover { background: rgba(225, 169, 95, 0.1); }
-        
         body.light-mode .result-table-wrapper { background: #FFF8DC; border: 1px solid #E1A95F; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2); }
-        body.light-mode .clickable-roll { color: #E1A95F; }
-        body.light-mode .clickable-roll:hover { color: #333; text-shadow: none; }
-        
         body.light-mode .submit-btn, body.light-mode .login-btn { background: #E1A95F; color: #fff; border-color: #E1A95F; box-shadow: 4px 4px 10px rgba(225, 169, 95, 0.4), inset 2px 2px 4px rgba(255,255,255,0.4); }
         body.light-mode .submit-btn:active, body.light-mode .login-btn:active { box-shadow: inset 4px 4px 10px rgba(0,0,0,0.2); color: #fff;}
-        
         body.light-mode .nav-btn { background: #FFF8DC; color: #E1A95F; border-color: #E1A95F; box-shadow: 4px 4px 8px rgba(225, 169, 95, 0.2), inset 2px 2px 4px #ffffff; }
         body.light-mode .nav-btn:active { box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2); }
-        body.light-mode .hamburger-btn svg { fill: #E1A95F; }
-
-        body.light-mode .live-counter-box { background: rgba(178, 212, 212, 0.3); border-color: #B2D4D4; color: #E1A95F; }
         body.light-mode .result-modal { background: rgba(255, 248, 220, 0.8); }
-        
         body.light-mode .swal2-popup { background: #FFF8DC !important; color: #333 !important; box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), inset 4px 4px 10px #ffffff !important; border: 1px solid #E1A95F !important;}
-        body.light-mode .swal2-title { color: #E1A95F !important; text-shadow: none !important;}
-        body.light-mode .swal2-input { background: #FFF8DC !important; color: #333 !important; border: 1px solid #B2D4D4 !important; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2) !important; }
-        body.light-mode .swal2-input:focus { border: 1px solid #E1A95F !important; box-shadow: 0 0 10px rgba(225, 169, 95, 0.3) !important; }
-
-        @media (max-width: 768px) { 
-            .nav-buttons { display: none; }
-            .hamburger-btn { display: block; }
-        }
+        body.light-mode .swal2-title, body.light-mode .swal2-html-container { color: #E1A95F !important; text-shadow: none !important;}
+        body.light-mode .swal2-input, body.light-mode .swal2-textarea { background: #FFF8DC !important; color: #333 !important; border: 1px solid #B2D4D4 !important; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2) !important; }
+        body.light-mode .swal2-input:focus, body.light-mode .swal2-textarea:focus { border: 1px solid #E1A95F !important; box-shadow: 0 0 10px rgba(225, 169, 95, 0.3) !important; }
+        @media (max-width: 768px) { .nav-buttons { display: none; } .hamburger-btn { display: block; } .action-buttons-row { flex-direction: column; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -243,23 +163,14 @@
         <div class="nav-buttons">
             <button class="nav-btn btn-theme" id="themeToggleDesktop">🌞</button>
         </div>
-        <button class="hamburger-btn" id="hamburgerBtn">
-            <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-        </button>
     </nav>
 
-    <div class="slide-menu-overlay" id="slideMenuOverlay"></div>
-    <div class="slide-menu" id="slideMenu">
-        <button class="close-menu-btn" id="closeMenuBtn">✖</button>
-        <button class="nav-btn btn-theme" id="themeToggleMobile" style="margin-top: 20px;">🌞</button>
-    </div>
-
     <div class="result-modal" id="resultModal">
-        <div class="result-modal-content">
+        <div class="result-modal-content" style="max-width: 650px; overflow-y: auto; max-height: 90vh;">
             <span class="result-close-btn" id="closeResultModal">&times;</span>
             <h3 style="margin-bottom: 5px; text-align: center; text-shadow: none;">📊 Live Result Board</h3>
             <p style="color: #a0a0b0; font-size: 14px; text-align: center; margin-bottom: 15px;">Results sorted by highest score.</p>
-            <div class="result-table-wrapper">
+            <div class="result-table-wrapper" style="overflow-y: visible;">
                 <table class="res-table">
                     <thead><tr><th>Rank</th><th>Roll Number</th><th>Total Score</th></tr></thead>
                     <tbody id="resultTableBody"></tbody>
@@ -269,11 +180,11 @@
     </div>
 
     <div class="result-modal" id="historyModal">
-        <div class="result-modal-content">
+        <div class="result-modal-content" style="max-width: 650px; overflow-y: auto; max-height: 90vh;">
             <span class="result-close-btn" id="closeHistoryModal">&times;</span>
             <h3 style="margin-bottom: 5px; text-align: center; text-shadow: none;">👤 Student History</h3>
             <p id="historyStudentDetails" style="color: #a0a0b0; font-size: 14px; text-align: center; margin-bottom: 15px;"></p>
-            <div class="result-table-wrapper">
+            <div class="result-table-wrapper" style="overflow-y: visible;">
                 <table class="res-table">
                     <thead><tr><th style="text-align: left;">Exam Title</th><th>Score</th></tr></thead>
                     <tbody id="historyTableBody"></tbody>
@@ -282,11 +193,41 @@
         </div>
     </div>
 
+    <div class="result-modal" id="evalModal">
+        <div class="result-modal-content" style="max-width: 950px; padding: 30px; overflow-y: auto; max-height: 90vh; display: block;">
+            <span class="result-close-btn" id="closeEvalModal">&times;</span>
+            
+            <p style="color: #ffb74d; margin-bottom: 10px; text-align: center; font-size: 16px; font-weight: bold;">Please evaluate the entire script at once/*Use desktop mode to evaluate</p>
+            
+            <h3 style="margin-bottom:10px; text-align: center; text-shadow: none; color: #00e676;">✍️ Evaluate Script</h3>
+            <p id="evalStudentInfo" style="text-align: center; color: #a0a0b0; margin-bottom: 15px; font-size: 14px;"></p>
+            
+            <div id="evalScriptContainer" style="margin-top: 20px;"></div>
+
+            <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                
+                <div class="compact-input-group">
+                    <label>Total Marks Obtained (Auto-calculated):</label>
+                    <input type="number" id="evalMarks" placeholder="0" step="0.1" readonly style="background: rgba(255,255,255,0.05); color: #00e676; cursor: not-allowed; text-align: center; font-size: 24px; font-weight: bold; border: 1px solid #00e676;">
+                </div>
+                
+                <div class="compact-input-group">
+                    <label>Feedback / Comments (Optional):</label>
+                    <textarea id="evalFeedback" rows="3" placeholder="e.g. Formula missing in step 2..."></textarea>
+                </div>
+
+                <p id="evalUploadStatus" style="font-size: 14px; color: #00e676; margin-top: 10px; font-weight: bold; text-align: center;"></p>
+                <button id="saveEvalBtn" class="submit-btn" style="background:#00e676; color:#000; margin-top:15px; padding: 16px; font-size: 18px;">Submit Evaluation</button>
+            </div>
+        </div>
+    </div>
+
+
     <div class="result-modal" id="editQModal">
-        <div class="result-modal-content" style="max-width: 500px; padding: 25px;">
+        <div class="result-modal-content" style="max-width: 500px; padding: 25px; overflow-y: auto; max-height: 90vh;">
             <span class="result-close-btn" id="closeEditQModal">&times;</span>
             <h3 style="margin-bottom:10px; text-align: center; text-shadow: none;">✏️ Edit Question</h3>
-            <div class="result-table-wrapper" style="padding: 10px; background: transparent; box-shadow: none; overflow-y: auto; margin-top: 0; border: none;">
+            <div class="result-table-wrapper" style="padding: 10px; background: transparent; box-shadow: none; border: none; overflow-y: visible; margin-top: 0;">
                 <div class="compact-input-group"><label>Question:</label><textarea id="editQText" rows="2" required></textarea></div>
                 <div class="compact-input-group"><label>Option 1:</label><input type="text" id="editQOpt1" required></div>
                 <div class="compact-input-group"><label>Option 2:</label><input type="text" id="editQOpt2" required></div>
@@ -317,6 +258,7 @@
             <div class="admin-tabs">
                 <button id="btn-tab-create" class="tab-btn active">📝 Create Exam</button>
                 <button id="btn-tab-add-q" class="tab-btn">➕ Add Questions</button>
+                <button id="btn-tab-eval" class="tab-btn" style="border-bottom: 2px solid #00e676;">✍️ Evaluate Written</button>
                 <button id="btn-tab-manage" class="tab-btn">⚙️ Management</button>
                 <button id="btn-tab-db" class="tab-btn">🗄️ Database Mgt.</button>
             </div>
@@ -325,6 +267,13 @@
                 <h3>Create New Exam (Draft)</h3>
                 <form id="createExamForm">
                     <div class="input-group"><label>Exam Title:</label><input type="text" id="newExamTitle" required placeholder="Enter Exam Title"></div>
+                    <div class="input-group">
+                        <label>Exam Type:</label>
+                        <select id="newExamType" required>
+                            <option value="mcq">MCQ Exam </option>
+                            <option value="written">Written Exam </option>
+                        </select>
+                    </div>
                     <div class="input-group"><label>Exam Duration (Minutes):</label><input type="number" id="newExamDuration" required placeholder="Enter Duration"></div>
                     <div class="input-group"><label>Result Publish Date & Time:</label><input type="datetime-local" id="newExamPublishTime" required></div>
                     <button type="submit" class="submit-btn" style="background: #ffb74d; color: #000;">Create Exam (Draft)</button>
@@ -343,21 +292,64 @@
                 </div>
 
                 <form id="questionForm">
-                    <div class="input-group"><label>Question:</label><textarea id="question" rows="3" required placeholder="Type your question here..."></textarea></div>
-                    <div class="input-group"><label>Option 1:</label><input type="text" id="option1" required></div>
-                    <div class="input-group"><label>Option 2:</label><input type="text" id="option2" required></div>
-                    <div class="input-group"><label>Option 3:</label><input type="text" id="option3" required></div>
-                    <div class="input-group"><label>Option 4:</label><input type="text" id="option4" required></div>
                     <div class="input-group">
-                        <label>Correct Answer:</label>
-                        <select id="correctOption" required>
-                            <option value="">Select correct option</option>
-                            <option value="1">Option 1</option><option value="2">Option 2</option>
-                            <option value="3">Option 3</option><option value="4">Option 4</option>
-                        </select>
+                        <label>Question Text (Optional for Written):</label>
+                        <textarea id="question" rows="3" placeholder="Type your question here..."></textarea>
+                    </div>
+                    
+                    <div id="qImageUploadGroup" class="input-group" style="display: none; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;">
+                        <label style="color: #ffb74d;">Question Image (Optional):</label>
+                        <input type="file" id="qImageFile" accept="image/*">
+                        <p id="qImageStatus" style="font-size: 12px; color: #00bcd4; margin-top: 5px;"></p>
+                    </div>
+
+                    <div id="qAnswerUploadGroup" class="input-group" style="display: none; background: rgba(0, 230, 118, 0.05); padding: 15px; border-radius: 12px; border: 1px dashed #00e676; margin-top: 10px;">
+                        <label style="color: #00e676;">Official Answer Image (Optional):</label>
+                        <input type="file" id="qAnswerImageFile" accept="image/*">
+                        <p id="qAnswerImageStatus" style="font-size: 12px; color: #00e676; margin-top: 5px;">*Visible to students after publish time.</p>
+                    </div>
+
+                    <div id="mcqOptionsGroup">
+                        <div class="input-group"><label>Option 1:</label><input type="text" id="option1"></div>
+                        <div class="input-group"><label>Option 2:</label><input type="text" id="option2"></div>
+                        <div class="input-group"><label>Option 3:</label><input type="text" id="option3"></div>
+                        <div class="input-group"><label>Option 4:</label><input type="text" id="option4"></div>
+                        <div class="input-group">
+                            <label>Correct Answer:</label>
+                            <select id="correctOption">
+                                <option value="">Select correct option</option>
+                                <option value="1">Option 1</option><option value="2">Option 2</option>
+                                <option value="3">Option 3</option><option value="4">Option 4</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="writtenMarksGroup" class="input-group" style="display: none;">
+                        <label>Max Marks for this Question:</label>
+                        <input type="number" id="qMaxMarks" placeholder="e.g. 10">
                     </div>
                     <button type="submit" class="submit-btn" id="saveQuestionBtn">Save Question</button>
                 </form>
+            </div>
+
+            <div id="tab-eval" class="section-box tab-content" style="border-top: 4px solid #00e676;">
+                <h3 style="color: #00e676;">✍️ Evaluate Written Scripts</h3>
+                <div class="input-group">
+                    <label>Select Written Exam:</label>
+                    <select id="evalExamSelector"><option value="">-- Loading Written Exams... --</option></select>
+                </div>
+                <div id="evalWorkspace" style="display:none; margin-top: 20px;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <button class="btn-live-excel" id="filterPendingBtn" style="display:block; flex:1; background: #ffb74d; color: #000;">Show Pending</button>
+                        <button class="btn-live-excel" id="filterEvalBtn" style="display:block; flex:1; background: #202028; color: #a0a0b0;">Show Evaluated</button>
+                    </div>
+                    <div class="result-table-wrapper" style="box-shadow: none; border: none; max-height: 400px; overflow-y: auto;">
+                        <table class="res-table" style="width: 100%; min-width: 500px;">
+                            <thead><tr><th style="text-align: left;">Roll / Email</th><th>Status</th><th>Score</th><th>Action</th></tr></thead>
+                            <tbody id="evalSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Select an exam to load scripts...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <div id="tab-manage" class="section-box tab-content" style="border-top: 4px solid #e91e63;">
@@ -366,30 +358,23 @@
                     <label>Select Exam to Manage:</label>
                     <select id="manageExamSelector"><option value="">-- Select an Exam --</option></select>
                 </div>
-                
                 <div id="manageWorkspace" style="display:none;">
-                    
                     <div class="stats-banner">
                         <div><h4>👥 Total Submissions</h4><div class="count" id="participantCount">...</div></div>
                         <button id="adminViewLiveResultBtn" class="btn-live-excel">👁️ View Leaderboard</button>
                     </div>
-
                     <div id="updateSettingsBox" style="background: transparent; padding: 0; border: none; margin-bottom: 25px; box-shadow: none; display: none;">
                         <h4 style="margin-bottom:15px; text-align: left;">Update Running Settings</h4>
-                        <p style="color: #a0a0b0; font-size: 13px; margin-bottom: 15px;">You can update details for this currently running (or draft) exam.</p>
-                        
                         <div class="input-group"><label>Update Title:</label><input type="text" id="editExamTitle"></div>
                         <div class="input-group"><label>Update Duration (Mins):</label><input type="number" id="editExamDuration"></div>
                         <div class="input-group"><label>Update Publish Time (End Time):</label><input type="datetime-local" id="editExamPublishTime"></div>
-                        
                         <div class="action-buttons-row">
                             <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63; margin-top: 0; color: #fff;">Save Changes Only</button>
                             <button id="publishDraftBtn" class="submit-btn" style="background: #00e676; margin-top: 0; color: #000; display: none;">🚀 Publish Live</button>
                         </div>
                     </div>
-
                     <div style="background: transparent; padding: 0; border: none; box-shadow: none;">
-                        <h4 style="margin-bottom:15px; text-align: left;">Edit / Delete Questions</h4>
+                        <h4 style="margin-bottom:15px; text-align: left;">Delete Questions</h4>
                         <div id="manageQuestionsList"><p style="color:#b3b3b3;">Loading questions...</p></div>
                     </div>
                 </div>
@@ -397,7 +382,6 @@
 
             <div id="tab-db" class="section-box tab-content" style="border-top: 4px solid #9c27b0;">
                 <h3>🗄️ Database Management</h3>
-                
                 <div style="background: transparent; padding: 0; border: none; margin-bottom: 25px; box-shadow: none;">
                     <h4 style="margin-bottom:15px; text-align: left;">🔍 Search Student History</h4>
                     <div style="display: flex; gap: 15px; align-items: center;">
@@ -405,34 +389,19 @@
                         <button id="searchRollBtn" class="submit-btn" style="margin: 0; width: auto; padding: 14px 30px;">Search</button>
                     </div>
                 </div>
-
                 <div class="input-group">
                     <label>Select Exam to Manage Database:</label>
                     <select id="dbExamSelector"><option value="">-- Select an Exam --</option></select>
                 </div>
-                
                 <div id="dbWorkspace" style="display:none; background: transparent; padding: 0; border: none; box-shadow: none;">
                     <p id="dbExamStatus" style="margin-bottom: 20px; font-weight: bold; font-size: 16px; text-align: center;"></p>
-
                     <div id="dbActionButtons" class="action-buttons-row"></div>
-                    
                     <div style="margin-top: 30px; padding-top: 25px;">
                         <h4 style="margin-bottom: 10px; text-align: left;">📋 Individual Submissions</h4>
-                        <p style="font-size: 13px; color: #a0a0b0; margin-bottom: 15px;">* Click on a Roll Number to view the student's full history.</p>
                         <div class="result-table-wrapper" style="box-shadow: none; border: none;">
                             <table class="res-table" style="width: 100%; min-width: 650px;">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: left;">Roll / Email</th>
-                                        <th>C / W / S</th>
-                                        <th>Score</th>
-                                        <th>Time</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dbSubmissionsBody">
-                                    <tr><td colspan="5" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr>
-                                </tbody>
+                                <thead><tr><th style="text-align: left;">Roll / Email</th><th>C / W / S (MCQ)</th><th>Score</th><th>Action</th></tr></thead>
+                                <tbody id="dbSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr></tbody>
                             </table>
                         </div>
                     </div>
@@ -447,424 +416,500 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🟢 Theme Check & Init 🟢
-        const themeToggleDesktop = document.getElementById('themeToggleDesktop');
-        const themeToggleMobile = document.getElementById('themeToggleMobile');
-        
-        if (localStorage.getItem('theme') === 'light') {
-            themeToggleDesktop.innerHTML = '🌙';
-            themeToggleMobile.innerHTML = '🌙';
-        } else {
-            themeToggleDesktop.innerHTML = '🌞';
-            themeToggleMobile.innerHTML = '🌞';
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            const icon = isLight ? '🌙' : '🌞';
-            themeToggleDesktop.innerHTML = icon;
-            themeToggleMobile.innerHTML = icon;
-        }
-
+        // Theme Init
+        const themeToggleDesktop = document.getElementById('themeToggleDesktop'); 
+        if (localStorage.getItem('theme') === 'light') { themeToggleDesktop.innerHTML = '🌙'; } 
+        else { themeToggleDesktop.innerHTML = '🌞'; }
+        function toggleTheme() { document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); themeToggleDesktop.innerHTML = isLight ? '🌙' : '🌞'; }
         themeToggleDesktop.addEventListener('click', toggleTheme);
-        themeToggleMobile.addEventListener('click', toggleTheme);
 
-        // 🟢 Mobile Menu Logic 🟢
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
-        const slideMenu = document.getElementById('slideMenu');
-        const slideMenuOverlay = document.getElementById('slideMenuOverlay');
-        const closeMenuBtn = document.getElementById('closeMenuBtn');
-
-        function toggleMenu() {
-            slideMenu.classList.toggle('active');
-            slideMenuOverlay.classList.toggle('active');
-        }
-
-        hamburgerBtn.addEventListener('click', toggleMenu);
-        closeMenuBtn.addEventListener('click', toggleMenu);
-        slideMenuOverlay.addEventListener('click', toggleMenu);
-
-        // 🔴 YOUR FIREBASE CONFIG 🔴
-        const firebaseConfig = {
-            apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
-            authDomain: "mcq-portal-904fd.firebaseapp.com",
-            projectId: "mcq-portal-904fd",
-            storageBucket: "mcq-portal-904fd.firebasestorage.app",
-            messagingSenderId: "977853699063",
-            appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
-        };
+        // 🔴 FIREBASE CONFIG 🔴
+        const firebaseConfig = { apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE", authDomain: "mcq-portal-904fd.firebaseapp.com", projectId: "mcq-portal-904fd", storageBucket: "mcq-portal-904fd.firebasestorage.app", messagingSenderId: "977853699063", appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2" };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); provider.setCustomParameters({ prompt: 'select_account' }); const db = getFirestore(app);
 
-        const ADMIN_EMAILS = [
-            "hridoymeruet@gmail.com", 
-            "mcqportal198@gmail.com"
-        ]; 
+        const IMGBB_API_KEY = "35b7e96a7a04b874aa3e4a2949ff11cc";
+        const ADMIN_EMAILS = ["hridoymeruet@gmail.com", "mcqportal198@gmail.com"]; 
+        let allExamsData = {};
 
-        // 🟢 Tab Switcher Logic 🟢
-        function switchTab(tabId, btnId) { 
-            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none'); 
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active')); 
-            document.getElementById(tabId).style.display = 'block'; 
-            document.getElementById(btnId).classList.add('active'); 
-        }
+        function switchTab(tabId, btnId) { document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none'); document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active')); document.getElementById(tabId).style.display = 'block'; document.getElementById(btnId).classList.add('active'); }
         document.getElementById('btn-tab-create').addEventListener('click', () => switchTab('tab-create', 'btn-tab-create')); 
         document.getElementById('btn-tab-add-q').addEventListener('click', () => switchTab('tab-add-q', 'btn-tab-add-q')); 
+        document.getElementById('btn-tab-eval').addEventListener('click', () => switchTab('tab-eval', 'btn-tab-eval')); 
         document.getElementById('btn-tab-manage').addEventListener('click', () => switchTab('tab-manage', 'btn-tab-manage')); 
         document.getElementById('btn-tab-db').addEventListener('click', () => switchTab('tab-db', 'btn-tab-db'));
 
-        const loginSection = document.getElementById('loginSection'); 
-        const adminFormSection = document.getElementById('adminFormSection'); 
-        const examSelector = document.getElementById('examSelector'); 
-        const manageExamSelector = document.getElementById('manageExamSelector'); 
-        const dbExamSelector = document.getElementById('dbExamSelector'); 
+        const loginSection = document.getElementById('loginSection'); const adminFormSection = document.getElementById('adminFormSection'); const examSelector = document.getElementById('examSelector'); const manageExamSelector = document.getElementById('manageExamSelector'); const dbExamSelector = document.getElementById('dbExamSelector'); const viewLiveResultBtn = document.getElementById('adminViewLiveResultBtn'); 
         
-        const viewLiveResultBtn = document.getElementById('adminViewLiveResultBtn'); 
-        
-        // 🟢 Modal Elements 🟢
-        const resultModal = document.getElementById('resultModal'); 
-        const closeResultModal = document.getElementById('closeResultModal'); 
-        const resultTableBody = document.getElementById('resultTableBody');
+        const resultModal = document.getElementById('resultModal'); const closeResultModal = document.getElementById('closeResultModal'); const resultTableBody = document.getElementById('resultTableBody');
+        const historyModal = document.getElementById('historyModal'); const closeHistoryModal = document.getElementById('closeHistoryModal'); const historyTableBody = document.getElementById('historyTableBody'); const historyStudentDetails = document.getElementById('historyStudentDetails');
+        const editQModal = document.getElementById('editQModal'); const closeEditQModal = document.getElementById('closeEditQModal');
+        const evalModal = document.getElementById('evalModal'); const closeEvalModal = document.getElementById('closeEvalModal');
 
-        const historyModal = document.getElementById('historyModal');
-        const closeHistoryModal = document.getElementById('closeHistoryModal');
-        const historyTableBody = document.getElementById('historyTableBody');
-        const historyStudentDetails = document.getElementById('historyStudentDetails');
+        closeResultModal.addEventListener('click', () => { resultModal.classList.remove('show'); }); closeHistoryModal.addEventListener('click', () => { historyModal.classList.remove('show'); }); closeEditQModal.addEventListener('click', () => { editQModal.classList.remove('show'); }); closeEvalModal.addEventListener('click', () => { evalModal.classList.remove('show'); }); 
+        window.addEventListener('click', (e) => { if(e.target === resultModal) resultModal.classList.remove('show'); if(e.target === historyModal) historyModal.classList.remove('show'); if(e.target === editQModal) editQModal.classList.remove('show'); if(e.target === evalModal) evalModal.classList.remove('show'); });
 
-        const editQModal = document.getElementById('editQModal');
-        const closeEditQModal = document.getElementById('closeEditQModal');
+        onAuthStateChanged(auth, (user) => { if (user) { if (ADMIN_EMAILS.includes(user.email)) { loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); } else { Swal.fire('Access Denied!', '', 'error'); signOut(auth); } } else { loginSection.style.display = "block"; adminFormSection.style.display = "none"; } });
+        document.getElementById('adminLoginBtn').addEventListener('click', async () => { try { await signInWithPopup(auth, provider); } catch (e) {} });
 
-        // Modal Close Listeners
-        closeResultModal.addEventListener('click', () => { resultModal.classList.remove('show'); }); 
-        closeHistoryModal.addEventListener('click', () => { historyModal.classList.remove('show'); }); 
-        closeEditQModal.addEventListener('click', () => { editQModal.classList.remove('show'); }); 
-
-        window.addEventListener('click', (e) => { 
-            if(e.target === resultModal) resultModal.classList.remove('show'); 
-            if(e.target === historyModal) historyModal.classList.remove('show'); 
-            if(e.target === editQModal) editQModal.classList.remove('show'); 
-        });
-
-        // 🟢 Auth System 🟢
-        onAuthStateChanged(auth, (user) => { 
-            if (user) { 
-                if (ADMIN_EMAILS.includes(user.email)) { 
-                    loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); 
-                } else { 
-                    Swal.fire({title: 'Access Denied!', text: 'You are not authorized.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); 
-                    signOut(auth); 
-                } 
-            } else { 
-                loginSection.style.display = "block"; adminFormSection.style.display = "none"; 
-            } 
-        });
-        document.getElementById('adminLoginBtn').addEventListener('click', async () => { 
-            const btn = document.getElementById('adminLoginBtn'); btn.innerText = "Processing..."; 
-            try { await signInWithPopup(auth, provider); btn.innerText = "Login with Google"; } 
-            catch (error) { Swal.fire({title: 'Error', text: 'Login failed.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); btn.innerText = "Login with Google"; } 
-        });
-
-        // 🟢 Load Exams 🟢
-        async function loadExamsIntoDropdowns() {
-            try { 
-                const q = query(collection(db, "exams"), orderBy("createdAt", "desc")); 
-                const querySnapshot = await getDocs(q); 
-                let optionsHtml = '<option value="">-- Select an Exam --</option>'; 
-                const currentTime = new Date().getTime();
-                querySnapshot.forEach((doc) => { 
-                    const data = doc.data(); let titleStr = data.title; 
-                    
-                    if(data.status === "hidden") { titleStr += " 🙈 (Hidden)"; }
-                    else if(data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) { titleStr += " 🟢 (Practice)"; } 
-                    else if(data.status === "draft") { titleStr += " 📝 (Draft)"; } 
-                    else { titleStr += " 🔴 (Live)"; } 
-                    
-                    optionsHtml += `<option value="${doc.id}">${titleStr}</option>`; 
-                }); 
-                examSelector.innerHTML = optionsHtml; manageExamSelector.innerHTML = optionsHtml; dbExamSelector.innerHTML = optionsHtml; 
-            } catch (error) { console.error("Error:", error); }
+        async function uploadImageToImgBB(file) {
+            const formData = new FormData(); formData.append('image', file);
+            try {
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
+                const data = await response.json();
+                if(data.success) { return data.data.url; } else { throw new Error("Upload failed"); }
+            } catch(e) { console.error(e); return null; }
         }
 
-        function formatTimeForInput(timestamp) { const d = new Date(timestamp); const offset = d.getTimezoneOffset() * 60000; return new Date(d - offset).toISOString().slice(0, 16); }
-
-        // 🟢 Create Exam 🟢
-        document.getElementById('createExamForm').addEventListener('submit', async function(e) { 
-            e.preventDefault(); 
-            const btn = document.querySelector('#createExamForm button'); btn.innerText = "Creating...";
+        async function loadExamsIntoDropdowns() {
             try { 
-                await addDoc(collection(db, "exams"), { 
-                    title: document.getElementById('newExamTitle').value, 
-                    duration: parseInt(document.getElementById('newExamDuration').value), 
-                    publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), 
-                    createdAt: new Date().getTime(), status: "draft" 
+                const q = query(collection(db, "exams"), orderBy("createdAt", "desc")); const querySnapshot = await getDocs(q); 
+                let optionsHtml = '<option value="">-- Select an Exam --</option>'; let writtenOptionsHtml = '<option value="">-- Select Written Exam --</option>'; 
+                const currentTime = new Date().getTime(); allExamsData = {};
+                querySnapshot.forEach((doc) => { 
+                    const data = doc.data(); let titleStr = data.title; allExamsData[doc.id] = data;
+                    const typeIcon = data.type === 'written' ? "✍️ " : "📋 ";
+                    if(data.status === "hidden") titleStr += " 🙈";
+                    else if(data.type !== 'written' && (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime))) titleStr += " 🟢 (Practice)"; 
+                    else if(data.type === 'written' && (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime))) titleStr += " 🏁 (Ended)"; 
+                    else if(data.status === "draft") titleStr += " 📝 (Draft)"; 
+                    else titleStr += " 🔴 (Live)"; 
+                    const opt = `<option value="${doc.id}">${typeIcon} ${titleStr}</option>`;
+                    optionsHtml += opt; 
+                    if(data.type === 'written') writtenOptionsHtml += opt;
                 }); 
-                Swal.fire({title: 'Created!', text: 'Exam Saved as DRAFT successfully.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'});
-                document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); 
-            } catch (error) { Swal.fire({title: 'Error', text: 'Failed to create exam.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } 
-            btn.innerText = "Create Exam (Draft)";
+                document.getElementById('examSelector').innerHTML = optionsHtml; document.getElementById('manageExamSelector').innerHTML = optionsHtml; document.getElementById('dbExamSelector').innerHTML = optionsHtml; document.getElementById('evalExamSelector').innerHTML = writtenOptionsHtml; 
+            } catch (error) {}
+        }
+
+        function formatTimeForInput(timestamp) { if(!timestamp) return ""; try { const d = new Date(timestamp); if (isNaN(d.getTime())) return ""; const offset = d.getTimezoneOffset() * 60000; return new Date(d - offset).toISOString().slice(0, 16); } catch(e) { return ""; } }
+
+        document.getElementById('createExamForm').addEventListener('submit', async function(e) { 
+            e.preventDefault(); const btn = document.querySelector('#createExamForm button'); btn.innerText = "Creating...";
+            try { await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, type: document.getElementById('newExamType').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "draft" }); Swal.fire('Created!', 'Exam Saved as DRAFT successfully.', 'success'); document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); } catch (error) { Swal.fire('Error', 'Failed to create exam.', 'error'); } btn.innerText = "Create Exam (Draft)";
         });
         
-        // 🟢 Add Question Logic 🟢
-        examSelector.addEventListener('change', async (e) => {
+        document.getElementById('examSelector').addEventListener('change', async (e) => {
             const examId = e.target.value; const counterBox = document.getElementById('liveQuestionCounterBox');
             if(!examId) { counterBox.style.display = "none"; return; }
+            
+            const examType = allExamsData[examId].type;
+            if(examType === 'written') {
+                document.getElementById('mcqOptionsGroup').style.display = "none";
+                document.getElementById('qImageUploadGroup').style.display = "block";
+                document.getElementById('qAnswerUploadGroup').style.display = "block"; 
+                document.getElementById('writtenMarksGroup').style.display = "block";
+                document.getElementById('question').removeAttribute('required'); 
+                document.getElementById('option1').removeAttribute('required'); document.getElementById('option2').removeAttribute('required'); document.getElementById('option3').removeAttribute('required'); document.getElementById('option4').removeAttribute('required'); document.getElementById('correctOption').removeAttribute('required');
+                document.getElementById('qMaxMarks').setAttribute('required', 'true');
+            } else {
+                document.getElementById('mcqOptionsGroup').style.display = "block";
+                document.getElementById('qImageUploadGroup').style.display = "none";
+                document.getElementById('qAnswerUploadGroup').style.display = "none";
+                document.getElementById('writtenMarksGroup').style.display = "none";
+                document.getElementById('question').setAttribute('required', 'true'); 
+                document.getElementById('option1').setAttribute('required', 'true'); document.getElementById('option2').setAttribute('required', 'true'); document.getElementById('option3').setAttribute('required', 'true'); document.getElementById('option4').setAttribute('required', 'true'); document.getElementById('correctOption').setAttribute('required', 'true');
+                document.getElementById('qMaxMarks').removeAttribute('required');
+            }
+
             counterBox.style.display = "block"; document.getElementById('liveQuestionNumber').innerText = "...";
-            const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
-            document.getElementById('liveQuestionNumber').innerText = qSnap.size + 1;
+            try { const qSnap = await getDocs(collection(db, "exams", examId, "questions")); document.getElementById('liveQuestionNumber').innerText = qSnap.size + 1; } catch(e) {}
         });
 
         document.getElementById('questionForm').addEventListener('submit', async function(e) { 
             e.preventDefault(); 
-            const selectedExamId = examSelector.value; 
-            if(!selectedExamId) { Swal.fire({title: 'Wait!', text: 'Please select an Exam first!', icon: 'warning', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); return; } 
-            const btn = document.getElementById('saveQuestionBtn'); btn.innerText = "Saving..."; 
+            const selectedExamId = document.getElementById('examSelector').value; 
+            if(!selectedExamId) { Swal.fire('Wait!', 'Please select an Exam first!', 'warning'); return; } 
+            
+            const examType = allExamsData[selectedExamId].type;
+            const qText = document.getElementById('question').value.trim();
+
+            if(examType === 'written') {
+                const fileInput = document.getElementById('qImageFile');
+                if(!qText && fileInput.files.length === 0) { Swal.fire('Wait!', 'Please provide either Question Text or upload a Question Image.', 'warning'); return; }
+            }
+
+            const btn = document.getElementById('saveQuestionBtn'); btn.innerText = "Processing..."; 
             
             try { 
-                await addDoc(collection(db, "exams", selectedExamId, "questions"), { 
-                    question: document.getElementById('question').value, 
-                    options: { "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, "3": document.getElementById('option3').value, "4": document.getElementById('option4').value }, 
-                    correctAnswer: document.getElementById('correctOption').value, timestamp: new Date() 
-                }); 
-                Swal.fire({ icon: 'success', title: 'Saved!', text: 'Question added successfully.', timer: 1500, showConfirmButton: false, background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' });
+                let questionData = { question: qText, timestamp: new Date() };
+
+                if(examType === 'written') {
+                    questionData.maxMarks = parseFloat(document.getElementById('qMaxMarks').value);
+                    const fileInput = document.getElementById('qImageFile');
+                    if(fileInput.files.length > 0) {
+                        document.getElementById('qImageStatus').innerText = "Uploading Question Image...";
+                        const url = await uploadImageToImgBB(fileInput.files[0]);
+                        if(url) questionData.imageUrl = url;
+                        document.getElementById('qImageStatus').innerText = "";
+                    }
+                    const ansFileInput = document.getElementById('qAnswerImageFile');
+                    if(ansFileInput.files.length > 0) {
+                        document.getElementById('qAnswerImageStatus').innerText = "Uploading Answer Image...";
+                        const ansUrl = await uploadImageToImgBB(ansFileInput.files[0]);
+                        if(ansUrl) questionData.answerImageUrl = ansUrl;
+                        document.getElementById('qAnswerImageStatus').innerText = "*Visible to students after publish time.";
+                    }
+                } else {
+                    questionData.options = { "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, "3": document.getElementById('option3').value, "4": document.getElementById('option4').value };
+                    questionData.correctAnswer = document.getElementById('correctOption').value;
+                }
+
+                await addDoc(collection(db, "exams", selectedExamId, "questions"), questionData); 
+                Swal.fire({ icon: 'success', title: 'Saved!', timer: 1000, showConfirmButton: false });
                 
                 let currentNum = parseInt(document.getElementById('liveQuestionNumber').innerText);
                 document.getElementById('liveQuestionNumber').innerText = currentNum + 1;
                 document.getElementById('questionForm').reset(); 
-            } catch (error) { Swal.fire({title: 'Error', text: 'Failed to save question.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } 
+            } catch (error) { Swal.fire('Error', 'Failed to save question.', 'error'); } 
             btn.innerText = "Save Question"; 
         });
 
-        // 🟢 Manage Exam Dropdown Change 🟢
-        manageExamSelector.addEventListener('change', async (e) => {
-            const examId = e.target.value; const workspace = document.getElementById('manageWorkspace'); const participantCountEl = document.getElementById('participantCount'); 
-            if(!examId) { workspace.style.display = "none"; return; } 
-            workspace.style.display = "block"; document.getElementById('manageQuestionsList').innerHTML = "<p style='color:#b3b3b3;'>Loading...</p>"; participantCountEl.innerText = "Loading..."; viewLiveResultBtn.style.display = "none";
-            
-            const examDoc = await getDoc(doc(db, "exams", examId)); 
-            if(examDoc.exists()) { 
-                const data = examDoc.data(); 
-                const currentTime = new Date().getTime();
-                const updateBox = document.getElementById('updateSettingsBox');
-                const publishDraftBtn = document.getElementById('publishDraftBtn');
-                
-                document.getElementById('editExamTitle').value = data.title; 
-                document.getElementById('editExamDuration').value = data.duration; 
-                document.getElementById('editExamPublishTime').value = formatTimeForInput(data.publishTime); 
-                
-                let isPractice = false;
-                if(data.status === "hidden" || data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) {
-                    isPractice = true;
-                }
-                
-                if(isPractice) {
-                    updateBox.style.display = "none";
-                } else {
-                    updateBox.style.display = "block";
-                    if(data.status === "draft") {
-                        publishDraftBtn.style.display = "block";
-                    } else {
-                        publishDraftBtn.style.display = "none";
-                    }
-                }
-            }
-            
-            try { 
-                const resQuery = query(collection(db, "results"), where("examId", "==", examId)); 
-                const resSnap = await getDocs(resQuery); participantCountEl.innerText = resSnap.size; 
-                if(resSnap.size > 0) { viewLiveResultBtn.style.display = "block"; } 
-            } catch (err) { console.error(err); } 
-            loadQuestionsForEdit(examId);
-        });
+        // 🟢 EVALUATE WRITTEN SCRIPTS LOGIC 🟢
+        const evalExamSelector = document.getElementById('evalExamSelector'); const filterPendingBtn = document.getElementById('filterPendingBtn'); const filterEvalBtn = document.getElementById('filterEvalBtn');
+        let currentEvalFilter = 'pending'; let evalSubmissionsData = [];
 
-        // 🟢 View Leaderboard 🟢
-        viewLiveResultBtn.addEventListener('click', async (e) => { 
-            e.preventDefault(); const examId = manageExamSelector.value; if(!examId) return; 
-            const originalText = viewLiveResultBtn.innerText; viewLiveResultBtn.innerText = "Loading..."; 
-            try { 
-                const q = query(collection(db, "results"), where("examId", "==", examId)); 
-                const snapshot = await getDocs(q); let resultsArray = []; snapshot.forEach(doc => { resultsArray.push(doc.data()); }); 
-                resultsArray.sort((a, b) => b.score - a.score); resultTableBody.innerHTML = ""; 
-                resultsArray.forEach((row, index) => { 
-                    let tr = document.createElement('tr'); 
-                    tr.innerHTML = `<td>#${index + 1}</td><td style="font-weight: bold; color: #E1A95F;">${row.rollNumber || "N/A"}</td><td style="font-weight: bold; color: #00e676; font-size:18px;">${row.score}</td>`; 
-                    resultTableBody.appendChild(tr); 
-                }); 
-                resultModal.classList.add('show'); 
-            } catch (error) { Swal.fire({title: 'Error', text: 'Failed to load results.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } 
-            viewLiveResultBtn.innerText = originalText; 
-        });
+        evalExamSelector.addEventListener('change', () => { loadEvalSubmissions(); });
+        filterPendingBtn.addEventListener('click', () => { currentEvalFilter = 'pending'; filterPendingBtn.style.background = '#ffb74d'; filterPendingBtn.style.color = '#000'; filterEvalBtn.style.background = '#202028'; filterEvalBtn.style.color = '#a0a0b0'; renderEvalTable(); });
+        filterEvalBtn.addEventListener('click', () => { currentEvalFilter = 'evaluated'; filterEvalBtn.style.background = '#00e676'; filterEvalBtn.style.color = '#000'; filterPendingBtn.style.background = '#202028'; filterPendingBtn.style.color = '#a0a0b0'; renderEvalTable(); });
 
-        // 🟢 Save Changes Only (For Live/Draft Exams) 🟢
-        document.getElementById('updateSettingsBtn').addEventListener('click', async () => { 
-            const examId = manageExamSelector.value; 
-            if(!examId) return;
-            try { 
-                await updateDoc(doc(db, "exams", examId), { 
-                    title: document.getElementById('editExamTitle').value, 
-                    duration: parseInt(document.getElementById('editExamDuration').value), 
-                    publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() 
-                }); 
-                Swal.fire({title: 'Updated', text: 'Settings updated successfully.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); 
-            } catch (error) { Swal.fire({title: 'Error', text: 'Failed to update.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } 
-        });
+        async function loadEvalSubmissions() {
+            const examId = evalExamSelector.value; const workspace = document.getElementById('evalWorkspace');
+            if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block";
+            document.getElementById('evalSubmissionsBody').innerHTML = '<tr><td colspan="4" style="text-align:center; color:#a0a0b0;">Loading scripts...</td></tr>';
+            try { const q = query(collection(db, "results"), where("examId", "==", examId)); const snap = await getDocs(q); evalSubmissionsData = []; snap.forEach(doc => evalSubmissionsData.push({id: doc.id, ...doc.data()})); renderEvalTable(); } catch(e) { console.error(e); }
+        }
 
-        // 🟢 PUBLISH DRAFT EXAM 🟢
-        document.getElementById('publishDraftBtn').addEventListener('click', async () => { 
-            const examId = manageExamSelector.value; 
-            if(!examId) return;
-            Swal.fire({
-                title: 'Publish this Exam?',
-                text: "This will change the status from Draft to LIVE. Students will be able to take it.",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#00e676',
-                cancelButtonColor: '#333',
-                confirmButtonText: 'Yes, Publish it!',
-                background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22',
-                color: document.body.classList.contains('light-mode') ? '#333' : '#fff'
-            }).then(async (result) => {
-                if(result.isConfirmed) {
-                    try { 
-                        await setDoc(doc(db, "exams", examId), { 
-                            title: document.getElementById('editExamTitle').value, 
-                            duration: parseInt(document.getElementById('editExamDuration').value), 
-                            publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime(),
-                            status: "active" 
-                        }, { merge: true }); 
-                        Swal.fire({title: 'Published!', text: 'Exam is now LIVE for students.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); 
-                        loadExamsIntoDropdowns();
-                        manageExamSelector.dispatchEvent(new Event('change')); 
-                    } catch (error) { Swal.fire({title: 'Error', text: 'Failed to publish exam.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } 
-                }
-            });
-        });
+        function renderEvalTable() {
+            const tbody = document.getElementById('evalSubmissionsBody'); tbody.innerHTML = "";
+            let filtered = evalSubmissionsData.filter(sub => { if(currentEvalFilter === 'pending') return sub.status === 'pending' || !sub.status; return sub.status === 'evaluated'; });
+            if(filtered.length === 0) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ffb74d;">No ${currentEvalFilter} scripts found.</td></tr>`; return; }
 
-        // 🟢 Load Questions for Edit 🟢
-        async function loadQuestionsForEdit(examId) {
-            const listDiv = document.getElementById('manageQuestionsList'); listDiv.innerHTML = ""; 
-            const qSnap = await getDocs(collection(db, "exams", examId, "questions")); 
-            if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#E1A95F;'>No questions found.</p>"; return; }
-            let count = 1; 
-            qSnap.forEach((docSnap) => { 
-                const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; 
-                item.innerHTML = `<div class="q-text">Q${count}: ${data.question}</div><div class="q-actions"><button class="btn-edit" data-id="${qId}">Edit</button><button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++;
+            filtered.forEach((sub, i) => {
+                let statusSpan = currentEvalFilter === 'pending' ? `<span style="color:#ffb74d;">⏳ Pending</span>` : `<span style="color:#00e676;">✅ Evaluated</span>`;
+                let scoreText = sub.score !== undefined ? sub.score : "N/A";
+                let btnText = currentEvalFilter === 'pending' ? "✍️ Evaluate" : "🔍 View/Edit";
                 
-                item.querySelector('.btn-edit').addEventListener('click', () => { 
-                    editQModal.classList.add('show'); 
-                    document.getElementById('editQText').value = data.question; 
-                    document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; 
-                    document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; 
-                    document.getElementById('editQCorrect').value = data.correctAnswer || "1"; 
-                    document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); 
-                });
-                
-                item.querySelector('.btn-delete').addEventListener('click', async () => { 
-                    Swal.fire({ title: 'Delete Question?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Yes, delete it!', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' }).then(async (res) => {
-                        if(res.isConfirmed) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); }
-                    });
-                });
+                let tr = document.createElement('tr');
+                tr.innerHTML = `<td style="text-align:left;"><b>${sub.rollNumber}</b><br><span style="font-size:11px; color:#a0a0b0;">${sub.email}</span></td><td>${statusSpan}</td><td style="font-weight:bold; color:#00bcd4;">${scoreText}</td><td><button class="btn-eval eval-open-btn" data-index="${i}">${btnText}</button></td>`;
+                tbody.appendChild(tr);
+                tr.querySelector('.eval-open-btn').addEventListener('click', () => openEvalModal(sub));
             });
         }
 
-        // 🟢 Save Edited Question 🟢
-        document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => {
-            e.preventDefault(); const btn = document.getElementById('saveEditedQBtn'); const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; btn.innerText = "Saving...";
-            try { 
-                await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); 
-                editQModal.classList.remove('show'); 
-                loadQuestionsForEdit(examId); 
-                Swal.fire({icon: 'success', title: 'Updated', timer: 1000, showConfirmButton: false, background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'});
-            } catch (error) { Swal.fire({title: 'Error', text: error.message, icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } btn.innerText = "Update Question";
+        let currentEvalSubId = null;
+        let currentEvalSub = null; // Store entire sub data
+        let canvasRegistry = {}; // Store canvas contexts for upload
+
+        // 🟢 OPEN EVAL MODAL (PER QUESTION LIVE CANVAS) 🟢
+        async function openEvalModal(sub) {
+            currentEvalSubId = sub.id; 
+            currentEvalSub = sub;
+            canvasRegistry = {}; // Clear old registry
+
+            document.getElementById('evalStudentInfo').innerText = `Student: ${sub.rollNumber} | Email: ${sub.email}`;
+            
+            const scriptContainer = document.getElementById('evalScriptContainer');
+            scriptContainer.innerHTML = "<p style='color:#00bcd4; text-align:center;'>Loading scripts...</p>";
+            evalModal.classList.add('show');
+
+            try {
+                const qSnap = await getDocs(collection(db, "exams", sub.examId, "questions"));
+                let html = ""; let qNum = 1;
+                let studentMarks = sub.questionMarks || {}; 
+
+                let questionsArray = [];
+                qSnap.forEach(doc => { questionsArray.push({ id: doc.id, data: doc.data() }); });
+
+                // Generate HTML First
+                questionsArray.forEach(qItem => {
+                    const qData = qItem.data; const qId = qItem.id;
+                    let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null;
+                    if (!studentAns && sub.studentImageUrl && qNum === 1) { studentAns = sub.studentImageUrl; }
+
+                    let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null;
+                    let ansUrlToDraw = checkedAns || studentAns;
+
+                    let prevMark = studentMarks[qId] !== undefined ? studentMarks[qId] : "";
+
+                    html += `<div style="margin-bottom: 25px; text-align: left; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">`;
+                    html += `<p style="font-weight: bold; color: #00bcd4; margin-bottom: 15px; font-size: 18px;">Q${qNum}: ${qData.question || '(Image Question)'} <span style="color:#ffb74d;">[Max: ${qData.maxMarks || 0}]</span></p>`;
+                    
+                    if(ansUrlToDraw) {
+                        html += `
+                            <div style="text-align:center; position:relative; margin-bottom:15px;">
+                                <canvas id="canvas_${qId}" class="draw-canvas"></canvas><br>
+                                <button class="btn-delete clear-canvas-btn" data-qid="${qId}" style="margin-top: 10px; padding: 6px 20px;">🧹 Clear</button>
+                            </div>
+                        `;
+                    } else {
+                        html += `<p style="color: #ff5252; font-weight: bold; margin-bottom: 15px; font-size: 16px;">Not answered</p>`;
+                    }
+                    
+                    html += `
+                        <div style="display:flex; align-items:center; gap:10px; margin-top: 15px; background: rgba(0, 230, 118, 0.1); padding: 15px; border-radius: 8px;">
+                            <label style="color:#00e676; margin:0; font-size:16px; font-weight:bold;">Marks for Q${qNum}:</label>
+                            <input type="number" class="q-mark-input" data-qid="${qId}" value="${prevMark}" placeholder="0" step="0.1" max="${qData.maxMarks || 100}" style="width: 120px; padding: 10px; font-size:18px; text-align:center; background:#15151a; color:#fff; border:1px solid #00e676; border-radius:8px;">
+                        </div>
+                    `;
+                    html += `</div>`;
+                    qNum++;
+                });
+
+                scriptContainer.innerHTML = html;
+                document.getElementById('evalMarks').value = sub.score !== undefined ? sub.score : "0";
+
+                // Initialize Canvases
+                questionsArray.forEach(qItem => {
+                    const qId = qItem.id;
+                    let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null;
+                    if (!studentAns && sub.studentImageUrl && qItem.qNum === 1) { studentAns = sub.studentImageUrl; }
+
+                    let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null;
+                    
+                    if (studentAns || checkedAns) {
+                        const canvas = document.getElementById(`canvas_${qId}`);
+                        if (canvas) {
+                            const ctx = canvas.getContext('2d');
+                            const imgBase = new Image(); imgBase.crossOrigin = "Anonymous";
+                            
+                            imgBase.onload = () => {
+                                const MAX_WIDTH = 1000;
+                                let width = imgBase.width; let height = imgBase.height;
+                                if (width > MAX_WIDTH) { height = Math.floor(height * (MAX_WIDTH / width)); width = MAX_WIDTH; }
+                                
+                                canvas.width = width; canvas.height = height;
+                                ctx.drawImage(imgBase, 0, 0, width, height);
+
+                                if (checkedAns) {
+                                    const imgChecked = new Image(); imgChecked.crossOrigin = "Anonymous";
+                                    imgChecked.onload = () => {
+                                        ctx.clearRect(0, 0, width, height);
+                                        ctx.drawImage(imgChecked, 0, 0, width, height);
+                                        ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+                                        canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false };
+                                        attachCanvasEvents(canvas, qId);
+                                    };
+                                    imgChecked.src = checkedAns;
+                                } else {
+                                    ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+                                    canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false };
+                                    attachCanvasEvents(canvas, qId);
+                                }
+                            };
+                            imgBase.src = studentAns || checkedAns; // Fallback if somehow only checkedAns exists
+                        }
+                    }
+                });
+                
+            } catch(e) { scriptContainer.innerHTML = "<p style='color:#ff5252; text-align:center;'>Error loading scripts.</p>"; }
+
+            document.getElementById('evalFeedback').value = sub.feedback || ""; 
+            document.getElementById('evalUploadStatus').innerText = "";
+        }
+
+        // 🟢 Canvas Drawing Logic 🟢
+        function attachCanvasEvents(canvas, qId) {
+            let isDrawing = false;
+            
+            function getCoords(e) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                let clientX = e.clientX; let clientY = e.clientY;
+                if(e.touches && e.touches.length > 0) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
+                return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+            }
+
+            function startDrawing(e) {
+                isDrawing = true; const coords = getCoords(e);
+                canvasRegistry[qId].ctx.beginPath();
+                canvasRegistry[qId].ctx.moveTo(coords.x, coords.y);
+            }
+
+            function draw(e) {
+                if(!isDrawing) return; e.preventDefault();
+                const coords = getCoords(e);
+                canvasRegistry[qId].ctx.lineTo(coords.x, coords.y);
+                canvasRegistry[qId].ctx.stroke();
+                canvasRegistry[qId].isModified = true;
+            }
+
+            function stopDrawing() { if(isDrawing) { isDrawing = false; canvasRegistry[qId].ctx.closePath(); } }
+
+            canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing);
+            canvas.addEventListener('touchstart', startDrawing, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false});
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        // Clear Canvas Delegation
+        document.getElementById('evalScriptContainer').addEventListener('click', (e) => {
+            if(e.target.classList.contains('clear-canvas-btn')) {
+                const qId = e.target.getAttribute('data-qid');
+                const data = canvasRegistry[qId];
+                if(data) {
+                    data.ctx.clearRect(0, 0, data.width, data.height);
+                    data.ctx.drawImage(data.imgBase, 0, 0, data.width, data.height); // Reset to student's original image
+                    data.isModified = true; // Marks it so the fresh version overwrites any old checked version
+                }
+            }
         });
 
-        // 🟢🟢 DATABASE MANAGEMENT LOGIC 🟢🟢
-        const dbWorkspace = document.getElementById('dbWorkspace');
-        const dbActionButtons = document.getElementById('dbActionButtons');
-        
-        dbExamSelector.addEventListener('change', async (e) => {
-            const examId = e.target.value;
-            if(!examId) { dbWorkspace.style.display = "none"; return; }
-            dbWorkspace.style.display = "block";
+        // 🟢 AUTO-SUM EVENT LISTENER 🟢
+        document.getElementById('evalScriptContainer').addEventListener('input', (e) => {
+            if(e.target.classList.contains('q-mark-input')) {
+                let total = 0;
+                document.querySelectorAll('.q-mark-input').forEach(inp => {
+                    let val = parseFloat(inp.value);
+                    if(!isNaN(val)) total += val;
+                });
+                document.getElementById('evalMarks').value = total;
+            }
+        });
+
+        // 🟢 SAVE EVALUATION WITH PER-QUESTION MARKS & CANVASES 🟢
+        document.getElementById('saveEvalBtn').addEventListener('click', async () => {
+            let questionMarks = {};
+            let totalMarks = 0;
             
+            document.querySelectorAll('.q-mark-input').forEach(inp => {
+                let val = parseFloat(inp.value);
+                if(!isNaN(val)) { totalMarks += val; questionMarks[inp.getAttribute('data-qid')] = val; }
+            });
+
+            if(isNaN(totalMarks)) { totalMarks = 0; }
+
+            const btn = document.getElementById('saveEvalBtn'); btn.innerText = "Processing & Uploading..."; btn.disabled = true;
+            document.getElementById('evalUploadStatus').innerText = "Uploading checked scripts (if any modified)...";
+
+            let newCheckedImageUrls = currentEvalSub.checkedImageUrls || {};
+            let uploadPromises = [];
+
+            for (let qId in canvasRegistry) {
+                if (canvasRegistry[qId].isModified) {
+                    let p = new Promise((resolve, reject) => {
+                        canvasRegistry[qId].canvas.toBlob(async (blob) => {
+                            const file = new File([blob], `checked_${qId}.jpg`, { type: "image/jpeg" });
+                            const url = await uploadImageToImgBB(file);
+                            if (url) { newCheckedImageUrls[qId] = url; resolve(); } else { reject(); }
+                        }, 'image/jpeg', 0.85);
+                    });
+                    uploadPromises.push(p);
+                }
+            }
+
+            try {
+                await Promise.all(uploadPromises);
+
+                let updateData = { 
+                    score: totalMarks, 
+                    questionMarks: questionMarks, 
+                    feedback: document.getElementById('evalFeedback').value, 
+                    status: "evaluated" 
+                };
+
+                if (Object.keys(newCheckedImageUrls).length > 0) {
+                    updateData.checkedImageUrls = newCheckedImageUrls;
+                }
+
+                await setDoc(doc(db, "results", currentEvalSubId), updateData, {merge: true});
+                Swal.fire('Success', 'Evaluation Saved Successfully!', 'success');
+                evalModal.classList.remove('show');
+                loadEvalSubmissions(); 
+            } catch(e) { Swal.fire('Error', 'Failed to save evaluation.', 'error'); }
+            
+            btn.innerText = "Submit Evaluation"; btn.disabled = false; document.getElementById('evalUploadStatus').innerText = "";
+        });
+
+        // Manage Settings
+        document.getElementById('manageExamSelector').addEventListener('change', async (e) => {
+            const examId = e.target.value; const workspace = document.getElementById('manageWorkspace'); const participantCountEl = document.getElementById('participantCount'); 
+            if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block"; document.getElementById('manageQuestionsList').innerHTML = "<p style='color:#b3b3b3;'>Loading...</p>"; participantCountEl.innerText = "Loading..."; 
+            
+            try {
+                const examDoc = await getDoc(doc(db, "exams", examId)); 
+                if(examDoc.exists()) { 
+                    const data = examDoc.data(); const currentTime = new Date().getTime();
+                    document.getElementById('editExamTitle').value = data.title || ""; document.getElementById('editExamDuration').value = data.duration || 0; document.getElementById('editExamPublishTime').value = data.publishTime ? formatTimeForInput(data.publishTime) : ""; 
+                    document.getElementById('updateSettingsBox').style.display = (data.status === "hidden" || data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) ? "none" : "block"; document.getElementById('publishDraftBtn').style.display = data.status === "draft" ? "block" : "none";
+                }
+            } catch (error) {}
+            try { const resSnap = await getDocs(query(collection(db, "results"), where("examId", "==", examId))); participantCountEl.innerText = resSnap.size; } catch (err) { participantCountEl.innerText = "0"; } 
+            loadQuestionsForEdit(examId);
+        });
+
+        document.getElementById('updateSettingsBtn').addEventListener('click', async () => { const examId = document.getElementById('manageExamSelector').value; if(!examId) return; try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); Swal.fire('Updated', '', 'success'); loadExamsIntoDropdowns(); } catch (error) {} });
+        document.getElementById('publishDraftBtn').addEventListener('click', async () => { const examId = document.getElementById('manageExamSelector').value; if(!examId) return; Swal.fire({title: 'Publish this Exam?', icon: 'question', showCancelButton: true, confirmButtonText: 'Yes'}).then(async (res) => { if(res.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true }); Swal.fire('Published!', '', 'success'); loadExamsIntoDropdowns(); document.getElementById('manageExamSelector').dispatchEvent(new Event('change')); } catch (error) {} } }); });
+
+        async function loadQuestionsForEdit(examId) {
+            const listDiv = document.getElementById('manageQuestionsList'); listDiv.innerHTML = "<p style='color:#b3b3b3;'>Loading questions...</p>"; 
+            try {
+                const qSnap = await getDocs(collection(db, "exams", examId, "questions")); 
+                if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#E1A95F;'>No questions found.</p>"; return; }
+                let count = 1; listDiv.innerHTML = "";
+                qSnap.forEach((docSnap) => { 
+                    const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; 
+                    let isWritten = allExamsData[examId] && allExamsData[examId].type === 'written';
+                    let editBtnHtml = isWritten ? '' : `<button class="btn-edit" data-id="${qId}">Edit</button>`;
+                    item.innerHTML = `<div class="q-text">Q${count}: ${data.question || '(Image)'}</div><div class="q-actions">${editBtnHtml}<button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++;
+                    if(!isWritten) {
+                        item.querySelector('.btn-edit').addEventListener('click', () => { 
+                            document.getElementById('editQModal').classList.add('show'); document.getElementById('editQText').value = data.question; document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; document.getElementById('editQCorrect').value = data.correctAnswer || "1"; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); 
+                        });
+                    }
+                    item.querySelector('.btn-delete').addEventListener('click', () => { Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes' }).then(async (res) => { if(res.isConfirmed) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } }); });
+                });
+            } catch (err) { listDiv.innerHTML = "<p style='color:#ff5252;'>Failed to load questions.</p>"; }
+        }
+
+        document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => { const btn = e.target; const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; btn.innerText = "Saving..."; try { await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQModal').classList.remove('show'); loadQuestionsForEdit(examId); Swal.fire({icon: 'success', title: 'Updated', timer: 1000, showConfirmButton: false}); } catch (e) {} btn.innerText = "Update Question"; });
+
+        // DB Management (Status Logic Fixed for Written Exams)
+        const dbWorkspace = document.getElementById('dbWorkspace'); const dbActionButtons = document.getElementById('dbActionButtons');
+        document.getElementById('dbExamSelector').addEventListener('change', async (e) => {
+            const examId = e.target.value; if(!examId) { dbWorkspace.style.display = "none"; return; } dbWorkspace.style.display = "block";
             const docSnap = await getDoc(doc(db, "exams", examId));
             if(docSnap.exists()) {
-                const data = docSnap.data(); const currentTime = new Date().getTime(); const statusEl = document.getElementById('dbExamStatus');
-                
-                let buttonsHtml = '';
+                const data = docSnap.data(); const currentTime = new Date().getTime(); const statusEl = document.getElementById('dbExamStatus'); let buttonsHtml = '';
+                const isWritten = data.type === 'written';
 
-                if (data.status === "draft") {
-                    statusEl.innerHTML = `<span style="color:#b3b3b3;">Status: 📝 Draft Exam (Not Published)</span>`; 
-                } 
-                else if (data.status === "hidden") {
-                    statusEl.innerHTML = `<span style="color:#E1A95F;">Status: 🙈 Hidden (Removed from Practice)</span>`; 
-                    buttonsHtml += `<button id="dbRestorePracticeBtn" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">♻️ Restore to Practice</button>`;
+                if (data.status === "draft") { statusEl.innerHTML = `Status: 📝 Draft`; } 
+                else if (data.status === "hidden") { 
+                    statusEl.innerHTML = `Status: 🙈 Hidden`; 
+                    buttonsHtml += `<button id="${isWritten ? 'dbMakeLiveAgainBtn' : 'dbRestorePracticeBtn'}" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">${isWritten ? '🚀 Make Live Again' : '♻️ Restore to Practice'}</button>`; 
                 }
-                else if (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) {
-                    statusEl.innerHTML = `<span style="color:#00e676;">Status: 🟢 Practice Exam (Time Passed / Moved)</span>`; 
-                    buttonsHtml += `
-                        <button id="dbMakeLiveAgainBtn" class="submit-btn" style="background: #00e676; color: #000; margin-top: 0;">🚀 Make Live Again</button>
-                        <button id="dbHideFromStudentsBtn" class="submit-btn" style="background: #e91e63; color: #fff; margin-top: 0;">🙈 Hide Practice Exam</button>
-                    `;
+                else if (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) { 
+                    statusEl.innerHTML = isWritten ? `Status: 🏁 Ended (Evaluation Phase)` : `Status: 🟢 Practice`; 
+                    buttonsHtml += `<button id="dbMakeLiveAgainBtn" class="submit-btn" style="background: #00e676; color: #000; margin-top: 0;">🚀 Make Live Again</button> <button id="dbHideFromStudentsBtn" class="submit-btn" style="background: #e91e63; color: #fff; margin-top: 0;">🙈 Hide</button>`; 
                 } 
-                else {
-                    statusEl.innerHTML = `<span style="color:#ff5252;">Status: 🔴 Live Exam (Running)</span>`; 
-                    buttonsHtml += `<button id="dbHideBtn" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">Move to Practice (Hide Live)</button>`;
+                else { 
+                    statusEl.innerHTML = `Status: 🔴 Live`; 
+                    buttonsHtml += `<button id="${isWritten ? 'dbHideFromStudentsBtn' : 'dbHideBtn'}" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">${isWritten ? '🙈 Hide Exam' : 'Move to Practice'}</button>`; 
                 }
                 
-                // 🟢 NEW: Clear Merit List Button 🟢
-                buttonsHtml += `<button id="dbClearMeritBtn" class="submit-btn" style="background: #ffb74d; margin-top: 0; color:#000;">🧹 Clear Merit List</button>`;
-                buttonsHtml += `<button id="dbDeleteExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0; color:#fff;">🗑️ Permanently Delete</button>`;
-                
+                buttonsHtml += `<button id="dbClearMeritBtn" class="submit-btn" style="background: #ffb74d; margin-top: 0; color:#000;">🧹 Clear Submissions</button>`;
+                buttonsHtml += `<button id="dbDeleteExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0; color:#fff;">🗑️ Delete Exam</button>`;
                 dbActionButtons.innerHTML = buttonsHtml;
             }
             loadDbSubmissions(examId);
         });
 
-        // 🟢 Dynamic Buttons Logic (Event Delegation) 🟢
         dbActionButtons.addEventListener('click', async (e) => {
-            const examId = dbExamSelector.value;
-            if(!examId) return;
-
-            // 0. CLEAR MERIT LIST 🟢
+            const examId = document.getElementById('dbExamSelector').value; if(!examId) return;
+            
             if(e.target.id === 'dbClearMeritBtn') {
-                Swal.fire({
-                    title: 'Clear Merit List?',
-                    text: "Old merit list will be refreshed and a new merit list will be generated from future submissions.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#E1A95F',
-                    cancelButtonColor: '#ff5252',
-                    confirmButtonText: 'Yes, Clear it!',
-                    background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22',
-                    color: document.body.classList.contains('light-mode') ? '#333' : '#fff'
-                }).then(async (res) => {
+                Swal.fire({title: 'Clear Submissions?', icon: 'warning', showCancelButton: true}).then(async (res) => {
                     if(res.isConfirmed) {
-                        try {
-                            const resQuery = query(collection(db, "results"), where("examId", "==", examId));
-                            const snapshot = await getDocs(resQuery);
-                            const batchDeletes = [];
-                            snapshot.forEach(docSnap => {
-                                batchDeletes.push(deleteDoc(docSnap.ref));
-                                const email = docSnap.data().email;
-                                if(email) batchDeletes.push(deleteDoc(doc(db, "user_timers", email + "_" + examId)));
-                            });
-                            await Promise.all(batchDeletes);
-                            Swal.fire({title: 'Cleared!', text: 'Merit list has been reset.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'});
-                            loadDbSubmissions(examId); 
-                        } catch(err) {
-                            Swal.fire({title: 'Error', text: 'Failed to clear merit list.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'});
-                        }
+                        const snap = await getDocs(query(collection(db, "results"), where("examId", "==", examId)));
+                        const deletes = [];
+                        snap.forEach(d => { deletes.push(deleteDoc(d.ref)); deletes.push(deleteDoc(doc(db, "user_timers", d.data().email + "_" + examId))); });
+                        await Promise.all(deletes);
+                        Swal.fire('Cleared!', '', 'success'); loadDbSubmissions(examId); 
                     }
                 });
             }
-
-            // 1. MAKE LIVE AGAIN
             if(e.target.id === 'dbMakeLiveAgainBtn') {
-                const docSnap = await getDoc(doc(db, "exams", examId));
-                const data = docSnap.data();
-                const timeVal = formatTimeForInput(data.publishTime || new Date().getTime());
-                
+                const docSnap = await getDoc(doc(db, "exams", examId)); const data = docSnap.data(); const timeVal = formatTimeForInput(data.publishTime || new Date().getTime());
                 Swal.fire({
                     title: '🚀 Make Live Again',
                     html: `
@@ -873,139 +918,53 @@
                         <div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Publish Time:</label><input id="swal-time" type="datetime-local" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${timeVal}"></div>
                     `,
                     showCancelButton: true, confirmButtonColor: '#00e676', confirmButtonText: 'Publish Live',
-                    background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22',
-                    color: document.body.classList.contains('light-mode') ? '#333' : '#fff',
-                    preConfirm: () => {
-                        return { title: document.getElementById('swal-title').value, duration: parseInt(document.getElementById('swal-duration').value), publishTime: new Date(document.getElementById('swal-time').value).getTime() }
-                    }
+                    preConfirm: () => { return { title: document.getElementById('swal-title').value, duration: parseInt(document.getElementById('swal-duration').value), publishTime: new Date(document.getElementById('swal-time').value).getTime() } }
                 }).then(async (result) => {
-                    if(result.isConfirmed) {
-                        try {
-                            await setDoc(doc(db, "exams", examId), { title: result.value.title, duration: result.value.duration, publishTime: result.value.publishTime, status: "active" }, { merge: true });
-                            Swal.fire({title: 'Success', text: 'Exam is now LIVE!', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change'));
-                        } catch(err) { Swal.fire({title: 'Error', text: 'Failed to make live.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); }
-                    }
+                    if(result.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { title: result.value.title, duration: result.value.duration, publishTime: result.value.publishTime, status: "active" }, { merge: true }); Swal.fire('Success', 'Exam is now LIVE!', 'success'); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} }
                 });
             }
-
-            // 2. HIDE PRACTICE EXAM FROM STUDENTS
-            if(e.target.id === 'dbHideFromStudentsBtn') {
-                Swal.fire({ title: 'Hide Practice Exam?', text: "This exam will be completely hidden from students.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#e91e63', confirmButtonText: 'Yes, Hide it!', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' }).then(async (res) => {
-                    if(res.isConfirmed) {
-                        try { await setDoc(doc(db, "exams", examId), { status: "hidden" }, { merge: true }); Swal.fire({title: 'Hidden', text: 'Exam is now hidden.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
-                        catch(err) { Swal.fire({title: 'Error', text: 'Failed to hide.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); }
-                    }
-                });
-            }
-
-            // 3. RESTORE TO PRACTICE
-            if(e.target.id === 'dbRestorePracticeBtn') {
-                try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire({title: 'Restored', text: 'Exam is back in Practice mode.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
-                catch(err) { Swal.fire({title: 'Error', text: 'Failed to restore.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); }
-            }
-
-            // 4. MOVE TO PRACTICE (Hide Live)
-            if(e.target.id === 'dbHideBtn') {
-                Swal.fire({ title: 'Hide Live Exam?', text: "Move the LIVE exam to Practice Mode immediately?", icon: 'warning', showCancelButton: true, confirmButtonColor: '#E1A95F', confirmButtonText: 'Yes, Move it!', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' }).then(async (res) => {
-                    if(res.isConfirmed) {
-                        try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire({title: 'Success', text: 'Exam moved to Practice Mode!', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); dbExamSelector.dispatchEvent(new Event('change')); } 
-                        catch(err) { Swal.fire({title: 'Error', text: 'Failed to move.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); }
-                    }
-                });
-            }
-
-            // 5. PERMANENT DELETE
-            if(e.target.id === 'dbDeleteExamBtn') {
-                Swal.fire({ title: 'Permanently Delete?', text: "This will completely wipe out the exam.", icon: 'error', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Delete Permanently!', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' }).then(async (res) => {
-                    if(res.isConfirmed) {
-                        try { await deleteDoc(doc(db, "exams", examId)); Swal.fire({title: 'Deleted!', text: 'Exam deleted permanently.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); loadExamsIntoDropdowns(); dbWorkspace.style.display = "none"; } 
-                        catch(err) { Swal.fire({title: 'Error', text: 'Error deleting exam.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); }
-                    }
-                });
-            }
+            if(e.target.id === 'dbHideFromStudentsBtn') { Swal.fire({ title: 'Hide Exam?', icon: 'warning', showCancelButton: true }).then(async (res) => { if(res.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { status: "hidden" }, { merge: true }); Swal.fire('Hidden', '', 'success'); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} } }); }
+            if(e.target.id === 'dbRestorePracticeBtn') { try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire('Restored', '', 'success'); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} }
+            if(e.target.id === 'dbHideBtn') { Swal.fire({ title: 'Move to Practice?', icon: 'warning', showCancelButton: true }).then(async (res) => { if(res.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire('Moved', '', 'success'); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} } }); }
+            if(e.target.id === 'dbDeleteExamBtn') { Swal.fire({ title: 'Permanently Delete Exam?', icon: 'error', showCancelButton: true }).then(async (res) => { if(res.isConfirmed) { try { await deleteDoc(doc(db, "exams", examId)); Swal.fire('Deleted!', '', 'success'); loadExamsIntoDropdowns(); dbWorkspace.style.display = "none"; } catch(err) {} } }); }
         });
 
         async function loadDbSubmissions(examId) {
-            const tbody = document.getElementById('dbSubmissionsBody'); tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr>';
+            const tbody = document.getElementById('dbSubmissionsBody'); tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
             try {
-                const q = query(collection(db, "results"), where("examId", "==", examId)); const snapshot = await getDocs(q);
-                if(snapshot.empty) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#E1A95F;">No submissions found for this exam.</td></tr>'; return; }
-                
-                let html = ""; let resultsData = [];
-                snapshot.forEach(doc => { resultsData.push({ id: doc.id, ...doc.data() }); });
-                resultsData.sort((a, b) => b.score - a.score);
-                
+                const snap = await getDocs(query(collection(db, "results"), where("examId", "==", examId)));
+                if(snap.empty) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No submissions.</td></tr>'; return; }
+                let html = ""; let resultsData = []; snap.forEach(doc => resultsData.push({ id: doc.id, ...doc.data() })); resultsData.sort((a, b) => b.score - a.score);
                 resultsData.forEach((row) => {
-                    let timeStr = "N/A";
-                    if(row.timestamp) { let d = row.timestamp.seconds ? new Date(row.timestamp.seconds * 1000) : new Date(row.timestamp); timeStr = d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }); }
-                    
-                    html += `
-                    <tr>
-                        <td style="text-align:left;">
-                            <span class="clickable-roll" data-roll="${row.rollNumber || 'N/A'}" title="Click to view history">${row.rollNumber || "N/A"}</span><br>
-                            <span style="font-size:11px; color:#a0a0b0;">${row.email}</span>
-                        </td>
-                        <td>
-                            <span style="color:#00e676;" title="Correct">${row.correctCount||0}</span> / 
-                            <span style="color:#ff5252;" title="Wrong">${row.wrongCount||0}</span> / 
-                            <span style="color:#ffb74d;" title="Skipped">${row.skippedCount||0}</span>
-                        </td>
-                        <td style="color:#00bcd4; font-weight:bold; font-size: 16px;">${row.score}</td>
-                        <td style="font-size:12px; color:#b3b3b3;">${timeStr}</td>
-                        <td><button class="btn-delete delete-sub-btn" data-id="${row.id}" data-email="${row.email}" data-exam="${row.examId}">Delete</button></td>
+                    html += `<tr>
+                        <td style="text-align:left;">${row.rollNumber || 'N/A'}<br><span style="font-size:11px;">${row.email}</span></td>
+                        <td>${row.correctCount||0}/${row.wrongCount||0}/${row.skippedCount||0}</td>
+                        <td style="color:#00bcd4; font-weight:bold;">${row.score !== undefined ? row.score : 'Pending'}</td>
+                        <td><button class="btn-delete delete-sub-btn" data-id="${row.id}">Delete</button></td>
                     </tr>`;
                 });
                 tbody.innerHTML = html;
-                
-                document.querySelectorAll('.delete-sub-btn').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        const docId = e.target.getAttribute('data-id'); const email = e.target.getAttribute('data-email'); const exId = e.target.getAttribute('data-exam');
-                        Swal.fire({ title: 'Delete Submission?', text: "Student will be able to retake the exam as a fresh start.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', confirmButtonText: 'Yes, delete it!', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff' }).then(async (res) => {
-                            if(res.isConfirmed) { e.target.innerText = "Wait..."; try { await deleteDoc(doc(db, "results", docId)); await deleteDoc(doc(db, "user_timers", email + "_" + exId)); loadDbSubmissions(exId); Swal.fire({title: 'Deleted!', text: 'Submission removed.', icon: 'success', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); } catch(err) { Swal.fire({title: 'Error', text: 'Failed to delete.', icon: 'error', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); e.target.innerText = "Delete"; } }
-                        });
-                    });
-                });
-
-                document.querySelectorAll('.clickable-roll').forEach(el => { el.addEventListener('click', (e) => { showStudentHistory(e.target.getAttribute('data-roll')); }); });
-            } catch(error) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ff5252;">Error loading data.</td></tr>'; }
+                document.querySelectorAll('.delete-sub-btn').forEach(btn => { btn.addEventListener('click', async (e) => { const docId = e.target.getAttribute('data-id'); Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true }).then(async (res) => { if(res.isConfirmed) { await deleteDoc(doc(db, "results", docId)); loadDbSubmissions(examId); } }); }); });
+            } catch(error) {}
         }
+        
+        document.getElementById('searchRollBtn').addEventListener('click', () => { const rollVal = document.getElementById('searchRollInput').value.trim(); if(!rollVal) return; showStudentHistory(rollVal); });
 
-        // 🟢 MANUAL SEARCH BUTTON LOGIC 🟢
-        document.getElementById('searchRollBtn').addEventListener('click', () => {
-            const rollVal = document.getElementById('searchRollInput').value.trim();
-            if(!rollVal) { Swal.fire({title: 'Missing input', text: 'Please enter a roll number to search.', icon: 'warning', background: document.body.classList.contains('light-mode') ? '#FFF8DC' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#333' : '#fff'}); return; }
-            showStudentHistory(rollVal);
-        });
-
-        // 🟢 Fetch & Show Student History 🟢
         async function showStudentHistory(roll) {
-            historyModal.classList.add('show');
-            historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:16px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#a0a0b0;">Fetching records...</span>`;
-            historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#a0a0b0;">Fetching student records...</td></tr>';
-
+            historyModal.classList.add('show'); historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:16px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#a0a0b0;">Fetching records...</span>`; historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#a0a0b0;">Fetching student records...</td></tr>';
             try {
                 const examsSnap = await getDocs(query(collection(db, "exams"), orderBy("createdAt", "desc")));
                 let allExams = []; examsSnap.forEach(doc => { if (doc.data().status !== "draft" && doc.data().status !== "hidden") { allExams.push({ id: doc.id, title: doc.data().title }); } });
-
                 const resultsSnap = await getDocs(query(collection(db, "results"), where("rollNumber", "==", roll)));
                 let studentResults = {}; let usedEmails = new Set(); 
-
                 resultsSnap.forEach(doc => { const data = doc.data(); studentResults[data.examId] = data.score; if(data.email) usedEmails.add(data.email); });
-
                 if(usedEmails.size > 0) { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#E1A95F; font-size:13px;">Emails Used: ${Array.from(usedEmails).join(', ')}</span>`; } 
-                else { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ff5252; font-size:13px;">No records found for this roll number.</span>`; }
-
+                else { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ff5252; font-size:13px;">No records found.</span>`; }
                 let html = "";
-                allExams.forEach(exam => {
-                    let scoreHtml = studentResults[exam.id] !== undefined ? `<span style="color:#00e676; font-weight:bold; font-size:18px;">${studentResults[exam.id]}</span>` : `<span style="color:#ff5252; font-weight:bold;">❌ Missed</span>`;
-                    html += `<tr><td style="text-align:left;">${exam.title}</td><td>${scoreHtml}</td></tr>`;
-                });
-
-                if(allExams.length === 0) html = '<tr><td colspan="2" style="color:#E1A95F;">No exams found in database.</td></tr>';
-                historyTableBody.innerHTML = html;
+                allExams.forEach(exam => { let scoreHtml = studentResults[exam.id] !== undefined ? `<span style="color:#00e676; font-weight:bold; font-size:18px;">${studentResults[exam.id]}</span>` : `<span style="color:#ff5252; font-weight:bold;">❌ Missed</span>`; html += `<tr><td style="text-align:left;">${exam.title}</td><td>${scoreHtml}</td></tr>`; });
+                if(allExams.length === 0) html = '<tr><td colspan="2" style="color:#E1A95F;">No exams found.</td></tr>'; historyTableBody.innerHTML = html;
             } catch(e) { historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#ff5252;">Failed to load history.</td></tr>'; }
         }
-
     </script>
 </body>
 </html>
