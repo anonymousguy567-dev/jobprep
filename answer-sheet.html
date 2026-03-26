@@ -9,126 +9,140 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body { 
-            background-color: #121218; color: #ffffff; min-height: 100vh; display: flex; 
+            background-color: #050508; color: #ffffff; min-height: 100vh; display: flex; 
             flex-direction: column; justify-content: center; align-items: center; 
             padding: 120px 20px 60px 20px; overflow-x: hidden; position: relative; 
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
         
-        /* 🟢 Background Blobs 🟢 */
-        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
-        .blob { position: absolute; filter: blur(90px); opacity: 0.3; animation: float 12s infinite alternate ease-in-out; }
+        .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; transition: 0.4s;}
+        .blob { position: absolute; filter: blur(90px); opacity: 0.5; animation: float 12s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #00bcd4; top: -10%; left: -5%; animation-delay: 0s; }
         .blob2 { width: 400px; height: 400px; background: #2196f3; bottom: -10%; right: -5%; animation-delay: 3s; }
         .blob3 { width: 250px; height: 250px; background: #673ab7; top: 40%; left: 40%; animation-delay: 5s; }
 
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
 
-        /* 🟢 CLAYMORPHISM: Top Navigation Bar 🟢 */
+        /* 🟢 Top Navigation Bar 🟢 */
         .navbar {
             position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px;
             display: flex; justify-content: space-between; align-items: center;
-            background: #181820; border-bottom: none; z-index: 2000;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 -2px 5px rgba(255,255,255,0.05);
+            background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 188, 212, 0.2); z-index: 2000; transition: 0.4s ease;
         }
         
-        .nav-brand { font-size: 24px; font-weight: 800; color: #00bcd4; letter-spacing: 1.5px; text-transform: uppercase; }
+        .nav-brand { font-size: 24px; font-weight: 800; color: #00bcd4; letter-spacing: 1.5px; text-transform: uppercase; transition: 0.4s;}
         
+        .nav-buttons { display: flex; gap: 15px; align-items: center; }
         .nav-admin-btn {
-            background: #202028; color: #00bcd4; padding: 10px 24px; border-radius: 12px; 
-            text-decoration: none; font-weight: bold; font-size: 17px; display: flex; align-items: center; gap: 8px; transition: 0.2s;
-            box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(255,255,255,0.1);
-            border: none;
+            background: rgba(255, 255, 255, 0.05); color: #e0e0e0; border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px; 
+            transition: 0.3s; display: flex; align-items: center; gap: 8px;
         }
-        .nav-admin-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px); }
+        .nav-admin-btn:hover { background: rgba(0, 188, 212, 0.15); border-color: #00bcd4; color: #00bcd4; box-shadow: 0 0 15px rgba(0, 188, 212, 0.3); transform: translateY(-2px); }
+        
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.05); color: #ffd700; border: 1px solid rgba(255,255,255,0.2); 
+            border-radius: 50%; width: 40px; height: 40px; font-size: 18px; cursor: pointer; display: flex; justify-content: center; align-items: center;
+            transition: 0.3s;
+        }
+        .theme-toggle-btn:hover { background: rgba(255, 215, 0, 0.15); border-color: #ffd700; }
 
         /* 🟢 9-Dot Menu 🟢 */
         .top-right-bar { position: absolute; top: 90px; right: 25px; z-index: 1000; }
-        
-        .apps-menu-btn { 
-            position: relative; width: 45px; height: 45px; border-radius: 50%; background: #202028; 
-            display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; outline: none; border: none;
-            box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 5px rgba(255,255,255,0.1);
-        }
-        .apps-menu-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px); }
-        .apps-menu-btn svg { fill: #00bcd4; width: 20px; height: 20px; transition: 0.3s; }
-        
-        .apps-dropdown { 
-            position: absolute; top: 60px; right: 0; background: #181820; border-radius: 15px; padding: 10px; width: max-content; 
-            box-shadow: 8px 8px 16px rgba(0,0,0,0.5), -4px -4px 10px rgba(255,255,255,0.03); border: none; display: none; flex-direction: column; 
-        }
-        .apps-dropdown.show { display: block; animation: fadeIn 0.2s ease; }
+        .apps-menu-btn { position: relative; width: 45px; height: 45px; border-radius: 50%; background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; outline: none; }
+        .apps-menu-btn:hover { background: rgba(0, 188, 212, 0.2); border-color: rgba(0, 188, 212, 0.5); }
+        .apps-menu-btn svg { fill: #e0e0e0; width: 24px; height: 24px; transition: 0.3s; }
+        .apps-menu-btn:hover svg { fill: #00bcd4; }
+        .apps-dropdown { position: absolute; top: 55px; right: 0; background: rgba(20, 20, 25, 0.95); backdrop-filter: blur(15px); border: 1px solid rgba(0, 188, 212, 0.3); border-radius: 12px; padding: 10px; width: max-content; box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: none; flex-direction: column; transform: translateY(-10px); opacity: 0; transition: all 0.3s ease; }
+        .apps-dropdown.show { display: block; animation: fadeIn 0.2s ease; opacity: 1; transform: translateY(0); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 10px; text-align: center; transition: 0.2s; }
-        .apps-link:hover { background: #202028; color: #00bcd4; box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4); }
+        .apps-link { display: block; padding: 12px 20px; color: #fff; text-decoration: none; font-size: 14px; font-weight: bold; border-radius: 6px; transition: 0.3s; background: rgba(255, 255, 255, 0.05); text-align: center; }
+        .apps-link:hover { background: rgba(0, 188, 212, 0.15); color: #00bcd4; }
 
-        /* 🟢 CLAYMORPHISM: Main Container 🟢 */
-        .glass-container { 
-            background: #1a1a22; border-radius: 30px; padding: 35px 30px; width: 100%; max-width: 800px; 
-            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 3px 3px 10px rgba(255,255,255,0.05);
-            border: none; position: relative; z-index: 10;
-        }
-        h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; letter-spacing: 1px; }
+        /* Main Container */
+        .glass-container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 30px; width: 100%; max-width: 800px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); transition: 0.4s;}
+        h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; letter-spacing: 1px; transition: 0.4s;}
         
-        #timer-section, #result-section { display: none; flex-direction: column; align-items: center; text-align: center; padding: 10px 0; width: 100%; }
+        #result-section { display: none; flex-direction: column; align-items: center; text-align: center; padding: 10px 0; width: 100%; }
         
-        /* Buttons */
-        .login-btn, .action-btn { 
-            padding: 12px 25px; margin-top: 20px; border-radius: 14px; text-decoration: none; font-size: 15px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s;
-            background: #252530; color: #00bcd4; display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 2px 2px 5px rgba(255,255,255,0.05);
-        }
-        .login-btn:active, .action-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.02); transform: translateY(2px); }
+        .login-btn, .action-btn { padding: 12px 25px; margin-top: 20px; border: none; border-radius: 8px; background: #ffffff; color: #333; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s;}
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
         
-        /* Select Dropdown */
-        select { 
-            width: 100%; padding: 14px; border-radius: 12px; border: none; background: #15151a; color: #fff; outline: none; font-size: 15px; margin-bottom: 20px; 
-            box-shadow: inset 5px 5px 10px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(255,255,255,0.02); cursor: pointer;
-        }
-        select option { background-color: #202028; color: white; }
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; transition: 0.4s; color-scheme: dark; font-size: 16px; margin-bottom: 20px;}
+        select option { background-color: #1a1a24; color: white; }
+        select:focus { border-color: #00bcd4; }
         
-        /* Claymorphism Inner Boxes */
-        .login-box, .breakdown-box, .question-card {
-            background: #202028; padding: 25px; border-radius: 16px; margin-bottom: 20px; border: none;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.4), -2px -2px 5px rgba(255,255,255,0.02);
-        }
+        .time-box { font-size: 18px; font-weight: bold; color: #ffb74d; background: rgba(255, 183, 77, 0.1); padding: 15px 20px; border-radius: 10px; margin: 20px 0; border: 1px dashed #ffb74d; transition: 0.4s; text-align: center; width: 100%;}
+        .score-display { font-size: 40px; font-weight: bold; color: #00bcd4; margin: 15px 0 10px 0; transition: 0.4s;}
         
-        .login-box { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        
-        .time-box { 
-            font-size: 18px; font-weight: bold; color: #ff5252; padding: 15px 30px; border-radius: 14px; margin: 15px 0; 
-            background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(255,255,255,0.02); border: none;
-        }
-
-        .score-display { font-size: 45px; font-weight: bold; color: #00bcd4; margin: 15px 0 10px 0; text-shadow: 0 0 10px rgba(0, 188, 212, 0.3); }
-        
-        .breakdown-box { display: flex; justify-content: space-around; width: 100%; max-width: 500px; padding: 20px; }
+        .breakdown-box { display: flex; justify-content: space-around; width: 100%; max-width: 500px; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s;}
         .stat-item { text-align: center; }
-        .stat-label { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #a0a0b0; }
-        .stat-value { font-size: 26px; font-weight: bold; }
+        .stat-label { font-size: 14px; font-weight: bold; margin-bottom: 5px; transition: 0.4s;}
+        .stat-value { font-size: 24px; font-weight: bold; }
         
-        .question-card { text-align: left; width: 100%; }
-        .question-text { font-size: 18px; margin-bottom: 15px; color: #e0e0e0; font-weight: bold; }
+        .question-card { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.05); text-align: left; width: 100%; transition: 0.4s;}
+        .question-text { font-size: 18px; margin-bottom: 10px; color: #e0e0e0; font-weight: bold; transition: 0.4s;}
+        .option-div { background: rgba(255, 255, 255, 0.05); padding: 10px 15px; margin-bottom: 10px; border-radius: 6px; font-size: 15px; transition: 0.4s;}
+        .correct-ans { background: rgba(0, 230, 118, 0.2) !important; border: 1px solid #00e676; color: #00e676; }
+        .wrong-ans { background: rgba(255, 82, 82, 0.2) !important; border: 1px solid #ff5252; color: #ff5252; }
+        .skipped-msg { color: #ffb74d; font-weight: bold; font-size: 14px; margin-bottom: 15px; display: block;}
+        
+        .login-box { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 30px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; transition: 0.4s;}
 
-        /* Inset Option Div */
-        .option-div { 
-            padding: 12px 15px; margin-bottom: 10px; border-radius: 12px; font-size: 15px; 
-            background: #15151a; border: none; color: #b3b3b3;
-            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4), inset -2px -2px 4px rgba(255,255,255,0.02);
-        }
-        .correct-ans { background: rgba(0, 230, 118, 0.1) !important; border: 1px solid #00e676; color: #00e676; box-shadow: inset 3px 3px 6px rgba(0,230,118,0.2); }
-        .wrong-ans { background: rgba(255, 82, 82, 0.1) !important; border: 1px solid #ff5252; color: #ff5252; box-shadow: inset 3px 3px 6px rgba(255,82,82,0.2); }
-        .skipped-msg { color: #ffb74d; font-weight: bold; font-size: 14px; margin-bottom: 15px; display: block; text-shadow: 0 0 5px rgba(255, 183, 77, 0.2);}
+        .feedback-box { background: rgba(0, 188, 212, 0.1); padding: 15px; border-left: 4px solid #00bcd4; border-radius: 8px; margin-bottom: 20px; text-align: left; transition: 0.4s;}
+        .feedback-box h4 { margin-bottom: 5px; text-align: left; font-size: 15px;}
+        .feedback-text { color: #e0e0e0; font-size: 15px; line-height: 1.5; transition: 0.4s;}
+        .official-ans-box { background: rgba(0, 230, 118, 0.05); padding: 15px; border-left: 4px solid #00e676; border-radius: 8px; margin-top: 15px; transition: 0.4s;}
         
+        .marks-fraction-box { display: inline-block; background: rgba(0, 230, 118, 0.1); color: #00e676; border: 1px solid #00e676; padding: 8px 20px; border-radius: 8px; font-size: 18px; font-weight: bold; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0, 230, 118, 0.2); }
+        .obt-mark-badge { display: inline-block; background: rgba(0, 230, 118, 0.1); color: #00e676; border: 1px solid #00e676; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: bold; margin-bottom: 10px; margin-top: 5px;}
+
+        /* 🟡🟢 LIGHT MODE STYLES 🟢🟡 */
+        body.light-mode { background-color: #FFFFF0; color: #4A3B2C; background-image: none; } 
+        body.light-mode .bg-blobs { opacity: 0.1; filter: blur(100px); }
+        body.light-mode .navbar { background: rgba(255, 248, 220, 0.8); border-bottom: 1px solid rgba(225, 169, 95, 0.3); }
+        body.light-mode .nav-brand { color: #E1A95F; text-shadow: none; }
+        body.light-mode .nav-admin-btn, body.light-mode .theme-toggle-btn { background: #FFF8DC; color: #E1A95F; border: 1px solid #B2D4D4; box-shadow: 2px 2px 5px rgba(225, 169, 95, 0.2); }
+        body.light-mode .nav-admin-btn:hover, body.light-mode .theme-toggle-btn:hover { background: #B2D4D4; color: #333; border-color: #E1A95F; }
+        body.light-mode .glass-container, body.light-mode .login-box { background: #FFF8DC; border: 1px solid #E1A95F; box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), -8px -8px 20px #ffffff; }
+        body.light-mode h2, body.light-mode h3, body.light-mode h4 { color: #E1A95F; text-shadow: none; }
+        body.light-mode .score-display { color: #E1A95F; }
+        body.light-mode select { background: #FFF8DC; color: #333; border: 1px solid #B2D4D4; box-shadow: inset 2px 2px 5px rgba(225, 169, 95, 0.2); }
+        body.light-mode select:focus { border-color: #E1A95F;}
+        body.light-mode select option { background: #FFF8DC; color: #333; }
+        body.light-mode .breakdown-box, body.light-mode .question-card { background: #FFF8DC; border: 1px solid #B2D4D4; box-shadow: 4px 4px 10px rgba(225, 169, 95, 0.2); }
+        body.light-mode .question-text, body.light-mode .stat-label { color: #333; }
+        body.light-mode .option-div { background: #FDFCF9; border: 1px solid rgba(178, 212, 212, 0.5); color: #555; }
+        body.light-mode .time-box { background: rgba(225, 169, 95, 0.1); border-color: #E1A95F; color: #E1A95F; }
+        body.light-mode .login-btn, body.light-mode .action-btn { background: #E1A95F; color: #fff; border: 1px solid #E1A95F; box-shadow: 4px 4px 10px rgba(225, 169, 95, 0.4); }
+        body.light-mode .login-btn:hover, body.light-mode .action-btn:hover { background: #c8914b; box-shadow: 2px 2px 5px rgba(225, 169, 95, 0.6); }
+        body.light-mode .apps-menu-btn { background: #FFF8DC; border: 1px solid #E1A95F; box-shadow: 2px 2px 5px rgba(225, 169, 95, 0.2); }
+        body.light-mode .apps-menu-btn svg { fill: #E1A95F; }
+        body.light-mode .apps-dropdown { background: #FFF8DC; border: 1px solid #E1A95F; box-shadow: 4px 4px 15px rgba(225, 169, 95, 0.3); }
+        body.light-mode .apps-link { color: #333; }
+        body.light-mode .apps-link:hover { background: #B2D4D4; color: #333; }
+        body.light-mode .feedback-box { background: rgba(225, 169, 95, 0.1); border-left-color: #E1A95F; }
+        body.light-mode .feedback-text { color: #333; }
+        body.light-mode .official-ans-box { background: rgba(0, 230, 118, 0.1); border-left-color: #00e676; }
+        body.light-mode .marks-fraction-box { background: #FDFCF9; border-color: #E1A95F; color: #E1A95F; box-shadow: 0 4px 10px rgba(225, 169, 95, 0.2); }
+        body.light-mode .obt-mark-badge { background: #FDFCF9; border-color: #E1A95F; color: #E1A95F; }
     </style>
 </head>
 <body>
+
+    <script>
+        if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }
+    </script>
 
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
 
     <nav class="navbar">
         <div class="nav-brand">MCQ Portal</div>
-        <a href="admin.html" class="nav-admin-btn">⚙️ Admin</a>
+        <div class="nav-buttons">
+            <button class="theme-toggle-btn" id="themeToggleBtn">🌞</button>
+            <a href="admin.html" class="nav-admin-btn">⚙️ Admin</a>
+        </div>
     </nav>
 
     <div class="top-right-bar">
@@ -145,38 +159,20 @@
     <div class="glass-container">
 
         <div id="login-section" class="login-box" style="display: none;">
-            <h3 style="color: #00bcd4; margin-bottom: 10px;">🔍  Answer Sheet</h3>
+            <h3 style="margin-bottom: 10px;">🔍  Answer Sheet</h3>
             <p style="color: #a0a0b0; font-size: 14px;">Login to view your detailed question-by-question breakdown and mistakes.</p>
             <button id="loginBtn" class="login-btn" style="margin: 20px auto 0 auto;">Login with Google</button>
         </div>
 
         <div id="select-exam-section" class="login-box" style="display: none;">
-            <h3 style="color: #00bcd4; margin-bottom: 5px;">👤 Welcome, <span id="userNameHeader">Student</span></h3>
+            <h3 style="margin-bottom: 5px;">👤 Welcome, <span id="userNameHeader">Student</span></h3>
             <h4 style="color: #a0a0b0; margin-bottom: 25px; font-weight: normal; font-size: 15px;">Select an exam to view your detailed answer sheet.</h4>
             <select id="examDropdown">
                 <option value="">-- Loading Exams... --</option>
             </select>
         </div>
         
-        <a href="index.html" id="homeLink" style="color:#b3b3b3; display:block; text-align:center; margin-top: 25px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.2s;">🔙 Back to Homepage</a>
-
-        <div id="timer-section">
-            <h2 style="color: #00e676;">Exam Submitted!</h2>
-            
-            <div id="earlyResultContainer" style="display: none; width: 100%; display: flex; flex-direction: column; align-items: center;">
-                <h3 style="color: #00bcd4; margin-top: 10px;">Your Score: <span id="earlyFinalScore" style="font-size: 36px; color: #00e676; display: block; text-shadow: 0 0 10px rgba(0, 230, 118, 0.3);">0</span></h3>
-                
-                <div class="breakdown-box" style="margin-top: 10px;">
-                    <div class="stat-item" style="color: #00e676;"><div class="stat-label">Correct (+1)</div><div class="stat-value" id="earlyCorrect">0</div></div>
-                    <div class="stat-item" style="color: #ff5252;"><div class="stat-label">Wrong (-0.5)</div><div class="stat-value" id="earlyWrong">0</div></div>
-                    <div class="stat-item" style="color: #ffb74d;"><div class="stat-label">Skipped (0)</div><div class="stat-value" id="earlySkipped">0</div></div>
-                </div>
-            </div>
-
-            <p style="margin-top: 20px; color: #b3b3b3; font-size: 14px;">Detailed Answer Sheet will be visible below after the publish time.</p>
-            <div class="time-box" id="countdown">Checking schedule...</div>
-            <button class="action-btn" onclick="window.location.reload()" style="width:auto; margin:auto; margin-top:15px;">Go Back</button>
-        </div>
+        <a href="index.html" id="homeLink" style="color:#b3b3b3; display:block; text-align:center; margin-top: 25px; text-decoration: none; font-size: 14px; font-weight: bold;">🔙 Back to Homepage</a>
 
         <div id="result-section">
             <h2 id="studentNameDisplay">Your Detailed Result</h2>
@@ -184,16 +180,18 @@
             
             <div class="score-display" id="finalScore">Loading...</div>
             
-            <div class="breakdown-box">
+            <div class="breakdown-box" id="mainBreakdownBox" style="display: none;">
                 <div class="stat-item" style="color: #00e676;"><div class="stat-label">Correct (+1)</div><div class="stat-value" id="countCorrect">0</div></div>
                 <div class="stat-item" style="color: #ff5252;"><div class="stat-label">Wrong (-0.5)</div><div class="stat-value" id="countWrong">0</div></div>
                 <div class="stat-item" style="color: #ffb74d;"><div class="stat-label">Skipped (0)</div><div class="stat-value" id="countSkipped">0</div></div>
             </div>
             
-            <h3 style="margin-bottom: 20px; text-align: left; width: 100%;">Answer Breakdown:</h3>
-            <div id="answersContainer" style="width: 100%;"></div>
+            <div id="userScriptContainer" style="width: 100%;"></div>
             
-            <button class="action-btn" onclick="window.location.reload()" style="width:100%; margin-top:20px;">Back to Menu</button>
+            <div id="officialTimerBox" class="time-box" style="display: none;"></div>
+            <div id="officialAnswersContainer" style="width: 100%; display: none;"></div>
+
+            <button class="action-btn" onclick="window.location.reload()" style="width:100%; margin-top:30px;">Back to Menu</button>
         </div>
     </div>
 
@@ -202,7 +200,15 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, query, where, doc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🔴🔴 YOUR ORIGINAL FIREBASE CONFIG 🔴🔴
+        // Theme Setup
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        if (localStorage.getItem('theme') === 'light') { themeToggleBtn.innerHTML = '🌙'; }
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark'); themeToggleBtn.innerHTML = isLight ? '🌙' : '🌞';
+        });
+
+        // 🔴🔴 YOUR FIREBASE CONFIG 🔴🔴
         const firebaseConfig = {
             apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE",
             authDomain: "mcq-portal-904fd.firebaseapp.com",
@@ -211,161 +217,179 @@
             messagingSenderId: "977853699063",
             appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
         };
-        const app = initializeApp(firebaseConfig); 
-        const auth = getAuth(app); 
-        const provider = new GoogleAuthProvider(); 
-        const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); const db = getFirestore(app);
 
         let userEmail = ""; let userName = ""; let timerInterval; let allExamsCache = {};
         
-        // Setup 9-dot App Menu
-        const appsBtn = document.getElementById('appsMenuBtn');
-        const appsDropdown = document.getElementById('appsDropdown');
+        // Setup 9-dot Menu
+        const appsBtn = document.getElementById('appsMenuBtn'); const appsDropdown = document.getElementById('appsDropdown');
         appsBtn.addEventListener('click', (e) => { e.stopPropagation(); appsDropdown.classList.toggle('show'); });
         window.addEventListener('click', (e) => { if (!appsBtn.contains(e.target)) appsDropdown.classList.remove('show'); });
 
-        const loginSection = document.getElementById('login-section');
-        const selectExamSection = document.getElementById('select-exam-section');
-        const timerSection = document.getElementById('timer-section'); 
-        const resultSection = document.getElementById('result-section');
-        const countdownDisplay = document.getElementById('countdown'); 
-        const examDropdown = document.getElementById('examDropdown');
+        const loginSection = document.getElementById('login-section'); const selectExamSection = document.getElementById('select-exam-section');
+        const resultSection = document.getElementById('result-section'); const examDropdown = document.getElementById('examDropdown');
         const homeLink = document.getElementById('homeLink');
 
         async function fetchExams() {
             try {
-                const q = query(collection(db, "exams"), orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q);
+                const q = query(collection(db, "exams"), orderBy("createdAt", "desc")); const querySnapshot = await getDocs(q);
                 let optionsHTML = '<option value="">-- Choose an Exam --</option>';
-                
                 querySnapshot.forEach((doc) => {
-                    const examData = doc.data();
-                    if (examData.status === "draft") return; 
-                    allExamsCache[doc.id] = examData;
-                    
-                    let examTitle = examData.title; 
-                    if (examData.status === "deleted") { examTitle += " [Ended/Practice]"; }
+                    const examData = doc.data(); if (examData.status === "draft") return; allExamsCache[doc.id] = examData;
+                    let examTitle = examData.title; if (examData.status === "deleted") { examTitle += " [Ended]"; }
                     optionsHTML += `<option value="${doc.id}">${examTitle}</option>`;
                 });
-                
                 examDropdown.innerHTML = optionsHTML;
-            } catch(error) { 
-                examDropdown.innerHTML = '<option value="">Error loading exams!</option>'; 
-            }
+            } catch(error) {}
         }
-        
         fetchExams();
 
-        // Auth Logic
         onAuthStateChanged(auth, (user) => {
             if (user) { 
-                userEmail = user.email; userName = user.displayName; 
-                document.getElementById('userNameHeader').innerText = userName;
-                
-                loginSection.style.display = "none"; 
-                if (timerSection.style.display !== "flex" && resultSection.style.display !== "flex") {
-                    selectExamSection.style.display = "flex"; 
-                }
-            } else {
-                loginSection.style.display = "flex";
-                selectExamSection.style.display = "none";
-            }
+                userEmail = user.email; userName = user.displayName; document.getElementById('userNameHeader').innerText = userName;
+                loginSection.style.display = "none"; if (resultSection.style.display !== "flex") { selectExamSection.style.display = "flex"; }
+            } else { loginSection.style.display = "flex"; selectExamSection.style.display = "none"; }
         });
-
         document.getElementById('loginBtn').addEventListener('click', () => { signInWithPopup(auth, provider).catch(console.error); });
 
         examDropdown.addEventListener('change', (e) => {
             const selectedExamId = e.target.value;
-            if(selectedExamId) { 
-                selectExamSection.style.display = "none"; 
-                homeLink.style.display = "none";
-                checkTimeAndProceed(selectedExamId); 
-            }
+            if(selectedExamId) { selectExamSection.style.display = "none"; homeLink.style.display = "none"; loadAndDisplayResult(selectedExamId); }
         });
 
         async function fetchBasicUserResult(examId) {
             const q = query(collection(db, "results"), where("email", "==", userEmail), where("examId", "==", examId));
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) { return querySnapshot.docs[0].data(); }
-            return null;
+            const querySnapshot = await getDocs(q); if (!querySnapshot.empty) { return querySnapshot.docs[0].data(); } return null;
         }
 
-        async function checkTimeAndProceed(examId) {
-            timerSection.style.display = "flex"; countdownDisplay.innerText = "Checking schedule...";
+        async function loadAndDisplayResult(examId) {
             const userData = await fetchBasicUserResult(examId);
-            
             if (!userData) {
-                document.getElementById('earlyResultContainer').style.display = "none"; countdownDisplay.innerText = "";
-                timerSection.innerHTML = "<h2 style='color:#ff5252;'>You haven't participated in this exam!</h2><button class='action-btn' onclick='window.location.reload()' style='width:auto; margin:auto; margin-top:20px;'>Go Back</button>";
+                resultSection.style.display = "flex";
+                resultSection.innerHTML = `<h2 style='color:#ff5252;'>You haven't participated in this exam!</h2><button class='action-btn' onclick='window.location.reload()' style='width:auto; margin:auto; margin-top:20px;'>Go Back</button>`;
                 return;
             }
 
-            document.getElementById('earlyResultContainer').style.display = "flex";
-            document.getElementById('earlyFinalScore').innerText = userData.score;
-            document.getElementById('earlyCorrect').innerText = userData.correctCount || 0;
-            document.getElementById('earlyWrong').innerText = userData.wrongCount || 0;
-            document.getElementById('earlySkipped').innerText = userData.skippedCount || 0;
+            const examData = allExamsCache[examId] || (await getDoc(doc(db, "exams", examId))).data();
+            const publishTime = examData.publishTime || 0;
 
-            try {
-                const examData = allExamsCache[examId];
-                let publishTime = examData ? examData.publishTime : 0;
+            const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
+            let totalMaxMarks = 0; let questionsList = []; let qNum = 1;
+            qSnap.forEach(doc => { 
+                const data = doc.data(); data.qId = doc.id; data.qNum = qNum++;
+                questionsList.push(data); totalMaxMarks += (data.maxMarks || 0); 
+            });
 
-                const now = new Date().getTime();
-                if (now >= publishTime || examData.status === "deleted") { timerSection.style.display = "none"; showFullResult(examId, userData); return; }
-
-                if(timerInterval) clearInterval(timerInterval); 
-                timerInterval = setInterval(() => {
-                    const currentTime = new Date().getTime(); const distance = publishTime - currentTime;
-                    if (distance <= 0) { clearInterval(timerInterval); timerSection.style.display = "none"; showFullResult(examId, userData); } 
-                    else {
-                        const days = Math.floor(distance / (1000 * 60 * 60 * 24)); const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                        let timeString = ""; if (days > 0) timeString += `${days}d `; timeString += `${hours}h ${minutes}m ${seconds}s`; countdownDisplay.innerText = `Answers unlock in: ${timeString}`;
-                    }
-                }, 1000);
-            } catch (error) { countdownDisplay.innerText = "Error checking schedule!"; }
-        }
-
-        async function showFullResult(examId, userData) {
-            resultSection.style.display = "flex"; document.getElementById('studentNameDisplay').innerText = `Detailed Result for: ${userName}`;
-            const answersContainer = document.getElementById('answersContainer'); 
-            
-            const userAnswers = userData.userAnswers || {};
+            resultSection.style.display = "flex"; 
+            document.getElementById('studentNameDisplay').innerText = `Detailed Result for: ${userName}`;
             document.getElementById('studentRollDisplay').innerText = `Roll No: ${userData.rollNumber || 'N/A'}`; 
-            document.getElementById('finalScore').innerText = `Total Score: ${userData.score}`; 
-            document.getElementById('countCorrect').innerText = userData.correctCount || 0; 
-            document.getElementById('countWrong').innerText = userData.wrongCount || 0; 
-            document.getElementById('countSkipped').innerText = userData.skippedCount || 0;
+            
+            const mainBreakdownBox = document.getElementById('mainBreakdownBox');
+            const userScriptContainer = document.getElementById('userScriptContainer');
+            
+            // 🟢 WRITTEN EXAM RENDER 🟢
+            if (userData.type === 'written') {
+                mainBreakdownBox.style.display = "none";
+                let headerHtml = ""; let statusColor = userData.status === 'evaluated' ? "#00e676" : "#ffb74d";
+                let statusText = userData.status === 'evaluated' ? "Evaluated ✅" : "Pending Evaluation ⏳";
+                
+                document.getElementById('finalScore').innerText = statusText; document.getElementById('finalScore').style.color = statusColor;
 
-            try {
-                const questionsSnapshot = await getDocs(collection(db, "exams", examId, "questions"));
-                answersContainer.innerHTML = ""; let qNum = 1;
-                questionsSnapshot.forEach((doc) => {
-                    const qData = doc.data(); const qId = doc.id; 
-                    const correctOpt = String(qData.correctAnswer); 
-                    const userOpt = userAnswers[qId] ? String(userAnswers[qId]) : null;
+                if (userData.status === 'evaluated') {
+                    headerHtml += `<div class="marks-fraction-box">Marks Obtained: ${userData.score} / ${totalMaxMarks}</div>`;
+                    if (userData.feedback) { headerHtml += `<div class="feedback-box"><h4 style="color: #00bcd4;">Teacher's Feedback:</h4><p class="feedback-text">${userData.feedback}</p></div>`; }
+                } else {
+                     headerHtml += `<p style="color:#a0a0b0; font-size:14px; margin-bottom: 20px;">You will see your score and admin's feedback here once it is checked.</p>`;
+                }
+
+                let questionsHtml = ""; let studentMarks = userData.questionMarks || {};
+
+                questionsList.forEach(qData => {
+                    let studentAns = (userData.studentImageUrls && userData.studentImageUrls[qData.qId]) ? userData.studentImageUrls[qData.qId] : null;
+                    if (!studentAns && userData.studentImageUrl && qData.qNum === 1) { studentAns = userData.studentImageUrl; } 
                     
-                    const qCard = document.createElement('div'); qCard.className = 'question-card';
-                    let optionsHTML = ""; 
-                    let skippedMsg = (!userOpt) ? "<span class='skipped-msg'>⚠ You skipped this question (0 mark).</span>" : "";
+                    let checkedAns = (userData.checkedImageUrls && userData.checkedImageUrls[qData.qId]) ? userData.checkedImageUrls[qData.qId] : null;
+                    
+                    let displayUrl = checkedAns || studentAns;
+                    let displayTitle = checkedAns ? "Teacher's Checked Script (Red Ink):" : "Your Uploaded Answer:";
+                    let borderColor = checkedAns ? "#00e676" : "#555";
+
+                    questionsHtml += `<div class="question-card" style="text-align: left;">`;
+                    questionsHtml += `<div class="question-text" style="color: #00bcd4;">Q${qData.qNum}: ${qData.question || '(Image Question)'} <span style="color:#a0a0b0; font-size:13px; font-weight:normal;">[Max: ${qData.maxMarks || 0}]</span></div>`;
+                    
+                    if(userData.status === 'evaluated') {
+                        let obtMark = studentMarks[qData.qId] !== undefined ? studentMarks[qData.qId] : 0;
+                        questionsHtml += `<div class="obt-mark-badge">Obtained: ${obtMark}</div><br>`;
+                    }
+
+                    if(displayUrl) {
+                        questionsHtml += `<h5 style="color:#a0a0b0; margin-bottom:8px; font-weight:normal;">${displayTitle}</h5>`;
+                        questionsHtml += `<a href="${displayUrl}" target="_blank"><img src="${displayUrl}" style="max-width: 100%; height: auto; border-radius: 8px; border: 2px solid ${borderColor}; cursor:pointer;"></a>`;
+                    } else {
+                        questionsHtml += `<p style="color: #ff5252; font-weight: bold; margin-top:10px;">Not answered</p>`;
+                    }
+                    questionsHtml += `</div>`;
+                });
+
+                userScriptContainer.innerHTML = `<div style="text-align:center;">${headerHtml}</div>` + questionsHtml;
+
+            } else {
+                // 🟢 MCQ RENDER 🟢
+                mainBreakdownBox.style.display = "flex";
+                document.getElementById('finalScore').innerText = `Total Score: ${userData.score}`; document.getElementById('finalScore').style.color = "#00bcd4"; 
+                document.getElementById('countCorrect').innerText = userData.correctCount || 0; document.getElementById('countWrong').innerText = userData.wrongCount || 0; document.getElementById('countSkipped').innerText = userData.skippedCount || 0;
+
+                const userAnswers = userData.userAnswers || {};
+                let mcqHtml = `<h3 style="margin-bottom: 20px; text-align: left; width: 100%;">Answer Breakdown:</h3>`;
+                
+                questionsList.forEach(qData => {
+                    const correctOpt = String(qData.correctAnswer); const userOpt = userAnswers[qData.qId] ? String(userAnswers[qData.qId]) : null;
+                    let optionsHTML = ""; let skippedMsg = (!userOpt) ? "<span class='skipped-msg'>⚠ You skipped this question (0 mark).</span>" : "";
                     
                     for(let i=1; i<=4; i++) {
-                        let optClass = "option-div"; let extraText = "";
-                        let iStr = String(i);
-                        
-                        if (iStr === correctOpt && iStr === userOpt) { 
-                            optClass += " correct-ans"; extraText = " ✓ (Correct Answer & You selected this)"; 
-                        } else if (iStr === correctOpt) { 
-                            optClass += " correct-ans"; extraText = " ✓ (Correct Answer)"; 
-                        } else if (iStr === userOpt) { 
-                            optClass += " wrong-ans"; extraText = " ✗ (Your Answer)"; 
-                        }
-                        
+                        let optClass = "option-div"; let extraText = ""; let iStr = String(i);
+                        if (iStr === correctOpt && iStr === userOpt) { optClass += " correct-ans"; extraText = " ✓ (Correct Answer & You selected this)"; } 
+                        else if (iStr === correctOpt) { optClass += " correct-ans"; extraText = " ✓ (Correct Answer)"; } 
+                        else if (iStr === userOpt) { optClass += " wrong-ans"; extraText = " ✗ (Your Answer)"; }
                         optionsHTML += `<div class="${optClass}">${qData.options[i]} ${extraText}</div>`;
                     }
-                    qCard.innerHTML = `<div class="question-text">${qNum}. ${qData.question}</div>${skippedMsg}${optionsHTML}`; answersContainer.appendChild(qCard); qNum++;
+                    mcqHtml += `<div class="question-card"><div class="question-text">${qData.qNum}. ${qData.question}</div>${skippedMsg}${optionsHTML}</div>`;
                 });
-            } catch (error) { answersContainer.innerHTML = "<p style='color:red;'>Error loading result sheet!</p>"; }
+                userScriptContainer.innerHTML = mcqHtml;
+            }
+
+            // 🟢 OFFICIAL ANSWERS LOGIC 🟢
+            const officialTimerBox = document.getElementById('officialTimerBox'); const officialAnswersContainer = document.getElementById('officialAnswersContainer');
+            function renderOfficialAnswers() {
+                officialTimerBox.style.display = "none";
+                let offHtml = `<h3 style="margin-top: 40px; margin-bottom: 20px; text-align: left; width: 100%; color: #00bcd4;">Official Questions & Answers:</h3>`;
+                questionsList.forEach(qData => {
+                    offHtml += `<div class="question-card" style="text-align: left;">`;
+                    if(qData.question) { offHtml += `<div class="question-text">Q${qData.qNum}: ${qData.question}</div>`; } else { offHtml += `<div class="question-text">Q${qData.qNum}: (See Image)</div>`; }
+                    if(qData.imageUrl) { offHtml += `<a href="${qData.imageUrl}" target="_blank"><img src="${qData.imageUrl}" style="max-width: 100%; max-height: 300px; border-radius: 8px; margin-bottom: 15px; cursor:pointer;"></a><br>`; }
+                    if(qData.answerImageUrl) { offHtml += `<div class="official-ans-box"><h4 style="color: #00e676; margin-bottom: 10px; text-align: left;">Official Answer:</h4><a href="${qData.answerImageUrl}" target="_blank"><img src="${qData.answerImageUrl}" style="max-width: 100%; max-height: 300px; border-radius: 8px; border: 1px solid #00e676; cursor:pointer;"></a></div>`; } 
+                    else if(userData.type === 'written') { offHtml += `<p style="color: #a0a0b0; font-size: 13px; font-style: italic; margin-top: 10px;">No official answer provided.</p>`; }
+                    offHtml += `</div>`;
+                });
+                
+                if(userData.type === 'written') { officialAnswersContainer.innerHTML = offHtml; officialAnswersContainer.style.display = "block"; }
+            }
+
+            if (new Date().getTime() >= publishTime) { renderOfficialAnswers(); } 
+            else {
+                if(userData.type === 'written') {
+                    officialTimerBox.style.display = "block"; officialAnswersContainer.style.display = "none";
+                    timerInterval = setInterval(() => {
+                        const distance = publishTime - new Date().getTime();
+                        if (distance <= 0) { clearInterval(timerInterval); renderOfficialAnswers(); } 
+                        else {
+                            const d = Math.floor(distance / (1000 * 60 * 60 * 24)); const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)); const s = Math.floor((distance % (1000 * 60)) / 1000);
+                            let tStr = ""; if (d > 0) tStr += `${d}d `; tStr += `${h}h ${m}m ${s}s`; officialTimerBox.innerText = `🔒 Official Answers unlock in: ${tStr}`;
+                        }
+                    }, 1000);
+                }
+            }
         }
     </script>
 </body>
