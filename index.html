@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniDocs MCQ & Written Portal</title>
+    <title>UniDocs MCQ Portal</title>
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TNSE25JEYN"></script>
     <script>
@@ -54,13 +54,29 @@
 
         .nav-btn {
             background: rgba(255, 255, 255, 0.05); padding: 10px 20px; border-radius: 20px; 
-            text-decoration: none; font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 8px; transition: 0.3s ease-in-out;
+            text-decoration: none; font-weight: bold; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s ease-in-out;
             border: 1px solid rgba(255,255,255,0.05); cursor: pointer; color: #fff;
         }
         .nav-btn:hover { background: rgba(0, 188, 212, 0.1); border-color: rgba(0, 188, 212, 0.3); transform: translateY(-2px); }
         .nav-btn:active { transform: translateY(0) scale(0.96); }
         .btn-talk { color: #00e676; }
-        .btn-admin { color: #ffb74d; }
+
+        /* 🟢 Mobile Slider Menu 🟢 */
+        .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; z-index: 3000; }
+        .hamburger-btn svg { width: 35px; height: 35px; fill: #00bcd4; transition: 0.4s; }
+
+        .slide-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; display: none; backdrop-filter: blur(3px); }
+        .slide-menu-overlay.active { display: block; animation: fadeIn 0.3s ease; }
+        
+        .slide-menu { 
+            position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #1e1e26; 
+            z-index: 2600; box-shadow: -10px 0 30px rgba(0,0,0,0.8); transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            display: flex; flex-direction: column; padding: 70px 20px 20px 20px; gap: 15px; border-left: 1px solid rgba(255,255,255,0.05); 
+        }
+        .slide-menu.active { right: 0; }
+        
+        .close-menu-btn { position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: #888; font-size: 32px; cursor: pointer; transition: 0.2s; line-height: 1;}
+        .close-menu-btn:hover { color: #ff5252; }
 
         /* 🟢 Core SPA Sections 🟢 */
         .spa-section { display: none; width: 100%; max-width: 1100px; flex-direction: column; align-items: center; z-index: 10; animation: fadeInUp 0.5s ease forwards; }
@@ -86,7 +102,7 @@
         .google-login-btn:active { transform: translateY(2px) scale(0.98); }
 
         /* 🟢 SECTION: Homepage 🟢 */
-        .welcome-header { text-align: center; margin-bottom: 40px; margin-top: 20px; width: 100%;}
+        .welcome-header { text-align: center; margin-bottom: 40px; margin-top: 20px; width: 100%; }
         .welcome-header h1 { font-size: 36px; color: #fff; font-weight: 900; margin-bottom: 10px; letter-spacing: 1px; }
         .welcome-header span { color: #00bcd4; }
         .welcome-header p { color: #a0a0b0; font-size: 16px; }
@@ -169,7 +185,7 @@
 
         .time-box { font-size: 16px; font-weight: bold; color: #ffb74d; background: rgba(255, 183, 77, 0.1); padding: 15px 20px; border-radius: 15px; margin: 20px 0; border: 1px dashed #ffb74d; text-align: center; width: 100%;}
 
-        /* 🟢 Nav Modals (Drop Note & Merit List) Fixes 🟢 */
+        /* 🟢 Nav Modals (Drop Note & Merit List) 🟢 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 4000; display: none; justify-content: center; align-items: center; }
         .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
         .contact-modal { background: #1e1e26; padding: 40px; border-radius: 35px; width: 90%; max-width: 450px; position: relative; box-shadow: 15px 15px 30px rgba(0,0,0,0.6), inset 3px 3px 8px rgba(255,255,255,0.05); border: 1px solid rgba(255, 255, 255, 0.02); display: flex; flex-direction: column; gap: 20px; }
@@ -222,17 +238,22 @@
         
         body.light-mode .loader-wrapper { background: #F0EBE1; }
         body.light-mode .loader { border-color: #E8E0D5; border-top-color: #008394; }
+
+        body.light-mode .slide-menu { background: #FDFCF9; border-left: 1px solid rgba(102, 76, 40, 0.1); box-shadow: -10px 0 30px rgba(102,76,40,0.1); }
+        body.light-mode .close-menu-btn { color: #888; }
+        body.light-mode .close-menu-btn:hover { color: #ff5252; }
         
         /* 📱 MOBILE HEAVY OPTIMIZATION 📱 */
         @media (max-width: 768px) { 
             body { padding: 80px 15px 60px 15px; }
             .navbar { padding: 15px 20px; }
             .nav-brand { font-size: 20px; }
-            .nav-buttons { display: none; }
-            .theme-toggle-btn { width: 35px; height: 35px; font-size: 20px; margin-right: 10px;}
-            .nav-buttons { display: flex; gap: 5px; } 
-            .nav-btn { display: none; } 
-            .btn-talk-mobile, .btn-admin-mobile { display: block; font-size: 13px; padding: 8px 12px; } 
+            
+            /* Hide desktop buttons */
+            .nav-buttons { display: none; } 
+            
+            /* Show hamburger */
+            .hamburger-btn { display: block; }
             
             .login-clay-box { padding: 30px 20px; }
             .login-icon { font-size: 50px; }
@@ -270,14 +291,30 @@
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
 
     <nav class="navbar">
-        <div class="nav-brand">Exam Portal</div>
+        <div class="nav-brand">MCQ Portal</div>
+        
         <div class="nav-buttons">
-            <button class="nav-btn btn-talk btn-talk-mobile" id="openTalkModalBtn">📝 Contact</button>
+            <button class="nav-btn btn-talk" id="openTalkModalBtn">📝 Drop a Note</button>
             <button class="theme-toggle-btn" id="themeToggleBtn">🌞</button>
-            <button class="nav-btn btn-admin btn-admin-mobile" id="goToAdminBtn" style="display:none;">⚙️ Admin</button>
+            <button class="nav-btn btn-admin" id="goToAdminBtn" style="display:none;">⚙️ Admin</button>
             <button class="nav-btn" id="logoutBtn" style="display:none; color:#ff5252;">🚪 Logout</button>
         </div>
+
+        <button class="hamburger-btn" id="hamburgerBtn">
+            <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
     </nav>
+
+    <div class="slide-menu-overlay" id="slideMenuOverlay"></div>
+    <div class="slide-menu" id="slideMenu">
+        <button class="close-menu-btn" id="closeMenuBtn">&times;</button>
+        
+        <h3 style="color: #00bcd4; margin-bottom: 20px; text-align: center;">Menu</h3>
+        <button class="nav-btn theme-toggle-btn-mobile" id="themeToggleBtnMobile" style="width: 100%; justify-content: center; border-radius: 15px; margin-bottom: 10px; border:none;">🌞 Light Mode</button>
+        <button class="nav-btn btn-talk" id="openTalkModalBtnMobile" style="width: 100%; justify-content: center; border-radius: 15px; margin-bottom: 10px; border:none;">📝 Drop a Note</button>
+        <button class="nav-btn btn-admin" id="goToAdminBtnMobile" style="width: 100%; justify-content: center; border-radius: 15px; margin-bottom: 10px; display:none; border:none;">⚙️ Admin Panel</button>
+        <button class="nav-btn" id="logoutBtnMobile" style="width: 100%; justify-content: center; border-radius: 15px; display:none; color:#ff5252; border:none;">🚪 Logout</button>
+    </div>
 
     <div class="modal-overlay" id="talkModalOverlay">
         <div class="contact-modal">
@@ -292,7 +329,7 @@
                 </div>
                 <input type="email" name="email" id="userEmailInput" placeholder="Your Email address" required>
                 <textarea name="message" placeholder="Ideas, Advice, or Bugs..." required></textarea>
-                <button type="submit" class="action-btn btn-practice" id="submitNoteBtn">Send Message</button>
+                <button type="submit" class="action-btn btn-practice" id="submitNoteBtn" style="border:none;">Send Message</button>
             </form>
         </div>
     </div>
@@ -315,7 +352,7 @@
     <div id="login-view" class="spa-section active">
         <div class="login-clay-box">
             <div class="login-icon">🛡️</div>
-            <h1 class="login-title">Exam Portal</h1>
+            <h1 class="login-title">Secure Portal</h1>
             <p class="login-subtitle">Log in to access your live exams, practice materials, and personal performance dashboard.</p>
             <button id="loginBtn" class="google-login-btn">
                 <svg width="24" height="24" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
@@ -339,7 +376,7 @@
 
             <div class="clay-box box-practice">
                 <div class="box-icon">🟢</div>
-                <div class="box-title">Practice & PDF Bank</div>
+                <div class="box-title">Practice</div>
                 <p class="box-desc">Access previous exams, practice freely.</p>
                 <div style="margin-top: auto;">
                     <select id="practiceExamSelector"><option value="">-- Loading Exams --</option></select>
@@ -411,17 +448,56 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, query, where, doc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🟢 Theme Toggle
-        const body = document.body; const themeToggleBtn = document.getElementById('themeToggleBtn');
-        if (localStorage.getItem('theme') === 'light') { body.classList.add('light-mode'); themeToggleBtn.innerHTML = '🌙'; }
-        themeToggleBtn.addEventListener('click', () => {
-            body.classList.toggle('light-mode'); const isLight = body.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark'); themeToggleBtn.innerHTML = isLight ? '🌙' : '🌞';
-        });
+        // 🟢 Theme Toggle (Desktop & Mobile Sync)
+        const body = document.body; 
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeToggleBtnMobile = document.getElementById('themeToggleBtnMobile');
+
+        if (localStorage.getItem('theme') === 'light') { 
+            body.classList.add('light-mode'); 
+            themeToggleBtn.innerHTML = '🌙'; 
+            themeToggleBtnMobile.innerHTML = '🌙 Dark Mode'; 
+        }
+
+        function toggleTheme() {
+            body.classList.toggle('light-mode'); 
+            const isLight = body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark'); 
+            themeToggleBtn.innerHTML = isLight ? '🌙' : '🌞';
+            themeToggleBtnMobile.innerHTML = isLight ? '🌙 Dark Mode' : '🌞 Light Mode';
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+
+        // 🟢 Mobile Menu Slider Logic
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const slideMenu = document.getElementById('slideMenu');
+        const slideMenuOverlay = document.getElementById('slideMenuOverlay');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+        function toggleMenu() {
+            slideMenu.classList.toggle('active');
+            slideMenuOverlay.classList.toggle('active');
+        }
+
+        hamburgerBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+        slideMenuOverlay.addEventListener('click', toggleMenu);
 
         // 🟢 Contact Modal
-        const talkModalOverlay = document.getElementById('talkModalOverlay'); const openTalkModalBtn = document.getElementById('openTalkModalBtn');
-        openTalkModalBtn.addEventListener('click', () => { talkModalOverlay.classList.add('active'); });
+        const talkModalOverlay = document.getElementById('talkModalOverlay'); 
+        const openTalkModalBtn = document.getElementById('openTalkModalBtn');
+        const openTalkModalBtnMobile = document.getElementById('openTalkModalBtnMobile');
+        
+        function openNoteModal() {
+            talkModalOverlay.classList.add('active');
+            if(slideMenu.classList.contains('active')) toggleMenu(); // close slider if open
+        }
+
+        openTalkModalBtn.addEventListener('click', openNoteModal);
+        openTalkModalBtnMobile.addEventListener('click', openNoteModal);
+
         document.getElementById('closeTalkModal').addEventListener('click', () => { talkModalOverlay.classList.remove('active'); });
         talkModalOverlay.addEventListener('click', (e) => { if (e.target === talkModalOverlay) talkModalOverlay.classList.remove('active'); });
 
@@ -455,7 +531,9 @@
 
         const mainLoader = document.getElementById('mainLoader');
         const logoutBtn = document.getElementById('logoutBtn');
+        const logoutBtnMobile = document.getElementById('logoutBtnMobile');
         const goToAdminBtn = document.getElementById('goToAdminBtn');
+        const goToAdminBtnMobile = document.getElementById('goToAdminBtnMobile');
 
         // 🟢 SPA Router Logic
         window.switchView = function(viewId) {
@@ -465,17 +543,19 @@
         };
 
         // 🟢 Return to Admin Logic
-        goToAdminBtn.addEventListener('click', () => {
+        function returnToAdmin() {
             sessionStorage.removeItem('viewAsUser');
             window.location.href = "admin.html";
-        });
+        }
+        goToAdminBtn.addEventListener('click', returnToAdmin);
+        goToAdminBtnMobile.addEventListener('click', returnToAdmin);
 
-        // 🟢 Central Auth (Fix: Added viewAsUser Session Check) 🟢
+        // 🟢 Central Auth 🟢
         onAuthStateChanged(auth, (user) => {
             setTimeout(() => { mainLoader.style.opacity = "0"; setTimeout(() => mainLoader.style.display = "none", 500); }, 500);
 
             if (user) {
-                // If it's an admin AND they didn't explicitly request to view as user -> send to admin
+                // Admin check
                 if (ADMIN_EMAILS.includes(user.email) && !sessionStorage.getItem('viewAsUser')) { 
                     window.location.href = "admin.html"; 
                 } 
@@ -484,11 +564,14 @@
                     userEmail = user.email; userName = user.displayName || "Student";
                     document.getElementById('studentNameDisplay').innerText = userName.split(' ')[0];
                     document.getElementById('dashboardBoxTitle').innerText = `${userName.split(' ')[0]}'s Dashboard`;
-                    logoutBtn.style.display = "block";
                     
-                    // Show Go To Admin button if this is an admin in "View User" mode
+                    logoutBtn.style.display = "block";
+                    logoutBtnMobile.style.display = "flex";
+                    
+                    // Show Admin button if admin viewing as user
                     if (ADMIN_EMAILS.includes(user.email)) {
                         goToAdminBtn.style.display = "block";
+                        goToAdminBtnMobile.style.display = "flex";
                     }
 
                     switchView('home-view');
@@ -496,7 +579,9 @@
                 }
             } else {
                 logoutBtn.style.display = "none";
+                logoutBtnMobile.style.display = "none";
                 goToAdminBtn.style.display = "none";
+                goToAdminBtnMobile.style.display = "none";
                 switchView('login-view');
             }
         });
@@ -507,10 +592,13 @@
             signInWithPopup(auth, provider).catch(() => { btn.innerHTML = originalHTML; btn.disabled = false; });
         });
 
-        logoutBtn.addEventListener('click', () => { 
-            sessionStorage.removeItem('viewAsUser'); // Clear token on logout
-            signOut(auth); 
-        });
+        function handleLogout() {
+            sessionStorage.removeItem('viewAsUser');
+            signOut(auth);
+            if(slideMenu.classList.contains('active')) toggleMenu();
+        }
+        logoutBtn.addEventListener('click', handleLogout);
+        logoutBtnMobile.addEventListener('click', handleLogout);
 
         // 🟢 Format Date Helper
         function formatResultTime(timestamp) { if (!timestamp) return "Not Scheduled"; return new Date(timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }); }
