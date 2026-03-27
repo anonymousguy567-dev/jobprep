@@ -4,33 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Premium MCQ Portal</title>
-    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body { 
-            background-color: #121218; color: #ffffff; min-height: 100vh; display: flex; 
-            justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-x: hidden; position: relative;
+            background-color: #0b0c10; color: #ffffff; min-height: 100vh; overflow-x: hidden; position: relative;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; transition: 0.4s;}
-        .blob { position: absolute; filter: blur(90px); opacity: 0.2; animation: float 12s infinite alternate ease-in-out; }
+        .blob { position: absolute; filter: blur(120px); opacity: 0.2; animation: float 14s infinite alternate ease-in-out; }
         .blob1 { width: 350px; height: 350px; background: #e91e63; top: -10%; left: -5%; animation-delay: 0s; }
         .blob2 { width: 400px; height: 400px; background: #00bcd4; bottom: -10%; right: -5%; animation-delay: 3s; }
 
-        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.1); } }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, -30px) scale(1.05); } }
 
-        .glass-container { 
-            background: #1a1a22; border-radius: 35px; padding: 40px 30px; width: 100%; max-width: 900px; 
-            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), -8px -8px 20px rgba(255,255,255,0.03), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.02); position: relative; z-index: 10; transition: 0.4s;
-        }
-
-        h2, h3, h4 { text-align: center; margin-bottom: 20px; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.3); transition: 0.4s;}
-        
+        /* 🟢 Core Forms & Inputs (Claymorphism) 🟢 */
+        h2, h3, h4 { margin-bottom: 20px; color: #00bcd4; transition: 0.4s;}
         .input-group { margin-bottom: 20px; width: 100%; }
         label { display: block; margin-bottom: 8px; font-size: 14px; color: #00bcd4; font-weight: bold; transition: 0.4s;}
         
@@ -38,327 +29,251 @@
             width: 100%; padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.02); color: #fff; outline: none; transition: 0.4s; font-size: 15px; font-weight: bold;
             background: #15151a; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); color-scheme: dark;
         }
-        input[type="file"] { padding: 10px; font-size: 14px; background: #202028; cursor: pointer; }
-        input:focus, textarea:focus, select:focus { box-shadow: inset 6px 6px 12px rgba(0,0,0,0.9), 0 0 15px rgba(0, 188, 212, 0.3); }
+        input[type="file"] { padding: 10px; font-size: 14px; background: #1e1e26; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.5); cursor: pointer; }
+        input:focus, textarea:focus, select:focus { box-shadow: inset 6px 6px 12px rgba(0,0,0,0.9), 0 0 10px rgba(0, 188, 212, 0.2); border-color: #00bcd4;}
         select option { background-color: #1a1a22; color: white; }
 
         .submit-btn, .login-btn { 
-            width: 100%; padding: 16px; margin-top: 10px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s;
-            background: #00bcd4; color: #000; letter-spacing: 1px;
-            box-shadow: 6px 6px 15px rgba(0,188,212,0.3), -4px -4px 10px rgba(255,255,255,0.05), inset 3px 3px 6px rgba(255,255,255,0.4), inset -4px -4px 10px rgba(0,0,0,0.2);
+            width: 100%; padding: 16px; margin-top: 10px; border-radius: 16px; border: none; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s;
+            background: #00bcd4; color: #000; box-shadow: 5px 5px 15px rgba(0, 188, 212, 0.3), inset 2px 2px 5px rgba(255,255,255,0.4), inset -4px -4px 10px rgba(0,0,0,0.2);
         }
-        .submit-btn:active, .login-btn:active { box-shadow: inset 6px 6px 15px rgba(0,0,0,0.4), inset -2px -2px 5px rgba(255,255,255,0.1); transform: scale(0.96) translateY(2px); }
-        
-        #adminFormSection { display: none; width: 100%; }
-        #loginSection { text-align: center; padding: 40px 0; width: 100%; max-width: 500px; margin: auto; }
-        
-        .section-box { 
-            background: #202028; padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.04); margin-top: 20px;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.3);
-            transition: 0.4s;
+        .submit-btn:active, .login-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.3); transform: scale(0.97); }
+
+        .btn-edit { background: #ffb74d; color: #000; box-shadow: 4px 4px 10px rgba(255, 183, 77, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); padding: 8px 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
+        .btn-delete { background: #ff5252; color: #fff; box-shadow: 4px 4px 10px rgba(255, 82, 82, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); padding: 8px 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
+        .btn-eval { background: #00e676; color: #000; box-shadow: 4px 4px 10px rgba(0, 230, 118, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); padding: 8px 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
+        .btn-edit:active, .btn-delete:active, .btn-eval:active { transform: scale(0.95); box-shadow: inset 3px 3px 8px rgba(0,0,0,0.3); }
+
+        /* 🟢 Layout: Login View 🟢 */
+        #loginSection { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
+        .login-clay-box {
+            background: #1e1e26; border-radius: 40px; padding: 50px 40px; text-align: center; width: 100%; max-width: 450px;
+            box-shadow: 15px 15px 30px rgba(0,0,0,0.6), -10px -10px 25px rgba(255,255,255,0.02), inset 4px 4px 10px rgba(255,255,255,0.05), inset -6px -6px 20px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.02); transition: 0.4s;
         }
 
-        .q-list-item { background: #1a1a22; padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); transition: 0.4s; }
-        .q-text { font-weight: bold; color: #e0e0e0; font-size: 16px; line-height: 1.4; transition: 0.4s;}
+        /* 🟢 Layout: SaaS Sidebar Dashboard 🟢 */
+        #adminDashboardLayout { display: none; height: 100vh; width: 100%; overflow: hidden; }
+        
+        .sidebar {
+            width: 280px; height: calc(100vh - 40px); margin: 20px 0 20px 20px;
+            background: #1e1e26; border-radius: 30px; padding: 30px 20px;
+            box-shadow: 12px 12px 25px rgba(0,0,0,0.5), -8px -8px 20px rgba(255,255,255,0.02), inset 3px 3px 8px rgba(255,255,255,0.05), inset -5px -5px 15px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.02); display: flex; flex-direction: column; transition: 0.4s;
+        }
+        
+        .brand-title { font-size: 22px; font-weight: 900; color: #00bcd4; text-align: center; margin-bottom: 30px; letter-spacing: 1px; }
+
+        .nav-menu { display: flex; flex-direction: column; gap: 12px; flex-grow: 1; }
+        .nav-item {
+            background: transparent; color: #a0a0b0; border: none; padding: 16px 20px; border-radius: 18px;
+            font-size: 15px; font-weight: bold; text-align: left; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.03); color: #fff; }
+        
+        .nav-item.active {
+            background: #15151a; color: #00bcd4; 
+            box-shadow: inset 6px 6px 12px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(255,255,255,0.02);
+            border: 1px solid rgba(0, 188, 212, 0.1);
+        }
+
+        .nav-divider { border: 0; height: 1px; background: rgba(255,255,255,0.05); margin: 15px 0; }
+        .btn-view-user { color: #ffb74d; }
+        .btn-view-user:hover { background: rgba(255, 183, 77, 0.1); color: #ffb74d; }
+        .btn-logout { color: #ff5252; }
+        .btn-logout:hover { background: rgba(255, 82, 82, 0.1); color: #ff5252; }
+
+        .main-content-area { flex-grow: 1; padding: 20px 30px; height: 100vh; overflow-y: auto; }
+        .main-content-area::-webkit-scrollbar { width: 8px; }
+        .main-content-area::-webkit-scrollbar-thumb { background: rgba(0, 188, 212, 0.5); border-radius: 10px; }
+
+        /* 🟢 Tab Contents (Clay Boxes) 🟢 */
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .clay-box {
+            background: #1e1e26; padding: 35px; border-radius: 35px; width: 100%; max-width: 850px; margin: 0 auto;
+            box-shadow: 12px 12px 25px rgba(0,0,0,0.5), -8px -8px 20px rgba(255,255,255,0.02), inset 3px 3px 8px rgba(255,255,255,0.05), inset -5px -5px 15px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.02); transition: 0.4s;
+        }
+
+        .stats-banner { background: #15151a; padding: 20px 25px; border-radius: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(255,255,255,0.02); border-left: 5px solid #00e676; transition: 0.4s; }
+        .stats-banner h4 { margin: 0; color: #a0a0b0; font-size: 14px; font-weight: bold; text-align: left; }
+        .stats-banner .count { font-size: 32px; font-weight: 900; color: #00e676; margin-top: 5px;}
+
+        .q-list-item { background: #1a1a22; padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.02); display: flex; flex-direction: column; gap: 12px; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.5), inset -2px -2px 4px rgba(255,255,255,0.02); transition: 0.4s; }
+        .q-text { font-weight: bold; color: #e0e0e0; font-size: 15px; line-height: 1.5; }
         .q-actions { display: flex; gap: 10px; }
-        .btn-edit, .btn-delete, .btn-eval { padding: 8px 16px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
-        .btn-edit { background: #ffb74d; color: #000; box-shadow: 3px 3px 8px rgba(255,183,77,0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
-        .btn-delete { background: #ff5252; color: #fff; box-shadow: 3px 3px 8px rgba(255,82,82,0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
-        .btn-eval { background: #00e676; color: #000; box-shadow: 3px 3px 8px rgba(0,230,118,0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
-        .btn-edit:active, .btn-delete:active, .btn-eval:active { transform: scale(0.95); box-shadow: inset 3px 3px 8px rgba(0,0,0,0.4); }
+
+        .result-table-wrapper { width: 100%; overflow-x: auto; border-radius: 20px; background: #15151a; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(255,255,255,0.02); padding: 5px; }
+        .res-table { width: 100%; border-collapse: collapse; text-align: center; }
+        .res-table th { padding: 15px; color: #a0a0b0; font-size: 13px; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .res-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.02); color: #e0e0e0; font-size: 14px; font-weight: bold;}
+        .res-table tr:hover { background: rgba(255,255,255,0.03); }
+
+        .btn-live-excel { background: #2196f3; color: #fff; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-weight: bold; transition: 0.2s; border: none; box-shadow: 4px 4px 10px rgba(33,150,243,0.3), inset 2px 2px 5px rgba(255,255,255,0.4); }
+        .btn-live-excel:active { transform: scale(0.95); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4); }
         .action-buttons-row { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
         .action-buttons-row button { flex: 1; min-width: 150px; }
 
-        .stats-banner { background: #15151a; padding: 20px; border-radius: 16px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); border-left: 5px solid #00e676; transition: 0.4s; }
-        .stats-banner h4 { margin: 0; color: #a0a0b0; font-size: 15px; font-weight: bold; text-align: left; text-shadow: none; transition: 0.4s;}
-        .stats-banner .count { font-size: 35px; font-weight: bold; color: #00e676; margin-top: 5px;}
-        
-        .btn-live-excel { background: #2196f3; color: #fff; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; display: none; border: none; box-shadow: 4px 4px 10px rgba(33,150,243,0.3), inset 2px 2px 5px rgba(255,255,255,0.4); }
-        .btn-live-excel:active { transform: scale(0.95); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4); }
+        .theme-toggle-floating {
+            position: absolute; top: 25px; right: 30px; background: transparent; color: #ffd700; border: none; 
+            width: 45px; height: 45px; font-size: 24px; cursor: pointer; display: flex; justify-content: center; align-items: center;
+            transition: 0.3s; z-index: 100;
+        }
+        .theme-toggle-floating:hover { transform: rotate(20deg) scale(1.1); filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
 
+        /* Modals */
         .result-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 4000; display: none; justify-content: center; align-items: center; transition: 0.4s;}
         .result-modal.show { display: flex; animation: fadeIn 0.3s ease; }
-        
         .result-modal-content { 
-            background: #1a1a22; border-radius: 25px; padding: 30px; width: 90%; position: relative; 
-            box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05); 
-            transform: translateY(-20px); transition: 0.4s ease; border: 1px solid rgba(255,255,255,0.04); 
+            background: #1e1e26; border-radius: 35px; padding: 35px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative; 
+            box-shadow: 15px 15px 30px rgba(0,0,0,0.6), inset 3px 3px 8px rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.02); transition: 0.4s;
         }
-        
-        .result-modal.show .result-modal-content { transform: translateY(0); }
-        .result-close-btn { position: absolute; top: 20px; right: 25px; color: #ff5252; font-size: 32px; cursor: pointer; font-weight: bold; transition: 0.2s; line-height: 1; z-index: 10;}
-        .result-close-btn:hover { transform: scale(1.1); text-shadow: 0 0 15px rgba(255,82,82,0.5); }
-        
-        .result-table-wrapper { margin-top: 15px; padding-right: 5px; flex-grow: 1; border-radius: 12px; background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6); transition: 0.4s;}
-        .res-table { width: 100%; border-collapse: collapse; text-align: center; }
-        .res-table th { background: #202028; padding: 15px; color: #00bcd4; position: sticky; top: 0; z-index: 1; font-size: 14px; text-transform: uppercase; transition: 0.4s;}
-        .res-table td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e0e0e0; font-size: 15px; transition: 0.4s;}
-        .res-table tr:hover { background: rgba(0, 188, 212, 0.1); }
+        .result-close-btn { position: absolute; top: 20px; right: 25px; color: #888; font-size: 28px; cursor: pointer; font-weight: bold; transition: 0.2s;}
+        .result-close-btn:hover { color: #ff5252; }
 
-        .admin-tabs { display: flex; gap: 12px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        .admin-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { flex: 1; min-width: 130px; padding: 14px; border: 1px solid rgba(255,255,255,0.02); border-radius: 16px; background: #202028; color: #a0a0b0; font-weight: bold; cursor: pointer; transition: 0.4s; white-space: nowrap; font-size: 14px; box-shadow: 4px 4px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.05); }
-        .tab-btn:hover { color: #fff; background: #252530; }
-        .tab-btn.active { color: #00bcd4; background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.02); border: 1px solid rgba(0, 188, 212, 0.2); }
-        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .hamburger-btn { display: none; position: absolute; top: 20px; left: 20px; background: transparent; border: none; z-index: 3000; cursor: pointer; }
+        .hamburger-btn svg { width: 35px; height: 35px; fill: #00bcd4; }
+        .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; display: none; backdrop-filter: blur(3px); }
+        .draw-canvas { border-radius: 12px; cursor: crosshair; touch-action: none; box-shadow: 0 5px 15px rgba(0,0,0,0.4); max-width: 100%; border: 2px solid #00e676; background: #fff; }
 
-        /* 🟢 Drawing Canvas CSS 🟢 */
-        .draw-canvas { border-radius: 8px; cursor: crosshair; touch-action: none; box-shadow: 0 5px 15px rgba(0,0,0,0.4); max-width: 100%; border: 2px solid #00e676; background: #fff; }
+        /* SweetAlert */
+        .swal2-popup { background: #1e1e26 !important; border-radius: 30px !important; color: #fff !important; box-shadow: 15px 15px 30px rgba(0,0,0,0.6), inset 3px 3px 8px rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.02) !important;}
+        .swal2-title { color: #00bcd4 !important; }
+        .swal2-input, .swal2-textarea { background: #15151a !important; color: #fff !important; border: 1px solid rgba(0, 188, 212, 0.2) !important; border-radius: 15px !important; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.6) !important; }
+        .swal2-input:focus { border-color: #00bcd4 !important; }
 
-        .navbar { position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px; display: flex; justify-content: flex-end; align-items: center; background: transparent; border-bottom: none; z-index: 2000; transition: 0.4s ease; }
-        .nav-btn.btn-theme { background: #202028; padding: 10px 15px; border-radius: 18px; text-decoration: none; font-weight: bold; font-size: 15px; transition: 0.3s ease-in-out; box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(255,255,255,0.1), inset -3px -3px 6px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; color: #ffd700; }
-        .nav-btn.btn-theme:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px) scale(0.96); }
-        .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; padding: 5px; z-index: 3000; }
-        .hamburger-btn svg { width: 30px; height: 30px; fill: #00bcd4; transition: 0.4s;}
-        .slide-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; opacity: 0; visibility: hidden; transition: 0.3s ease; backdrop-filter: blur(3px); }
-        .slide-menu-overlay.active { opacity: 1; visibility: visible; }
-        .slide-menu { position: fixed; top: 0; right: -300px; width: 250px; height: 100%; background: #181820; z-index: 2600; box-shadow: -10px 0 30px rgba(0,0,0,0.8); transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.4s; display: flex; flex-direction: column; padding: 60px 20px 20px 20px; gap: 15px; overflow-y: auto; border-left: 1px solid rgba(255,255,255,0.05); }
-        .slide-menu.active { right: 0; }
-        .slide-menu .nav-btn { width: 100%; justify-content: center; padding: 15px; font-size: 16px; }
-        .close-menu-btn { position: absolute; top: 20px; right: 20px; background: #252530; border: none; width: 35px; height: 35px; border-radius: 50%; color: #ff5252; font-size: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.5), -2px -2px 5px rgba(255,255,255,0.05); transition: 0.3s; }
-
-        /* SweetAlert Custom Theme */
-        .swal2-popup { background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important; box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important; }
-        .swal2-title, .swal2-html-container { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
-        .swal2-input, .swal2-textarea { background: #15151a !important; color: #fff !important; border: 1px solid rgba(0, 188, 212, 0.4) !important; border-radius: 12px !important; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6) !important; }
-        .swal2-input:focus, .swal2-textarea:focus { border: 1px solid #00bcd4 !important; box-shadow: 0 0 10px rgba(0, 188, 212, 0.3) !important; }
-
-        /* 🟡🟢 LIGHT MODE STYLES 🟢🟡 */
-        body.light-mode { background-color: #FFF8DC; color: #333; } 
-        body.light-mode .bg-blobs { opacity: 0.1; filter: blur(100px); }
-        body.light-mode .glass-container, body.light-mode .section-box, body.light-mode .result-modal-content, body.light-mode .slide-menu { background: #FFF8DC; border: 1px solid #E1A95F; box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), -8px -8px 20px #ffffff, inset 4px 4px 10px #ffffff, inset -8px -8px 18px rgba(225, 169, 95, 0.1); }
-        body.light-mode h1, body.light-mode h2, body.light-mode h3, body.light-mode h4, body.light-mode label { color: #E1A95F; text-shadow: none; }
-        body.light-mode input, body.light-mode textarea, body.light-mode select { background: #FFF8DC; color: #333; border: 1px solid #B2D4D4; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2), inset -2px -2px 5px #ffffff; }
-        body.light-mode input:focus, body.light-mode textarea:focus, body.light-mode select:focus { box-shadow: inset 6px 6px 12px rgba(225, 169, 95, 0.3), 0 0 15px rgba(225, 169, 95, 0.3); border-color: #E1A95F;}
-        body.light-mode select option { background: #FFF8DC; color: #333; }
-        body.light-mode .tab-btn { background: #FFF8DC; color: #555; border-color: #B2D4D4; box-shadow: 4px 4px 8px rgba(225, 169, 95, 0.2), inset 2px 2px 4px #ffffff; }
-        body.light-mode .tab-btn:hover { background: #B2D4D4; color: #333; }
-        body.light-mode .tab-btn.active { background: #B2D4D4; color: #333; border: 1px solid #E1A95F; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.1); }
-        body.light-mode .q-list-item { background: #FFF8DC; border: 1px solid #B2D4D4; box-shadow: 4px 4px 10px rgba(225, 169, 95, 0.2), inset 2px 2px 4px #ffffff; }
+        /* 🟡🟢 LIGHT MODE 🟢🟡 */
+        body.light-mode { background-color: #F0EBE1; color: #2C3539; } 
+        body.light-mode .bg-blobs { opacity: 0.05; filter: blur(100px); }
+        body.light-mode .login-clay-box, body.light-mode .sidebar, body.light-mode .clay-box, body.light-mode .result-modal-content { background: #FDFCF9; border: 1px solid rgba(102, 76, 40, 0.1); box-shadow: 12px 12px 25px rgba(102, 76, 40, 0.1), -8px -8px 20px #ffffff, inset 3px 3px 8px #ffffff, inset -5px -5px 15px rgba(102, 76, 40, 0.05); }
+        body.light-mode .brand-title { color: #008394; }
+        body.light-mode h2, body.light-mode h3, body.light-mode h4, body.light-mode label { color: #664C28; }
+        body.light-mode .nav-item { color: #666; }
+        body.light-mode .nav-item:hover { background: rgba(102, 76, 40, 0.05); color: #222; }
+        body.light-mode .nav-item.active { background: #F0EBE1; color: #008394; box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff; border-color: rgba(0, 131, 148, 0.2); }
+        body.light-mode .nav-divider { background: rgba(102, 76, 40, 0.1); }
+        body.light-mode input, body.light-mode textarea, body.light-mode select { background: #F0EBE1; color: #333; border: 1px solid rgba(102, 76, 40, 0.1); box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff; }
+        body.light-mode input:focus, body.light-mode textarea:focus, body.light-mode select:focus { box-shadow: inset 6px 6px 12px rgba(102, 76, 40, 0.2); border-color: #E1A95F;}
+        body.light-mode select option { background: #F0EBE1; color: #333; }
+        body.light-mode .stats-banner, body.light-mode .result-table-wrapper, body.light-mode .q-list-item { background: #F0EBE1; border-color: rgba(102, 76, 40, 0.1); box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.1), inset -2px -2px 5px #ffffff; border-left-color: #E1A95F;}
+        body.light-mode .stats-banner .count { color: #00A04A; }
+        body.light-mode .res-table th { color: #8A7254; border-bottom: 1px solid rgba(102, 76, 40, 0.1); }
+        body.light-mode .res-table td { color: #4A3B2C; border-bottom: 1px solid rgba(102, 76, 40, 0.05); }
+        body.light-mode .res-table tr:hover { background: rgba(102, 76, 40, 0.05); }
         body.light-mode .q-text { color: #333; }
-        body.light-mode .stats-banner { background: #FFF8DC; border-color: #B2D4D4; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2), inset -2px -2px 4px #ffffff; border-left-color: #E1A95F;}
-        body.light-mode .stats-banner .count { color: #E1A95F; }
-        body.light-mode .res-table th { background: #B2D4D4; color: #333; border-bottom: 1px solid rgba(225, 169, 95, 0.3); }
-        body.light-mode .res-table td { color: #555; border-bottom: 1px solid rgba(178, 212, 212, 0.5); }
-        body.light-mode .res-table tr:hover { background: rgba(225, 169, 95, 0.1); }
-        body.light-mode .result-table-wrapper { background: #FFF8DC; border: 1px solid #E1A95F; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2); }
-        body.light-mode .submit-btn, body.light-mode .login-btn { background: #E1A95F; color: #fff; border-color: #E1A95F; box-shadow: 4px 4px 10px rgba(225, 169, 95, 0.4), inset 2px 2px 4px rgba(255,255,255,0.4); }
-        body.light-mode .submit-btn:active, body.light-mode .login-btn:active { box-shadow: inset 4px 4px 10px rgba(0,0,0,0.2); color: #fff;}
-        body.light-mode .nav-btn { background: #FFF8DC; color: #E1A95F; border-color: #E1A95F; box-shadow: 4px 4px 8px rgba(225, 169, 95, 0.2), inset 2px 2px 4px #ffffff; }
-        body.light-mode .nav-btn:active { box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2); }
-        body.light-mode .hamburger-btn svg { fill: #E1A95F; }
-        body.light-mode .live-counter-box { background: rgba(178, 212, 212, 0.3); border-color: #B2D4D4; color: #E1A95F; }
-        body.light-mode .result-modal { background: rgba(255, 248, 220, 0.8); }
-        body.light-mode .swal2-popup { background: #FFF8DC !important; color: #333 !important; box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), inset 4px 4px 10px #ffffff !important; border: 1px solid #E1A95F !important;}
-        body.light-mode .swal2-title, body.light-mode .swal2-html-container { color: #E1A95F !important; text-shadow: none !important;}
-        body.light-mode .swal2-input, body.light-mode .swal2-textarea { background: #FFF8DC !important; color: #333 !important; border: 1px solid #B2D4D4 !important; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2) !important; }
-        body.light-mode .swal2-input:focus, body.light-mode .swal2-textarea:focus { border: 1px solid #E1A95F !important; box-shadow: 0 0 10px rgba(225, 169, 95, 0.3) !important; }
-        @media (max-width: 768px) { .nav-buttons { display: none; } .hamburger-btn { display: block; } .action-buttons-row { flex-direction: column; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body.light-mode .submit-btn, body.light-mode .login-btn { background: #008394; color: #fff; box-shadow: 4px 4px 10px rgba(0, 131, 148, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
+        body.light-mode .btn-live-excel { background: #E1A95F; color: #fff; box-shadow: 4px 4px 10px rgba(225, 169, 95, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
+        body.light-mode .swal2-popup { background: #FDFCF9 !important; color: #333 !important; border: 1px solid rgba(102,76,40,0.2) !important; box-shadow: 15px 15px 30px rgba(102,76,40,0.1), inset 3px 3px 8px #ffffff !important;}
+        body.light-mode .swal2-title { color: #664C28 !important; }
+        body.light-mode .swal2-input, body.light-mode .swal2-textarea { background: #F0EBE1 !important; color: #333 !important; border: 1px solid rgba(102,76,40,0.2) !important; box-shadow: inset 4px 4px 8px rgba(102,76,40,0.1) !important; }
+        body.light-mode .theme-toggle-floating { color: #E1A95F; }
+
+        @media (max-width: 900px) { 
+            #adminDashboardLayout { flex-direction: column; }
+            .sidebar { position: fixed; left: -320px; top: 0; margin: 0; height: 100vh; z-index: 2600; border-radius: 0 30px 30px 0; transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+            .sidebar.active { left: 0; }
+            .hamburger-btn { display: block; }
+            .mobile-sidebar-overlay.active { display: block; }
+            .main-content-area { padding: 80px 15px 20px 15px; }
+            .clay-box { padding: 25px 20px; }
+            .action-buttons-row { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
 
-    <script>
-        if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }
-    </script>
-
+    <script>if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }</script>
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div></div>
 
-    <nav class="navbar">
-        <div class="nav-buttons">
-            <button class="nav-btn btn-theme" id="themeToggleDesktop">🌞</button>
-        </div>
-        <button class="hamburger-btn" id="hamburgerBtn">
-            <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-        </button>
-    </nav>
-
-    <div class="slide-menu-overlay" id="slideMenuOverlay"></div>
-    <div class="slide-menu" id="slideMenu">
-        <button class="close-menu-btn" id="closeMenuBtn">✖</button>
-        <button class="nav-btn btn-theme" id="themeToggleMobile" style="margin-top: 20px;">🌞</button>
-    </div>
-
-    <div class="result-modal" id="resultModal">
-        <div class="result-modal-content" style="max-width: 650px; overflow-y: auto; max-height: 90vh;">
-            <span class="result-close-btn" id="closeResultModal">&times;</span>
-            <h3 style="margin-bottom: 5px; text-align: center; text-shadow: none;">📊 Live Result Board</h3>
-            <p style="color: #a0a0b0; font-size: 14px; text-align: center; margin-bottom: 15px;">Results sorted by highest score.</p>
-            <div class="result-table-wrapper" style="overflow-y: visible;">
-                <table class="res-table">
-                    <thead><tr><th>Rank</th><th>Roll Number</th><th>Total Score</th></tr></thead>
-                    <tbody id="resultTableBody"></tbody>
-                </table>
-            </div>
+    <div id="loginSection">
+        <div class="login-clay-box">
+            <h1 style="color: #ff5252; margin-bottom: 10px; font-size: 28px;">Admin Portal</h1>
+            <p style="color:#b3b3b3; font-size:14px; margin-bottom:30px;">Select authorized account to enter command center.</p>
+            <button id="adminLoginBtn" class="login-btn" style="background: #fff; color: #111;">
+                <svg width="20" height="20" viewBox="0 0 48 48" style="margin-right: 8px; vertical-align: middle;"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Continue with Google
+            </button>
         </div>
     </div>
 
-    <div class="result-modal" id="historyModal">
-        <div class="result-modal-content" style="max-width: 650px; overflow-y: auto; max-height: 90vh;">
-            <span class="result-close-btn" id="closeHistoryModal">&times;</span>
-            <h3 style="margin-bottom: 5px; text-align: center; text-shadow: none;">👤 Student History</h3>
-            <p id="historyStudentDetails" style="color: #a0a0b0; font-size: 14px; text-align: center; margin-bottom: 15px;"></p>
-            <div class="result-table-wrapper" style="overflow-y: visible;">
-                <table class="res-table">
-                    <thead><tr><th style="text-align: left;">Exam Title</th><th>Score</th></tr></thead>
-                    <tbody id="historyTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="result-modal" id="evalModal">
-        <div class="result-modal-content" style="max-width: 950px; padding: 30px; overflow-y: auto; max-height: 90vh; display: block;">
-            <span class="result-close-btn" id="closeEvalModal">&times;</span>
-            
-            <p style="color: #ffb74d; margin-bottom: 10px; text-align: center; font-size: 16px; font-weight: bold;">Please view the entire script at once</p>
-            
-            <h3 style="margin-bottom:10px; text-align: center; text-shadow: none; color: #00e676;">✍️ Evaluate Script</h3>
-            <p id="evalStudentInfo" style="text-align: center; color: #a0a0b0; margin-bottom: 15px; font-size: 14px;"></p>
-            
-            <div id="evalScriptContainer" style="margin-top: 20px;"></div>
-
-            <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                
-                <div class="compact-input-group">
-                    <label>Total Marks Obtained (Auto-calculated):</label>
-                    <input type="number" id="evalMarks" placeholder="0" step="0.1" readonly style="background: rgba(255,255,255,0.05); color: #00e676; cursor: not-allowed; text-align: center; font-size: 24px; font-weight: bold; border: 1px solid #00e676;">
-                </div>
-                
-                <div class="compact-input-group">
-                    <label>Feedback / Comments (Optional):</label>
-                    <textarea id="evalFeedback" rows="3" placeholder="e.g. Formula missing in step 2..."></textarea>
-                </div>
-
-                <p id="evalUploadStatus" style="font-size: 14px; color: #00e676; margin-top: 10px; font-weight: bold; text-align: center;"></p>
-                <button id="saveEvalBtn" class="submit-btn" style="background:#00e676; color:#000; margin-top:15px; padding: 16px; font-size: 18px;">Submit Evaluation</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="result-modal" id="editQModal">
-        <div class="result-modal-content" style="max-width: 500px; padding: 25px; overflow-y: auto; max-height: 90vh;">
-            <span class="result-close-btn" id="closeEditQModal">&times;</span>
-            <h3 style="margin-bottom:10px; text-align: center; text-shadow: none;">✏️ Edit Question</h3>
-            <div class="result-table-wrapper" style="padding: 10px; background: transparent; box-shadow: none; border: none; overflow-y: visible; margin-top: 0;">
-                <div class="compact-input-group"><label>Question:</label><textarea id="editQText" rows="2" required></textarea></div>
-                <div class="compact-input-group"><label>Option 1:</label><input type="text" id="editQOpt1" required></div>
-                <div class="compact-input-group"><label>Option 2:</label><input type="text" id="editQOpt2" required></div>
-                <div class="compact-input-group"><label>Option 3:</label><input type="text" id="editQOpt3" required></div>
-                <div class="compact-input-group"><label>Option 4:</label><input type="text" id="editQOpt4" required></div>
-                <div class="compact-input-group">
-                    <label>Correct Answer:</label>
-                    <select id="editQCorrect" required>
-                        <option value="1">Option 1</option><option value="2">Option 2</option>
-                        <option value="3">Option 3</option><option value="4">Option 4</option>
-                    </select>
-                </div>
-                <button id="saveEditedQBtn" class="submit-btn" style="background:#ffb74d; color:#000; margin-top:5px; padding: 12px;">Update Question</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="glass-container" id="mainContainer">
+    <div id="adminDashboardLayout">
         
-        <div id="loginSection">
-            <h1 style="color: #ff5252; margin-bottom: 10px;">🔒 Admin Access</h1>
-            <p style="color:#b3b3b3; font-size:15px; margin-bottom:25px;">Select your authorized Admin Gmail account to continue.</p>
-            <button id="adminLoginBtn" class="login-btn">Login with Google</button>
-            <p id="errorMsg" style="color:#ff5252; margin-top: 15px; font-weight: bold;"></p>
-        </div>
+        <button class="hamburger-btn" id="hamburgerBtn"><svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+        <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
+        <button class="theme-toggle-floating" id="themeToggleBtn">🌞</button>
 
-        <div id="adminFormSection">
-            <div class="admin-tabs">
-                <button id="btn-tab-create" class="tab-btn active">📝 Create Exam</button>
-                <button id="btn-tab-add-q" class="tab-btn">➕ Add Questions</button>
-                <button id="btn-tab-eval" class="tab-btn" style="border-bottom: 2px solid #00e676;">✍️ Evaluate Written</button>
-                <button id="btn-tab-manage" class="tab-btn">⚙️ Management</button>
-                <button id="btn-tab-db" class="tab-btn">🗄️ Database Mgt.</button>
-            </div>
+        <aside class="sidebar" id="sidebar">
+            <div class="brand-title">Workspace</div>
+            <nav class="nav-menu">
+                <button class="nav-item active" data-target="tab-create">📝 Create Exam</button>
+                <button class="nav-item" data-target="tab-add-q">➕ Add Questions</button>
+                <button class="nav-item" data-target="tab-eval">✍️ Evaluate Written</button>
+                <button class="nav-item" data-target="tab-manage">⚙️ Management</button>
+                <button class="nav-item" data-target="tab-db">🗄️ Database Mgt.</button>
+                <hr class="nav-divider">
+                <button class="nav-item btn-view-user" id="viewUserPanelBtn">👤 View User Panel</button>
+                <button class="nav-item btn-logout" id="logoutBtn">🚪 Logout</button>
+            </nav>
+        </aside>
 
-            <div id="tab-create" class="section-box tab-content" style="display: block; border-top: 4px solid #ffb74d;">
+        <main class="main-content-area">
+            
+            <div id="tab-create" class="clay-box tab-content" style="display: block;">
                 <h3>Create New Exam (Draft)</h3>
                 <form id="createExamForm">
                     <div class="input-group"><label>Exam Title:</label><input type="text" id="newExamTitle" required placeholder="Enter Exam Title"></div>
                     <div class="input-group">
                         <label>Exam Type:</label>
                         <select id="newExamType" required>
-                            <option value="mcq">MCQ Exam </option>
-                            <option value="written">Written Exam </option>
+                            <option value="mcq">MCQ Exam</option>
+                            <option value="written">Written Exam</option>
                         </select>
                     </div>
                     <div class="input-group"><label>Exam Duration (Minutes):</label><input type="number" id="newExamDuration" required placeholder="Enter Duration"></div>
                     <div class="input-group"><label>Result Publish Date & Time:</label><input type="datetime-local" id="newExamPublishTime" required></div>
-                    <button type="submit" class="submit-btn" style="background: #ffb74d; color: #000;">Create Exam (Draft)</button>
+                    <button type="submit" class="submit-btn" style="background: #ffb74d;">Create Exam (Draft)</button>
                 </form>
             </div>
 
-            <div id="tab-add-q" class="section-box tab-content" style="border-top: 4px solid #00bcd4;">
+            <div id="tab-add-q" class="clay-box tab-content">
                 <h3>Add Questions to Exam</h3>
                 <div class="input-group">
                     <label>Select Exam:</label>
                     <select id="examSelector" required><option value="">-- Loading Exams... --</option></select>
                 </div>
-                
-                <div id="liveQuestionCounterBox" class="live-counter-box" style="display: none;">
+                <div id="liveQuestionCounterBox" style="display: none; background: rgba(0, 188, 212, 0.1); border: 1px dashed #00bcd4; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: bold; color: #00bcd4;">
                     Adding Question No: <span id="liveQuestionNumber">1</span>
                 </div>
-
                 <form id="questionForm">
-                    <div class="input-group">
-                        <label>Question Text (Optional for Written):</label>
-                        <textarea id="question" rows="3" placeholder="Type your question here..."></textarea>
-                    </div>
-                    
-                    <div id="qImageUploadGroup" class="input-group" style="display: none; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;">
-                        <label style="color: #ffb74d;">Question Image (Optional):</label>
-                        <input type="file" id="qImageFile" accept="image/*">
-                        <p id="qImageStatus" style="font-size: 12px; color: #00bcd4; margin-top: 5px;"></p>
-                    </div>
-
-                    <div id="qAnswerUploadGroup" class="input-group" style="display: none; background: rgba(0, 230, 118, 0.05); padding: 15px; border-radius: 12px; border: 1px dashed #00e676; margin-top: 10px;">
-                        <label style="color: #00e676;">Official Answer Image (Optional):</label>
-                        <input type="file" id="qAnswerImageFile" accept="image/*">
-                        <p id="qAnswerImageStatus" style="font-size: 12px; color: #00e676; margin-top: 5px;">*Visible to students after publish time.</p>
-                    </div>
+                    <div class="input-group"><label>Question Text (Optional for Written):</label><textarea id="question" rows="3" placeholder="Type your question here..."></textarea></div>
+                    <div id="qImageUploadGroup" class="input-group" style="display: none;"><label style="color: #ffb74d;">Question Image (Optional):</label><input type="file" id="qImageFile" accept="image/*"><p id="qImageStatus" style="font-size: 12px; color: #00bcd4; margin-top: 5px;"></p></div>
+                    <div id="qAnswerUploadGroup" class="input-group" style="display: none; border-top: 1px dashed rgba(255,255,255,0.1); padding-top:15px; margin-top: 10px;"><label style="color: #00e676;">Official Answer Image (Optional):</label><input type="file" id="qAnswerImageFile" accept="image/*"><p id="qAnswerImageStatus" style="font-size: 12px; color: #00e676; margin-top: 5px;">*Visible to students after publish time.</p></div>
 
                     <div id="mcqOptionsGroup">
                         <div class="input-group"><label>Option 1:</label><input type="text" id="option1"></div>
                         <div class="input-group"><label>Option 2:</label><input type="text" id="option2"></div>
                         <div class="input-group"><label>Option 3:</label><input type="text" id="option3"></div>
                         <div class="input-group"><label>Option 4:</label><input type="text" id="option4"></div>
-                        <div class="input-group">
-                            <label>Correct Answer:</label>
-                            <select id="correctOption">
-                                <option value="">Select correct option</option>
-                                <option value="1">Option 1</option><option value="2">Option 2</option>
-                                <option value="3">Option 3</option><option value="4">Option 4</option>
-                            </select>
-                        </div>
+                        <div class="input-group"><label>Correct Answer:</label><select id="correctOption"><option value="">Select correct option</option><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option><option value="4">Option 4</option></select></div>
                     </div>
-
-                    <div id="writtenMarksGroup" class="input-group" style="display: none;">
-                        <label>Max Marks for this Question:</label>
-                        <input type="number" id="qMaxMarks" placeholder="e.g. 10">
-                    </div>
+                    <div id="writtenMarksGroup" class="input-group" style="display: none;"><label>Max Marks for this Question:</label><input type="number" id="qMaxMarks" placeholder="e.g. 10"></div>
                     <button type="submit" class="submit-btn" id="saveQuestionBtn">Save Question</button>
                 </form>
             </div>
 
-            <div id="tab-eval" class="section-box tab-content" style="border-top: 4px solid #00e676;">
+            <div id="tab-eval" class="clay-box tab-content">
                 <h3 style="color: #00e676;">✍️ Evaluate Written Scripts</h3>
-                <div class="input-group">
-                    <label>Select Written Exam:</label>
-                    <select id="evalExamSelector"><option value="">-- Loading Written Exams... --</option></select>
-                </div>
+                <div class="input-group"><label>Select Written Exam:</label><select id="evalExamSelector"><option value="">-- Loading Written Exams... --</option></select></div>
                 <div id="evalWorkspace" style="display:none; margin-top: 20px;">
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                         <button class="btn-live-excel" id="filterPendingBtn" style="display:block; flex:1; background: #ffb74d; color: #000;">Show Pending</button>
-                        <button class="btn-live-excel" id="filterEvalBtn" style="display:block; flex:1; background: #202028; color: #a0a0b0;">Show Evaluated</button>
+                        <button class="btn-live-excel" id="filterEvalBtn" style="display:block; flex:1; background: #15151a; color: #a0a0b0; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);">Show Evaluated</button>
                     </div>
-                    <div class="result-table-wrapper" style="box-shadow: none; border: none; max-height: 400px; overflow-y: auto;">
-                        <table class="res-table" style="width: 100%; min-width: 500px;">
+                    <div class="result-table-wrapper">
+                        <table class="res-table">
                             <thead><tr><th style="text-align: left;">Roll / Email</th><th>Status</th><th>Score</th><th>Action</th></tr></thead>
                             <tbody id="evalSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Select an exam to load scripts...</td></tr></tbody>
                         </table>
@@ -366,62 +281,96 @@
                 </div>
             </div>
 
-            <div id="tab-manage" class="section-box tab-content" style="border-top: 4px solid #e91e63;">
+            <div id="tab-manage" class="clay-box tab-content">
                 <h3>Manage Exam & Results</h3>
-                <div class="input-group">
-                    <label>Select Exam to Manage:</label>
-                    <select id="manageExamSelector"><option value="">-- Select an Exam --</option></select>
-                </div>
+                <div class="input-group"><label>Select Exam to Manage:</label><select id="manageExamSelector"><option value="">-- Select an Exam --</option></select></div>
                 <div id="manageWorkspace" style="display:none;">
-                    <div class="stats-banner">
-                        <div><h4>👥 Total Submissions</h4><div class="count" id="participantCount">...</div></div>
-                        <button id="adminViewLiveResultBtn" class="btn-live-excel">👁️ View Leaderboard</button>
-                    </div>
-                    <div id="updateSettingsBox" style="background: transparent; padding: 0; border: none; margin-bottom: 25px; box-shadow: none; display: none;">
+                    <div class="stats-banner"><div><h4>👥 Total Submissions</h4><div class="count" id="participantCount">...</div></div><button id="adminViewLiveResultBtn" class="btn-live-excel">👁️ View Leaderboard</button></div>
+                    <div id="updateSettingsBox" style="display: none;">
                         <h4 style="margin-bottom:15px; text-align: left;">Update Running Settings</h4>
                         <div class="input-group"><label>Update Title:</label><input type="text" id="editExamTitle"></div>
                         <div class="input-group"><label>Update Duration (Mins):</label><input type="number" id="editExamDuration"></div>
                         <div class="input-group"><label>Update Publish Time (End Time):</label><input type="datetime-local" id="editExamPublishTime"></div>
-                        <div class="action-buttons-row">
-                            <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63; margin-top: 0; color: #fff;">Save Changes Only</button>
+                        <div class="action-buttons-row" style="margin-bottom: 30px;">
+                            <button id="updateSettingsBtn" class="submit-btn" style="background: #e91e63; margin-top: 0; color: #fff;">Save Changes</button>
                             <button id="publishDraftBtn" class="submit-btn" style="background: #00e676; margin-top: 0; color: #000; display: none;">🚀 Publish Live</button>
                         </div>
                     </div>
-                    <div style="background: transparent; padding: 0; border: none; box-shadow: none;">
-                        <h4 style="margin-bottom:15px; text-align: left;">Delete Questions</h4>
-                        <div id="manageQuestionsList"><p style="color:#b3b3b3;">Loading questions...</p></div>
-                    </div>
+                    <div><h4 style="margin-bottom:15px; text-align: left;">Questions List</h4><div id="manageQuestionsList"><p style="color:#b3b3b3;">Loading questions...</p></div></div>
                 </div>
             </div>
 
-            <div id="tab-db" class="section-box tab-content" style="border-top: 4px solid #9c27b0;">
+            <div id="tab-db" class="clay-box tab-content">
                 <h3>🗄️ Database Management</h3>
-                <div style="background: transparent; padding: 0; border: none; margin-bottom: 25px; box-shadow: none;">
+                <div style="margin-bottom: 30px;">
                     <h4 style="margin-bottom:15px; text-align: left;">🔍 Search Student History</h4>
-                    <div style="display: flex; gap: 15px; align-items: center;">
-                        <input type="number" id="searchRollInput" placeholder="Enter Roll Number" style="flex: 1; margin: 0;">
-                        <button id="searchRollBtn" class="submit-btn" style="margin: 0; width: auto; padding: 14px 30px;">Search</button>
-                    </div>
+                    <div style="display: flex; gap: 15px; align-items: center;"><input type="number" id="searchRollInput" placeholder="Enter Roll Number" style="flex: 1; margin: 0;"><button id="searchRollBtn" class="submit-btn" style="margin: 0; width: auto; padding: 14px 30px;">Search</button></div>
                 </div>
-                <div class="input-group">
-                    <label>Select Exam to Manage Database:</label>
-                    <select id="dbExamSelector"><option value="">-- Select an Exam --</option></select>
-                </div>
-                <div id="dbWorkspace" style="display:none; background: transparent; padding: 0; border: none; box-shadow: none;">
-                    <p id="dbExamStatus" style="margin-bottom: 20px; font-weight: bold; font-size: 16px; text-align: center;"></p>
+                <div class="input-group"><label>Select Exam to Manage Database:</label><select id="dbExamSelector"><option value="">-- Select an Exam --</option></select></div>
+                <div id="dbWorkspace" style="display:none;">
+                    <p id="dbExamStatus" style="margin-bottom: 20px; font-weight: bold; font-size: 16px; text-align: center; color: #00bcd4;"></p>
                     <div id="dbActionButtons" class="action-buttons-row"></div>
-                    <div style="margin-top: 30px; padding-top: 25px;">
-                        <h4 style="margin-bottom: 10px; text-align: left;">📋 Individual Submissions</h4>
-                        <div class="result-table-wrapper" style="box-shadow: none; border: none;">
-                            <table class="res-table" style="width: 100%; min-width: 650px;">
-                                <thead><tr><th style="text-align: left;">Roll / Email</th><th>C / W / S (MCQ)</th><th>Score</th><th>Action</th></tr></thead>
+                    <div style="margin-top: 30px;">
+                        <h4 style="margin-bottom: 15px; text-align: left;">📋 Individual Submissions</h4>
+                        <div class="result-table-wrapper">
+                            <table class="res-table">
+                                <thead><tr><th style="text-align: left;">Roll / Email</th><th>C / W / S</th><th>Score</th><th>Action</th></tr></thead>
                                 <tbody id="dbSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
+        </main>
+    </div>
 
+    <div class="result-modal" id="resultModal">
+        <div class="result-modal-content" style="max-width: 650px; overflow-y: auto; max-height: 90vh;">
+            <span class="result-close-btn" id="closeResultModal">&times;</span>
+            <h3 style="margin-bottom: 5px; text-align: center;">📊 Live Result Board</h3>
+            <p style="color: #a0a0b0; font-size: 14px; text-align: center; margin-bottom: 15px;">Results sorted by highest score.</p>
+            <div class="result-table-wrapper" style="overflow-y: visible;"><table class="res-table"><thead><tr><th>Rank</th><th>Roll Number</th><th>Total Score</th></tr></thead><tbody id="resultTableBody"></tbody></table></div>
+        </div>
+    </div>
+
+    <div class="result-modal" id="historyModal">
+        <div class="result-modal-content" style="max-width: 650px; overflow-y: auto; max-height: 90vh;">
+            <span class="result-close-btn" id="closeHistoryModal">&times;</span>
+            <h3 style="margin-bottom: 5px; text-align: center;">👤 Student History</h3>
+            <p id="historyStudentDetails" style="color: #a0a0b0; font-size: 14px; text-align: center; margin-bottom: 15px;"></p>
+            <div class="result-table-wrapper" style="overflow-y: visible;"><table class="res-table"><thead><tr><th style="text-align: left;">Exam Title</th><th>Score</th></tr></thead><tbody id="historyTableBody"></tbody></table></div>
+        </div>
+    </div>
+
+    <div class="result-modal" id="evalModal">
+        <div class="result-modal-content" style="max-width: 950px; padding: 30px; overflow-y: auto; max-height: 90vh; display: block;">
+            <span class="result-close-btn" id="closeEvalModal">&times;</span>
+            <p style="color: #ffb74d; margin-bottom: 10px; text-align: center; font-size: 16px; font-weight: bold;">Please evaluate the entire script at once/*Use desktop mode to evaluate</p>
+            <h3 style="margin-bottom:10px; text-align: center; color: #00e676;">✍️ Evaluate Script</h3>
+            <p id="evalStudentInfo" style="text-align: center; color: #a0a0b0; margin-bottom: 15px; font-size: 14px;"></p>
+            <div id="evalScriptContainer" style="margin-top: 20px;"></div>
+            <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                <div class="input-group"><label>Total Marks Obtained (Auto-calculated):</label><input type="number" id="evalMarks" placeholder="0" step="0.1" readonly style="color: #00e676; text-align: center; font-size: 24px; border: 1px solid #00e676;"></div>
+                <div class="input-group"><label>Feedback / Comments (Optional):</label><textarea id="evalFeedback" rows="3"></textarea></div>
+                <p id="evalUploadStatus" style="font-size: 14px; color: #00e676; margin-top: 10px; font-weight: bold; text-align: center;"></p>
+                <button id="saveEvalBtn" class="submit-btn" style="background:#00e676; color:#000; margin-top:15px;">Submit Evaluation</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="result-modal" id="editQModal">
+        <div class="result-modal-content" style="max-width: 500px; padding: 25px; overflow-y: auto; max-height: 90vh;">
+            <span class="result-close-btn" id="closeEditQModal">&times;</span>
+            <h3 style="margin-bottom:10px; text-align: center;">✏️ Edit Question</h3>
+            <div class="result-table-wrapper" style="padding: 10px; background: transparent; box-shadow: none; border: none; overflow-y: visible; margin-top: 0;">
+                <div class="input-group"><label>Question:</label><textarea id="editQText" rows="2" required></textarea></div>
+                <div class="input-group"><label>Option 1:</label><input type="text" id="editQOpt1" required></div>
+                <div class="input-group"><label>Option 2:</label><input type="text" id="editQOpt2" required></div>
+                <div class="input-group"><label>Option 3:</label><input type="text" id="editQOpt3" required></div>
+                <div class="input-group"><label>Option 4:</label><input type="text" id="editQOpt4" required></div>
+                <div class="input-group"><label>Correct Answer:</label><select id="editQCorrect" required><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option><option value="4">Option 4</option></select></div>
+                <button id="saveEditedQBtn" class="submit-btn" style="background:#ffb74d; color:#000;">Update Question</button>
+            </div>
         </div>
     </div>
 
@@ -431,71 +380,49 @@
         import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         // Theme Init
-        const themeToggleDesktop = document.getElementById('themeToggleDesktop'); 
-        if (localStorage.getItem('theme') === 'light') { themeToggleDesktop.innerHTML = '🌙'; } 
-        else { themeToggleDesktop.innerHTML = '🌞'; }
-        function toggleTheme() { document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); themeToggleDesktop.innerHTML = isLight ? '🌙' : '🌞'; }
-        themeToggleDesktop.addEventListener('click', toggleTheme);
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); themeToggleBtn.innerHTML = '🌙';} 
+        else { themeToggleBtn.innerHTML = '🌞'; }
+        themeToggleBtn.addEventListener('click', () => { document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); themeToggleBtn.innerHTML = isLight ? '🌙' : '🌞'; });
 
-        // 🔴 FIREBASE CONFIG 🔴
+        // Sidebar Navigation
+        const sidebar = document.getElementById('sidebar'); const hamburgerBtn = document.getElementById('hamburgerBtn'); const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+        hamburgerBtn.addEventListener('click', () => { sidebar.classList.add('active'); mobileSidebarOverlay.classList.add('active'); });
+        mobileSidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('active'); mobileSidebarOverlay.classList.remove('active'); });
+
+        document.querySelectorAll('.nav-item[data-target]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(tc => { tc.style.display = 'none'; tc.style.animation = 'none'; });
+                e.currentTarget.classList.add('active');
+                const targetEl = document.getElementById(e.currentTarget.getAttribute('data-target'));
+                targetEl.style.display = 'block'; setTimeout(() => targetEl.style.animation = 'fadeIn 0.4s ease', 10);
+                if(window.innerWidth <= 900) { sidebar.classList.remove('active'); mobileSidebarOverlay.classList.remove('active'); }
+            });
+        });
+
+        document.getElementById('viewUserPanelBtn').addEventListener('click', () => { sessionStorage.setItem('viewAsUser', 'true'); window.location.href = "index.html"; });
+
+        // FIREBASE CONFIG
         const firebaseConfig = { apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE", authDomain: "mcq-portal-904fd.firebaseapp.com", projectId: "mcq-portal-904fd", storageBucket: "mcq-portal-904fd.firebasestorage.app", messagingSenderId: "977853699063", appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2" };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); provider.setCustomParameters({ prompt: 'select_account' }); const db = getFirestore(app);
 
-        const IMGBB_API_KEY = "35b7e96a7a04b874aa3e4a2949ff11cc";
-        const ADMIN_EMAILS = ["hridoymeruet@gmail.com", "mcqportal198@gmail.com"]; 
-        let allExamsData = {};
+        const IMGBB_API_KEY = "35b7e96a7a04b874aa3e4a2949ff11cc"; const ADMIN_EMAILS = ["hridoymeruet@gmail.com", "mcqportal198@gmail.com"]; let allExamsData = {};
 
-        function switchTab(tabId, btnId) { document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none'); document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active')); document.getElementById(tabId).style.display = 'block'; document.getElementById(btnId).classList.add('active'); }
-        document.getElementById('btn-tab-create').addEventListener('click', () => switchTab('tab-create', 'btn-tab-create')); 
-        document.getElementById('btn-tab-add-q').addEventListener('click', () => switchTab('tab-add-q', 'btn-tab-add-q')); 
-        document.getElementById('btn-tab-eval').addEventListener('click', () => switchTab('tab-eval', 'btn-tab-eval')); 
-        document.getElementById('btn-tab-manage').addEventListener('click', () => switchTab('tab-manage', 'btn-tab-manage')); 
-        document.getElementById('btn-tab-db').addEventListener('click', () => switchTab('tab-db', 'btn-tab-db'));
-
-        const loginSection = document.getElementById('loginSection'); const adminFormSection = document.getElementById('adminFormSection'); const examSelector = document.getElementById('examSelector'); const manageExamSelector = document.getElementById('manageExamSelector'); const dbExamSelector = document.getElementById('dbExamSelector'); const viewLiveResultBtn = document.getElementById('adminViewLiveResultBtn'); 
-        
+        const loginSection = document.getElementById('loginSection'); const adminDashboardLayout = document.getElementById('adminDashboardLayout');
         const resultModal = document.getElementById('resultModal'); const closeResultModal = document.getElementById('closeResultModal'); const resultTableBody = document.getElementById('resultTableBody');
         const historyModal = document.getElementById('historyModal'); const closeHistoryModal = document.getElementById('closeHistoryModal'); const historyTableBody = document.getElementById('historyTableBody'); const historyStudentDetails = document.getElementById('historyStudentDetails');
         const editQModal = document.getElementById('editQModal'); const closeEditQModal = document.getElementById('closeEditQModal');
         const evalModal = document.getElementById('evalModal'); const closeEvalModal = document.getElementById('closeEvalModal');
 
-        closeResultModal.addEventListener('click', () => { resultModal.classList.remove('show'); }); closeHistoryModal.addEventListener('click', () => { historyModal.classList.remove('show'); }); closeEditQModal.addEventListener('click', () => { editQModal.classList.remove('show'); }); closeEvalModal.addEventListener('click', () => { evalModal.classList.remove('show'); }); 
+        closeResultModal.addEventListener('click', () => resultModal.classList.remove('show')); closeHistoryModal.addEventListener('click', () => historyModal.classList.remove('show')); closeEditQModal.addEventListener('click', () => editQModal.classList.remove('show')); closeEvalModal.addEventListener('click', () => evalModal.classList.remove('show')); 
         window.addEventListener('click', (e) => { if(e.target === resultModal) resultModal.classList.remove('show'); if(e.target === historyModal) historyModal.classList.remove('show'); if(e.target === editQModal) editQModal.classList.remove('show'); if(e.target === evalModal) evalModal.classList.remove('show'); });
 
-        onAuthStateChanged(auth, (user) => { 
-            if (user) { 
-                if (ADMIN_EMAILS.includes(user.email)) { 
-                    loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); 
-                    
-                    // 🟢 NEW FEATURE ALERT POPUP 🟢
-                    if (!sessionStorage.getItem('writtenNoticeShown')) {
-                        Swal.fire({
-                            title: '🚀 Written Exams Now Available!',
-                            html: 'From now on, you can also conduct <b>Written Exams</b>.<br><br>Since this feature is in the development phase, the mobile version is not yet fully optimized. Therefore, you are requested to use a <b>Desktop or Laptop</b> to create and evaluate exams for the best experience.',
-                            icon: 'info',
-                            showCloseButton: true,
-                            allowOutsideClick: true,
-                            confirmButtonText: 'Got it!',
-                            background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
-                            color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
-                        });
-                        sessionStorage.setItem('writtenNoticeShown', 'true');
-                    }
-                    
-                } else { Swal.fire('Access Denied!', '', 'error'); signOut(auth); } 
-            } else { loginSection.style.display = "block"; adminFormSection.style.display = "none"; } 
-        });
-        
+        onAuthStateChanged(auth, (user) => { if (user) { if (ADMIN_EMAILS.includes(user.email)) { loginSection.style.display = "none"; adminDashboardLayout.style.display = "flex"; loadExamsIntoDropdowns(); } else { Swal.fire('Access Denied!', '', 'error'); signOut(auth); } } else { loginSection.style.display = "flex"; adminDashboardLayout.style.display = "none"; } });
         document.getElementById('adminLoginBtn').addEventListener('click', async () => { try { await signInWithPopup(auth, provider); } catch (e) {} });
+        document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-        async function uploadImageToImgBB(file) {
-            const formData = new FormData(); formData.append('image', file);
-            try {
-                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
-                const data = await response.json();
-                if(data.success) { return data.data.url; } else { throw new Error("Upload failed"); }
-            } catch(e) { console.error(e); return null; }
-        }
+        async function uploadImageToImgBB(file) { const formData = new FormData(); formData.append('image', file); try { const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData }); const data = await response.json(); if(data.success) return data.data.url; else throw new Error("Upload failed"); } catch(e) { return null; } }
 
         async function loadExamsIntoDropdowns() {
             try { 
@@ -508,11 +435,9 @@
                     if(data.status === "hidden") titleStr += " 🙈";
                     else if(data.type !== 'written' && (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime))) titleStr += " 🟢 (Practice)"; 
                     else if(data.type === 'written' && (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime))) titleStr += " 🏁 (Ended)"; 
-                    else if(data.status === "draft") titleStr += " 📝 (Draft)"; 
-                    else titleStr += " 🔴 (Live)"; 
+                    else if(data.status === "draft") titleStr += " 📝 (Draft)"; else titleStr += " 🔴 (Live)"; 
                     const opt = `<option value="${doc.id}">${typeIcon} ${titleStr}</option>`;
-                    optionsHtml += opt; 
-                    if(data.type === 'written') writtenOptionsHtml += opt;
+                    optionsHtml += opt; if(data.type === 'written') writtenOptionsHtml += opt;
                 }); 
                 document.getElementById('examSelector').innerHTML = optionsHtml; document.getElementById('manageExamSelector').innerHTML = optionsHtml; document.getElementById('dbExamSelector').innerHTML = optionsHtml; document.getElementById('evalExamSelector').innerHTML = writtenOptionsHtml; 
             } catch (error) {}
@@ -522,394 +447,176 @@
 
         document.getElementById('createExamForm').addEventListener('submit', async function(e) { 
             e.preventDefault(); const btn = document.querySelector('#createExamForm button'); btn.innerText = "Creating...";
-            try { await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, type: document.getElementById('newExamType').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "draft" }); Swal.fire('Created!', 'Exam Saved as DRAFT successfully.', 'success'); document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); } catch (error) { Swal.fire('Error', 'Failed to create exam.', 'error'); } btn.innerText = "Create Exam (Draft)";
+            try { await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, type: document.getElementById('newExamType').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "draft" }); Swal.fire({icon: 'success', title: 'Created!', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); } catch (error) { Swal.fire('Error', 'Failed to create exam.', 'error'); } btn.innerText = "Create Exam (Draft)";
         });
         
         document.getElementById('examSelector').addEventListener('change', async (e) => {
             const examId = e.target.value; const counterBox = document.getElementById('liveQuestionCounterBox');
             if(!examId) { counterBox.style.display = "none"; return; }
-            
             const examType = allExamsData[examId].type;
             if(examType === 'written') {
-                document.getElementById('mcqOptionsGroup').style.display = "none";
-                document.getElementById('qImageUploadGroup').style.display = "block";
-                document.getElementById('qAnswerUploadGroup').style.display = "block"; 
-                document.getElementById('writtenMarksGroup').style.display = "block";
-                document.getElementById('question').removeAttribute('required'); 
-                document.getElementById('option1').removeAttribute('required'); document.getElementById('option2').removeAttribute('required'); document.getElementById('option3').removeAttribute('required'); document.getElementById('option4').removeAttribute('required'); document.getElementById('correctOption').removeAttribute('required');
-                document.getElementById('qMaxMarks').setAttribute('required', 'true');
+                document.getElementById('mcqOptionsGroup').style.display = "none"; document.getElementById('qImageUploadGroup').style.display = "block"; document.getElementById('qAnswerUploadGroup').style.display = "block"; document.getElementById('writtenMarksGroup').style.display = "block";
+                document.getElementById('question').removeAttribute('required'); document.getElementById('option1').removeAttribute('required'); document.getElementById('option2').removeAttribute('required'); document.getElementById('option3').removeAttribute('required'); document.getElementById('option4').removeAttribute('required'); document.getElementById('correctOption').removeAttribute('required'); document.getElementById('qMaxMarks').setAttribute('required', 'true');
             } else {
-                document.getElementById('mcqOptionsGroup').style.display = "block";
-                document.getElementById('qImageUploadGroup').style.display = "none";
-                document.getElementById('qAnswerUploadGroup').style.display = "none";
-                document.getElementById('writtenMarksGroup').style.display = "none";
-                document.getElementById('question').setAttribute('required', 'true'); 
-                document.getElementById('option1').setAttribute('required', 'true'); document.getElementById('option2').setAttribute('required', 'true'); document.getElementById('option3').setAttribute('required', 'true'); document.getElementById('option4').setAttribute('required', 'true'); document.getElementById('correctOption').setAttribute('required', 'true');
-                document.getElementById('qMaxMarks').removeAttribute('required');
+                document.getElementById('mcqOptionsGroup').style.display = "block"; document.getElementById('qImageUploadGroup').style.display = "none"; document.getElementById('qAnswerUploadGroup').style.display = "none"; document.getElementById('writtenMarksGroup').style.display = "none";
+                document.getElementById('question').setAttribute('required', 'true'); document.getElementById('option1').setAttribute('required', 'true'); document.getElementById('option2').setAttribute('required', 'true'); document.getElementById('option3').setAttribute('required', 'true'); document.getElementById('option4').setAttribute('required', 'true'); document.getElementById('correctOption').setAttribute('required', 'true'); document.getElementById('qMaxMarks').removeAttribute('required');
             }
-
             counterBox.style.display = "block"; document.getElementById('liveQuestionNumber').innerText = "...";
             try { const qSnap = await getDocs(collection(db, "exams", examId, "questions")); document.getElementById('liveQuestionNumber').innerText = qSnap.size + 1; } catch(e) {}
         });
 
         document.getElementById('questionForm').addEventListener('submit', async function(e) { 
-            e.preventDefault(); 
-            const selectedExamId = document.getElementById('examSelector').value; 
-            if(!selectedExamId) { Swal.fire('Wait!', 'Please select an Exam first!', 'warning'); return; } 
-            
-            const examType = allExamsData[selectedExamId].type;
-            const qText = document.getElementById('question').value.trim();
-
-            if(examType === 'written') {
-                const fileInput = document.getElementById('qImageFile');
-                if(!qText && fileInput.files.length === 0) { Swal.fire('Wait!', 'Please provide either Question Text or upload a Question Image.', 'warning'); return; }
-            }
-
+            e.preventDefault(); const selectedExamId = document.getElementById('examSelector').value; if(!selectedExamId) { Swal.fire('Wait!', 'Select Exam first!', 'warning'); return; } 
+            const examType = allExamsData[selectedExamId].type; const qText = document.getElementById('question').value.trim();
+            if(examType === 'written' && !qText && document.getElementById('qImageFile').files.length === 0) { Swal.fire('Wait!', 'Provide Text or Image.', 'warning'); return; }
             const btn = document.getElementById('saveQuestionBtn'); btn.innerText = "Processing..."; 
             
             try { 
                 let questionData = { question: qText, timestamp: new Date() };
-
                 if(examType === 'written') {
                     questionData.maxMarks = parseFloat(document.getElementById('qMaxMarks').value);
-                    const fileInput = document.getElementById('qImageFile');
-                    if(fileInput.files.length > 0) {
-                        document.getElementById('qImageStatus').innerText = "Uploading Question Image...";
-                        const url = await uploadImageToImgBB(fileInput.files[0]);
-                        if(url) questionData.imageUrl = url;
-                        document.getElementById('qImageStatus').innerText = "";
-                    }
-                    const ansFileInput = document.getElementById('qAnswerImageFile');
-                    if(ansFileInput.files.length > 0) {
-                        document.getElementById('qAnswerImageStatus').innerText = "Uploading Answer Image...";
-                        const ansUrl = await uploadImageToImgBB(ansFileInput.files[0]);
-                        if(ansUrl) questionData.answerImageUrl = ansUrl;
-                        document.getElementById('qAnswerImageStatus').innerText = "*Visible to students after publish time.";
-                    }
+                    if(document.getElementById('qImageFile').files.length > 0) { document.getElementById('qImageStatus').innerText = "Uploading Image..."; const url = await uploadImageToImgBB(document.getElementById('qImageFile').files[0]); if(url) questionData.imageUrl = url; document.getElementById('qImageStatus').innerText = ""; }
+                    if(document.getElementById('qAnswerImageFile').files.length > 0) { document.getElementById('qAnswerImageStatus').innerText = "Uploading Answer..."; const ansUrl = await uploadImageToImgBB(document.getElementById('qAnswerImageFile').files[0]); if(ansUrl) questionData.answerImageUrl = ansUrl; document.getElementById('qAnswerImageStatus').innerText = "*Visible after publish."; }
                 } else {
-                    questionData.options = { "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, "3": document.getElementById('option3').value, "4": document.getElementById('option4').value };
-                    questionData.correctAnswer = document.getElementById('correctOption').value;
+                    questionData.options = { "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, "3": document.getElementById('option3').value, "4": document.getElementById('option4').value }; questionData.correctAnswer = document.getElementById('correctOption').value;
                 }
-
-                await addDoc(collection(db, "exams", selectedExamId, "questions"), questionData); 
-                Swal.fire({ icon: 'success', title: 'Saved!', timer: 1000, showConfirmButton: false });
-                
-                let currentNum = parseInt(document.getElementById('liveQuestionNumber').innerText);
-                document.getElementById('liveQuestionNumber').innerText = currentNum + 1;
-                document.getElementById('questionForm').reset(); 
-            } catch (error) { Swal.fire('Error', 'Failed to save question.', 'error'); } 
-            btn.innerText = "Save Question"; 
+                await addDoc(collection(db, "exams", selectedExamId, "questions"), questionData); Swal.fire({ icon: 'success', title: 'Saved!', timer: 1000, showConfirmButton: false, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26' });
+                document.getElementById('liveQuestionNumber').innerText = parseInt(document.getElementById('liveQuestionNumber').innerText) + 1; document.getElementById('questionForm').reset(); 
+            } catch (error) { Swal.fire('Error', 'Failed to save.', 'error'); } btn.innerText = "Save Question"; 
         });
 
-        // 🟢 EVALUATE WRITTEN SCRIPTS LOGIC 🟢
+        // 🟢 EVALUATE LOGIC 🟢
         const evalExamSelector = document.getElementById('evalExamSelector'); const filterPendingBtn = document.getElementById('filterPendingBtn'); const filterEvalBtn = document.getElementById('filterEvalBtn');
         let currentEvalFilter = 'pending'; let evalSubmissionsData = [];
 
-        evalExamSelector.addEventListener('change', () => { loadEvalSubmissions(); });
-        filterPendingBtn.addEventListener('click', () => { currentEvalFilter = 'pending'; filterPendingBtn.style.background = '#ffb74d'; filterPendingBtn.style.color = '#000'; filterEvalBtn.style.background = '#202028'; filterEvalBtn.style.color = '#a0a0b0'; renderEvalTable(); });
-        filterEvalBtn.addEventListener('click', () => { currentEvalFilter = 'evaluated'; filterEvalBtn.style.background = '#00e676'; filterEvalBtn.style.color = '#000'; filterPendingBtn.style.background = '#202028'; filterPendingBtn.style.color = '#a0a0b0'; renderEvalTable(); });
+        evalExamSelector.addEventListener('change', loadEvalSubmissions);
+        filterPendingBtn.addEventListener('click', () => { currentEvalFilter = 'pending'; filterPendingBtn.style.background = '#ffb74d'; filterPendingBtn.style.color = '#000'; filterPendingBtn.style.boxShadow = 'none'; filterEvalBtn.style.background = '#15151a'; filterEvalBtn.style.color = '#a0a0b0'; filterEvalBtn.style.boxShadow = 'inset 4px 4px 8px rgba(0,0,0,0.6)'; renderEvalTable(); });
+        filterEvalBtn.addEventListener('click', () => { currentEvalFilter = 'evaluated'; filterEvalBtn.style.background = '#00e676'; filterEvalBtn.style.color = '#000'; filterEvalBtn.style.boxShadow = 'none'; filterPendingBtn.style.background = '#15151a'; filterPendingBtn.style.color = '#a0a0b0'; filterPendingBtn.style.boxShadow = 'inset 4px 4px 8px rgba(0,0,0,0.6)'; renderEvalTable(); });
 
         async function loadEvalSubmissions() {
-            const examId = evalExamSelector.value; const workspace = document.getElementById('evalWorkspace');
-            if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block";
-            document.getElementById('evalSubmissionsBody').innerHTML = '<tr><td colspan="4" style="text-align:center; color:#a0a0b0;">Loading scripts...</td></tr>';
-            try { const q = query(collection(db, "results"), where("examId", "==", examId)); const snap = await getDocs(q); evalSubmissionsData = []; snap.forEach(doc => evalSubmissionsData.push({id: doc.id, ...doc.data()})); renderEvalTable(); } catch(e) { console.error(e); }
+            const examId = evalExamSelector.value; const workspace = document.getElementById('evalWorkspace'); if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block";
+            document.getElementById('evalSubmissionsBody').innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
+            try { const snap = await getDocs(query(collection(db, "results"), where("examId", "==", examId))); evalSubmissionsData = []; snap.forEach(doc => evalSubmissionsData.push({id: doc.id, ...doc.data()})); renderEvalTable(); } catch(e) {}
         }
 
         function renderEvalTable() {
             const tbody = document.getElementById('evalSubmissionsBody'); tbody.innerHTML = "";
             let filtered = evalSubmissionsData.filter(sub => { if(currentEvalFilter === 'pending') return sub.status === 'pending' || !sub.status; return sub.status === 'evaluated'; });
-            if(filtered.length === 0) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ffb74d;">No ${currentEvalFilter} scripts found.</td></tr>`; return; }
+            if(filtered.length === 0) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ffb74d;">No scripts found.</td></tr>`; return; }
 
             filtered.forEach((sub, i) => {
                 let statusSpan = currentEvalFilter === 'pending' ? `<span style="color:#ffb74d;">⏳ Pending</span>` : `<span style="color:#00e676;">✅ Evaluated</span>`;
-                let scoreText = sub.score !== undefined ? sub.score : "N/A";
-                let btnText = currentEvalFilter === 'pending' ? "✍️ Evaluate" : "🔍 View/Edit";
-                
                 let tr = document.createElement('tr');
-                tr.innerHTML = `<td style="text-align:left;"><b>${sub.rollNumber}</b><br><span style="font-size:11px; color:#a0a0b0;">${sub.email}</span></td><td>${statusSpan}</td><td style="font-weight:bold; color:#00bcd4;">${scoreText}</td><td><button class="btn-eval eval-open-btn" data-index="${i}">${btnText}</button></td>`;
-                tbody.appendChild(tr);
-                tr.querySelector('.eval-open-btn').addEventListener('click', () => openEvalModal(sub));
+                tr.innerHTML = `<td style="text-align:left;"><b>${sub.rollNumber}</b><br><span style="font-size:11px; color:#a0a0b0;">${sub.email}</span></td><td>${statusSpan}</td><td style="color:#00bcd4;">${sub.score !== undefined ? sub.score : "N/A"}</td><td><button class="btn-eval eval-open-btn" data-index="${i}">${currentEvalFilter === 'pending' ? "✍️ Evaluate" : "🔍 View"}</button></td>`;
+                tbody.appendChild(tr); tr.querySelector('.eval-open-btn').addEventListener('click', () => openEvalModal(sub));
             });
         }
 
-        let currentEvalSubId = null;
-        let currentEvalSub = null; 
-        let canvasRegistry = {}; 
-
-        // 🟢 OPEN EVAL MODAL (PER QUESTION LIVE CANVAS) 🟢
+        let currentEvalSubId = null; let currentEvalSub = null; let canvasRegistry = {}; 
         async function openEvalModal(sub) {
-            currentEvalSubId = sub.id; 
-            currentEvalSub = sub;
-            canvasRegistry = {}; 
-
+            currentEvalSubId = sub.id; currentEvalSub = sub; canvasRegistry = {}; 
             document.getElementById('evalStudentInfo').innerText = `Student: ${sub.rollNumber} | Email: ${sub.email}`;
-            
-            const scriptContainer = document.getElementById('evalScriptContainer');
-            scriptContainer.innerHTML = "<p style='color:#00bcd4; text-align:center;'>Loading scripts...</p>";
-            evalModal.classList.add('show');
-
+            const scriptContainer = document.getElementById('evalScriptContainer'); scriptContainer.innerHTML = "<div style='text-align:center;'>Loading scripts...</div>"; evalModal.classList.add('show');
             try {
-                const qSnap = await getDocs(collection(db, "exams", sub.examId, "questions"));
-                let html = ""; let qNum = 1;
-                let studentMarks = sub.questionMarks || {}; 
-
-                let questionsArray = [];
-                qSnap.forEach(doc => { questionsArray.push({ id: doc.id, data: doc.data() }); });
+                const qSnap = await getDocs(collection(db, "exams", sub.examId, "questions")); let html = ""; let qNum = 1; let studentMarks = sub.questionMarks || {}; let questionsArray = [];
+                qSnap.forEach(doc => questionsArray.push({ id: doc.id, data: doc.data() }));
 
                 questionsArray.forEach(qItem => {
                     const qData = qItem.data; const qId = qItem.id;
-                    let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null;
-                    if (!studentAns && sub.studentImageUrl && qNum === 1) { studentAns = sub.studentImageUrl; }
-
-                    let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null;
-                    let ansUrlToDraw = checkedAns || studentAns;
-
-                    let prevMark = studentMarks[qId] !== undefined ? studentMarks[qId] : "";
-
-                    html += `<div style="margin-bottom: 25px; text-align: left; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">`;
-                    html += `<p style="font-weight: bold; color: #00bcd4; margin-bottom: 15px; font-size: 18px;">Q${qNum}: ${qData.question || '(Image Question)'} <span style="color:#ffb74d;">[Max: ${qData.maxMarks || 0}]</span></p>`;
+                    let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null; if (!studentAns && sub.studentImageUrl && qNum === 1) studentAns = sub.studentImageUrl;
+                    let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null; let ansUrlToDraw = checkedAns || studentAns;
                     
-                    if(ansUrlToDraw) {
-                        html += `
-                            <div style="text-align:center; position:relative; margin-bottom:15px;">
-                                <canvas id="canvas_${qId}" class="draw-canvas"></canvas><br>
-                                <button class="btn-delete clear-canvas-btn" data-qid="${qId}" style="margin-top: 10px; padding: 6px 20px;">🧹 Clear</button>
-                            </div>
-                        `;
-                    } else {
-                        html += `<p style="color: #ff5252; font-weight: bold; margin-bottom: 15px; font-size: 16px;">Not answered</p>`;
-                    }
-                    
-                    html += `
-                        <div style="display:flex; align-items:center; gap:10px; margin-top: 15px; background: rgba(0, 230, 118, 0.1); padding: 15px; border-radius: 8px;">
-                            <label style="color:#00e676; margin:0; font-size:16px; font-weight:bold;">Marks for Q${qNum}:</label>
-                            <input type="number" class="q-mark-input" data-qid="${qId}" value="${prevMark}" placeholder="0" step="0.1" max="${qData.maxMarks || 100}" style="width: 120px; padding: 10px; font-size:18px; text-align:center; background:#15151a; color:#fff; border:1px solid #00e676; border-radius:8px;">
-                        </div>
-                    `;
-                    html += `</div>`;
-                    qNum++;
+                    html += `<div style="margin-bottom: 25px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">`;
+                    html += `<p style="font-weight: bold; color: #00bcd4; margin-bottom: 15px; font-size: 16px;">Q${qNum}: ${qData.question || '(Image)'} <span style="color:#ffb74d;">[Max: ${qData.maxMarks || 0}]</span></p>`;
+                    if(ansUrlToDraw) html += `<div style="text-align:center; position:relative; margin-bottom:15px;"><canvas id="canvas_${qId}" class="draw-canvas"></canvas><br><button class="btn-delete clear-canvas-btn" data-qid="${qId}" style="margin-top: 10px;">🧹 Clear</button></div>`;
+                    else html += `<p style="color: #ff5252; font-weight: bold; margin-bottom: 15px;">Not answered</p>`;
+                    html += `<div class="input-group" style="margin-bottom:0;"><label style="color:#00e676;">Marks:</label><input type="number" class="q-mark-input" data-qid="${qId}" value="${studentMarks[qId]!==undefined?studentMarks[qId]:""}" placeholder="0" step="0.1" style="width:120px;"></div></div>`; qNum++;
                 });
-
-                scriptContainer.innerHTML = html;
-                document.getElementById('evalMarks').value = sub.score !== undefined ? sub.score : "0";
+                scriptContainer.innerHTML = html; document.getElementById('evalMarks').value = sub.score !== undefined ? sub.score : "0";
 
                 questionsArray.forEach(qItem => {
-                    const qId = qItem.id;
-                    let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null;
-                    if (!studentAns && sub.studentImageUrl && qItem.qNum === 1) { studentAns = sub.studentImageUrl; }
-                    let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null;
-                    
+                    const qId = qItem.id; let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null; if (!studentAns && sub.studentImageUrl && qItem.qNum === 1) studentAns = sub.studentImageUrl; let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null;
                     if (studentAns || checkedAns) {
                         const canvas = document.getElementById(`canvas_${qId}`);
                         if (canvas) {
-                            const ctx = canvas.getContext('2d');
-                            const imgBase = new Image(); imgBase.crossOrigin = "Anonymous";
-                            
+                            const ctx = canvas.getContext('2d'); const imgBase = new Image(); imgBase.crossOrigin = "Anonymous";
                             imgBase.onload = () => {
-                                const MAX_WIDTH = 1000;
-                                let width = imgBase.width; let height = imgBase.height;
-                                if (width > MAX_WIDTH) { height = Math.floor(height * (MAX_WIDTH / width)); width = MAX_WIDTH; }
-                                
-                                canvas.width = width; canvas.height = height;
-                                ctx.drawImage(imgBase, 0, 0, width, height);
-
-                                if (checkedAns) {
-                                    const imgChecked = new Image(); imgChecked.crossOrigin = "Anonymous";
-                                    imgChecked.onload = () => {
-                                        ctx.clearRect(0, 0, width, height);
-                                        ctx.drawImage(imgChecked, 0, 0, width, height);
-                                        ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-                                        canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false };
-                                        attachCanvasEvents(canvas, qId);
-                                    };
-                                    imgChecked.src = checkedAns;
-                                } else {
-                                    ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-                                    canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false };
-                                    attachCanvasEvents(canvas, qId);
-                                }
-                            };
-                            imgBase.src = studentAns || checkedAns; 
+                                let width = imgBase.width; let height = imgBase.height; if (width > 1000) { height = Math.floor(height * (1000 / width)); width = 1000; }
+                                canvas.width = width; canvas.height = height; ctx.drawImage(imgBase, 0, 0, width, height);
+                                if (checkedAns) { const imgChecked = new Image(); imgChecked.crossOrigin = "Anonymous"; imgChecked.onload = () => { ctx.clearRect(0, 0, width, height); ctx.drawImage(imgChecked, 0, 0, width, height); ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false }; attachCanvasEvents(canvas, qId); }; imgChecked.src = checkedAns; } 
+                                else { ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false }; attachCanvasEvents(canvas, qId); }
+                            }; imgBase.src = studentAns || checkedAns; 
                         }
                     }
                 });
-                
-            } catch(e) { scriptContainer.innerHTML = "<p style='color:#ff5252; text-align:center;'>Error loading scripts.</p>"; }
-
-            document.getElementById('evalFeedback').value = sub.feedback || ""; 
-            document.getElementById('evalUploadStatus').innerText = "";
+            } catch(e) { scriptContainer.innerHTML = "<p style='color:#ff5252; text-align:center;'>Error loading.</p>"; }
+            document.getElementById('evalFeedback').value = sub.feedback || ""; document.getElementById('evalUploadStatus').innerText = "";
         }
 
-        // 🟢 Canvas Drawing Logic 🟢
         function attachCanvasEvents(canvas, qId) {
             let isDrawing = false;
-            
-            function getCoords(e) {
-                const rect = canvas.getBoundingClientRect();
-                const scaleX = canvas.width / rect.width;
-                const scaleY = canvas.height / rect.height;
-                let clientX = e.clientX; let clientY = e.clientY;
-                if(e.touches && e.touches.length > 0) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
-                return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
-            }
-
-            function startDrawing(e) {
-                isDrawing = true; const coords = getCoords(e);
-                canvasRegistry[qId].ctx.beginPath();
-                canvasRegistry[qId].ctx.moveTo(coords.x, coords.y);
-            }
-
-            function draw(e) {
-                if(!isDrawing) return; e.preventDefault();
-                const coords = getCoords(e);
-                canvasRegistry[qId].ctx.lineTo(coords.x, coords.y);
-                canvasRegistry[qId].ctx.stroke();
-                canvasRegistry[qId].isModified = true;
-            }
-
+            function getCoords(e) { const rect = canvas.getBoundingClientRect(); const scaleX = canvas.width / rect.width; const scaleY = canvas.height / rect.height; let clientX = e.touches ? e.touches[0].clientX : e.clientX; let clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY }; }
+            function startDrawing(e) { isDrawing = true; const coords = getCoords(e); canvasRegistry[qId].ctx.beginPath(); canvasRegistry[qId].ctx.moveTo(coords.x, coords.y); }
+            function draw(e) { if(!isDrawing) return; e.preventDefault(); const coords = getCoords(e); canvasRegistry[qId].ctx.lineTo(coords.x, coords.y); canvasRegistry[qId].ctx.stroke(); canvasRegistry[qId].isModified = true; }
             function stopDrawing() { if(isDrawing) { isDrawing = false; canvasRegistry[qId].ctx.closePath(); } }
-
-            canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing);
-            canvas.addEventListener('touchstart', startDrawing, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false});
-            canvas.addEventListener('touchend', stopDrawing);
+            canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing); canvas.addEventListener('touchstart', startDrawing, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', stopDrawing);
         }
+        document.getElementById('evalScriptContainer').addEventListener('click', (e) => { if(e.target.classList.contains('clear-canvas-btn')) { const qId = e.target.getAttribute('data-qid'); const data = canvasRegistry[qId]; if(data) { data.ctx.clearRect(0, 0, data.width, data.height); data.ctx.drawImage(data.imgBase, 0, 0, data.width, data.height); data.isModified = true; } } });
+        document.getElementById('evalScriptContainer').addEventListener('input', (e) => { if(e.target.classList.contains('q-mark-input')) { let total = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let val = parseFloat(inp.value); if(!isNaN(val)) total += val; }); document.getElementById('evalMarks').value = total; } });
 
-        // Clear Canvas Delegation
-        document.getElementById('evalScriptContainer').addEventListener('click', (e) => {
-            if(e.target.classList.contains('clear-canvas-btn')) {
-                const qId = e.target.getAttribute('data-qid');
-                const data = canvasRegistry[qId];
-                if(data) {
-                    data.ctx.clearRect(0, 0, data.width, data.height);
-                    data.ctx.drawImage(data.imgBase, 0, 0, data.width, data.height); 
-                    data.isModified = true; 
-                }
-            }
-        });
-
-        // 🟢 AUTO-SUM EVENT LISTENER 🟢
-        document.getElementById('evalScriptContainer').addEventListener('input', (e) => {
-            if(e.target.classList.contains('q-mark-input')) {
-                let total = 0;
-                document.querySelectorAll('.q-mark-input').forEach(inp => {
-                    let val = parseFloat(inp.value);
-                    if(!isNaN(val)) total += val;
-                });
-                document.getElementById('evalMarks').value = total;
-            }
-        });
-
-        // 🟢 SAVE EVALUATION WITH PER-QUESTION MARKS & CANVASES 🟢
         document.getElementById('saveEvalBtn').addEventListener('click', async () => {
-            let questionMarks = {};
-            let totalMarks = 0;
-            
-            document.querySelectorAll('.q-mark-input').forEach(inp => {
-                let val = parseFloat(inp.value);
-                if(!isNaN(val)) { totalMarks += val; questionMarks[inp.getAttribute('data-qid')] = val; }
-            });
-
-            if(isNaN(totalMarks)) { totalMarks = 0; }
-
-            const btn = document.getElementById('saveEvalBtn'); btn.innerText = "Processing & Uploading..."; btn.disabled = true;
-            document.getElementById('evalUploadStatus').innerText = "Uploading checked scripts (if any modified)...";
-
-            let newCheckedImageUrls = currentEvalSub.checkedImageUrls || {};
-            let uploadPromises = [];
-
+            let questionMarks = {}; let totalMarks = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let val = parseFloat(inp.value); if(!isNaN(val)) { totalMarks += val; questionMarks[inp.getAttribute('data-qid')] = val; } }); if(isNaN(totalMarks)) totalMarks = 0;
+            const btn = document.getElementById('saveEvalBtn'); btn.innerText = "Processing..."; btn.disabled = true; document.getElementById('evalUploadStatus').innerText = "Uploading checked scripts...";
+            let newCheckedImageUrls = currentEvalSub.checkedImageUrls || {}; let uploadPromises = [];
             for (let qId in canvasRegistry) {
                 if (canvasRegistry[qId].isModified) {
-                    let p = new Promise((resolve, reject) => {
-                        canvasRegistry[qId].canvas.toBlob(async (blob) => {
-                            const file = new File([blob], `checked_${qId}.jpg`, { type: "image/jpeg" });
-                            const url = await uploadImageToImgBB(file);
-                            if (url) { newCheckedImageUrls[qId] = url; resolve(); } else { reject(); }
-                        }, 'image/jpeg', 0.85);
-                    });
-                    uploadPromises.push(p);
+                    uploadPromises.push(new Promise((resolve, reject) => { canvasRegistry[qId].canvas.toBlob(async (blob) => { const url = await uploadImageToImgBB(new File([blob], `checked_${qId}.jpg`, { type: "image/jpeg" })); if (url) { newCheckedImageUrls[qId] = url; resolve(); } else reject(); }, 'image/jpeg', 0.85); }));
                 }
             }
-
-            try {
-                await Promise.all(uploadPromises);
-
-                let updateData = { 
-                    score: totalMarks, 
-                    questionMarks: questionMarks, 
-                    feedback: document.getElementById('evalFeedback').value, 
-                    status: "evaluated" 
-                };
-
-                if (Object.keys(newCheckedImageUrls).length > 0) {
-                    updateData.checkedImageUrls = newCheckedImageUrls;
-                }
-
-                await setDoc(doc(db, "results", currentEvalSubId), updateData, {merge: true});
-                Swal.fire('Success', 'Evaluation Saved Successfully!', 'success');
-                evalModal.classList.remove('show');
-                loadEvalSubmissions(); 
-            } catch(e) { Swal.fire('Error', 'Failed to save evaluation.', 'error'); }
-            
-            btn.innerText = "Submit Evaluation"; btn.disabled = false; document.getElementById('evalUploadStatus').innerText = "";
+            try { await Promise.all(uploadPromises); let updateData = { score: totalMarks, questionMarks: questionMarks, feedback: document.getElementById('evalFeedback').value, status: "evaluated" }; if (Object.keys(newCheckedImageUrls).length > 0) updateData.checkedImageUrls = newCheckedImageUrls; await setDoc(doc(db, "results", currentEvalSubId), updateData, {merge: true}); Swal.fire({icon:'success', title:'Saved', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); evalModal.classList.remove('show'); loadEvalSubmissions(); } 
+            catch(e) { Swal.fire('Error', 'Failed to save.', 'error'); } btn.innerText = "Submit Evaluation"; btn.disabled = false; document.getElementById('evalUploadStatus').innerText = "";
         });
 
-        // Manage Settings (Robust Error Handling Added)
+        // 🟢 Manage Settings 🟢
         document.getElementById('manageExamSelector').addEventListener('change', async (e) => {
-            try {
-                const examId = e.target.value; const workspace = document.getElementById('manageWorkspace'); const participantCountEl = document.getElementById('participantCount'); const viewBtn = document.getElementById('adminViewLiveResultBtn');
-                if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block"; document.getElementById('manageQuestionsList').innerHTML = "<p style='color:#b3b3b3;'>Loading...</p>"; participantCountEl.innerText = "Loading..."; if(viewBtn) viewBtn.style.display = "none";
-                
-                const examDoc = await getDoc(doc(db, "exams", examId)); 
-                if(examDoc.exists()) { 
-                    const data = examDoc.data(); const currentTime = new Date().getTime();
-                    document.getElementById('editExamTitle').value = data.title || ""; document.getElementById('editExamDuration').value = data.duration || 0; document.getElementById('editExamPublishTime').value = data.publishTime ? formatTimeForInput(data.publishTime) : ""; 
-                    document.getElementById('updateSettingsBox').style.display = (data.status === "hidden" || data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) ? "none" : "block"; document.getElementById('publishDraftBtn').style.display = data.status === "draft" ? "block" : "none";
-                }
-                
-                const resSnap = await getDocs(query(collection(db, "results"), where("examId", "==", examId))); 
-                participantCountEl.innerText = resSnap.size; 
-                if(resSnap.size > 0 && viewBtn) viewBtn.style.display = "block"; 
-                
-                loadQuestionsForEdit(examId);
-            } catch (error) {
-                console.error(error);
-                document.getElementById('participantCount').innerText = "Error";
-                document.getElementById('manageQuestionsList').innerHTML = "<p style='color:#ff5252;'>Error loading data.</p>";
-            }
+            const examId = e.target.value; const workspace = document.getElementById('manageWorkspace'); const pCount = document.getElementById('participantCount'); const vBtn = document.getElementById('adminViewLiveResultBtn');
+            if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block"; document.getElementById('manageQuestionsList').innerHTML = "Loading..."; pCount.innerText = "..."; if(vBtn) vBtn.style.display = "none";
+            const examDoc = await getDoc(doc(db, "exams", examId)); if(examDoc.exists()) { const data = examDoc.data(); document.getElementById('editExamTitle').value = data.title || ""; document.getElementById('editExamDuration').value = data.duration || 0; document.getElementById('editExamPublishTime').value = data.publishTime ? formatTimeForInput(data.publishTime) : ""; document.getElementById('updateSettingsBox').style.display = (data.status === "hidden" || data.status === "deleted" || (data.status === "active" && data.publishTime && new Date().getTime() >= data.publishTime)) ? "none" : "block"; document.getElementById('publishDraftBtn').style.display = data.status === "draft" ? "block" : "none"; }
+            const resSnap = await getDocs(query(collection(db, "results"), where("examId", "==", examId))); pCount.innerText = resSnap.size; if(resSnap.size > 0 && vBtn) vBtn.style.display = "block"; loadQuestionsForEdit(examId);
         });
 
-        document.getElementById('updateSettingsBtn').addEventListener('click', async () => { const examId = document.getElementById('manageExamSelector').value; if(!examId) return; try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); Swal.fire('Updated', '', 'success'); loadExamsIntoDropdowns(); } catch (error) {} });
-        document.getElementById('publishDraftBtn').addEventListener('click', async () => { const examId = document.getElementById('manageExamSelector').value; if(!examId) return; Swal.fire({title: 'Publish this Exam?', icon: 'question', showCancelButton: true, confirmButtonText: 'Yes'}).then(async (res) => { if(res.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true }); Swal.fire('Published!', '', 'success'); loadExamsIntoDropdowns(); document.getElementById('manageExamSelector').dispatchEvent(new Event('change')); } catch (error) {} } }); });
+        document.getElementById('updateSettingsBtn').addEventListener('click', async () => { const examId = document.getElementById('manageExamSelector').value; if(!examId) return; try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); Swal.fire({icon:'success', title:'Updated', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26'}); loadExamsIntoDropdowns(); } catch (error) {} });
+        
+        // 🟢 RESTORED: Publish Draft Popup 🟢
+        document.getElementById('publishDraftBtn').addEventListener('click', async () => { 
+            const examId = document.getElementById('manageExamSelector').value; if(!examId) return; 
+            Swal.fire({
+                title: 'Publish this Exam?', icon: 'question', showCancelButton: true, confirmButtonText: 'Yes', 
+                background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'
+            }).then(async (res) => { 
+                if(res.isConfirmed) { 
+                    try { await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true }); Swal.fire({icon: 'success', title:'Published!', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); loadExamsIntoDropdowns(); document.getElementById('manageExamSelector').dispatchEvent(new Event('change')); } catch (error) {} 
+                } 
+            }); 
+        });
 
         async function loadQuestionsForEdit(examId) {
-            const listDiv = document.getElementById('manageQuestionsList'); listDiv.innerHTML = "<p style='color:#b3b3b3;'>Loading questions...</p>"; 
-            try {
-                const qSnap = await getDocs(collection(db, "exams", examId, "questions")); 
-                if(qSnap.empty) { listDiv.innerHTML = "<p style='color:#E1A95F;'>No questions found.</p>"; return; }
-                let count = 1; listDiv.innerHTML = "";
-                qSnap.forEach((docSnap) => { 
-                    const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; 
-                    let isWritten = allExamsData[examId] && allExamsData[examId].type === 'written';
-                    let editBtnHtml = isWritten ? '' : `<button class="btn-edit" data-id="${qId}">Edit</button>`;
-                    item.innerHTML = `<div class="q-text">Q${count}: ${data.question || '(Image)'}</div><div class="q-actions">${editBtnHtml}<button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++;
-                    if(!isWritten) {
-                        item.querySelector('.btn-edit').addEventListener('click', () => { 
-                            document.getElementById('editQModal').classList.add('show'); document.getElementById('editQText').value = data.question; document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; document.getElementById('editQCorrect').value = data.correctAnswer || "1"; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); 
-                        });
-                    }
-                    item.querySelector('.btn-delete').addEventListener('click', () => { Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes' }).then(async (res) => { if(res.isConfirmed) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } }); });
-                });
-            } catch (err) { listDiv.innerHTML = "<p style='color:#ff5252;'>Failed to load questions.</p>"; }
+            const listDiv = document.getElementById('manageQuestionsList'); try { const qSnap = await getDocs(collection(db, "exams", examId, "questions")); if(qSnap.empty) { listDiv.innerHTML = "No questions found."; return; } let count = 1; listDiv.innerHTML = ""; qSnap.forEach((docSnap) => { const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; let editBtnHtml = allExamsData[examId].type === 'written' ? '' : `<button class="btn-edit" data-id="${qId}">Edit</button>`; item.innerHTML = `<div class="q-text">Q${count}: ${data.question || '(Image)'}</div><div class="q-actions">${editBtnHtml}<button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++; if(allExamsData[examId].type !== 'written') { item.querySelector('.btn-edit').addEventListener('click', () => { document.getElementById('editQModal').classList.add('show'); document.getElementById('editQText').value = data.question; document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; document.getElementById('editQCorrect').value = data.correctAnswer || "1"; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); }); } 
+            
+            // 🟢 RESTORED: Delete Question Popup 🟢
+            item.querySelector('.btn-delete').addEventListener('click', () => { 
+                Swal.fire({ title: 'Delete Question?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' }).then(async (res) => { 
+                    if(res.isConfirmed) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } 
+                }); 
+            }); 
+            
+            }); } catch (err) {}
         }
+        document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => { const btn = e.target; const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQModal').classList.remove('show'); loadQuestionsForEdit(examId); Swal.fire({icon:'success', title:'Updated', timer:1000}); });
 
-        document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => { const btn = e.target; const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; btn.innerText = "Saving..."; try { await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQModal').classList.remove('show'); loadQuestionsForEdit(examId); Swal.fire({icon: 'success', title: 'Updated', timer: 1000, showConfirmButton: false}); } catch (e) {} btn.innerText = "Update Question"; });
-
-        // DB Management 
-        const dbWorkspace = document.getElementById('dbWorkspace'); const dbActionButtons = document.getElementById('dbActionButtons');
+        // 🟢 DB Management 🟢
         document.getElementById('dbExamSelector').addEventListener('change', async (e) => {
-            const examId = e.target.value; if(!examId) { dbWorkspace.style.display = "none"; return; } dbWorkspace.style.display = "block";
+            const examId = e.target.value; if(!examId) { document.getElementById('dbWorkspace').style.display = "none"; return; } document.getElementById('dbWorkspace').style.display = "block";
             const docSnap = await getDoc(doc(db, "exams", examId));
             if(docSnap.exists()) {
                 const data = docSnap.data(); const currentTime = new Date().getTime(); const statusEl = document.getElementById('dbExamStatus'); let buttonsHtml = '';
@@ -929,24 +636,53 @@
                     buttonsHtml += `<button id="${isWritten ? 'dbHideFromStudentsBtn' : 'dbHideBtn'}" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">${isWritten ? '🙈 Hide Exam' : 'Move to Practice'}</button>`; 
                 }
                 
-                buttonsHtml += `<button id="dbClearMeritBtn" class="submit-btn" style="background: #ffb74d; margin-top: 0; color:#000;">🧹 Clear Submissions</button>`;
+                buttonsHtml += `<button id="dbClearMeritBtn" class="submit-btn" style="background: #ff5252; margin-top: 0; color:#fff;">🧹 Clear Submissions</button>`;
                 buttonsHtml += `<button id="dbDeleteExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0; color:#fff;">🗑️ Delete Exam</button>`;
                 dbActionButtons.innerHTML = buttonsHtml;
             }
             loadDbSubmissions(examId);
         });
 
-        dbActionButtons.addEventListener('click', async (e) => {
+        // 🟢 RESTORED: All Popups for Database Actions 🟢
+        document.getElementById('dbActionButtons').addEventListener('click', async (e) => {
             const examId = document.getElementById('dbExamSelector').value; if(!examId) return;
+            const isLight = document.body.classList.contains('light-mode');
+            const bg = isLight ? '#FDFCF9' : '#1e1e26';
+            const col = isLight ? '#222' : '#fff';
             
             if(e.target.id === 'dbClearMeritBtn') {
-                Swal.fire({title: 'Clear Submissions?', icon: 'warning', showCancelButton: true}).then(async (res) => {
+                Swal.fire({title: 'Clear All Submissions?', text: "This action cannot be undone!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', background: bg, color: col}).then(async (res) => {
                     if(res.isConfirmed) {
                         const snap = await getDocs(query(collection(db, "results"), where("examId", "==", examId)));
                         const deletes = [];
                         snap.forEach(d => { deletes.push(deleteDoc(d.ref)); deletes.push(deleteDoc(doc(db, "user_timers", d.data().email + "_" + examId))); });
                         await Promise.all(deletes);
-                        Swal.fire('Cleared!', '', 'success'); loadDbSubmissions(examId); 
+                        Swal.fire({title: 'Cleared!', icon: 'success', background: bg, color: col}); loadDbSubmissions(examId); 
+                    }
+                });
+            }
+            if(e.target.id === 'dbHideFromStudentsBtn') {
+                Swal.fire({title: 'Hide Exam?', text: "Students won't be able to see this.", icon: 'warning', showCancelButton: true, background: bg, color: col}).then(async (res) => {
+                    if(res.isConfirmed) {
+                        await setDoc(doc(db, "exams", examId), { status: "hidden" }, { merge: true }); 
+                        Swal.fire({title: 'Hidden!', icon: 'success', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); 
+                    }
+                });
+            }
+            if(e.target.id === 'dbRestorePracticeBtn' || e.target.id === 'dbHideBtn') {
+                let msg = e.target.id === 'dbHideBtn' ? 'Move to Practice?' : 'Restore to Practice?';
+                Swal.fire({title: msg, icon: 'info', showCancelButton: true, background: bg, color: col}).then(async (res) => {
+                    if(res.isConfirmed) {
+                        await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); 
+                        Swal.fire({title: 'Done!', icon: 'success', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); 
+                    }
+                });
+            }
+            if(e.target.id === 'dbDeleteExamBtn') {
+                Swal.fire({title: 'Permanently Delete Exam?', text: "You won't be able to revert this!", icon: 'error', showCancelButton: true, confirmButtonColor: '#ff5252', background: bg, color: col}).then(async (res) => {
+                    if(res.isConfirmed) {
+                        await deleteDoc(doc(db, "exams", examId)); 
+                        Swal.fire({title: 'Deleted!', icon: 'success', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbWorkspace').style.display = "none"; 
                     }
                 });
             }
@@ -960,15 +696,12 @@
                         <div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Publish Time:</label><input id="swal-time" type="datetime-local" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${timeVal}"></div>
                     `,
                     showCancelButton: true, confirmButtonColor: '#00e676', confirmButtonText: 'Publish Live',
+                    background: bg, color: col,
                     preConfirm: () => { return { title: document.getElementById('swal-title').value, duration: parseInt(document.getElementById('swal-duration').value), publishTime: new Date(document.getElementById('swal-time').value).getTime() } }
                 }).then(async (result) => {
-                    if(result.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { title: result.value.title, duration: result.value.duration, publishTime: result.value.publishTime, status: "active" }, { merge: true }); Swal.fire('Success', 'Exam is now LIVE!', 'success'); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} }
+                    if(result.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { title: result.value.title, duration: result.value.duration, publishTime: result.value.publishTime, status: "active" }, { merge: true }); Swal.fire({icon: 'success', title: 'Exam is now LIVE!', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} }
                 });
             }
-            if(e.target.id === 'dbHideFromStudentsBtn') { Swal.fire({ title: 'Hide Exam?', icon: 'warning', showCancelButton: true }).then(async (res) => { if(res.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { status: "hidden" }, { merge: true }); Swal.fire('Hidden', '', 'success'); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} } }); }
-            if(e.target.id === 'dbRestorePracticeBtn') { try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire('Restored', '', 'success'); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} }
-            if(e.target.id === 'dbHideBtn') { Swal.fire({ title: 'Move to Practice?', icon: 'warning', showCancelButton: true }).then(async (res) => { if(res.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire('Moved', '', 'success'); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} } }); }
-            if(e.target.id === 'dbDeleteExamBtn') { Swal.fire({ title: 'Permanently Delete Exam?', icon: 'error', showCancelButton: true }).then(async (res) => { if(res.isConfirmed) { try { await deleteDoc(doc(db, "exams", examId)); Swal.fire('Deleted!', '', 'success'); loadExamsIntoDropdowns(); dbWorkspace.style.display = "none"; } catch(err) {} } }); }
         });
 
         async function loadDbSubmissions(examId) {
@@ -986,7 +719,16 @@
                     </tr>`;
                 });
                 tbody.innerHTML = html;
-                document.querySelectorAll('.delete-sub-btn').forEach(btn => { btn.addEventListener('click', async (e) => { const docId = e.target.getAttribute('data-id'); Swal.fire({ title: 'Delete?', icon: 'warning', showCancelButton: true }).then(async (res) => { if(res.isConfirmed) { await deleteDoc(doc(db, "results", docId)); loadDbSubmissions(examId); } }); }); });
+                
+                // 🟢 RESTORED: Individual Submission Delete Popup 🟢
+                document.querySelectorAll('.delete-sub-btn').forEach(btn => { 
+                    btn.addEventListener('click', async (e) => { 
+                        const docId = e.target.getAttribute('data-id'); 
+                        Swal.fire({ title: 'Delete Submission?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' }).then(async (res) => { 
+                            if(res.isConfirmed) { await deleteDoc(doc(db, "results", docId)); loadDbSubmissions(examId); } 
+                        }); 
+                    }); 
+                });
             } catch(error) {}
         }
         
