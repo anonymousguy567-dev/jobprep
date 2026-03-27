@@ -103,26 +103,30 @@
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
 
         /* 🟢 Drawing Canvas CSS 🟢 */
-        .draw-canvas {
-            border-radius: 8px; cursor: crosshair; touch-action: none; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4); max-width: 100%; border: 2px solid #00e676; background: #fff;
-        }
+        .draw-canvas { border-radius: 8px; cursor: crosshair; touch-action: none; box-shadow: 0 5px 15px rgba(0,0,0,0.4); max-width: 100%; border: 2px solid #00e676; background: #fff; }
 
         .navbar { position: absolute; top: 0; left: 0; width: 100%; padding: 15px 30px; display: flex; justify-content: flex-end; align-items: center; background: transparent; border-bottom: none; z-index: 2000; transition: 0.4s ease; }
         .nav-btn.btn-theme { background: #202028; padding: 10px 15px; border-radius: 18px; text-decoration: none; font-weight: bold; font-size: 15px; transition: 0.3s ease-in-out; box-shadow: 5px 5px 10px rgba(0,0,0,0.4), -3px -3px 8px rgba(255,255,255,0.05), inset 2px 2px 4px rgba(255,255,255,0.1), inset -3px -3px 6px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; color: #ffd700; }
         .nav-btn.btn-theme:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.05); transform: translateY(2px) scale(0.96); }
         .hamburger-btn { display: none; background: transparent; border: none; cursor: pointer; padding: 5px; z-index: 3000; }
         .hamburger-btn svg { width: 30px; height: 30px; fill: #00bcd4; transition: 0.4s;}
+        .slide-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; opacity: 0; visibility: hidden; transition: 0.3s ease; backdrop-filter: blur(3px); }
+        .slide-menu-overlay.active { opacity: 1; visibility: visible; }
+        .slide-menu { position: fixed; top: 0; right: -300px; width: 250px; height: 100%; background: #181820; z-index: 2600; box-shadow: -10px 0 30px rgba(0,0,0,0.8); transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.4s; display: flex; flex-direction: column; padding: 60px 20px 20px 20px; gap: 15px; overflow-y: auto; border-left: 1px solid rgba(255,255,255,0.05); }
+        .slide-menu.active { right: 0; }
+        .slide-menu .nav-btn { width: 100%; justify-content: center; padding: 15px; font-size: 16px; }
+        .close-menu-btn { position: absolute; top: 20px; right: 20px; background: #252530; border: none; width: 35px; height: 35px; border-radius: 50%; color: #ff5252; font-size: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.5), -2px -2px 5px rgba(255,255,255,0.05); transition: 0.3s; }
 
+        /* SweetAlert Custom Theme */
         .swal2-popup { background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important; box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important; }
-        .swal2-title { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
+        .swal2-title, .swal2-html-container { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
         .swal2-input, .swal2-textarea { background: #15151a !important; color: #fff !important; border: 1px solid rgba(0, 188, 212, 0.4) !important; border-radius: 12px !important; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6) !important; }
         .swal2-input:focus, .swal2-textarea:focus { border: 1px solid #00bcd4 !important; box-shadow: 0 0 10px rgba(0, 188, 212, 0.3) !important; }
 
         /* 🟡🟢 LIGHT MODE STYLES 🟢🟡 */
         body.light-mode { background-color: #FFF8DC; color: #333; } 
         body.light-mode .bg-blobs { opacity: 0.1; filter: blur(100px); }
-        body.light-mode .glass-container, body.light-mode .section-box, body.light-mode .result-modal-content { background: #FFF8DC; border: 1px solid #E1A95F; box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), -8px -8px 20px #ffffff, inset 4px 4px 10px #ffffff, inset -8px -8px 18px rgba(225, 169, 95, 0.1); }
+        body.light-mode .glass-container, body.light-mode .section-box, body.light-mode .result-modal-content, body.light-mode .slide-menu { background: #FFF8DC; border: 1px solid #E1A95F; box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), -8px -8px 20px #ffffff, inset 4px 4px 10px #ffffff, inset -8px -8px 18px rgba(225, 169, 95, 0.1); }
         body.light-mode h1, body.light-mode h2, body.light-mode h3, body.light-mode h4, body.light-mode label { color: #E1A95F; text-shadow: none; }
         body.light-mode input, body.light-mode textarea, body.light-mode select { background: #FFF8DC; color: #333; border: 1px solid #B2D4D4; box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2), inset -2px -2px 5px #ffffff; }
         body.light-mode input:focus, body.light-mode textarea:focus, body.light-mode select:focus { box-shadow: inset 6px 6px 12px rgba(225, 169, 95, 0.3), 0 0 15px rgba(225, 169, 95, 0.3); border-color: #E1A95F;}
@@ -142,6 +146,8 @@
         body.light-mode .submit-btn:active, body.light-mode .login-btn:active { box-shadow: inset 4px 4px 10px rgba(0,0,0,0.2); color: #fff;}
         body.light-mode .nav-btn { background: #FFF8DC; color: #E1A95F; border-color: #E1A95F; box-shadow: 4px 4px 8px rgba(225, 169, 95, 0.2), inset 2px 2px 4px #ffffff; }
         body.light-mode .nav-btn:active { box-shadow: inset 4px 4px 8px rgba(225, 169, 95, 0.2); }
+        body.light-mode .hamburger-btn svg { fill: #E1A95F; }
+        body.light-mode .live-counter-box { background: rgba(178, 212, 212, 0.3); border-color: #B2D4D4; color: #E1A95F; }
         body.light-mode .result-modal { background: rgba(255, 248, 220, 0.8); }
         body.light-mode .swal2-popup { background: #FFF8DC !important; color: #333 !important; box-shadow: 12px 12px 24px rgba(225, 169, 95, 0.3), inset 4px 4px 10px #ffffff !important; border: 1px solid #E1A95F !important;}
         body.light-mode .swal2-title, body.light-mode .swal2-html-container { color: #E1A95F !important; text-shadow: none !important;}
@@ -163,7 +169,16 @@
         <div class="nav-buttons">
             <button class="nav-btn btn-theme" id="themeToggleDesktop">🌞</button>
         </div>
+        <button class="hamburger-btn" id="hamburgerBtn">
+            <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
     </nav>
+
+    <div class="slide-menu-overlay" id="slideMenuOverlay"></div>
+    <div class="slide-menu" id="slideMenu">
+        <button class="close-menu-btn" id="closeMenuBtn">✖</button>
+        <button class="nav-btn btn-theme" id="themeToggleMobile" style="margin-top: 20px;">🌞</button>
+    </div>
 
     <div class="result-modal" id="resultModal">
         <div class="result-modal-content" style="max-width: 650px; overflow-y: auto; max-height: 90vh;">
@@ -197,7 +212,7 @@
         <div class="result-modal-content" style="max-width: 950px; padding: 30px; overflow-y: auto; max-height: 90vh; display: block;">
             <span class="result-close-btn" id="closeEvalModal">&times;</span>
             
-            <p style="color: #ffb74d; margin-bottom: 10px; text-align: center; font-size: 16px; font-weight: bold;">Please evaluate the entire script at once/*Use desktop mode to evaluate</p>
+            <p style="color: #ffb74d; margin-bottom: 10px; text-align: center; font-size: 16px; font-weight: bold;">Please view the entire script at once</p>
             
             <h3 style="margin-bottom:10px; text-align: center; text-shadow: none; color: #00e676;">✍️ Evaluate Script</h3>
             <p id="evalStudentInfo" style="text-align: center; color: #a0a0b0; margin-bottom: 15px; font-size: 14px;"></p>
@@ -221,7 +236,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="result-modal" id="editQModal">
         <div class="result-modal-content" style="max-width: 500px; padding: 25px; overflow-y: auto; max-height: 90vh;">
@@ -448,7 +462,30 @@
         closeResultModal.addEventListener('click', () => { resultModal.classList.remove('show'); }); closeHistoryModal.addEventListener('click', () => { historyModal.classList.remove('show'); }); closeEditQModal.addEventListener('click', () => { editQModal.classList.remove('show'); }); closeEvalModal.addEventListener('click', () => { evalModal.classList.remove('show'); }); 
         window.addEventListener('click', (e) => { if(e.target === resultModal) resultModal.classList.remove('show'); if(e.target === historyModal) historyModal.classList.remove('show'); if(e.target === editQModal) editQModal.classList.remove('show'); if(e.target === evalModal) evalModal.classList.remove('show'); });
 
-        onAuthStateChanged(auth, (user) => { if (user) { if (ADMIN_EMAILS.includes(user.email)) { loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); } else { Swal.fire('Access Denied!', '', 'error'); signOut(auth); } } else { loginSection.style.display = "block"; adminFormSection.style.display = "none"; } });
+        onAuthStateChanged(auth, (user) => { 
+            if (user) { 
+                if (ADMIN_EMAILS.includes(user.email)) { 
+                    loginSection.style.display = "none"; adminFormSection.style.display = "block"; loadExamsIntoDropdowns(); 
+                    
+                    // 🟢 NEW FEATURE ALERT POPUP 🟢
+                    if (!sessionStorage.getItem('writtenNoticeShown')) {
+                        Swal.fire({
+                            title: '🚀 Written Exams Now Available!',
+                            html: 'From now on, you can also conduct <b>Written Exams</b>.<br><br>Since this feature is in the development phase, the mobile version is not yet fully optimized. Therefore, you are requested to use a <b>Desktop or Laptop</b> to create and evaluate exams for the best experience.',
+                            icon: 'info',
+                            showCloseButton: true,
+                            allowOutsideClick: true,
+                            confirmButtonText: 'Got it!',
+                            background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22',
+                            color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff'
+                        });
+                        sessionStorage.setItem('writtenNoticeShown', 'true');
+                    }
+                    
+                } else { Swal.fire('Access Denied!', '', 'error'); signOut(auth); } 
+            } else { loginSection.style.display = "block"; adminFormSection.style.display = "none"; } 
+        });
+        
         document.getElementById('adminLoginBtn').addEventListener('click', async () => { try { await signInWithPopup(auth, provider); } catch (e) {} });
 
         async function uploadImageToImgBB(file) {
@@ -597,14 +634,14 @@
         }
 
         let currentEvalSubId = null;
-        let currentEvalSub = null; // Store entire sub data
-        let canvasRegistry = {}; // Store canvas contexts for upload
+        let currentEvalSub = null; 
+        let canvasRegistry = {}; 
 
         // 🟢 OPEN EVAL MODAL (PER QUESTION LIVE CANVAS) 🟢
         async function openEvalModal(sub) {
             currentEvalSubId = sub.id; 
             currentEvalSub = sub;
-            canvasRegistry = {}; // Clear old registry
+            canvasRegistry = {}; 
 
             document.getElementById('evalStudentInfo').innerText = `Student: ${sub.rollNumber} | Email: ${sub.email}`;
             
@@ -620,7 +657,6 @@
                 let questionsArray = [];
                 qSnap.forEach(doc => { questionsArray.push({ id: doc.id, data: doc.data() }); });
 
-                // Generate HTML First
                 questionsArray.forEach(qItem => {
                     const qData = qItem.data; const qId = qItem.id;
                     let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null;
@@ -658,12 +694,10 @@
                 scriptContainer.innerHTML = html;
                 document.getElementById('evalMarks').value = sub.score !== undefined ? sub.score : "0";
 
-                // Initialize Canvases
                 questionsArray.forEach(qItem => {
                     const qId = qItem.id;
                     let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null;
                     if (!studentAns && sub.studentImageUrl && qItem.qNum === 1) { studentAns = sub.studentImageUrl; }
-
                     let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null;
                     
                     if (studentAns || checkedAns) {
@@ -696,7 +730,7 @@
                                     attachCanvasEvents(canvas, qId);
                                 }
                             };
-                            imgBase.src = studentAns || checkedAns; // Fallback if somehow only checkedAns exists
+                            imgBase.src = studentAns || checkedAns; 
                         }
                     }
                 });
@@ -749,8 +783,8 @@
                 const data = canvasRegistry[qId];
                 if(data) {
                     data.ctx.clearRect(0, 0, data.width, data.height);
-                    data.ctx.drawImage(data.imgBase, 0, 0, data.width, data.height); // Reset to student's original image
-                    data.isModified = true; // Marks it so the fresh version overwrites any old checked version
+                    data.ctx.drawImage(data.imgBase, 0, 0, data.width, data.height); 
+                    data.isModified = true; 
                 }
             }
         });
@@ -821,21 +855,29 @@
             btn.innerText = "Submit Evaluation"; btn.disabled = false; document.getElementById('evalUploadStatus').innerText = "";
         });
 
-        // Manage Settings
+        // Manage Settings (Robust Error Handling Added)
         document.getElementById('manageExamSelector').addEventListener('change', async (e) => {
-            const examId = e.target.value; const workspace = document.getElementById('manageWorkspace'); const participantCountEl = document.getElementById('participantCount'); 
-            if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block"; document.getElementById('manageQuestionsList').innerHTML = "<p style='color:#b3b3b3;'>Loading...</p>"; participantCountEl.innerText = "Loading..."; 
-            
             try {
+                const examId = e.target.value; const workspace = document.getElementById('manageWorkspace'); const participantCountEl = document.getElementById('participantCount'); const viewBtn = document.getElementById('adminViewLiveResultBtn');
+                if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block"; document.getElementById('manageQuestionsList').innerHTML = "<p style='color:#b3b3b3;'>Loading...</p>"; participantCountEl.innerText = "Loading..."; if(viewBtn) viewBtn.style.display = "none";
+                
                 const examDoc = await getDoc(doc(db, "exams", examId)); 
                 if(examDoc.exists()) { 
                     const data = examDoc.data(); const currentTime = new Date().getTime();
                     document.getElementById('editExamTitle').value = data.title || ""; document.getElementById('editExamDuration').value = data.duration || 0; document.getElementById('editExamPublishTime').value = data.publishTime ? formatTimeForInput(data.publishTime) : ""; 
                     document.getElementById('updateSettingsBox').style.display = (data.status === "hidden" || data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) ? "none" : "block"; document.getElementById('publishDraftBtn').style.display = data.status === "draft" ? "block" : "none";
                 }
-            } catch (error) {}
-            try { const resSnap = await getDocs(query(collection(db, "results"), where("examId", "==", examId))); participantCountEl.innerText = resSnap.size; } catch (err) { participantCountEl.innerText = "0"; } 
-            loadQuestionsForEdit(examId);
+                
+                const resSnap = await getDocs(query(collection(db, "results"), where("examId", "==", examId))); 
+                participantCountEl.innerText = resSnap.size; 
+                if(resSnap.size > 0 && viewBtn) viewBtn.style.display = "block"; 
+                
+                loadQuestionsForEdit(examId);
+            } catch (error) {
+                console.error(error);
+                document.getElementById('participantCount').innerText = "Error";
+                document.getElementById('manageQuestionsList').innerHTML = "<p style='color:#ff5252;'>Error loading data.</p>";
+            }
         });
 
         document.getElementById('updateSettingsBtn').addEventListener('click', async () => { const examId = document.getElementById('manageExamSelector').value; if(!examId) return; try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); Swal.fire('Updated', '', 'success'); loadExamsIntoDropdowns(); } catch (error) {} });
@@ -864,7 +906,7 @@
 
         document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => { const btn = e.target; const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; btn.innerText = "Saving..."; try { await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQModal').classList.remove('show'); loadQuestionsForEdit(examId); Swal.fire({icon: 'success', title: 'Updated', timer: 1000, showConfirmButton: false}); } catch (e) {} btn.innerText = "Update Question"; });
 
-        // DB Management (Status Logic Fixed for Written Exams)
+        // DB Management 
         const dbWorkspace = document.getElementById('dbWorkspace'); const dbActionButtons = document.getElementById('dbActionButtons');
         document.getElementById('dbExamSelector').addEventListener('change', async (e) => {
             const examId = e.target.value; if(!examId) { dbWorkspace.style.display = "none"; return; } dbWorkspace.style.display = "block";
