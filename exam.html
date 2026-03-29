@@ -15,13 +15,10 @@
         body { 
             background-color: #121218; color: #ffffff; min-height: 100vh; display: flex; 
             justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-x: hidden; position: relative;
-            transition: background-color 0.4s ease, color 0.4s ease, filter 0.2s;
+            transition: background-color 0.4s ease, color 0.4s ease;
             user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
             -webkit-touch-callout: none; -webkit-user-drag: none;
         }
-
-        /* The Blur Penalty - Triggered via JS on suspicious touch/focus loss */
-        body.blur-penalty { filter: blur(25px) grayscale(100%); pointer-events: none; }
 
         /* 🟢 Background Blobs 🟢 */
         .bg-blobs { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; transition: 0.4s; }
@@ -237,23 +234,6 @@
                 Swal.fire({icon: 'warning', title: 'Action Blocked', text: 'Screenshots are restricted.', confirmButtonColor: '#ff5252'});
             }
         });
-
-        // 🚫 Anti-Cheat Core: Blur Penalty on Focus Loss / Long Press (Defeats Circle to Search) 🚫
-        let blurTimeout;
-        document.addEventListener('visibilitychange', () => {
-            if(document.hidden) { document.body.classList.add('blur-penalty'); } 
-            else { clearTimeout(blurTimeout); blurTimeout = setTimeout(() => { document.body.classList.remove('blur-penalty'); }, 1500); }
-        });
-        
-        // Block long touch on mobile (prevents text selection overlay)
-        document.addEventListener('touchstart', (e) => {
-            if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-                window.touchTimer = setTimeout(() => { document.body.classList.add('blur-penalty'); setTimeout(() => document.body.classList.remove('blur-penalty'), 2000); }, 600);
-            }
-        }, {passive: false});
-        document.addEventListener('touchend', () => { clearTimeout(window.touchTimer); });
-        document.addEventListener('touchmove', () => { clearTimeout(window.touchTimer); });
-
     </script>
 
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
@@ -676,9 +656,6 @@
                 }
 
                 localStorage.removeItem('exam_progress_' + currentExamId + '_' + userEmail);
-
-                // Stop blur logic after submit
-                document.body.classList.remove('blur-penalty');
 
                 examSection.style.display = "none"; resultSection.style.display = "block";
                 
