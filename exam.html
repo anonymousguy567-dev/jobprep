@@ -81,7 +81,6 @@
             transition: 0.4s;
         }
 
-        /* 🟢 Word Break Fixes applied here 🟢 */
         .question-text { 
             font-size: 18px; margin-bottom: 15px; color: #e0e0e0; font-weight: bold; line-height: 1.4; transition: 0.4s; position: relative; z-index: 6;
             overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; 
@@ -103,7 +102,6 @@
         }
         .option-label:hover { background: #1a1a20; color: #fff; }
         
-        /* Fixed radio squishing */
         input[type="radio"] { margin-right: 15px; accent-color: #00bcd4; transform: scale(1.3); cursor: pointer; transition: 0.4s; flex-shrink: 0; }
         
         .option-label.selected { background: #00bcd4; color: #000; font-weight: bold; border-color: #00bcd4; box-shadow: 4px 4px 10px rgba(0,188,212,0.4), inset 2px 2px 5px rgba(255,255,255,0.4); transform: scale(1.02); }
@@ -162,8 +160,6 @@
         .review-a { font-size: 15px; color: #b3b3b3; line-height: 1.5; transition: 0.4s; overflow-wrap: break-word; word-break: break-word;}
         .review-a span { font-weight: bold; }
 
-        .option-div { background: rgba(0,0,0,0.2); padding: 12px 18px; margin-bottom: 10px; border-radius: 12px; font-size: 15px; border: 1px solid rgba(255,255,255,0.02); overflow-wrap: break-word; word-break: break-word;}
-
         .swal2-popup { background: #1a1a22 !important; border-radius: 25px !important; color: #fff !important; box-shadow: 12px 12px 24px rgba(0,0,0,0.6), inset 4px 4px 10px rgba(255,255,255,0.05), inset -8px -8px 18px rgba(0,0,0,0.4) !important; }
         .swal2-title, .swal2-html-container { color: #00bcd4 !important; font-family: 'Segoe UI', Tahoma, sans-serif !important; }
         .swal2-confirm { background: #00bcd4 !important; color: #000 !important; font-weight: bold !important; border-radius: 12px !important; box-shadow: 3px 3px 8px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,255,255,0.3) !important; }
@@ -204,6 +200,21 @@
         body.light-mode .swal2-popup { background: #FDFCF9 !important; color: #4A3B2C !important; box-shadow: 12px 12px 24px rgba(102, 76, 40, 0.15), inset 4px 4px 10px #ffffff !important; border: 1px solid rgba(102, 76, 40, 0.3) !important;}
         body.light-mode .swal2-title, body.light-mode .swal2-html-container { color: #664C28 !important; text-shadow: none !important;}
         body.light-mode .swal2-confirm { background: #664C28 !important; color: #FFFFF0 !important; }
+
+        /* 📱 MOBILE HEAVY OPTIMIZATION 📱 */
+        @media (max-width: 768px) { 
+            body { padding: 20px 10px 40px 10px; }
+            .glass-container { padding: 25px 15px; border-radius: 25px; }
+            .question-card, .marking-rules, .roll-input-box, .breakdown-box { padding: 18px 12px; border-radius: 16px; }
+            .question-text { font-size: 16px; margin-bottom: 10px; }
+            .written-upload-box { padding: 12px 10px; }
+            .user-info { padding: 12px 15px; width: 100%; border-radius: 15px;}
+            #examTimer { font-size: 18px; padding: 8px 15px; }
+            .option-label { padding: 12px 15px; }
+            .score-display { font-size: 32px; }
+            .stat-value { font-size: 24px; }
+            .question-img { width: 100%; max-height: max-content;}
+        }
     </style>
 </head>
 
