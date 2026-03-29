@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Premium MCQ Portal</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body { 
-            background-color: #0b0c10; color: #ffffff; min-height: 100vh; overflow-x: hidden; position: relative;
+            background-color: #121218; color: #ffffff; min-height: 100vh; overflow-x: hidden; position: relative;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
@@ -22,7 +24,7 @@
 
         /* 🟢 Core Forms & Inputs (Claymorphism) 🟢 */
         h2, h3, h4 { margin-bottom: 20px; color: #00bcd4; transition: 0.4s;}
-        .input-group { margin-bottom: 20px; width: 100%; }
+        .input-group, .compact-input-group { margin-bottom: 20px; width: 100%; }
         label { display: block; margin-bottom: 8px; font-size: 14px; color: #00bcd4; font-weight: bold; transition: 0.4s;}
         
         input, textarea, select { 
@@ -56,7 +58,7 @@
         #adminDashboardLayout { display: none; height: 100vh; width: 100%; overflow: hidden; }
         
         .sidebar {
-            width: 280px; height: calc(100vh - 40px); margin: 20px 0 20px 20px;
+            width: 280px; height: calc(100vh - 40px); margin: 20px 0 20px 20px; flex-shrink: 0;
             background: #1e1e26; border-radius: 30px; padding: 30px 20px;
             box-shadow: 12px 12px 25px rgba(0,0,0,0.5), -8px -8px 20px rgba(255,255,255,0.02), inset 3px 3px 8px rgba(255,255,255,0.05), inset -5px -5px 15px rgba(0,0,0,0.4);
             border: 1px solid rgba(255, 255, 255, 0.02); display: flex; flex-direction: column; transition: 0.4s;
@@ -64,7 +66,8 @@
         
         .brand-title { font-size: 22px; font-weight: 900; color: #00bcd4; text-align: center; margin-bottom: 30px; letter-spacing: 1px; }
 
-        .nav-menu { display: flex; flex-direction: column; gap: 12px; flex-grow: 1; }
+        .nav-menu { display: flex; flex-direction: column; gap: 12px; flex-grow: 1; overflow-y: auto;}
+        .nav-menu::-webkit-scrollbar { width: 0; }
         .nav-item {
             background: transparent; color: #a0a0b0; border: none; padding: 16px 20px; border-radius: 18px;
             font-size: 15px; font-weight: bold; text-align: left; cursor: pointer; transition: 0.3s;
@@ -131,7 +134,7 @@
             background: #1e1e26; border-radius: 35px; padding: 35px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative; 
             box-shadow: 15px 15px 30px rgba(0,0,0,0.6), inset 3px 3px 8px rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.02); transition: 0.4s;
         }
-        .result-close-btn { position: absolute; top: 20px; right: 25px; color: #888; font-size: 28px; cursor: pointer; font-weight: bold; transition: 0.2s;}
+        .result-close-btn { position: absolute; top: 20px; right: 25px; color: #888; font-size: 28px; cursor: pointer; font-weight: bold; transition: 0.2s; z-index: 50;}
         .result-close-btn:hover { color: #ff5252; }
 
         .hamburger-btn { display: none; position: absolute; top: 20px; left: 20px; background: transparent; border: none; z-index: 3000; cursor: pointer; }
@@ -139,7 +142,12 @@
         .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; display: none; backdrop-filter: blur(3px); }
         .draw-canvas { border-radius: 12px; cursor: crosshair; touch-action: none; box-shadow: 0 5px 15px rgba(0,0,0,0.4); max-width: 100%; border: 2px solid #00e676; background: #fff; }
 
-        /* SweetAlert */
+        /* Option Item Layout */
+        .option-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+        .option-row input { flex: 1; margin: 0;}
+        .option-row label { margin: 0; min-width: 70px;}
+
+        /* SweetAlert Tweaks */
         .swal2-popup { background: #1e1e26 !important; border-radius: 30px !important; color: #fff !important; box-shadow: 15px 15px 30px rgba(0,0,0,0.6), inset 3px 3px 8px rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.02) !important;}
         .swal2-title { color: #00bcd4 !important; }
         .swal2-input, .swal2-textarea { background: #15151a !important; color: #fff !important; border: 1px solid rgba(0, 188, 212, 0.2) !important; border-radius: 15px !important; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.6) !important; }
@@ -185,7 +193,10 @@
 </head>
 <body>
 
-    <script>if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }</script>
+    <script>
+        if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }
+    </script>
+
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div></div>
 
     <div id="loginSection">
@@ -253,12 +264,11 @@
                     <div id="qAnswerUploadGroup" class="input-group" style="display: none; border-top: 1px dashed rgba(255,255,255,0.1); padding-top:15px; margin-top: 10px;"><label style="color: #00e676;">Official Answer Image (Optional):</label><input type="file" id="qAnswerImageFile" accept="image/*"><p id="qAnswerImageStatus" style="font-size: 12px; color: #00e676; margin-top: 5px;">*Visible to students after publish time.</p></div>
 
                     <div id="mcqOptionsGroup">
-                        <div class="input-group"><label>Option 1:</label><input type="text" id="option1"></div>
-                        <div class="input-group"><label>Option 2:</label><input type="text" id="option2"></div>
-                        <div class="input-group"><label>Option 3:</label><input type="text" id="option3"></div>
-                        <div class="input-group"><label>Option 4:</label><input type="text" id="option4"></div>
-                        <div class="input-group"><label>Correct Answer:</label><select id="correctOption"><option value="">Select correct option</option><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option><option value="4">Option 4</option></select></div>
+                        <div id="dynamicAddOptionsContainer"></div>
+                        <button type="button" id="addMoreOptionBtn" class="btn-live-excel" style="margin-bottom: 15px; background: #2196f3; color:#fff; display:block;">➕ Add Extra Option</button>
+                        <div class="input-group"><label>Correct Answer:</label><select id="correctOption" required></select></div>
                     </div>
+
                     <div id="writtenMarksGroup" class="input-group" style="display: none;"><label>Max Marks for this Question:</label><input type="number" id="qMaxMarks" placeholder="e.g. 10"></div>
                     <button type="submit" class="submit-btn" id="saveQuestionBtn">Save Question</button>
                 </form>
@@ -349,7 +359,7 @@
             <h3 style="margin-bottom:10px; text-align: center; color: #00e676;">✍️ Evaluate Script</h3>
             <p id="evalStudentInfo" style="text-align: center; color: #a0a0b0; margin-bottom: 15px; font-size: 14px;"></p>
             <div id="evalScriptContainer" style="margin-top: 20px;"></div>
-            <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+            <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
                 <div class="input-group"><label>Total Marks Obtained (Auto-calculated):</label><input type="number" id="evalMarks" placeholder="0" step="0.1" readonly style="color: #00e676; text-align: center; font-size: 24px; border: 1px solid #00e676;"></div>
                 <div class="input-group"><label>Feedback / Comments (Optional):</label><textarea id="evalFeedback" rows="3"></textarea></div>
                 <p id="evalUploadStatus" style="font-size: 14px; color: #00e676; margin-top: 10px; font-weight: bold; text-align: center;"></p>
@@ -364,11 +374,9 @@
             <h3 style="margin-bottom:10px; text-align: center;">✏️ Edit Question</h3>
             <div class="result-table-wrapper" style="padding: 10px; background: transparent; box-shadow: none; border: none; overflow-y: visible; margin-top: 0;">
                 <div class="input-group"><label>Question:</label><textarea id="editQText" rows="2" required></textarea></div>
-                <div class="input-group"><label>Option 1:</label><input type="text" id="editQOpt1" required></div>
-                <div class="input-group"><label>Option 2:</label><input type="text" id="editQOpt2" required></div>
-                <div class="input-group"><label>Option 3:</label><input type="text" id="editQOpt3" required></div>
-                <div class="input-group"><label>Option 4:</label><input type="text" id="editQOpt4" required></div>
-                <div class="input-group"><label>Correct Answer:</label><select id="editQCorrect" required><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option><option value="4">Option 4</option></select></div>
+                <div id="editDynamicOptionsContainer"></div>
+                <button type="button" id="editAddMoreOptionBtn" class="btn-live-excel" style="margin-bottom:15px; display:block;">➕ Add Option</button>
+                <div class="input-group"><label>Correct Answer:</label><select id="editQCorrect" required></select></div>
                 <button id="saveEditedQBtn" class="submit-btn" style="background:#ffb74d; color:#000;">Update Question</button>
             </div>
         </div>
@@ -450,16 +458,54 @@
             try { await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, type: document.getElementById('newExamType').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "draft" }); Swal.fire({icon: 'success', title: 'Created!', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); } catch (error) { Swal.fire('Error', 'Failed to create exam.', 'error'); } btn.innerText = "Create Exam (Draft)";
         });
         
+        // 🟢 DYNAMIC MCQ OPTIONS LOGIC (Add & Edit) 🟢
+        let addOptCount = 4;
+        let editOptCount = 4;
+        
+        function renderOptionsUI(containerId, selectId, count, dataOptions = null) {
+            const container = document.getElementById(containerId);
+            const select = document.getElementById(selectId);
+            let currentSel = select.value;
+            container.innerHTML = ""; select.innerHTML = '<option value="">Select correct option</option>';
+            
+            for(let i=1; i<=count; i++) {
+                let val = dataOptions && dataOptions[i] ? dataOptions[i] : "";
+                let delBtn = i > 2 ? `<button type="button" class="btn-delete" onclick="removeOptRow('${containerId}','${selectId}', ${i})">✖</button>` : `<div style="width:38px;"></div>`;
+                
+                container.innerHTML += `<div class="option-row" id="${containerId}_row_${i}">
+                    <label>Option ${i}:</label>
+                    <input type="text" class="dynamic-opt-input" data-key="${i}" value="${val}" required>
+                    ${delBtn}
+                </div>`;
+                select.innerHTML += `<option value="${i}">Option ${i}</option>`;
+            }
+            if(currentSel && currentSel <= count) select.value = currentSel;
+            else if (dataOptions && dataOptions.correctAnswer) select.value = dataOptions.correctAnswer;
+        }
+
+        window.removeOptRow = function(containerId, selectId, i) {
+            if(containerId === 'dynamicAddOptionsContainer') { addOptCount--; renderOptionsUI(containerId, selectId, addOptCount); }
+            else { editOptCount--; renderOptionsUI(containerId, selectId, editOptCount); }
+        };
+
+        document.getElementById('addMoreOptionBtn').addEventListener('click', () => { addOptCount++; renderOptionsUI('dynamicAddOptionsContainer', 'correctOption', addOptCount); });
+        document.getElementById('editAddMoreOptionBtn').addEventListener('click', () => { editOptCount++; renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount); });
+
+        // Init Add Options
+        renderOptionsUI('dynamicAddOptionsContainer', 'correctOption', addOptCount);
+
         document.getElementById('examSelector').addEventListener('change', async (e) => {
             const examId = e.target.value; const counterBox = document.getElementById('liveQuestionCounterBox');
             if(!examId) { counterBox.style.display = "none"; return; }
             const examType = allExamsData[examId].type;
             if(examType === 'written') {
                 document.getElementById('mcqOptionsGroup').style.display = "none"; document.getElementById('qImageUploadGroup').style.display = "block"; document.getElementById('qAnswerUploadGroup').style.display = "block"; document.getElementById('writtenMarksGroup').style.display = "block";
-                document.getElementById('question').removeAttribute('required'); document.getElementById('option1').removeAttribute('required'); document.getElementById('option2').removeAttribute('required'); document.getElementById('option3').removeAttribute('required'); document.getElementById('option4').removeAttribute('required'); document.getElementById('correctOption').removeAttribute('required'); document.getElementById('qMaxMarks').setAttribute('required', 'true');
+                document.getElementById('question').removeAttribute('required'); document.getElementById('correctOption').removeAttribute('required'); document.getElementById('qMaxMarks').setAttribute('required', 'true');
+                document.querySelectorAll('#dynamicAddOptionsContainer input').forEach(i => i.removeAttribute('required'));
             } else {
                 document.getElementById('mcqOptionsGroup').style.display = "block"; document.getElementById('qImageUploadGroup').style.display = "none"; document.getElementById('qAnswerUploadGroup').style.display = "none"; document.getElementById('writtenMarksGroup').style.display = "none";
-                document.getElementById('question').setAttribute('required', 'true'); document.getElementById('option1').setAttribute('required', 'true'); document.getElementById('option2').setAttribute('required', 'true'); document.getElementById('option3').setAttribute('required', 'true'); document.getElementById('option4').setAttribute('required', 'true'); document.getElementById('correctOption').setAttribute('required', 'true'); document.getElementById('qMaxMarks').removeAttribute('required');
+                document.getElementById('question').setAttribute('required', 'true'); document.getElementById('correctOption').setAttribute('required', 'true'); document.getElementById('qMaxMarks').removeAttribute('required');
+                document.querySelectorAll('#dynamicAddOptionsContainer input').forEach(i => i.setAttribute('required', 'true'));
             }
             counterBox.style.display = "block"; document.getElementById('liveQuestionNumber').innerText = "...";
             try { const qSnap = await getDocs(collection(db, "exams", examId, "questions")); document.getElementById('liveQuestionNumber').innerText = qSnap.size + 1; } catch(e) {}
@@ -478,7 +524,9 @@
                     if(document.getElementById('qImageFile').files.length > 0) { document.getElementById('qImageStatus').innerText = "Uploading Image..."; const url = await uploadImageToImgBB(document.getElementById('qImageFile').files[0]); if(url) questionData.imageUrl = url; document.getElementById('qImageStatus').innerText = ""; }
                     if(document.getElementById('qAnswerImageFile').files.length > 0) { document.getElementById('qAnswerImageStatus').innerText = "Uploading Answer..."; const ansUrl = await uploadImageToImgBB(document.getElementById('qAnswerImageFile').files[0]); if(ansUrl) questionData.answerImageUrl = ansUrl; document.getElementById('qAnswerImageStatus').innerText = "*Visible after publish."; }
                 } else {
-                    questionData.options = { "1": document.getElementById('option1').value, "2": document.getElementById('option2').value, "3": document.getElementById('option3').value, "4": document.getElementById('option4').value }; questionData.correctAnswer = document.getElementById('correctOption').value;
+                    let optObj = {};
+                    document.querySelectorAll('#dynamicAddOptionsContainer .dynamic-opt-input').forEach(inp => { optObj[inp.getAttribute('data-key')] = inp.value; });
+                    questionData.options = optObj; questionData.correctAnswer = document.getElementById('correctOption').value;
                 }
                 await addDoc(collection(db, "exams", selectedExamId, "questions"), questionData); Swal.fire({ icon: 'success', title: 'Saved!', timer: 1000, showConfirmButton: false, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26' });
                 document.getElementById('liveQuestionNumber').innerText = parseInt(document.getElementById('liveQuestionNumber').innerText) + 1; document.getElementById('questionForm').reset(); 
@@ -528,9 +576,15 @@
                     
                     html += `<div style="margin-bottom: 25px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">`;
                     html += `<p style="font-weight: bold; color: #00bcd4; margin-bottom: 15px; font-size: 16px;">Q${qNum}: ${qData.question || '(Image)'} <span style="color:#ffb74d;">[Max: ${qData.maxMarks || 0}]</span></p>`;
-                    if(ansUrlToDraw) html += `<div style="text-align:center; position:relative; margin-bottom:15px;"><canvas id="canvas_${qId}" class="draw-canvas"></canvas><br><button class="btn-delete clear-canvas-btn" data-qid="${qId}" style="margin-top: 10px;">🧹 Clear</button></div>`;
+                    if(ansUrlToDraw) {
+                        html += `<div style="text-align:center; position:relative; margin-bottom:15px;">
+                            <canvas id="canvas_${qId}" class="draw-canvas"></canvas><br>
+                            <button class="btn-live-excel expand-canvas-btn" data-qid="${qId}" style="margin-top:10px; padding:6px 20px; background:#2196f3; color:#fff; display:inline-block;">🔍 View</button>
+                            <button class="btn-delete clear-canvas-btn" data-qid="${qId}" style="margin-top:10px; padding:6px 20px; display:inline-block;">🧹 Clear</button>
+                        </div>`;
+                    }
                     else html += `<p style="color: #ff5252; font-weight: bold; margin-bottom: 15px;">Not answered</p>`;
-                    html += `<div class="input-group" style="margin-bottom:0;"><label style="color:#00e676;">Marks:</label><input type="number" class="q-mark-input" data-qid="${qId}" value="${studentMarks[qId]!==undefined?studentMarks[qId]:""}" placeholder="0" step="0.1" style="width:120px;"></div></div>`; qNum++;
+                    html += `<div class="input-group" style="margin-bottom:0;"><label style="color:#00e676;">Marks:</label><input type="number" class="q-mark-input" data-qid="${qId}" value="${studentMarks[qId]!==undefined?studentMarks[qId]:""}" placeholder="0" step="0.1" max="${qData.maxMarks || 100}" style="width:120px;"></div></div>`; qNum++;
                 });
                 scriptContainer.innerHTML = html; document.getElementById('evalMarks').value = sub.score !== undefined ? sub.score : "0";
 
@@ -561,8 +615,33 @@
             function stopDrawing() { if(isDrawing) { isDrawing = false; canvasRegistry[qId].ctx.closePath(); } }
             canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing); canvas.addEventListener('touchstart', startDrawing, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', stopDrawing);
         }
-        document.getElementById('evalScriptContainer').addEventListener('click', (e) => { if(e.target.classList.contains('clear-canvas-btn')) { const qId = e.target.getAttribute('data-qid'); const data = canvasRegistry[qId]; if(data) { data.ctx.clearRect(0, 0, data.width, data.height); data.ctx.drawImage(data.imgBase, 0, 0, data.width, data.height); data.isModified = true; } } });
-        document.getElementById('evalScriptContainer').addEventListener('input', (e) => { if(e.target.classList.contains('q-mark-input')) { let total = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let val = parseFloat(inp.value); if(!isNaN(val)) total += val; }); document.getElementById('evalMarks').value = total; } });
+        
+        // 🟢 Canvas Buttons (Clear & Expand) + Validation Max Marks 🟢
+        document.getElementById('evalScriptContainer').addEventListener('click', (e) => { 
+            if(e.target.classList.contains('clear-canvas-btn')) { const qId = e.target.getAttribute('data-qid'); const data = canvasRegistry[qId]; if(data) { data.ctx.clearRect(0, 0, data.width, data.height); data.ctx.drawImage(data.imgBase, 0, 0, data.width, data.height); data.isModified = true; } } 
+            
+            // View Canvas Pop-up
+            if(e.target.classList.contains('expand-canvas-btn')) {
+                const qId = e.target.getAttribute('data-qid'); const canvas = document.getElementById(`canvas_${qId}`);
+                if(canvas) { Swal.fire({ imageUrl: canvas.toDataURL(), imageAlt: 'Script Image', width: '90%', imageWidth: '100%', showConfirmButton: false, showCloseButton: true, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26' }); }
+            }
+        });
+        
+        document.getElementById('evalScriptContainer').addEventListener('input', (e) => { 
+            if(e.target.classList.contains('q-mark-input')) { 
+                let maxVal = parseFloat(e.target.getAttribute('max'));
+                let val = parseFloat(e.target.value);
+                
+                // Max validation blocker
+                if(!isNaN(val) && !isNaN(maxVal) && val > maxVal) {
+                    e.target.value = maxVal; val = maxVal;
+                    Swal.fire({toast: true, position: 'top-end', icon: 'warning', title: `Max marks is ${maxVal}`, showConfirmButton: false, timer: 2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'});
+                }
+                
+                let total = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let v = parseFloat(inp.value); if(!isNaN(v)) total += v; }); 
+                document.getElementById('evalMarks').value = total.toFixed(2); 
+            } 
+        });
 
         document.getElementById('saveEvalBtn').addEventListener('click', async () => {
             let questionMarks = {}; let totalMarks = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let val = parseFloat(inp.value); if(!isNaN(val)) { totalMarks += val; questionMarks[inp.getAttribute('data-qid')] = val; } }); if(isNaN(totalMarks)) totalMarks = 0;
@@ -573,7 +652,7 @@
                     uploadPromises.push(new Promise((resolve, reject) => { canvasRegistry[qId].canvas.toBlob(async (blob) => { const url = await uploadImageToImgBB(new File([blob], `checked_${qId}.jpg`, { type: "image/jpeg" })); if (url) { newCheckedImageUrls[qId] = url; resolve(); } else reject(); }, 'image/jpeg', 0.85); }));
                 }
             }
-            try { await Promise.all(uploadPromises); let updateData = { score: totalMarks, questionMarks: questionMarks, feedback: document.getElementById('evalFeedback').value, status: "evaluated" }; if (Object.keys(newCheckedImageUrls).length > 0) updateData.checkedImageUrls = newCheckedImageUrls; await setDoc(doc(db, "results", currentEvalSubId), updateData, {merge: true}); Swal.fire({icon:'success', title:'Saved', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); evalModal.classList.remove('show'); loadEvalSubmissions(); } 
+            try { await Promise.all(uploadPromises); let updateData = { score: parseFloat(totalMarks.toFixed(2)), questionMarks: questionMarks, feedback: document.getElementById('evalFeedback').value, status: "evaluated" }; if (Object.keys(newCheckedImageUrls).length > 0) updateData.checkedImageUrls = newCheckedImageUrls; await setDoc(doc(db, "results", currentEvalSubId), updateData, {merge: true}); Swal.fire({icon:'success', title:'Saved', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); evalModal.classList.remove('show'); loadEvalSubmissions(); } 
             catch(e) { Swal.fire('Error', 'Failed to save.', 'error'); } btn.innerText = "Submit Evaluation"; btn.disabled = false; document.getElementById('evalUploadStatus').innerText = "";
         });
 
@@ -601,7 +680,13 @@
         });
 
         async function loadQuestionsForEdit(examId) {
-            const listDiv = document.getElementById('manageQuestionsList'); try { const qSnap = await getDocs(collection(db, "exams", examId, "questions")); if(qSnap.empty) { listDiv.innerHTML = "No questions found."; return; } let count = 1; listDiv.innerHTML = ""; qSnap.forEach((docSnap) => { const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; let editBtnHtml = allExamsData[examId].type === 'written' ? '' : `<button class="btn-edit" data-id="${qId}">Edit</button>`; item.innerHTML = `<div class="q-text">Q${count}: ${data.question || '(Image)'}</div><div class="q-actions">${editBtnHtml}<button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++; if(allExamsData[examId].type !== 'written') { item.querySelector('.btn-edit').addEventListener('click', () => { document.getElementById('editQModal').classList.add('show'); document.getElementById('editQText').value = data.question; document.getElementById('editQOpt1').value = data.options["1"]; document.getElementById('editQOpt2').value = data.options["2"]; document.getElementById('editQOpt3').value = data.options["3"]; document.getElementById('editQOpt4').value = data.options["4"]; document.getElementById('editQCorrect').value = data.correctAnswer || "1"; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); }); } 
+            const listDiv = document.getElementById('manageQuestionsList'); try { const qSnap = await getDocs(collection(db, "exams", examId, "questions")); if(qSnap.empty) { listDiv.innerHTML = "No questions found."; return; } let count = 1; listDiv.innerHTML = ""; qSnap.forEach((docSnap) => { const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; let editBtnHtml = allExamsData[examId].type === 'written' ? '' : `<button class="btn-edit" data-id="${qId}">Edit</button>`; item.innerHTML = `<div class="q-text">Q${count}: ${data.question || '(Image)'}</div><div class="q-actions">${editBtnHtml}<button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++; if(allExamsData[examId].type !== 'written') { item.querySelector('.btn-edit').addEventListener('click', () => { document.getElementById('editQModal').classList.add('show'); document.getElementById('editQText').value = data.question; 
+            
+            // Load dynamic options into edit modal
+            editOptCount = Object.keys(data.options).length; data.correctAnswer = data.correctAnswer || "1";
+            renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount, data.options);
+            
+            document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); }); } 
             
             // 🟢 RESTORED: Delete Question Popup 🟢
             item.querySelector('.btn-delete').addEventListener('click', () => { 
@@ -612,7 +697,12 @@
             
             }); } catch (err) {}
         }
-        document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => { const btn = e.target; const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: { "1": document.getElementById('editQOpt1').value, "2": document.getElementById('editQOpt2').value, "3": document.getElementById('editQOpt3').value, "4": document.getElementById('editQOpt4').value }, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQModal').classList.remove('show'); loadQuestionsForEdit(examId); Swal.fire({icon:'success', title:'Updated', timer:1000}); });
+        document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => { const btn = e.target; const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; 
+        
+        let optObj = {};
+        document.querySelectorAll('#editDynamicOptionsContainer .dynamic-opt-input').forEach(inp => { optObj[inp.getAttribute('data-key')] = inp.value; });
+        
+        await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: optObj, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQModal').classList.remove('show'); loadQuestionsForEdit(examId); Swal.fire({icon:'success', title:'Updated', timer:1000}); });
 
         // 🟢 DB Management 🟢
         document.getElementById('dbExamSelector').addEventListener('change', async (e) => {
@@ -749,6 +839,26 @@
                 if(allExams.length === 0) html = '<tr><td colspan="2" style="color:#E1A95F;">No exams found.</td></tr>'; historyTableBody.innerHTML = html;
             } catch(e) { historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#ff5252;">Failed to load history.</td></tr>'; }
         }
+
+        // 🟢 View Live Result Popup Fix 🟢
+        document.getElementById('adminViewLiveResultBtn').addEventListener('click', async () => {
+            const examId = document.getElementById('manageExamSelector').value; if(!examId) return; 
+            resultModal.classList.add('show'); resultTableBody.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
+            try {
+                const q = query(collection(db, "results"), where("examId", "==", examId)); 
+                const snapshot = await getDocs(q); let subs = []; 
+                snapshot.forEach(doc => subs.push(doc.data())); 
+                subs.sort((a, b) => b.score - a.score);
+                
+                let html = ""; 
+                subs.forEach((row, i) => { 
+                    html += `<tr><td>${i+1}</td><td>${row.rollNumber||'N/A'}</td><td style="color:#00e676;">${row.score !== undefined ? row.score : 'Pending'}</td></tr>`; 
+                }); 
+                resultTableBody.innerHTML = html || '<tr><td colspan="3">No results yet.</td></tr>';
+            } catch(e) {
+                resultTableBody.innerHTML = '<tr><td colspan="3" style="color:#ff5252;">Error loading results.</td></tr>';
+            }
+        });
     </script>
 </body>
 </html>
