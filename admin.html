@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Premium MCQ Portal</title>
-    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body { 
-            background-color: #121218; color: #ffffff; min-height: 100vh; overflow-x: hidden; position: relative;
+            background-color: #0b0c10; color: #ffffff; min-height: 100vh; overflow-x: hidden; position: relative;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
@@ -193,9 +191,7 @@
 </head>
 <body>
 
-    <script>
-        if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }
-    </script>
+    <script>if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }</script>
 
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div></div>
 
@@ -466,10 +462,22 @@
             const container = document.getElementById(containerId);
             const select = document.getElementById(selectId);
             let currentSel = select.value;
+
+            // Preserve current input values when just adding/removing rows (if not loading fresh from DB)
+            let currentInputs = [];
+            if (!dataOptions) {
+                container.querySelectorAll('.dynamic-opt-input').forEach(inp => {
+                    currentInputs.push(inp.value);
+                });
+            }
+
             container.innerHTML = ""; select.innerHTML = '<option value="">Select correct option</option>';
             
             for(let i=1; i<=count; i++) {
-                let val = dataOptions && dataOptions[i] ? dataOptions[i] : "";
+                let val = "";
+                if (dataOptions && dataOptions[i]) { val = dataOptions[i]; }
+                else if (currentInputs[i-1] !== undefined) { val = currentInputs[i-1]; }
+
                 let delBtn = i > 2 ? `<button type="button" class="btn-delete" onclick="removeOptRow('${containerId}','${selectId}', ${i})">✖</button>` : `<div style="width:38px;"></div>`;
                 
                 container.innerHTML += `<div class="option-row" id="${containerId}_row_${i}">
@@ -480,12 +488,37 @@
                 select.innerHTML += `<option value="${i}">Option ${i}</option>`;
             }
             if(currentSel && currentSel <= count) select.value = currentSel;
-            else if (dataOptions && dataOptions.correctAnswer) select.value = dataOptions.correctAnswer;
         }
 
-        window.removeOptRow = function(containerId, selectId, i) {
-            if(containerId === 'dynamicAddOptionsContainer') { addOptCount--; renderOptionsUI(containerId, selectId, addOptCount); }
-            else { editOptCount--; renderOptionsUI(containerId, selectId, editOptCount); }
+        window.removeOptRow = function(containerId, selectId, iToRemove) {
+            const container = document.getElementById(containerId);
+            let currentInputs = [];
+            container.querySelectorAll('.dynamic-opt-input').forEach(inp => { currentInputs.push(inp.value); });
+            
+            // Remove the specific index value
+            currentInputs.splice(iToRemove - 1, 1);
+
+            let count = 0;
+            if(containerId === 'dynamicAddOptionsContainer') { addOptCount--; count = addOptCount; }
+            else { editOptCount--; count = editOptCount; }
+
+            const select = document.getElementById(selectId);
+            let currentSel = select.value;
+            container.innerHTML = ""; select.innerHTML = '<option value="">Select correct option</option>';
+
+            for(let i=1; i<=count; i++) {
+                let val = currentInputs[i-1] || "";
+                let delBtn = i > 2 ? `<button type="button" class="btn-delete" onclick="removeOptRow('${containerId}','${selectId}', ${i})">✖</button>` : `<div style="width:38px;"></div>`;
+
+                container.innerHTML += `<div class="option-row" id="${containerId}_row_${i}">
+                    <label>Option ${i}:</label>
+                    <input type="text" class="dynamic-opt-input" data-key="${i}" value="${val}" required>
+                    ${delBtn}
+                </div>`;
+                select.innerHTML += `<option value="${i}">Option ${i}</option>`;
+            }
+
+            if (currentSel && currentSel != iToRemove && currentSel <= count) select.value = currentSel;
         };
 
         document.getElementById('addMoreOptionBtn').addEventListener('click', () => { addOptCount++; renderOptionsUI('dynamicAddOptionsContainer', 'correctOption', addOptCount); });
@@ -686,6 +719,7 @@
             editOptCount = Object.keys(data.options).length; data.correctAnswer = data.correctAnswer || "1";
             renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount, data.options);
             
+            document.getElementById('editQCorrect').value = data.correctAnswer || "";
             document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); }); } 
             
             // 🟢 RESTORED: Delete Question Popup 🟢
