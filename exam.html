@@ -445,7 +445,8 @@
                 isWrittenExam = (examData.type === 'written');
 
                 if(isWrittenExam) {
-                    document.getElementById('examRulesBox').innerHTML = `<span style="font-size: 16px; color: #00bcd4;">✍️ Written Exam Instructions:</span><br><span style="color:#a0a0b0; font-size:14px;">Read the questions carefully and write your answers on paper. Upload the photo of your answer below each specific question.</span><br><span id="antiCheatWarning" style="color: #ff5252; margin-top: 10px; display: block; font-size: 14px;">🚨 You can switch tabs if needed to capture images. But Copy/Paste and Screenshots are strictly restricted!</span>`;
+                    document.getElementById('examRulesBox').innerHTML = `<span style="font-size: 16px; color: #00bcd4;">✍️ Written Exam Instructions:</span><br><span style="color:#a0a0b0; font-size:14px;">Read the questions carefully and write your answers on paper. Upload the photo of your answer below each specific question.</span><br><span id="antiCheatWarning" style="color: #ff5252; margin-top: 10px; display: block; font-size: 14px;">🚨 You can switch tabs if needed to capture/upload
+                    images.</span>`;
                     progressTracker.innerText = "Written Exam Mode ✍️";
                 } else {
                     document.getElementById('antiCheatWarning').innerText = "🚨 Do not switch tabs or minimize the browser. Your exam will auto-submit on the 3rd attempt!";
