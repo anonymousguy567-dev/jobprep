@@ -20,7 +20,7 @@
 
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, -30px) scale(1.05); } }
 
-        /* 🟢 Core Forms & Inputs (Claymorphism) 🟢 */
+        /* 🟢 Core Forms & Inputs 🟢 */
         h2, h3, h4 { margin-bottom: 20px; color: #00bcd4; transition: 0.4s;}
         .input-group, .compact-input-group { margin-bottom: 20px; width: 100%; }
         label { display: block; margin-bottom: 8px; font-size: 14px; color: #00bcd4; font-weight: bold; transition: 0.4s;}
@@ -138,14 +138,27 @@
         .hamburger-btn { display: none; position: absolute; top: 20px; left: 20px; background: transparent; border: none; z-index: 3000; cursor: pointer; }
         .hamburger-btn svg { width: 35px; height: 35px; fill: #00bcd4; }
         .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; display: none; backdrop-filter: blur(3px); }
-        .draw-canvas { border-radius: 12px; cursor: crosshair; touch-action: none; box-shadow: 0 5px 15px rgba(0,0,0,0.4); max-width: 100%; border: 2px solid #00e676; background: #fff; }
+        
+        /* 🟢 Canvas & Toolbar Styles 🟢 */
+        .eval-q-wrapper { margin-bottom: 25px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s;}
+        .eval-canvas-container { position: relative; overflow: hidden; border-radius: 12px; border: 2px solid rgba(255,255,255,0.1); background: #fff; margin-bottom: 10px; }
+        .draw-canvas { cursor: crosshair; touch-action: none; display: block; margin: 0 auto; max-width: 100%; }
+        
+        .annotation-toolbar { display: flex; gap: 8px; background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 12px; margin-bottom: 15px; align-items: center; border: 1px solid rgba(255,255,255,0.05); overflow-x: auto; scrollbar-width: none; }
+        .annotation-toolbar::-webkit-scrollbar { display: none; }
+        .tool-btn { background: transparent; border: none; font-size: 18px; cursor: pointer; padding: 6px 10px; border-radius: 8px; transition: 0.2s; color: #fff; display: flex; align-items: center; justify-content: center; outline: none; }
+        .tool-btn:hover { background: rgba(255,255,255,0.1); }
+        .tool-btn.active { background: rgba(0, 188, 212, 0.2); border: 1px solid #00bcd4; }
+        .tool-btn:active { transform: scale(0.9); }
+        .t-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 5px; flex-shrink: 0; }
+        .jump-next-btn { font-size: 14px; background: rgba(0, 230, 118, 0.1); border: 1px solid #00e676; color: #00e676; font-weight: bold; white-space: nowrap; margin-left: auto; }
+        .jump-next-btn:hover { background: #00e676; color: #000; }
 
-        /* Option Item Layout */
         .option-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
         .option-row input { flex: 1; margin: 0;}
         .option-row label { margin: 0; min-width: 70px;}
 
-        /* SweetAlert Tweaks */
+        /* SweetAlert */
         .swal2-popup { background: #1e1e26 !important; border-radius: 30px !important; color: #fff !important; box-shadow: 15px 15px 30px rgba(0,0,0,0.6), inset 3px 3px 8px rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.02) !important;}
         .swal2-title { color: #00bcd4 !important; }
         .swal2-input, .swal2-textarea { background: #15151a !important; color: #fff !important; border: 1px solid rgba(0, 188, 212, 0.2) !important; border-radius: 15px !important; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.6) !important; }
@@ -160,7 +173,7 @@
         body.light-mode .nav-item { color: #666; }
         body.light-mode .nav-item:hover { background: rgba(102, 76, 40, 0.05); color: #222; }
         body.light-mode .nav-item.active { background: #F0EBE1; color: #008394; box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff; border-color: rgba(0, 131, 148, 0.2); }
-        body.light-mode .nav-divider { background: rgba(102, 76, 40, 0.1); }
+        body.light-mode .nav-divider, body.light-mode .t-divider { background: rgba(102, 76, 40, 0.1); }
         body.light-mode input, body.light-mode textarea, body.light-mode select { background: #F0EBE1; color: #333; border: 1px solid rgba(102, 76, 40, 0.1); box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff; }
         body.light-mode input:focus, body.light-mode textarea:focus, body.light-mode select:focus { box-shadow: inset 6px 6px 12px rgba(102, 76, 40, 0.2); border-color: #E1A95F;}
         body.light-mode select option { background: #F0EBE1; color: #333; }
@@ -176,23 +189,36 @@
         body.light-mode .swal2-title { color: #664C28 !important; }
         body.light-mode .swal2-input, body.light-mode .swal2-textarea { background: #F0EBE1 !important; color: #333 !important; border: 1px solid rgba(102,76,40,0.2) !important; box-shadow: inset 4px 4px 8px rgba(102,76,40,0.1) !important; }
         body.light-mode .theme-toggle-floating { color: #E1A95F; }
+        body.light-mode .eval-q-wrapper { background: #FDFCF9; border-color: rgba(102,76,40,0.1); }
+        body.light-mode .eval-canvas-container { border-color: rgba(102,76,40,0.2); }
+        body.light-mode .annotation-toolbar { background: #E8E0D5; border-color: rgba(102,76,40,0.1); }
+        body.light-mode .tool-btn { color: #664C28; }
+        body.light-mode .tool-btn:hover { background: rgba(102,76,40,0.1); }
+        body.light-mode .tool-btn.active { background: rgba(0, 131, 148, 0.1); border-color: #008394; }
 
+        /* 📱 Mobile Canvas Expansion */
         @media (max-width: 900px) { 
             #adminDashboardLayout { flex-direction: column; }
             .sidebar { position: fixed; left: -320px; top: 0; margin: 0; height: 100vh; z-index: 2600; border-radius: 0 30px 30px 0; transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
             .sidebar.active { left: 0; }
             .hamburger-btn { display: block; }
             .mobile-sidebar-overlay.active { display: block; }
-            .main-content-area { padding: 80px 15px 20px 15px; }
-            .clay-box { padding: 25px 20px; }
+            .main-content-area { padding: 80px 10px 20px 10px; }
+            .clay-box { padding: 25px 15px; }
             .action-buttons-row { flex-direction: column; }
+            
+            /* Edge-to-Edge Canvas on Mobile */
+            .eval-q-wrapper { padding: 15px 10px; margin-bottom: 20px; }
+            .eval-canvas-container { margin: 0 -10px 15px -10px; border-radius: 0; border-left: none; border-right: none; }
+            .draw-canvas { width: 100vw !important; max-width: none !important; }
+            .annotation-toolbar { padding: 8px; border-radius: 8px; }
+            .result-modal-content { padding: 25px 15px; width: 95%; }
         }
     </style>
 </head>
 <body>
 
     <script>if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }</script>
-
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div></div>
 
     <div id="loginSection">
@@ -232,13 +258,7 @@
                 <h3>Create New Exam (Draft)</h3>
                 <form id="createExamForm">
                     <div class="input-group"><label>Exam Title:</label><input type="text" id="newExamTitle" required placeholder="Enter Exam Title"></div>
-                    <div class="input-group">
-                        <label>Exam Type:</label>
-                        <select id="newExamType" required>
-                            <option value="mcq">MCQ Exam</option>
-                            <option value="written">Written Exam</option>
-                        </select>
-                    </div>
+                    <div class="input-group"><label>Exam Type:</label><select id="newExamType" required><option value="mcq">MCQ Exam</option><option value="written">Written Exam</option></select></div>
                     <div class="input-group"><label>Exam Duration (Minutes):</label><input type="number" id="newExamDuration" required placeholder="Enter Duration"></div>
                     <div class="input-group"><label>Result Publish Date & Time:</label><input type="datetime-local" id="newExamPublishTime" required></div>
                     <button type="submit" class="submit-btn" style="background: #ffb74d;">Create Exam (Draft)</button>
@@ -247,13 +267,8 @@
 
             <div id="tab-add-q" class="clay-box tab-content">
                 <h3>Add Questions to Exam</h3>
-                <div class="input-group">
-                    <label>Select Exam:</label>
-                    <select id="examSelector" required><option value="">-- Loading Exams... --</option></select>
-                </div>
-                <div id="liveQuestionCounterBox" style="display: none; background: rgba(0, 188, 212, 0.1); border: 1px dashed #00bcd4; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: bold; color: #00bcd4;">
-                    Adding Question No: <span id="liveQuestionNumber">1</span>
-                </div>
+                <div class="input-group"><label>Select Exam:</label><select id="examSelector" required><option value="">-- Loading Exams... --</option></select></div>
+                <div id="liveQuestionCounterBox" style="display: none; background: rgba(0, 188, 212, 0.1); border: 1px dashed #00bcd4; padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: bold; color: #00bcd4;">Adding Question No: <span id="liveQuestionNumber">1</span></div>
                 <form id="questionForm">
                     <div class="input-group"><label>Question Text (Optional for Written):</label><textarea id="question" rows="3" placeholder="Type your question here..."></textarea></div>
                     <div id="qImageUploadGroup" class="input-group" style="display: none;"><label style="color: #ffb74d;">Question Image (Optional):</label><input type="file" id="qImageFile" accept="image/*"><p id="qImageStatus" style="font-size: 12px; color: #00bcd4; margin-top: 5px;"></p></div>
@@ -264,7 +279,6 @@
                         <button type="button" id="addMoreOptionBtn" class="btn-live-excel" style="margin-bottom: 15px; background: #2196f3; color:#fff; display:block;">➕ Add Extra Option</button>
                         <div class="input-group"><label>Correct Answer:</label><select id="correctOption" required></select></div>
                     </div>
-
                     <div id="writtenMarksGroup" class="input-group" style="display: none;"><label>Max Marks for this Question:</label><input type="number" id="qMaxMarks" placeholder="e.g. 10"></div>
                     <button type="submit" class="submit-btn" id="saveQuestionBtn">Save Question</button>
                 </form>
@@ -278,12 +292,7 @@
                         <button class="btn-live-excel" id="filterPendingBtn" style="display:block; flex:1; background: #ffb74d; color: #000;">Show Pending</button>
                         <button class="btn-live-excel" id="filterEvalBtn" style="display:block; flex:1; background: #15151a; color: #a0a0b0; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);">Show Evaluated</button>
                     </div>
-                    <div class="result-table-wrapper">
-                        <table class="res-table">
-                            <thead><tr><th style="text-align: left;">Roll / Email</th><th>Status</th><th>Score</th><th>Action</th></tr></thead>
-                            <tbody id="evalSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Select an exam to load scripts...</td></tr></tbody>
-                        </table>
-                    </div>
+                    <div class="result-table-wrapper"><table class="res-table"><thead><tr><th style="text-align: left;">Roll / Email</th><th>Status</th><th>Score</th><th>Action</th></tr></thead><tbody id="evalSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Select an exam to load scripts...</td></tr></tbody></table></div>
                 </div>
             </div>
 
@@ -318,12 +327,7 @@
                     <div id="dbActionButtons" class="action-buttons-row"></div>
                     <div style="margin-top: 30px;">
                         <h4 style="margin-bottom: 15px; text-align: left;">📋 Individual Submissions</h4>
-                        <div class="result-table-wrapper">
-                            <table class="res-table">
-                                <thead><tr><th style="text-align: left;">Roll / Email</th><th>C / W / S</th><th>Score</th><th>Action</th></tr></thead>
-                                <tbody id="dbSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr></tbody>
-                            </table>
-                        </div>
+                        <div class="result-table-wrapper"><table class="res-table"><thead><tr><th style="text-align: left;">Roll / Email</th><th>C / W / S</th><th>Score</th><th>Action</th></tr></thead><tbody id="dbSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr></tbody></table></div>
                     </div>
                 </div>
             </div>
@@ -349,12 +353,14 @@
     </div>
 
     <div class="result-modal" id="evalModal">
-        <div class="result-modal-content" style="max-width: 950px; padding: 30px; overflow-y: auto; max-height: 90vh; display: block;">
+        <div class="result-modal-content" style="max-width: 950px; padding: 25px; overflow-y: auto; max-height: 95vh; display: block;">
             <span class="result-close-btn" id="closeEvalModal">&times;</span>
-            <p style="color: #ffb74d; margin-bottom: 10px; text-align: center; font-size: 16px; font-weight: bold;">Please evaluate the entire script at once/*Use desktop mode to evaluate</p>
+            <p style="color: #ffb74d; margin-bottom: 10px; text-align: center; font-size: 14px; font-weight: bold;">*Use Desktop Mode for Best Experience</p>
             <h3 style="margin-bottom:10px; text-align: center; color: #00e676;">✍️ Evaluate Script</h3>
             <p id="evalStudentInfo" style="text-align: center; color: #a0a0b0; margin-bottom: 15px; font-size: 14px;"></p>
+            
             <div id="evalScriptContainer" style="margin-top: 20px;"></div>
+            
             <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
                 <div class="input-group"><label>Total Marks Obtained (Auto-calculated):</label><input type="number" id="evalMarks" placeholder="0" step="0.1" readonly style="color: #00e676; text-align: center; font-size: 24px; border: 1px solid #00e676;"></div>
                 <div class="input-group"><label>Feedback / Comments (Optional):</label><textarea id="evalFeedback" rows="3"></textarea></div>
@@ -454,83 +460,42 @@
             try { await addDoc(collection(db, "exams"), { title: document.getElementById('newExamTitle').value, type: document.getElementById('newExamType').value, duration: parseInt(document.getElementById('newExamDuration').value), publishTime: new Date(document.getElementById('newExamPublishTime').value).getTime(), createdAt: new Date().getTime(), status: "draft" }); Swal.fire({icon: 'success', title: 'Created!', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); document.getElementById('createExamForm').reset(); loadExamsIntoDropdowns(); } catch (error) { Swal.fire('Error', 'Failed to create exam.', 'error'); } btn.innerText = "Create Exam (Draft)";
         });
         
-        // 🟢 DYNAMIC MCQ OPTIONS LOGIC (Add & Edit) 🟢
-        let addOptCount = 4;
-        let editOptCount = 4;
+        let addOptCount = 4; let editOptCount = 4;
         
         function renderOptionsUI(containerId, selectId, count, dataOptions = null) {
-            const container = document.getElementById(containerId);
-            const select = document.getElementById(selectId);
-            let currentSel = select.value;
-
-            // Preserve current input values when just adding/removing rows (if not loading fresh from DB)
-            let currentInputs = [];
-            if (!dataOptions) {
-                container.querySelectorAll('.dynamic-opt-input').forEach(inp => {
-                    currentInputs.push(inp.value);
-                });
-            }
-
+            const container = document.getElementById(containerId); const select = document.getElementById(selectId); let currentSel = select.value;
+            let currentInputs = []; if (!dataOptions) { container.querySelectorAll('.dynamic-opt-input').forEach(inp => { currentInputs.push(inp.value); }); }
             container.innerHTML = ""; select.innerHTML = '<option value="">Select correct option</option>';
-            
             for(let i=1; i<=count; i++) {
-                let val = "";
-                if (dataOptions && dataOptions[i]) { val = dataOptions[i]; }
-                else if (currentInputs[i-1] !== undefined) { val = currentInputs[i-1]; }
-
+                let val = ""; if (dataOptions && dataOptions[i]) { val = dataOptions[i]; } else if (currentInputs[i-1] !== undefined) { val = currentInputs[i-1]; }
                 let delBtn = i > 2 ? `<button type="button" class="btn-delete" onclick="removeOptRow('${containerId}','${selectId}', ${i})">✖</button>` : `<div style="width:38px;"></div>`;
-                
-                container.innerHTML += `<div class="option-row" id="${containerId}_row_${i}">
-                    <label>Option ${i}:</label>
-                    <input type="text" class="dynamic-opt-input" data-key="${i}" value="${val}" required>
-                    ${delBtn}
-                </div>`;
+                container.innerHTML += `<div class="option-row" id="${containerId}_row_${i}"><label>Option ${i}:</label><input type="text" class="dynamic-opt-input" data-key="${i}" value="${val}" required>${delBtn}</div>`;
                 select.innerHTML += `<option value="${i}">Option ${i}</option>`;
             }
             if(currentSel && currentSel <= count) select.value = currentSel;
         }
 
         window.removeOptRow = function(containerId, selectId, iToRemove) {
-            const container = document.getElementById(containerId);
-            let currentInputs = [];
-            container.querySelectorAll('.dynamic-opt-input').forEach(inp => { currentInputs.push(inp.value); });
-            
-            // Remove the specific index value
-            currentInputs.splice(iToRemove - 1, 1);
-
-            let count = 0;
-            if(containerId === 'dynamicAddOptionsContainer') { addOptCount--; count = addOptCount; }
-            else { editOptCount--; count = editOptCount; }
-
-            const select = document.getElementById(selectId);
-            let currentSel = select.value;
+            const container = document.getElementById(containerId); let currentInputs = [];
+            container.querySelectorAll('.dynamic-opt-input').forEach(inp => { currentInputs.push(inp.value); }); currentInputs.splice(iToRemove - 1, 1);
+            let count = 0; if(containerId === 'dynamicAddOptionsContainer') { addOptCount--; count = addOptCount; } else { editOptCount--; count = editOptCount; }
+            const select = document.getElementById(selectId); let currentSel = select.value;
             container.innerHTML = ""; select.innerHTML = '<option value="">Select correct option</option>';
-
             for(let i=1; i<=count; i++) {
-                let val = currentInputs[i-1] || "";
-                let delBtn = i > 2 ? `<button type="button" class="btn-delete" onclick="removeOptRow('${containerId}','${selectId}', ${i})">✖</button>` : `<div style="width:38px;"></div>`;
-
-                container.innerHTML += `<div class="option-row" id="${containerId}_row_${i}">
-                    <label>Option ${i}:</label>
-                    <input type="text" class="dynamic-opt-input" data-key="${i}" value="${val}" required>
-                    ${delBtn}
-                </div>`;
+                let val = currentInputs[i-1] || ""; let delBtn = i > 2 ? `<button type="button" class="btn-delete" onclick="removeOptRow('${containerId}','${selectId}', ${i})">✖</button>` : `<div style="width:38px;"></div>`;
+                container.innerHTML += `<div class="option-row" id="${containerId}_row_${i}"><label>Option ${i}:</label><input type="text" class="dynamic-opt-input" data-key="${i}" value="${val}" required>${delBtn}</div>`;
                 select.innerHTML += `<option value="${i}">Option ${i}</option>`;
             }
-
             if (currentSel && currentSel != iToRemove && currentSel <= count) select.value = currentSel;
         };
 
         document.getElementById('addMoreOptionBtn').addEventListener('click', () => { addOptCount++; renderOptionsUI('dynamicAddOptionsContainer', 'correctOption', addOptCount); });
         document.getElementById('editAddMoreOptionBtn').addEventListener('click', () => { editOptCount++; renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount); });
-
-        // Init Add Options
         renderOptionsUI('dynamicAddOptionsContainer', 'correctOption', addOptCount);
 
         document.getElementById('examSelector').addEventListener('change', async (e) => {
             const examId = e.target.value; const counterBox = document.getElementById('liveQuestionCounterBox');
-            if(!examId) { counterBox.style.display = "none"; return; }
-            const examType = allExamsData[examId].type;
+            if(!examId) { counterBox.style.display = "none"; return; } const examType = allExamsData[examId].type;
             if(examType === 'written') {
                 document.getElementById('mcqOptionsGroup').style.display = "none"; document.getElementById('qImageUploadGroup').style.display = "block"; document.getElementById('qAnswerUploadGroup').style.display = "block"; document.getElementById('writtenMarksGroup').style.display = "block";
                 document.getElementById('question').removeAttribute('required'); document.getElementById('correctOption').removeAttribute('required'); document.getElementById('qMaxMarks').setAttribute('required', 'true');
@@ -549,7 +514,6 @@
             const examType = allExamsData[selectedExamId].type; const qText = document.getElementById('question').value.trim();
             if(examType === 'written' && !qText && document.getElementById('qImageFile').files.length === 0) { Swal.fire('Wait!', 'Provide Text or Image.', 'warning'); return; }
             const btn = document.getElementById('saveQuestionBtn'); btn.innerText = "Processing..."; 
-            
             try { 
                 let questionData = { question: qText, timestamp: new Date() };
                 if(examType === 'written') {
@@ -557,8 +521,7 @@
                     if(document.getElementById('qImageFile').files.length > 0) { document.getElementById('qImageStatus').innerText = "Uploading Image..."; const url = await uploadImageToImgBB(document.getElementById('qImageFile').files[0]); if(url) questionData.imageUrl = url; document.getElementById('qImageStatus').innerText = ""; }
                     if(document.getElementById('qAnswerImageFile').files.length > 0) { document.getElementById('qAnswerImageStatus').innerText = "Uploading Answer..."; const ansUrl = await uploadImageToImgBB(document.getElementById('qAnswerImageFile').files[0]); if(ansUrl) questionData.answerImageUrl = ansUrl; document.getElementById('qAnswerImageStatus').innerText = "*Visible after publish."; }
                 } else {
-                    let optObj = {};
-                    document.querySelectorAll('#dynamicAddOptionsContainer .dynamic-opt-input').forEach(inp => { optObj[inp.getAttribute('data-key')] = inp.value; });
+                    let optObj = {}; document.querySelectorAll('#dynamicAddOptionsContainer .dynamic-opt-input').forEach(inp => { optObj[inp.getAttribute('data-key')] = inp.value; });
                     questionData.options = optObj; questionData.correctAnswer = document.getElementById('correctOption').value;
                 }
                 await addDoc(collection(db, "exams", selectedExamId, "questions"), questionData); Swal.fire({ icon: 'success', title: 'Saved!', timer: 1000, showConfirmButton: false, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26' });
@@ -594,6 +557,80 @@
         }
 
         let currentEvalSubId = null; let currentEvalSub = null; let canvasRegistry = {}; 
+        
+        // 🟢 Canvas Interaction Toolkit 🟢
+        function updateToolbarUI(qId, activeAction) {
+            document.querySelectorAll(`.annotation-toolbar[data-qid="${qId}"] .tool-btn`).forEach(btn => {
+                if(btn.getAttribute('data-action') === activeAction) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+        }
+
+        function saveCanvasState(qId) {
+            const data = canvasRegistry[qId];
+            data.step++;
+            if(data.step < data.history.length) data.history.length = data.step;
+            data.history.push(data.canvas.toDataURL());
+            data.isModified = true;
+        }
+
+        function restoreCanvasState(qId) {
+            const data = canvasRegistry[qId];
+            const img = new Image(); img.crossOrigin = "Anonymous";
+            img.onload = () => {
+                data.ctx.globalCompositeOperation = 'source-over';
+                data.ctx.clearRect(0, 0, data.width, data.height);
+                data.ctx.drawImage(img, 0, 0, data.width, data.height);
+                data.ctx.globalCompositeOperation = data.mode === 'eraser' ? 'destination-out' : 'source-over';
+            };
+            img.src = data.history[data.step];
+            data.isModified = true;
+        }
+
+        // Toolbar Event Delegation
+        document.getElementById('evalScriptContainer').addEventListener('click', (e) => { 
+            const btn = e.target.closest('.tool-btn');
+            if(!btn) return;
+            const action = btn.getAttribute('data-action');
+            const qId = btn.getAttribute('data-qid');
+            
+            if(action === 'next') {
+                const nextIndex = btn.getAttribute('data-nextindex');
+                const nextCard = document.getElementById(`qcard_${nextIndex}`);
+                if(nextCard) nextCard.scrollIntoView({behavior: 'smooth', block: 'start'});
+                return;
+            }
+            if(action === 'zoom') {
+                const canvas = document.getElementById(`canvas_${qId}`);
+                if(canvas) { 
+                    // Combine background image and strokes for preview
+                    const tempC = document.createElement('canvas'); tempC.width = canvas.width; tempC.height = canvas.height; const tCtx = tempC.getContext('2d');
+                    tCtx.drawImage(canvasRegistry[qId].imgBase, 0, 0, tempC.width, tempC.height); tCtx.drawImage(canvas, 0, 0, tempC.width, tempC.height);
+                    Swal.fire({ imageUrl: tempC.toDataURL(), imageAlt: 'Script Image', width: '90%', imageWidth: '100%', showConfirmButton: false, showCloseButton: true, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26' }); 
+                }
+                return;
+            }
+
+            const data = canvasRegistry[qId];
+            if(!data) return;
+
+            if(action === 'pen') {
+                data.mode = 'pen'; data.ctx.globalCompositeOperation = 'source-over'; data.ctx.strokeStyle = '#ff0000'; data.ctx.lineWidth = 4;
+                data.canvas.style.cursor = 'crosshair'; updateToolbarUI(qId, action);
+            }
+            else if(action === 'eraser') {
+                data.mode = 'eraser'; data.ctx.globalCompositeOperation = 'destination-out'; data.ctx.lineWidth = 20; 
+                data.canvas.style.cursor = 'cell'; updateToolbarUI(qId, action);
+            }
+            else if(action === 'undo') { if(data.step > 0) { data.step--; restoreCanvasState(qId); } }
+            else if(action === 'redo') { if(data.step < data.history.length - 1) { data.step++; restoreCanvasState(qId); } }
+            else if(action === 'clear') { 
+                data.ctx.globalCompositeOperation = 'source-over'; data.ctx.clearRect(0, 0, data.width, data.height); 
+                data.ctx.globalCompositeOperation = data.mode === 'eraser' ? 'destination-out' : 'source-over';
+                saveCanvasState(qId); 
+            }
+        });
+
         async function openEvalModal(sub) {
             currentEvalSubId = sub.id; currentEvalSub = sub; canvasRegistry = {}; 
             document.getElementById('evalStudentInfo').innerText = `Student: ${sub.rollNumber} | Email: ${sub.email}`;
@@ -602,25 +639,40 @@
                 const qSnap = await getDocs(collection(db, "exams", sub.examId, "questions")); let html = ""; let qNum = 1; let studentMarks = sub.questionMarks || {}; let questionsArray = [];
                 qSnap.forEach(doc => questionsArray.push({ id: doc.id, data: doc.data() }));
 
-                questionsArray.forEach(qItem => {
+                questionsArray.forEach((qItem, index) => {
                     const qData = qItem.data; const qId = qItem.id;
                     let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null; if (!studentAns && sub.studentImageUrl && qNum === 1) studentAns = sub.studentImageUrl;
                     let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null; let ansUrlToDraw = checkedAns || studentAns;
+                    let nextIndex = index + 2; // For next button
                     
-                    html += `<div style="margin-bottom: 25px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">`;
+                    html += `<div id="qcard_${qNum}" class="eval-q-wrapper">`;
                     html += `<p style="font-weight: bold; color: #00bcd4; margin-bottom: 15px; font-size: 16px;">Q${qNum}: ${qData.question || '(Image)'} <span style="color:#ffb74d;">[Max: ${qData.maxMarks || 0}]</span></p>`;
+                    
                     if(ansUrlToDraw) {
-                        html += `<div style="text-align:center; position:relative; margin-bottom:15px;">
-                            <canvas id="canvas_${qId}" class="draw-canvas"></canvas><br>
-                            <button class="btn-live-excel expand-canvas-btn" data-qid="${qId}" style="margin-top:10px; padding:6px 20px; background:#2196f3; color:#fff; display:inline-block;">🔍 View</button>
-                            <button class="btn-delete clear-canvas-btn" data-qid="${qId}" style="margin-top:10px; padding:6px 20px; display:inline-block;">🧹 Clear</button>
+                        html += `
+                        <div class="annotation-toolbar" data-qid="${qId}">
+                            <button class="tool-btn active" data-action="pen" data-qid="${qId}" title="Red Pen">✏️</button>
+                            <button class="tool-btn" data-action="eraser" data-qid="${qId}" title="Eraser">🧽</button>
+                            <div class="t-divider"></div>
+                            <button class="tool-btn" data-action="undo" data-qid="${qId}" title="Undo">↩️</button>
+                            <button class="tool-btn" data-action="redo" data-qid="${qId}" title="Redo">↪️</button>
+                            <button class="tool-btn" data-action="clear" data-qid="${qId}" title="Clear Strokes">🧹</button>
+                            <div class="t-divider"></div>
+                            <button class="tool-btn" data-action="zoom" data-qid="${qId}" title="Full Screen">🔍</button>
+                            <button class="tool-btn jump-next-btn" data-action="next" data-nextindex="${nextIndex}">⬇️ Next Q</button>
+                        </div>
+                        <div class="eval-canvas-container">
+                            <canvas id="canvas_${qId}" class="draw-canvas"></canvas>
                         </div>`;
                     }
                     else html += `<p style="color: #ff5252; font-weight: bold; margin-bottom: 15px;">Not answered</p>`;
+                    
                     html += `<div class="input-group" style="margin-bottom:0;"><label style="color:#00e676;">Marks:</label><input type="number" class="q-mark-input" data-qid="${qId}" value="${studentMarks[qId]!==undefined?studentMarks[qId]:""}" placeholder="0" step="0.1" max="${qData.maxMarks || 100}" style="width:120px;"></div></div>`; qNum++;
                 });
+                
                 scriptContainer.innerHTML = html; document.getElementById('evalMarks').value = sub.score !== undefined ? sub.score : "0";
 
+                // Initialize Canvases (Background Image + Transparent Drawing Layer)
                 questionsArray.forEach(qItem => {
                     const qId = qItem.id; let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null; if (!studentAns && sub.studentImageUrl && qItem.qNum === 1) studentAns = sub.studentImageUrl; let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null;
                     if (studentAns || checkedAns) {
@@ -628,10 +680,23 @@
                         if (canvas) {
                             const ctx = canvas.getContext('2d'); const imgBase = new Image(); imgBase.crossOrigin = "Anonymous";
                             imgBase.onload = () => {
-                                let width = imgBase.width; let height = imgBase.height; if (width > 1000) { height = Math.floor(height * (1000 / width)); width = 1000; }
-                                canvas.width = width; canvas.height = height; ctx.drawImage(imgBase, 0, 0, width, height);
-                                if (checkedAns) { const imgChecked = new Image(); imgChecked.crossOrigin = "Anonymous"; imgChecked.onload = () => { ctx.clearRect(0, 0, width, height); ctx.drawImage(imgChecked, 0, 0, width, height); ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false }; attachCanvasEvents(canvas, qId); }; imgChecked.src = checkedAns; } 
-                                else { ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false }; attachCanvasEvents(canvas, qId); }
+                                let width = imgBase.width; let height = imgBase.height; 
+                                if (window.innerWidth <= 768) { width = window.innerWidth; height = Math.floor(imgBase.height * (window.innerWidth / imgBase.width)); }
+                                else if (width > 1000) { height = Math.floor(height * (1000 / width)); width = 1000; }
+                                
+                                canvas.width = width; canvas.height = height;
+                                canvas.style.backgroundImage = `url(${imgBase.src})`; canvas.style.backgroundSize = "100% 100%"; canvas.style.backgroundRepeat = "no-repeat";
+                                
+                                ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+                                canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false, history: [], step: -1, mode: 'pen' };
+                                
+                                if (checkedAns) {
+                                    // Extract strokes if checked Ans exists (Since checkedAns is composite, it acts as the top layer for now)
+                                    // For future: It's better to store strokes separately.
+                                    const imgChecked = new Image(); imgChecked.crossOrigin = "Anonymous";
+                                    imgChecked.onload = () => { ctx.drawImage(imgChecked, 0, 0, width, height); saveCanvasState(qId); canvasRegistry[qId].isModified = false; attachCanvasEvents(canvas, qId); };
+                                    imgChecked.src = checkedAns;
+                                } else { saveCanvasState(qId); attachCanvasEvents(canvas, qId); }
                             }; imgBase.src = studentAns || checkedAns; 
                         }
                     }
@@ -645,32 +710,14 @@
             function getCoords(e) { const rect = canvas.getBoundingClientRect(); const scaleX = canvas.width / rect.width; const scaleY = canvas.height / rect.height; let clientX = e.touches ? e.touches[0].clientX : e.clientX; let clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY }; }
             function startDrawing(e) { isDrawing = true; const coords = getCoords(e); canvasRegistry[qId].ctx.beginPath(); canvasRegistry[qId].ctx.moveTo(coords.x, coords.y); }
             function draw(e) { if(!isDrawing) return; e.preventDefault(); const coords = getCoords(e); canvasRegistry[qId].ctx.lineTo(coords.x, coords.y); canvasRegistry[qId].ctx.stroke(); canvasRegistry[qId].isModified = true; }
-            function stopDrawing() { if(isDrawing) { isDrawing = false; canvasRegistry[qId].ctx.closePath(); } }
+            function stopDrawing() { if(isDrawing) { isDrawing = false; canvasRegistry[qId].ctx.closePath(); saveCanvasState(qId); } }
             canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing); canvas.addEventListener('touchstart', startDrawing, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', stopDrawing);
         }
         
-        // 🟢 Canvas Buttons (Clear & Expand) + Validation Max Marks 🟢
-        document.getElementById('evalScriptContainer').addEventListener('click', (e) => { 
-            if(e.target.classList.contains('clear-canvas-btn')) { const qId = e.target.getAttribute('data-qid'); const data = canvasRegistry[qId]; if(data) { data.ctx.clearRect(0, 0, data.width, data.height); data.ctx.drawImage(data.imgBase, 0, 0, data.width, data.height); data.isModified = true; } } 
-            
-            // View Canvas Pop-up
-            if(e.target.classList.contains('expand-canvas-btn')) {
-                const qId = e.target.getAttribute('data-qid'); const canvas = document.getElementById(`canvas_${qId}`);
-                if(canvas) { Swal.fire({ imageUrl: canvas.toDataURL(), imageAlt: 'Script Image', width: '90%', imageWidth: '100%', showConfirmButton: false, showCloseButton: true, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26' }); }
-            }
-        });
-        
         document.getElementById('evalScriptContainer').addEventListener('input', (e) => { 
             if(e.target.classList.contains('q-mark-input')) { 
-                let maxVal = parseFloat(e.target.getAttribute('max'));
-                let val = parseFloat(e.target.value);
-                
-                // Max validation blocker
-                if(!isNaN(val) && !isNaN(maxVal) && val > maxVal) {
-                    e.target.value = maxVal; val = maxVal;
-                    Swal.fire({toast: true, position: 'top-end', icon: 'warning', title: `Max marks is ${maxVal}`, showConfirmButton: false, timer: 2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'});
-                }
-                
+                let maxVal = parseFloat(e.target.getAttribute('max')); let val = parseFloat(e.target.value);
+                if(!isNaN(val) && !isNaN(maxVal) && val > maxVal) { e.target.value = maxVal; val = maxVal; Swal.fire({toast: true, position: 'top-end', icon: 'warning', title: `Max marks is ${maxVal}`, showConfirmButton: false, timer: 2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); }
                 let total = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let v = parseFloat(inp.value); if(!isNaN(v)) total += v; }); 
                 document.getElementById('evalMarks').value = total.toFixed(2); 
             } 
@@ -680,9 +727,16 @@
             let questionMarks = {}; let totalMarks = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let val = parseFloat(inp.value); if(!isNaN(val)) { totalMarks += val; questionMarks[inp.getAttribute('data-qid')] = val; } }); if(isNaN(totalMarks)) totalMarks = 0;
             const btn = document.getElementById('saveEvalBtn'); btn.innerText = "Processing..."; btn.disabled = true; document.getElementById('evalUploadStatus').innerText = "Uploading checked scripts...";
             let newCheckedImageUrls = currentEvalSub.checkedImageUrls || {}; let uploadPromises = [];
+            
             for (let qId in canvasRegistry) {
                 if (canvasRegistry[qId].isModified) {
-                    uploadPromises.push(new Promise((resolve, reject) => { canvasRegistry[qId].canvas.toBlob(async (blob) => { const url = await uploadImageToImgBB(new File([blob], `checked_${qId}.jpg`, { type: "image/jpeg" })); if (url) { newCheckedImageUrls[qId] = url; resolve(); } else reject(); }, 'image/jpeg', 0.85); }));
+                    uploadPromises.push(new Promise((resolve, reject) => { 
+                        // Composite Background + Strokes for Saving
+                        const tempC = document.createElement('canvas'); tempC.width = canvasRegistry[qId].width; tempC.height = canvasRegistry[qId].height; const tCtx = tempC.getContext('2d');
+                        tCtx.drawImage(canvasRegistry[qId].imgBase, 0, 0, tempC.width, tempC.height); tCtx.drawImage(canvasRegistry[qId].canvas, 0, 0, tempC.width, tempC.height);
+                        
+                        tempC.toBlob(async (blob) => { const url = await uploadImageToImgBB(new File([blob], `checked_${qId}.jpg`, { type: "image/jpeg" })); if (url) { newCheckedImageUrls[qId] = url; resolve(); } else reject(); }, 'image/jpeg', 0.85); 
+                    }));
                 }
             }
             try { await Promise.all(uploadPromises); let updateData = { score: parseFloat(totalMarks.toFixed(2)), questionMarks: questionMarks, feedback: document.getElementById('evalFeedback').value, status: "evaluated" }; if (Object.keys(newCheckedImageUrls).length > 0) updateData.checkedImageUrls = newCheckedImageUrls; await setDoc(doc(db, "results", currentEvalSubId), updateData, {merge: true}); Swal.fire({icon:'success', title:'Saved', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); evalModal.classList.remove('show'); loadEvalSubmissions(); } 
@@ -699,199 +753,58 @@
 
         document.getElementById('updateSettingsBtn').addEventListener('click', async () => { const examId = document.getElementById('manageExamSelector').value; if(!examId) return; try { await updateDoc(doc(db, "exams", examId), { title: document.getElementById('editExamTitle').value, duration: parseInt(document.getElementById('editExamDuration').value), publishTime: new Date(document.getElementById('editExamPublishTime').value).getTime() }); Swal.fire({icon:'success', title:'Updated', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26'}); loadExamsIntoDropdowns(); } catch (error) {} });
         
-        // 🟢 RESTORED: Publish Draft Popup 🟢
         document.getElementById('publishDraftBtn').addEventListener('click', async () => { 
             const examId = document.getElementById('manageExamSelector').value; if(!examId) return; 
-            Swal.fire({
-                title: 'Publish this Exam?', icon: 'question', showCancelButton: true, confirmButtonText: 'Yes', 
-                background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'
-            }).then(async (res) => { 
-                if(res.isConfirmed) { 
-                    try { await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true }); Swal.fire({icon: 'success', title:'Published!', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); loadExamsIntoDropdowns(); document.getElementById('manageExamSelector').dispatchEvent(new Event('change')); } catch (error) {} 
-                } 
+            Swal.fire({ title: 'Publish this Exam?', icon: 'question', showCancelButton: true, confirmButtonText: 'Yes', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' }).then(async (res) => { 
+                if(res.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { status: "active" }, { merge: true }); Swal.fire({icon: 'success', title:'Published!', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); loadExamsIntoDropdowns(); document.getElementById('manageExamSelector').dispatchEvent(new Event('change')); } catch (error) {} } 
             }); 
         });
 
         async function loadQuestionsForEdit(examId) {
-            const listDiv = document.getElementById('manageQuestionsList'); try { const qSnap = await getDocs(collection(db, "exams", examId, "questions")); if(qSnap.empty) { listDiv.innerHTML = "No questions found."; return; } let count = 1; listDiv.innerHTML = ""; qSnap.forEach((docSnap) => { const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; let editBtnHtml = allExamsData[examId].type === 'written' ? '' : `<button class="btn-edit" data-id="${qId}">Edit</button>`; item.innerHTML = `<div class="q-text">Q${count}: ${data.question || '(Image)'}</div><div class="q-actions">${editBtnHtml}<button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++; if(allExamsData[examId].type !== 'written') { item.querySelector('.btn-edit').addEventListener('click', () => { document.getElementById('editQModal').classList.add('show'); document.getElementById('editQText').value = data.question; 
-            
-            // Load dynamic options into edit modal
-            editOptCount = Object.keys(data.options).length; data.correctAnswer = data.correctAnswer || "1";
-            renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount, data.options);
-            
-            document.getElementById('editQCorrect').value = data.correctAnswer || "";
-            document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); }); } 
-            
-            // 🟢 RESTORED: Delete Question Popup 🟢
-            item.querySelector('.btn-delete').addEventListener('click', () => { 
-                Swal.fire({ title: 'Delete Question?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' }).then(async (res) => { 
-                    if(res.isConfirmed) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } 
-                }); 
-            }); 
-            
-            }); } catch (err) {}
+            const listDiv = document.getElementById('manageQuestionsList'); try { const qSnap = await getDocs(collection(db, "exams", examId, "questions")); if(qSnap.empty) { listDiv.innerHTML = "No questions found."; return; } let count = 1; listDiv.innerHTML = ""; qSnap.forEach((docSnap) => { const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; let editBtnHtml = allExamsData[examId].type === 'written' ? '' : `<button class="btn-edit" data-id="${qId}">Edit</button>`; item.innerHTML = `<div class="q-text">Q${count}: ${data.question || '(Image)'}</div><div class="q-actions">${editBtnHtml}<button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++; if(allExamsData[examId].type !== 'written') { item.querySelector('.btn-edit').addEventListener('click', () => { document.getElementById('editQModal').classList.add('show'); document.getElementById('editQText').value = data.question; editOptCount = Object.keys(data.options).length; data.correctAnswer = data.correctAnswer || "1"; renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount, data.options); document.getElementById('editQCorrect').value = data.correctAnswer || ""; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); }); } 
+            item.querySelector('.btn-delete').addEventListener('click', () => { Swal.fire({ title: 'Delete Question?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' }).then(async (res) => { if(res.isConfirmed) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } }); }); }); } catch (err) {}
         }
-        document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => { const btn = e.target; const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; 
-        
-        let optObj = {};
-        document.querySelectorAll('#editDynamicOptionsContainer .dynamic-opt-input').forEach(inp => { optObj[inp.getAttribute('data-key')] = inp.value; });
-        
-        await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: optObj, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQModal').classList.remove('show'); loadQuestionsForEdit(examId); Swal.fire({icon:'success', title:'Updated', timer:1000}); });
+        document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => { const btn = e.target; const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; let optObj = {}; document.querySelectorAll('#editDynamicOptionsContainer .dynamic-opt-input').forEach(inp => { optObj[inp.getAttribute('data-key')] = inp.value; }); await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: optObj, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQModal').classList.remove('show'); loadQuestionsForEdit(examId); Swal.fire({icon:'success', title:'Updated', timer:1000}); });
 
         // 🟢 DB Management 🟢
         document.getElementById('dbExamSelector').addEventListener('change', async (e) => {
             const examId = e.target.value; if(!examId) { document.getElementById('dbWorkspace').style.display = "none"; return; } document.getElementById('dbWorkspace').style.display = "block";
             const docSnap = await getDoc(doc(db, "exams", examId));
             if(docSnap.exists()) {
-                const data = docSnap.data(); const currentTime = new Date().getTime(); const statusEl = document.getElementById('dbExamStatus'); let buttonsHtml = '';
-                const isWritten = data.type === 'written';
-
+                const data = docSnap.data(); const currentTime = new Date().getTime(); const statusEl = document.getElementById('dbExamStatus'); let buttonsHtml = ''; const isWritten = data.type === 'written';
                 if (data.status === "draft") { statusEl.innerHTML = `Status: 📝 Draft`; } 
-                else if (data.status === "hidden") { 
-                    statusEl.innerHTML = `Status: 🙈 Hidden`; 
-                    buttonsHtml += `<button id="${isWritten ? 'dbMakeLiveAgainBtn' : 'dbRestorePracticeBtn'}" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">${isWritten ? '🚀 Make Live Again' : '♻️ Restore to Practice'}</button>`; 
-                }
-                else if (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) { 
-                    statusEl.innerHTML = isWritten ? `Status: 🏁 Ended (Evaluation Phase)` : `Status: 🟢 Practice`; 
-                    buttonsHtml += `<button id="dbMakeLiveAgainBtn" class="submit-btn" style="background: #00e676; color: #000; margin-top: 0;">🚀 Make Live Again</button> <button id="dbHideFromStudentsBtn" class="submit-btn" style="background: #e91e63; color: #fff; margin-top: 0;">🙈 Hide</button>`; 
-                } 
-                else { 
-                    statusEl.innerHTML = `Status: 🔴 Live`; 
-                    buttonsHtml += `<button id="${isWritten ? 'dbHideFromStudentsBtn' : 'dbHideBtn'}" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">${isWritten ? '🙈 Hide Exam' : 'Move to Practice'}</button>`; 
-                }
-                
-                buttonsHtml += `<button id="dbClearMeritBtn" class="submit-btn" style="background: #ff5252; margin-top: 0; color:#fff;">🧹 Clear Submissions</button>`;
-                buttonsHtml += `<button id="dbDeleteExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0; color:#fff;">🗑️ Delete Exam</button>`;
-                dbActionButtons.innerHTML = buttonsHtml;
-            }
-            loadDbSubmissions(examId);
+                else if (data.status === "hidden") { statusEl.innerHTML = `Status: 🙈 Hidden`; buttonsHtml += `<button id="${isWritten ? 'dbMakeLiveAgainBtn' : 'dbRestorePracticeBtn'}" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">${isWritten ? '🚀 Make Live Again' : '♻️ Restore to Practice'}</button>`; }
+                else if (data.status === "deleted" || (data.status === "active" && data.publishTime && currentTime >= data.publishTime)) { statusEl.innerHTML = isWritten ? `Status: 🏁 Ended (Evaluation Phase)` : `Status: 🟢 Practice`; buttonsHtml += `<button id="dbMakeLiveAgainBtn" class="submit-btn" style="background: #00e676; color: #000; margin-top: 0;">🚀 Make Live Again</button> <button id="dbHideFromStudentsBtn" class="submit-btn" style="background: #e91e63; color: #fff; margin-top: 0;">🙈 Hide</button>`; } 
+                else { statusEl.innerHTML = `Status: 🔴 Live`; buttonsHtml += `<button id="${isWritten ? 'dbHideFromStudentsBtn' : 'dbHideBtn'}" class="submit-btn" style="background: #E1A95F; color: #fff; margin-top: 0;">${isWritten ? '🙈 Hide Exam' : 'Move to Practice'}</button>`; }
+                buttonsHtml += `<button id="dbClearMeritBtn" class="submit-btn" style="background: #ff5252; margin-top: 0; color:#fff;">🧹 Clear Submissions</button> <button id="dbDeleteExamBtn" class="submit-btn" style="background: #ff5252; margin-top: 0; color:#fff;">🗑️ Delete Exam</button>`; dbActionButtons.innerHTML = buttonsHtml;
+            } loadDbSubmissions(examId);
         });
 
-        // 🟢 RESTORED: All Popups for Database Actions 🟢
         document.getElementById('dbActionButtons').addEventListener('click', async (e) => {
             const examId = document.getElementById('dbExamSelector').value; if(!examId) return;
-            const isLight = document.body.classList.contains('light-mode');
-            const bg = isLight ? '#FDFCF9' : '#1e1e26';
-            const col = isLight ? '#222' : '#fff';
-            
-            if(e.target.id === 'dbClearMeritBtn') {
-                Swal.fire({title: 'Clear All Submissions?', text: "This action cannot be undone!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', background: bg, color: col}).then(async (res) => {
-                    if(res.isConfirmed) {
-                        const snap = await getDocs(query(collection(db, "results"), where("examId", "==", examId)));
-                        const deletes = [];
-                        snap.forEach(d => { deletes.push(deleteDoc(d.ref)); deletes.push(deleteDoc(doc(db, "user_timers", d.data().email + "_" + examId))); });
-                        await Promise.all(deletes);
-                        Swal.fire({title: 'Cleared!', icon: 'success', background: bg, color: col}); loadDbSubmissions(examId); 
-                    }
-                });
-            }
-            if(e.target.id === 'dbHideFromStudentsBtn') {
-                Swal.fire({title: 'Hide Exam?', text: "Students won't be able to see this.", icon: 'warning', showCancelButton: true, background: bg, color: col}).then(async (res) => {
-                    if(res.isConfirmed) {
-                        await setDoc(doc(db, "exams", examId), { status: "hidden" }, { merge: true }); 
-                        Swal.fire({title: 'Hidden!', icon: 'success', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); 
-                    }
-                });
-            }
-            if(e.target.id === 'dbRestorePracticeBtn' || e.target.id === 'dbHideBtn') {
-                let msg = e.target.id === 'dbHideBtn' ? 'Move to Practice?' : 'Restore to Practice?';
-                Swal.fire({title: msg, icon: 'info', showCancelButton: true, background: bg, color: col}).then(async (res) => {
-                    if(res.isConfirmed) {
-                        await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); 
-                        Swal.fire({title: 'Done!', icon: 'success', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); 
-                    }
-                });
-            }
-            if(e.target.id === 'dbDeleteExamBtn') {
-                Swal.fire({title: 'Permanently Delete Exam?', text: "You won't be able to revert this!", icon: 'error', showCancelButton: true, confirmButtonColor: '#ff5252', background: bg, color: col}).then(async (res) => {
-                    if(res.isConfirmed) {
-                        await deleteDoc(doc(db, "exams", examId)); 
-                        Swal.fire({title: 'Deleted!', icon: 'success', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbWorkspace').style.display = "none"; 
-                    }
-                });
-            }
-            if(e.target.id === 'dbMakeLiveAgainBtn') {
-                const docSnap = await getDoc(doc(db, "exams", examId)); const data = docSnap.data(); const timeVal = formatTimeForInput(data.publishTime || new Date().getTime());
-                Swal.fire({
-                    title: '🚀 Make Live Again',
-                    html: `
-                        <div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Title:</label><input id="swal-title" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${data.title}"></div>
-                        <div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Duration (Mins):</label><input id="swal-duration" type="number" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${data.duration}"></div>
-                        <div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Publish Time:</label><input id="swal-time" type="datetime-local" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${timeVal}"></div>
-                    `,
-                    showCancelButton: true, confirmButtonColor: '#00e676', confirmButtonText: 'Publish Live',
-                    background: bg, color: col,
-                    preConfirm: () => { return { title: document.getElementById('swal-title').value, duration: parseInt(document.getElementById('swal-duration').value), publishTime: new Date(document.getElementById('swal-time').value).getTime() } }
-                }).then(async (result) => {
-                    if(result.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { title: result.value.title, duration: result.value.duration, publishTime: result.value.publishTime, status: "active" }, { merge: true }); Swal.fire({icon: 'success', title: 'Exam is now LIVE!', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} }
-                });
-            }
+            const bg = document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26'; const col = document.body.classList.contains('light-mode') ? '#222' : '#fff';
+            if(e.target.id === 'dbClearMeritBtn') { Swal.fire({title: 'Clear All Submissions?', text: "This action cannot be undone!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', background: bg, color: col}).then(async (res) => { if(res.isConfirmed) { const snap = await getDocs(query(collection(db, "results"), where("examId", "==", examId))); const deletes = []; snap.forEach(d => { deletes.push(deleteDoc(d.ref)); deletes.push(deleteDoc(doc(db, "user_timers", d.data().email + "_" + examId))); }); await Promise.all(deletes); Swal.fire({title: 'Cleared!', icon: 'success', background: bg, color: col}); loadDbSubmissions(examId); } }); }
+            if(e.target.id === 'dbHideFromStudentsBtn') { Swal.fire({title: 'Hide Exam?', text: "Students won't be able to see this.", icon: 'warning', showCancelButton: true, background: bg, color: col}).then(async (res) => { if(res.isConfirmed) { await setDoc(doc(db, "exams", examId), { status: "hidden" }, { merge: true }); Swal.fire({title: 'Hidden!', icon: 'success', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } }); }
+            if(e.target.id === 'dbRestorePracticeBtn' || e.target.id === 'dbHideBtn') { let msg = e.target.id === 'dbHideBtn' ? 'Move to Practice?' : 'Restore to Practice?'; Swal.fire({title: msg, icon: 'info', showCancelButton: true, background: bg, color: col}).then(async (res) => { if(res.isConfirmed) { await setDoc(doc(db, "exams", examId), { status: "deleted" }, { merge: true }); Swal.fire({title: 'Done!', icon: 'success', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } }); }
+            if(e.target.id === 'dbDeleteExamBtn') { Swal.fire({title: 'Permanently Delete Exam?', text: "You won't be able to revert this!", icon: 'error', showCancelButton: true, confirmButtonColor: '#ff5252', background: bg, color: col}).then(async (res) => { if(res.isConfirmed) { await deleteDoc(doc(db, "exams", examId)); Swal.fire({title: 'Deleted!', icon: 'success', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbWorkspace').style.display = "none"; } }); }
+            if(e.target.id === 'dbMakeLiveAgainBtn') { const docSnap = await getDoc(doc(db, "exams", examId)); const data = docSnap.data(); const timeVal = formatTimeForInput(data.publishTime || new Date().getTime()); Swal.fire({ title: '🚀 Make Live Again', html: `<div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Title:</label><input id="swal-title" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${data.title}"></div><div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Duration (Mins):</label><input id="swal-duration" type="number" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${data.duration}"></div><div style="text-align:left; margin-bottom:10px;"><label style="color:#00bcd4; font-size:13px;">Update Publish Time:</label><input id="swal-time" type="datetime-local" class="swal2-input" style="width:100%; margin:0; box-sizing:border-box;" value="${timeVal}"></div>`, showCancelButton: true, confirmButtonColor: '#00e676', confirmButtonText: 'Publish Live', background: bg, color: col, preConfirm: () => { return { title: document.getElementById('swal-title').value, duration: parseInt(document.getElementById('swal-duration').value), publishTime: new Date(document.getElementById('swal-time').value).getTime() } } }).then(async (result) => { if(result.isConfirmed) { try { await setDoc(doc(db, "exams", examId), { title: result.value.title, duration: result.value.duration, publishTime: result.value.publishTime, status: "active" }, { merge: true }); Swal.fire({icon: 'success', title: 'Exam is now LIVE!', background: bg, color: col}); loadExamsIntoDropdowns(); document.getElementById('dbExamSelector').dispatchEvent(new Event('change')); } catch(err) {} } }); }
         });
 
         async function loadDbSubmissions(examId) {
             const tbody = document.getElementById('dbSubmissionsBody'); tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
-            try {
-                const snap = await getDocs(query(collection(db, "results"), where("examId", "==", examId)));
-                if(snap.empty) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No submissions.</td></tr>'; return; }
-                let html = ""; let resultsData = []; snap.forEach(doc => resultsData.push({ id: doc.id, ...doc.data() })); resultsData.sort((a, b) => b.score - a.score);
-                resultsData.forEach((row) => {
-                    html += `<tr>
-                        <td style="text-align:left;">${row.rollNumber || 'N/A'}<br><span style="font-size:11px;">${row.email}</span></td>
-                        <td>${row.correctCount||0}/${row.wrongCount||0}/${row.skippedCount||0}</td>
-                        <td style="color:#00bcd4; font-weight:bold;">${row.score !== undefined ? row.score : 'Pending'}</td>
-                        <td><button class="btn-delete delete-sub-btn" data-id="${row.id}">Delete</button></td>
-                    </tr>`;
-                });
-                tbody.innerHTML = html;
-                
-                // 🟢 RESTORED: Individual Submission Delete Popup 🟢
-                document.querySelectorAll('.delete-sub-btn').forEach(btn => { 
-                    btn.addEventListener('click', async (e) => { 
-                        const docId = e.target.getAttribute('data-id'); 
-                        Swal.fire({ title: 'Delete Submission?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' }).then(async (res) => { 
-                            if(res.isConfirmed) { await deleteDoc(doc(db, "results", docId)); loadDbSubmissions(examId); } 
-                        }); 
-                    }); 
-                });
-            } catch(error) {}
+            try { const snap = await getDocs(query(collection(db, "results"), where("examId", "==", examId))); if(snap.empty) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No submissions.</td></tr>'; return; } let html = ""; let resultsData = []; snap.forEach(doc => resultsData.push({ id: doc.id, ...doc.data() })); resultsData.sort((a, b) => b.score - a.score); resultsData.forEach((row) => { html += `<tr><td style="text-align:left;">${row.rollNumber || 'N/A'}<br><span style="font-size:11px;">${row.email}</span></td><td>${row.correctCount||0}/${row.wrongCount||0}/${row.skippedCount||0}</td><td style="color:#00bcd4; font-weight:bold;">${row.score !== undefined ? row.score : 'Pending'}</td><td><button class="btn-delete delete-sub-btn" data-id="${row.id}">Delete</button></td></tr>`; }); tbody.innerHTML = html; document.querySelectorAll('.delete-sub-btn').forEach(btn => { btn.addEventListener('click', async (e) => { const docId = e.target.getAttribute('data-id'); Swal.fire({ title: 'Delete Submission?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ff5252', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' }).then(async (res) => { if(res.isConfirmed) { await deleteDoc(doc(db, "results", docId)); loadDbSubmissions(examId); } }); }); }); } catch(error) {}
         }
         
         document.getElementById('searchRollBtn').addEventListener('click', () => { const rollVal = document.getElementById('searchRollInput').value.trim(); if(!rollVal) return; showStudentHistory(rollVal); });
 
         async function showStudentHistory(roll) {
             historyModal.classList.add('show'); historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:16px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#a0a0b0;">Fetching records...</span>`; historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#a0a0b0;">Fetching student records...</td></tr>';
-            try {
-                const examsSnap = await getDocs(query(collection(db, "exams"), orderBy("createdAt", "desc")));
-                let allExams = []; examsSnap.forEach(doc => { if (doc.data().status !== "draft" && doc.data().status !== "hidden") { allExams.push({ id: doc.id, title: doc.data().title }); } });
-                const resultsSnap = await getDocs(query(collection(db, "results"), where("rollNumber", "==", roll)));
-                let studentResults = {}; let usedEmails = new Set(); 
-                resultsSnap.forEach(doc => { const data = doc.data(); studentResults[data.examId] = data.score; if(data.email) usedEmails.add(data.email); });
-                if(usedEmails.size > 0) { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#E1A95F; font-size:13px;">Emails Used: ${Array.from(usedEmails).join(', ')}</span>`; } 
-                else { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ff5252; font-size:13px;">No records found.</span>`; }
-                let html = "";
-                allExams.forEach(exam => { let scoreHtml = studentResults[exam.id] !== undefined ? `<span style="color:#00e676; font-weight:bold; font-size:18px;">${studentResults[exam.id]}</span>` : `<span style="color:#ff5252; font-weight:bold;">❌ Missed</span>`; html += `<tr><td style="text-align:left;">${exam.title}</td><td>${scoreHtml}</td></tr>`; });
-                if(allExams.length === 0) html = '<tr><td colspan="2" style="color:#E1A95F;">No exams found.</td></tr>'; historyTableBody.innerHTML = html;
-            } catch(e) { historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#ff5252;">Failed to load history.</td></tr>'; }
+            try { const examsSnap = await getDocs(query(collection(db, "exams"), orderBy("createdAt", "desc"))); let allExams = []; examsSnap.forEach(doc => { if (doc.data().status !== "draft" && doc.data().status !== "hidden") { allExams.push({ id: doc.id, title: doc.data().title }); } }); const resultsSnap = await getDocs(query(collection(db, "results"), where("rollNumber", "==", roll))); let studentResults = {}; let usedEmails = new Set(); resultsSnap.forEach(doc => { const data = doc.data(); studentResults[data.examId] = data.score; if(data.email) usedEmails.add(data.email); }); if(usedEmails.size > 0) { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#E1A95F; font-size:13px;">Emails Used: ${Array.from(usedEmails).join(', ')}</span>`; } else { historyStudentDetails.innerHTML = `<span style="color:#00bcd4; font-size:18px; font-weight:bold;">Roll Number: ${roll}</span><br><span style="color:#ff5252; font-size:13px;">No records found.</span>`; } let html = ""; allExams.forEach(exam => { let scoreHtml = studentResults[exam.id] !== undefined ? `<span style="color:#00e676; font-weight:bold; font-size:18px;">${studentResults[exam.id]}</span>` : `<span style="color:#ff5252; font-weight:bold;">❌ Missed</span>`; html += `<tr><td style="text-align:left;">${exam.title}</td><td>${scoreHtml}</td></tr>`; }); if(allExams.length === 0) html = '<tr><td colspan="2" style="color:#E1A95F;">No exams found.</td></tr>'; historyTableBody.innerHTML = html; } catch(e) { historyTableBody.innerHTML = '<tr><td colspan="2" style="color:#ff5252;">Failed to load history.</td></tr>'; }
         }
 
-        // 🟢 View Live Result Popup Fix 🟢
         document.getElementById('adminViewLiveResultBtn').addEventListener('click', async () => {
-            const examId = document.getElementById('manageExamSelector').value; if(!examId) return; 
-            resultModal.classList.add('show'); resultTableBody.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
-            try {
-                const q = query(collection(db, "results"), where("examId", "==", examId)); 
-                const snapshot = await getDocs(q); let subs = []; 
-                snapshot.forEach(doc => subs.push(doc.data())); 
-                subs.sort((a, b) => b.score - a.score);
-                
-                let html = ""; 
-                subs.forEach((row, i) => { 
-                    html += `<tr><td>${i+1}</td><td>${row.rollNumber||'N/A'}</td><td style="color:#00e676;">${row.score !== undefined ? row.score : 'Pending'}</td></tr>`; 
-                }); 
-                resultTableBody.innerHTML = html || '<tr><td colspan="3">No results yet.</td></tr>';
-            } catch(e) {
-                resultTableBody.innerHTML = '<tr><td colspan="3" style="color:#ff5252;">Error loading results.</td></tr>';
-            }
+            const examId = document.getElementById('manageExamSelector').value; if(!examId) return; resultModal.classList.add('show'); resultTableBody.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
+            try { const q = query(collection(db, "results"), where("examId", "==", examId)); const snapshot = await getDocs(q); let subs = []; snapshot.forEach(doc => subs.push(doc.data())); subs.sort((a, b) => b.score - a.score); let html = ""; subs.forEach((row, i) => { html += `<tr><td>${i+1}</td><td>${row.rollNumber||'N/A'}</td><td style="color:#00e676;">${row.score !== undefined ? row.score : 'Pending'}</td></tr>`; }); resultTableBody.innerHTML = html || '<tr><td colspan="3">No results yet.</td></tr>'; } catch(e) { resultTableBody.innerHTML = '<tr><td colspan="3" style="color:#ff5252;">Error loading results.</td></tr>'; }
         });
     </script>
 </body>
