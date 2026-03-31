@@ -231,7 +231,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, where, doc, getDoc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where, doc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE", authDomain: "mcq-portal-904fd.firebaseapp.com", projectId: "mcq-portal-904fd", storageBucket: "mcq-portal-904fd.firebasestorage.app", messagingSenderId: "977853699063", appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2" };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
@@ -241,7 +241,7 @@
         themeToggleBtn.addEventListener('click', () => { document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); themeToggleBtn.innerHTML = isLight ? '🌙' : '🌞'; });
 
         let pendingList = []; let evaluatedList = []; let questionsData = [];
-        let canvasRegistry = {}; let currentSlideIndex = 0; let currentSubId = null;
+        let canvasRegistry = {}; let currentSlideIndex = 0; let currentSubId = null; let currentSubDataGlobal = null;
 
         onAuthStateChanged(auth, (user) => {
             if (!user || !ADMIN_EMAILS.includes(user.email)) { window.location.href = "admin.html"; } 
@@ -263,7 +263,6 @@
             const examId = e.target.value; const qc = document.getElementById('queueContainer');
             if(!examId) { qc.style.display = 'none'; return; } qc.style.display = 'block';
             
-            // 🟢 Fetch and Sort Questions by Timestamp 🟢
             questionsData = [];
             const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
             qSnap.forEach(doc => { questionsData.push({id: doc.id, data: doc.data()}); });
@@ -296,7 +295,6 @@
             document.getElementById('evalTbody').innerHTML = eHtml || '<tr><td colspan="3" style="text-align:center;">No evaluated scripts.</td></tr>';
         }
 
-        // Tab Logic
         document.getElementById('tabPending').addEventListener('click', () => { document.getElementById('tabPending').classList.add('active'); document.getElementById('tabEvaluated').classList.remove('active'); document.getElementById('pendingArea').style.display='block'; document.getElementById('evaluatedArea').style.display='none'; });
         document.getElementById('tabEvaluated').addEventListener('click', () => { document.getElementById('tabEvaluated').classList.add('active'); document.getElementById('tabPending').classList.remove('active'); document.getElementById('evaluatedArea').style.display='block'; document.getElementById('pendingArea').style.display='none'; });
 
@@ -330,9 +328,63 @@
             d.canvas.addEventListener('touchstart', start, {passive:false}); d.canvas.addEventListener('touchmove', draw, {passive:false}); d.canvas.addEventListener('touchend', stop);
         }
 
-        // 🟢 Canvas Slider UI (1-Screen Fit & Eraser Logic) 🟢
+        // 🟢 Lazy Loading Canvas Init 🟢
+        function initCanvasForSlide(slideIndex) {
+            if (slideIndex < 0 || slideIndex >= questionsData.length) return;
+            const qItem = questionsData[slideIndex];
+            const qId = qItem.id;
+            
+            // If already initialized, skip
+            if(canvasRegistry[qId]) return;
+
+            let sAns = (currentSubDataGlobal.studentImageUrls && currentSubDataGlobal.studentImageUrls[qId]) ? currentSubDataGlobal.studentImageUrls[qId] : null; 
+            if (!sAns && currentSubDataGlobal.studentImageUrl && qItem.data.qNum === 1) sAns = currentSubDataGlobal.studentImageUrl; 
+            let cAns = (currentSubDataGlobal.checkedImageUrls && currentSubDataGlobal.checkedImageUrls[qId]) ? currentSubDataGlobal.checkedImageUrls[qId] : null;
+            
+            if(sAns || cAns) {
+                const canvas = document.getElementById(`canvas_${qId}`);
+                if(canvas) {
+                    // Show a small loader text while image loads
+                    const wrapper = document.getElementById(`wrapper_${qId}`);
+                    wrapper.style.position = 'relative';
+                    const tempLoading = document.createElement('div');
+                    tempLoading.innerHTML = "Loading image..."; tempLoading.style.position="absolute"; tempLoading.style.color="#00bcd4";
+                    wrapper.appendChild(tempLoading);
+
+                    const ctx = canvas.getContext('2d'); const imgBase = new Image(); imgBase.crossOrigin = "Anonymous";
+                    imgBase.onload = () => {
+                        if(tempLoading.parentNode) wrapper.removeChild(tempLoading);
+                        
+                        let maxW = wrapper.clientWidth - 10; 
+                        let maxH = wrapper.clientHeight - 10; 
+                        
+                        let ratio = Math.min(maxW / imgBase.width, maxH / imgBase.height);
+                        let cWidth = imgBase.width * ratio;
+                        let cHeight = imgBase.height * ratio;
+                        
+                        canvas.width = cWidth; canvas.height = cHeight;
+                        
+                        canvas.style.backgroundImage = `url(${sAns || cAns})`;
+                        canvas.style.backgroundSize = "100% 100%";
+                        
+                        ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+                        canvasRegistry[qId] = { canvas, ctx, imgBase, width: cWidth, height: cHeight, isModified: false, history: [], step: -1, mode: 'pen' };
+                        
+                        if (cAns) {
+                            const imgChecked = new Image(); imgChecked.crossOrigin = "Anonymous";
+                            imgChecked.onload = () => { ctx.drawImage(imgChecked, 0, 0, cWidth, cHeight); saveState(qId); canvasRegistry[qId].isModified = false; attachEvents(qId); };
+                            imgChecked.src = cAns;
+                        } else { saveState(qId); attachEvents(qId); }
+                    }; 
+                    imgBase.onerror = () => { if(tempLoading.parentNode) tempLoading.innerHTML = "Failed to load image."; tempLoading.style.color = "red"; };
+                    imgBase.src = sAns || cAns; 
+                }
+            }
+        }
+
+        // 🟢 Canvas Slider UI (Lazy Render) 🟢
         async function openEvaluation(subData) {
-            currentSubId = subData.id; canvasRegistry = {}; window.currentEvalSlide = 0;
+            currentSubId = subData.id; currentSubDataGlobal = subData; canvasRegistry = {}; window.currentEvalSlide = 0;
             document.getElementById('dashboardView').style.display = 'none';
             document.getElementById('evaluationView').style.display = 'flex';
             document.getElementById('finalSubmitArea').style.display = 'none';
@@ -353,9 +405,8 @@
                 
                 html += `<div class="eval-slide" id="slide_${index}">`;
                 
-                // Top Info & Toolbar
                 html += `<div class="slide-top-info">`;
-                html += `<div class="q-title">Q${qNum}: ${q.question || '(Image)'}</div>`;
+                html += `<div class="q-title">Q${qNum}: ${q.question || '(Image)'} <span style="color:#ffb74d; margin-left:10px;">[Max: ${q.maxMarks || 0}]</span></div>`;
                 
                 if(urlToDraw) {
                     html += `
@@ -372,14 +423,12 @@
                 }
                 html += `</div>`; 
 
-                // Middle Canvas
                 if(urlToDraw) {
                     html += `<div class="canvas-wrapper" id="wrapper_${qId}"><canvas id="canvas_${qId}" class="draw-canvas"></canvas></div>`;
                 } else {
                     html += `<div class="canvas-wrapper" style="color:#ff5252; font-size:20px; font-weight:bold;">No Image Submitted</div>`;
                 }
 
-                // Bottom Control Bar
                 html += `
                 <div class="bottom-bar">
                     <div class="marks-input-wrapper">
@@ -393,52 +442,21 @@
                 if(index < questionsData.length - 1) html += `<button class="action-btn" style="background:#2196f3; color:#fff;" onclick="attemptNext(${index}, '${qId}')">Next ➡️</button>`;
                 else html += `<button class="action-btn" style="background:#00e676; color:#000;" onclick="attemptNext(${index}, '${qId}')">Finish 🏁</button>`;
                 
-                html += `</div></div></div>`; // End slide
+                html += `</div></div></div>`; 
             });
 
             track.innerHTML = html;
             document.getElementById('finalFeedback').value = subData.feedback || "";
             updateTotalSum(); 
 
-            // Initialize Canvases (Background Image Lock logic for perfect eraser)
+            // ONLY INITIALIZE THE FIRST SLIDE INITIALLY
             setTimeout(() => {
-                questionsData.forEach((qItem) => {
-                    const qId = qItem.id; let sAns = (subData.studentImageUrls && subData.studentImageUrls[qId]) ? subData.studentImageUrls[qId] : null; if (!sAns && subData.studentImageUrl && qItem.data.qNum === 1) sAns = subData.studentImageUrl; let cAns = (subData.checkedImageUrls && subData.checkedImageUrls[qId]) ? subData.checkedImageUrls[qId] : null;
-                    if(sAns || cAns) {
-                        const canvas = document.getElementById(`canvas_${qId}`);
-                        if(canvas) {
-                            const ctx = canvas.getContext('2d'); const imgBase = new Image(); imgBase.crossOrigin = "Anonymous";
-                            imgBase.onload = () => {
-                                const wrapper = document.getElementById(`wrapper_${qId}`);
-                                let maxW = wrapper.clientWidth - 10; 
-                                let maxH = wrapper.clientHeight - 10; 
-                                
-                                let ratio = Math.min(maxW / imgBase.width, maxH / imgBase.height);
-                                let cWidth = imgBase.width * ratio;
-                                let cHeight = imgBase.height * ratio;
-                                
-                                canvas.width = cWidth; canvas.height = cHeight;
-                                
-                                // Lock the original image as CSS background so eraser only erases strokes to transparent
-                                canvas.style.backgroundImage = `url(${sAns || cAns})`; // Using whatever original base is available
-                                canvas.style.backgroundSize = "100% 100%";
-                                
-                                ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-                                canvasRegistry[qId] = { canvas, ctx, imgBase, width: cWidth, height: cHeight, isModified: false, history: [], step: -1, mode: 'pen' };
-                                
-                                if (cAns) {
-                                    const imgChecked = new Image(); imgChecked.crossOrigin = "Anonymous";
-                                    imgChecked.onload = () => { ctx.drawImage(imgChecked, 0, 0, cWidth, cHeight); saveState(qId); canvasRegistry[qId].isModified = false; attachEvents(qId); };
-                                    imgChecked.src = cAns;
-                                } else { saveState(qId); attachEvents(qId); }
-                            }; imgBase.src = sAns || cAns; // Use the image for sizing calculation
-                        }
-                    }
-                });
-            }, 100); 
+                initCanvasForSlide(0);
+                // Preload the second slide silently
+                if (questionsData.length > 1) { setTimeout(() => initCanvasForSlide(1), 500); }
+            }, 50);
         }
 
-        // 🟢 Validation and Navigation Logic 🟢
         window.validateMark = function(inp) {
             let max = parseFloat(inp.getAttribute('max')); let val = parseFloat(inp.value);
             if(!isNaN(val) && val > max) { 
@@ -467,6 +485,9 @@
         window.goToSlide = function(index) {
             window.currentEvalSlide = index;
             document.getElementById('sliderTrack').style.transform = `translateX(-${index * 100}%)`;
+            // Lazy load the current slide and the next one
+            initCanvasForSlide(index);
+            if (index + 1 < questionsData.length) { setTimeout(() => initCanvasForSlide(index + 1), 200); }
         }
 
         window.showFinalScreen = function() {
