@@ -23,7 +23,7 @@
 
         /* 🟢 Core Forms & Inputs 🟢 */
         h2, h3, h4 { margin-bottom: 20px; color: #00bcd4; transition: 0.4s;}
-        .input-group, .compact-input-group { margin-bottom: 20px; width: 100%; }
+        .input-group { margin-bottom: 20px; width: 100%; }
         label { display: block; margin-bottom: 8px; font-size: 14px; color: #00bcd4; font-weight: bold; transition: 0.4s;}
         
         input, textarea, select { 
@@ -40,10 +40,10 @@
         }
         .submit-btn:active, .login-btn:active { box-shadow: inset 5px 5px 10px rgba(0,0,0,0.3); transform: scale(0.97); }
 
-        .btn-edit { background: #ffb74d; color: #000; box-shadow: 4px 4px 10px rgba(255, 183, 77, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); padding: 8px 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
-        .btn-delete { background: #ff5252; color: #fff; box-shadow: 4px 4px 10px rgba(255, 82, 82, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); padding: 8px 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
-        .btn-eval { background: #00e676; color: #000; box-shadow: 4px 4px 10px rgba(0, 230, 118, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); padding: 8px 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
-        .btn-edit:active, .btn-delete:active, .btn-eval:active { transform: scale(0.95); box-shadow: inset 3px 3px 8px rgba(0,0,0,0.3); }
+        .btn-edit, .btn-delete { padding: 8px 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.2s;}
+        .btn-edit { background: #ffb74d; color: #000; box-shadow: 4px 4px 10px rgba(255, 183, 77, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
+        .btn-delete { background: #ff5252; color: #fff; box-shadow: 4px 4px 10px rgba(255, 82, 82, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
+        .btn-edit:active, .btn-delete:active { transform: scale(0.95); box-shadow: inset 3px 3px 8px rgba(0,0,0,0.3); }
 
         /* 🟢 Layout: Login View 🟢 */
         #loginSection { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
@@ -126,7 +126,6 @@
         }
         .theme-toggle-floating:hover { transform: rotate(20deg) scale(1.1); filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
 
-        /* Modals */
         .result-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 4000; display: none; justify-content: center; align-items: center; transition: 0.4s;}
         .result-modal.show { display: flex; animation: fadeIn 0.3s ease; }
         .result-modal-content { 
@@ -140,25 +139,6 @@
         .hamburger-btn svg { width: 35px; height: 35px; fill: #00bcd4; }
         .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; display: none; backdrop-filter: blur(3px); }
         
-        /* 🟢 Slide Scroll Canvas Layout & Toolbar 🟢 */
-        .eval-slider-viewport { width: 100%; overflow: hidden; position: relative; border-radius: 20px; }
-        .eval-slider-track { display: flex; transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); width: 100%; }
-        .eval-q-slide { min-width: 100%; flex-shrink: 0; padding: 5px; }
-
-        .eval-q-wrapper { margin-bottom: 25px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s;}
-        
-        /* Modified for Full Width Canvas */
-        .eval-canvas-container { position: relative; overflow: hidden; border-radius: 12px; border: 2px solid rgba(255,255,255,0.1); background: #fff; margin-bottom: 10px; width: 100%;}
-        .draw-canvas { cursor: crosshair; touch-action: none; display: block; width: 100%; }
-        
-        .annotation-toolbar { display: flex; gap: 8px; background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 12px; margin-bottom: 15px; align-items: center; border: 1px solid rgba(255,255,255,0.05); overflow-x: auto; scrollbar-width: none; }
-        .annotation-toolbar::-webkit-scrollbar { display: none; }
-        .tool-btn { background: transparent; border: none; font-size: 18px; cursor: pointer; padding: 6px 10px; border-radius: 8px; transition: 0.2s; color: #fff; display: flex; align-items: center; justify-content: center; outline: none; }
-        .tool-btn:hover { background: rgba(255,255,255,0.1); }
-        .tool-btn.active { background: rgba(0, 188, 212, 0.2); border: 1px solid #00bcd4; }
-        .tool-btn:active { transform: scale(0.9); }
-        .t-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 5px; flex-shrink: 0; }
-
         .option-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
         .option-row input { flex: 1; margin: 0;}
         .option-row label { margin: 0; min-width: 70px;}
@@ -194,14 +174,7 @@
         body.light-mode .swal2-title { color: #664C28 !important; }
         body.light-mode .swal2-input, body.light-mode .swal2-textarea { background: #F0EBE1 !important; color: #333 !important; border: 1px solid rgba(102,76,40,0.2) !important; box-shadow: inset 4px 4px 8px rgba(102,76,40,0.1) !important; }
         body.light-mode .theme-toggle-floating { color: #E1A95F; }
-        body.light-mode .eval-q-wrapper { background: #FDFCF9; border-color: rgba(102,76,40,0.1); }
-        body.light-mode .eval-canvas-container { border-color: rgba(102,76,40,0.2); }
-        body.light-mode .annotation-toolbar { background: #E8E0D5; border-color: rgba(102,76,40,0.1); }
-        body.light-mode .tool-btn { color: #664C28; }
-        body.light-mode .tool-btn:hover { background: rgba(102,76,40,0.1); }
-        body.light-mode .tool-btn.active { background: rgba(0, 131, 148, 0.1); border-color: #008394; }
 
-        /* 📱 Mobile Edge-to-Edge Expansion */
         @media (max-width: 900px) { 
             #adminDashboardLayout { flex-direction: column; }
             .sidebar { position: fixed; left: -320px; top: 0; margin: 0; height: 100vh; z-index: 2600; border-radius: 0 30px 30px 0; transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
@@ -211,11 +184,6 @@
             .main-content-area { padding: 80px 10px 20px 10px; }
             .clay-box { padding: 25px 15px; }
             .action-buttons-row { flex-direction: column; }
-            
-            .eval-q-wrapper { padding: 15px 10px; margin-bottom: 20px; border-radius: 12px;}
-            .eval-canvas-container { margin: 0 -10px 15px -10px; border-radius: 0; border-left: none; border-right: none; }
-            .draw-canvas { width: 100vw !important; max-width: none !important; }
-            .annotation-toolbar { padding: 8px; border-radius: 8px; }
             .result-modal-content { padding: 25px 15px; width: 95%; }
         }
     </style>
@@ -223,6 +191,7 @@
 <body>
 
     <script>if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); }</script>
+
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div></div>
 
     <div id="loginSection">
@@ -247,7 +216,7 @@
             <nav class="nav-menu">
                 <button class="nav-item active" data-target="tab-create">📝 Create Exam</button>
                 <button class="nav-item" data-target="tab-add-q">➕ Add Questions</button>
-                <button class="nav-item" data-target="tab-eval">✍️ Evaluate Written</button>
+                <button class="nav-item" onclick="window.location.href='evaluation.html'">✍️ Evaluate Written</button>
                 <button class="nav-item" data-target="tab-manage">⚙️ Management</button>
                 <button class="nav-item" data-target="tab-db">🗄️ Database Mgt.</button>
                 <hr class="nav-divider">
@@ -293,23 +262,6 @@
                     <div id="writtenMarksGroup" class="input-group" style="display: none;"><label>Max Marks for this Question:</label><input type="number" id="qMaxMarks" placeholder="e.g. 10"></div>
                     <button type="submit" class="submit-btn" id="saveQuestionBtn">Save Question</button>
                 </form>
-            </div>
-
-            <div id="tab-eval" class="clay-box tab-content">
-                <h3 style="color: #00e676;">✍️ Evaluate Written Scripts</h3>
-                <div class="input-group"><label>Select Written Exam:</label><select id="evalExamSelector"><option value="">-- Loading Written Exams... --</option></select></div>
-                <div id="evalWorkspace" style="display:none; margin-top: 20px;">
-                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                        <button class="btn-live-excel" id="filterPendingBtn" style="display:block; flex:1; background: #ffb74d; color: #000;">Show Pending</button>
-                        <button class="btn-live-excel" id="filterEvalBtn" style="display:block; flex:1; background: #15151a; color: #a0a0b0; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);">Show Evaluated</button>
-                    </div>
-                    <div class="result-table-wrapper">
-                        <table class="res-table">
-                            <thead><tr><th style="text-align: left;">Roll / Email</th><th>Status</th><th>Score</th><th>Action</th></tr></thead>
-                            <tbody id="evalSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Select an exam to load scripts...</td></tr></tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
 
             <div id="tab-manage" class="clay-box tab-content">
@@ -379,27 +331,6 @@
         </div>
     </div>
 
-    <div class="result-modal" id="evalModal">
-        <div class="result-modal-content" style="max-width: 950px; padding: 25px; overflow-y: hidden; display: flex; flex-direction: column; height: 95vh;">
-            <span class="result-close-btn" id="closeEvalModal" style="z-index: 100;">&times;</span>
-            <h3 style="margin-bottom:10px; text-align: center; color: #00e676; flex-shrink:0;">✍️ Evaluate Script</h3>
-            <p id="evalStudentInfo" style="text-align: center; color: #a0a0b0; margin-bottom: 15px; font-size: 14px; flex-shrink:0;"></p>
-            
-            <div id="evalScriptContainer" style="flex-grow: 1; overflow-y: auto; overflow-x: hidden; position: relative; padding-right: 5px;"></div>
-            
-            <div id="finalEvalSubmitArea" style="display: none; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; flex-shrink:0;">
-                <h4 style="text-align: center; color: #ffb74d;">Final Review</h4>
-                <div class="input-group"><label>Total Marks Obtained (Auto-calculated):</label><input type="number" id="evalMarks" placeholder="0" step="0.1" readonly style="color: #00e676; text-align: center; font-size: 24px; border: 1px solid #00e676;"></div>
-                <div class="input-group"><label>Feedback / Comments (Optional):</label><textarea id="evalFeedback" rows="2"></textarea></div>
-                <p id="evalUploadStatus" style="font-size: 14px; color: #00e676; margin-top: 10px; font-weight: bold; text-align: center;"></p>
-                <div style="display:flex; gap:10px;">
-                    <button class="submit-btn" style="background:#444; color:#fff; margin-top:15px;" onclick="returnToEvalSlides()">⬅️ Back to Scripts</button>
-                    <button id="saveEvalBtn" class="submit-btn" style="background:#00e676; color:#000; margin-top:15px;">Submit Evaluation ✅</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="result-modal" id="editQModal">
         <div class="result-modal-content" style="max-width: 500px; padding: 25px; overflow-y: auto; max-height: 90vh;">
             <span class="result-close-btn" id="closeEditQModal">&times;</span>
@@ -419,13 +350,11 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // Theme Init
         const themeToggleBtn = document.getElementById('themeToggleBtn');
         if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); themeToggleBtn.innerHTML = '🌙';} 
         else { themeToggleBtn.innerHTML = '🌞'; }
         themeToggleBtn.addEventListener('click', () => { document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); themeToggleBtn.innerHTML = isLight ? '🌙' : '🌞'; });
 
-        // Sidebar Navigation
         const sidebar = document.getElementById('sidebar'); const hamburgerBtn = document.getElementById('hamburgerBtn'); const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
         hamburgerBtn.addEventListener('click', () => { sidebar.classList.add('active'); mobileSidebarOverlay.classList.add('active'); });
         mobileSidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('active'); mobileSidebarOverlay.classList.remove('active'); });
@@ -453,10 +382,9 @@
         const resultModal = document.getElementById('resultModal'); const closeResultModal = document.getElementById('closeResultModal'); const resultTableBody = document.getElementById('resultTableBody');
         const historyModal = document.getElementById('historyModal'); const closeHistoryModal = document.getElementById('closeHistoryModal'); const historyTableBody = document.getElementById('historyTableBody'); const historyStudentDetails = document.getElementById('historyStudentDetails');
         const editQModal = document.getElementById('editQModal'); const closeEditQModal = document.getElementById('closeEditQModal');
-        const evalModal = document.getElementById('evalModal'); const closeEvalModal = document.getElementById('closeEvalModal');
 
-        closeResultModal.addEventListener('click', () => resultModal.classList.remove('show')); closeHistoryModal.addEventListener('click', () => historyModal.classList.remove('show')); closeEditQModal.addEventListener('click', () => editQModal.classList.remove('show')); closeEvalModal.addEventListener('click', () => evalModal.classList.remove('show')); 
-        window.addEventListener('click', (e) => { if(e.target === resultModal) resultModal.classList.remove('show'); if(e.target === historyModal) historyModal.classList.remove('show'); if(e.target === editQModal) editQModal.classList.remove('show'); if(e.target === evalModal) evalModal.classList.remove('show'); });
+        closeResultModal.addEventListener('click', () => resultModal.classList.remove('show')); closeHistoryModal.addEventListener('click', () => historyModal.classList.remove('show')); closeEditQModal.addEventListener('click', () => editQModal.classList.remove('show')); 
+        window.addEventListener('click', (e) => { if(e.target === resultModal) resultModal.classList.remove('show'); if(e.target === historyModal) historyModal.classList.remove('show'); if(e.target === editQModal) editQModal.classList.remove('show'); });
 
         onAuthStateChanged(auth, (user) => { if (user) { if (ADMIN_EMAILS.includes(user.email)) { loginSection.style.display = "none"; adminDashboardLayout.style.display = "flex"; loadExamsIntoDropdowns(); } else { Swal.fire('Access Denied!', '', 'error'); signOut(auth); } } else { loginSection.style.display = "flex"; adminDashboardLayout.style.display = "none"; } });
         document.getElementById('adminLoginBtn').addEventListener('click', async () => { try { await signInWithPopup(auth, provider); } catch (e) {} });
@@ -487,7 +415,7 @@
                     const opt = `<option value="${doc.id}">${typeIcon} ${titleStr}</option>`;
                     optionsHtml += opt; if(data.type === 'written') writtenOptionsHtml += opt;
                 }); 
-                document.getElementById('examSelector').innerHTML = optionsHtml; document.getElementById('manageExamSelector').innerHTML = optionsHtml; document.getElementById('dbExamSelector').innerHTML = optionsHtml; document.getElementById('evalExamSelector').innerHTML = writtenOptionsHtml; 
+                document.getElementById('examSelector').innerHTML = optionsHtml; document.getElementById('manageExamSelector').innerHTML = optionsHtml; document.getElementById('dbExamSelector').innerHTML = optionsHtml; 
             } catch (error) {}
         }
 
@@ -531,7 +459,6 @@
         document.getElementById('editAddMoreOptionBtn').addEventListener('click', () => { editOptCount++; renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount); });
         renderOptionsUI('dynamicAddOptionsContainer', 'correctOption', addOptCount);
 
-        // 🟢 Fetch Questions Helper (Sorted by timestamp) 🟢
         async function getSortedQuestions(examId) {
             const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
             let questionsArray = [];
@@ -570,7 +497,7 @@
             if(examType === 'written' && !qText && document.getElementById('qImageFile').files.length === 0) { Swal.fire('Wait!', 'Provide Text or Image.', 'warning'); return; }
             const btn = document.getElementById('saveQuestionBtn'); btn.innerText = "Processing..."; 
             try { 
-                let questionData = { question: qText, timestamp: new Date().getTime() }; // Save timestamp
+                let questionData = { question: qText, timestamp: new Date().getTime() }; 
                 if(examType === 'written') {
                     questionData.maxMarks = parseFloat(document.getElementById('qMaxMarks').value);
                     if(document.getElementById('qImageFile').files.length > 0) { document.getElementById('qImageStatus').innerText = "Uploading Image..."; const url = await uploadImageToImgBB(document.getElementById('qImageFile').files[0]); if(url) questionData.imageUrl = url; document.getElementById('qImageStatus').innerText = ""; }
@@ -582,276 +509,6 @@
                 await addDoc(collection(db, "exams", selectedExamId, "questions"), questionData); Swal.fire({ icon: 'success', title: 'Saved!', timer: 1000, showConfirmButton: false, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26' });
                 document.getElementById('liveQuestionNumber').innerText = parseInt(document.getElementById('liveQuestionNumber').innerText) + 1; document.getElementById('questionForm').reset(); 
             } catch (error) { Swal.fire('Error', 'Failed to save.', 'error'); } btn.innerText = "Save Question"; 
-        });
-
-        // 🟢 EVALUATE LOGIC 🟢
-        const evalExamSelector = document.getElementById('evalExamSelector'); const filterPendingBtn = document.getElementById('filterPendingBtn'); const filterEvalBtn = document.getElementById('filterEvalBtn');
-        let currentEvalFilter = 'pending'; let evalSubmissionsData = [];
-
-        evalExamSelector.addEventListener('change', loadEvalSubmissions);
-        filterPendingBtn.addEventListener('click', () => { currentEvalFilter = 'pending'; filterPendingBtn.style.background = '#ffb74d'; filterPendingBtn.style.color = '#000'; filterPendingBtn.style.boxShadow = 'none'; filterEvalBtn.style.background = '#15151a'; filterEvalBtn.style.color = '#a0a0b0'; filterEvalBtn.style.boxShadow = 'inset 4px 4px 8px rgba(0,0,0,0.6)'; renderEvalTable(); });
-        filterEvalBtn.addEventListener('click', () => { currentEvalFilter = 'evaluated'; filterEvalBtn.style.background = '#00e676'; filterEvalBtn.style.color = '#000'; filterEvalBtn.style.boxShadow = 'none'; filterPendingBtn.style.background = '#15151a'; filterPendingBtn.style.color = '#a0a0b0'; filterPendingBtn.style.boxShadow = 'inset 4px 4px 8px rgba(0,0,0,0.6)'; renderEvalTable(); });
-
-        async function loadEvalSubmissions() {
-            const examId = evalExamSelector.value; const workspace = document.getElementById('evalWorkspace'); if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block";
-            document.getElementById('evalSubmissionsBody').innerHTML = '<tr><td colspan="4" style="text-align:center;">Loading...</td></tr>';
-            try { const snap = await getDocs(query(collection(db, "results"), where("examId", "==", examId))); evalSubmissionsData = []; snap.forEach(doc => evalSubmissionsData.push({id: doc.id, ...doc.data()})); renderEvalTable(); } catch(e) {}
-        }
-
-        function renderEvalTable() {
-            const tbody = document.getElementById('evalSubmissionsBody'); tbody.innerHTML = "";
-            let filtered = evalSubmissionsData.filter(sub => { if(currentEvalFilter === 'pending') return sub.status === 'pending' || !sub.status; return sub.status === 'evaluated'; });
-            if(filtered.length === 0) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ffb74d;">No scripts found.</td></tr>`; return; }
-
-            filtered.forEach((sub, i) => {
-                let statusSpan = currentEvalFilter === 'pending' ? `<span style="color:#ffb74d;">⏳ Pending</span>` : `<span style="color:#00e676;">✅ Evaluated</span>`;
-                let tr = document.createElement('tr');
-                tr.innerHTML = `<td style="text-align:left;"><b>${sub.rollNumber}</b><br><span style="font-size:11px; color:#a0a0b0;">${sub.email}</span></td><td>${statusSpan}</td><td style="color:#00bcd4;">${sub.score !== undefined ? sub.score : "N/A"}</td><td><button class="btn-eval eval-open-btn" data-index="${i}">${currentEvalFilter === 'pending' ? "✍️ Evaluate" : "🔍 View"}</button></td>`;
-                tbody.appendChild(tr); tr.querySelector('.eval-open-btn').addEventListener('click', () => openEvalModal(sub));
-            });
-        }
-
-        let currentEvalSubId = null; let currentEvalSub = null; let canvasRegistry = {}; 
-        
-        // 🟢 Canvas Slider Logic & Prev/Next 🟢
-        window.currentEvalSlide = 0;
-        
-        window.goToEvalSlide = function(targetIndex, currentQid, isNextMode) {
-            // Validation block only when going NEXT
-            if(isNextMode && currentQid) {
-                const inp = document.querySelector(`.q-mark-input[data-qid="${currentQid}"]`);
-                if(!inp.value || isNaN(parseFloat(inp.value))) {
-                    Swal.fire({toast:true, position:'top-end', icon:'warning', title:'Please enter marks first!', showConfirmButton:false, timer:2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'});
-                    return;
-                }
-            }
-            window.currentEvalSlide = targetIndex;
-            document.getElementById('evalSliderTrack').style.transform = `translateX(-${targetIndex * 100}%)`;
-        };
-
-        window.showFinalEvalSubmit = function(currentQid) {
-            if(currentQid) {
-                const inp = document.querySelector(`.q-mark-input[data-qid="${currentQid}"]`);
-                if(!inp.value || isNaN(parseFloat(inp.value))) {
-                    Swal.fire({toast:true, position:'top-end', icon:'warning', title:'Please enter marks first!', showConfirmButton:false, timer:2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'});
-                    return;
-                }
-            }
-            document.getElementById('evalScriptContainer').style.display = 'none';
-            document.getElementById('finalEvalSubmitArea').style.display = 'block';
-        };
-
-        // Return to slide view from final screen
-        window.returnToEvalSlides = function() {
-            document.getElementById('finalEvalSubmitArea').style.display = 'none';
-            document.getElementById('evalScriptContainer').style.display = 'block';
-        };
-
-        // 🟢 Canvas Toolbar Functions 🟢
-        function updateToolbarUI(qId, activeAction) {
-            document.querySelectorAll(`.annotation-toolbar[data-qid="${qId}"] .tool-btn`).forEach(btn => {
-                if(btn.getAttribute('data-action') === activeAction) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
-        }
-
-        function saveCanvasState(qId) {
-            const data = canvasRegistry[qId];
-            data.step++;
-            if(data.step < data.history.length) data.history.length = data.step;
-            data.history.push(data.canvas.toDataURL());
-            data.isModified = true;
-        }
-
-        function restoreCanvasState(qId) {
-            const data = canvasRegistry[qId];
-            const img = new Image(); img.crossOrigin = "Anonymous";
-            img.onload = () => {
-                data.ctx.globalCompositeOperation = 'source-over';
-                data.ctx.clearRect(0, 0, data.width, data.height);
-                data.ctx.drawImage(img, 0, 0, data.width, data.height);
-                data.ctx.globalCompositeOperation = data.mode === 'eraser' ? 'destination-out' : 'source-over';
-            };
-            img.src = data.history[data.step];
-            data.isModified = true;
-        }
-
-        document.getElementById('evalScriptContainer').addEventListener('click', (e) => { 
-            const btn = e.target.closest('.tool-btn');
-            if(!btn) return;
-            const action = btn.getAttribute('data-action');
-            const qId = btn.getAttribute('data-qid');
-            
-            if(action === 'zoom') {
-                const canvas = document.getElementById(`canvas_${qId}`);
-                if(canvas) { 
-                    const tempC = document.createElement('canvas'); tempC.width = canvas.width; tempC.height = canvas.height; const tCtx = tempC.getContext('2d');
-                    tCtx.drawImage(canvasRegistry[qId].imgBase, 0, 0, tempC.width, tempC.height); tCtx.drawImage(canvas, 0, 0, tempC.width, tempC.height);
-                    Swal.fire({ imageUrl: tempC.toDataURL(), imageAlt: 'Script Image', width: '90%', imageWidth: '100%', showConfirmButton: false, showCloseButton: true, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26' }); 
-                }
-                return;
-            }
-
-            const data = canvasRegistry[qId];
-            if(!data) return;
-
-            if(action === 'pen') {
-                data.mode = 'pen'; data.ctx.globalCompositeOperation = 'source-over'; data.ctx.strokeStyle = '#ff0000'; data.ctx.lineWidth = 4;
-                data.canvas.style.cursor = 'crosshair'; updateToolbarUI(qId, action);
-            }
-            else if(action === 'eraser') {
-                data.mode = 'eraser'; data.ctx.globalCompositeOperation = 'destination-out'; data.ctx.lineWidth = 20; 
-                data.canvas.style.cursor = 'cell'; updateToolbarUI(qId, action);
-            }
-            else if(action === 'undo') { if(data.step > 0) { data.step--; restoreCanvasState(qId); } }
-            else if(action === 'redo') { if(data.step < data.history.length - 1) { data.step++; restoreCanvasState(qId); } }
-            else if(action === 'clear') { 
-                data.ctx.globalCompositeOperation = 'source-over'; data.ctx.clearRect(0, 0, data.width, data.height); 
-                data.ctx.globalCompositeOperation = data.mode === 'eraser' ? 'destination-out' : 'source-over';
-                saveCanvasState(qId); 
-            }
-        });
-
-        async function openEvalModal(sub) {
-            currentEvalSubId = sub.id; currentEvalSub = sub; canvasRegistry = {}; window.currentEvalSlide = 0;
-            document.getElementById('evalStudentInfo').innerText = `Student: ${sub.rollNumber} | Email: ${sub.email}`;
-            const scriptContainer = document.getElementById('evalScriptContainer'); scriptContainer.innerHTML = "<div style='text-align:center;'>Loading scripts...</div>"; 
-            document.getElementById('evalScriptContainer').style.display = 'block';
-            document.getElementById('finalEvalSubmitArea').style.display = 'none';
-            evalModal.classList.add('show');
-            
-            try {
-                let questionsArray = await getSortedQuestions(sub.examId);
-                let studentMarks = sub.questionMarks || {};
-
-                let html = `<div class="eval-slider-viewport"><div class="eval-slider-track" id="evalSliderTrack" style="transform: translateX(0%);">`;
-
-                questionsArray.forEach((qItem, index) => {
-                    const qData = qItem.data; const qId = qItem.id; let qNum = index + 1;
-                    let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null; if (!studentAns && sub.studentImageUrl && qNum === 1) studentAns = sub.studentImageUrl;
-                    let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null; let ansUrlToDraw = checkedAns || studentAns;
-                    
-                    html += `<div class="eval-q-slide" id="slide_${index}">`;
-                    html += `<div class="eval-q-wrapper" style="margin-bottom:0;">`;
-                    html += `<p style="font-weight: bold; color: #00bcd4; margin-bottom: 15px; font-size: 16px;">Q${qNum}: ${qData.question || '(Image)'} <span style="color:#ffb74d;">[Max: ${qData.maxMarks || 0}]</span></p>`;
-                    
-                    if(ansUrlToDraw) {
-                        html += `
-                        <div class="annotation-toolbar" data-qid="${qId}">
-                            <button class="tool-btn active" data-action="pen" data-qid="${qId}" title="Red Pen">✏️</button>
-                            <button class="tool-btn" data-action="eraser" data-qid="${qId}" title="Eraser">🧽</button>
-                            <div class="t-divider"></div>
-                            <button class="tool-btn" data-action="undo" data-qid="${qId}" title="Undo">↩️</button>
-                            <button class="tool-btn" data-action="redo" data-qid="${qId}" title="Redo">↪️</button>
-                            <button class="tool-btn" data-action="clear" data-qid="${qId}" title="Clear Strokes">🧹</button>
-                            <div class="t-divider"></div>
-                            <button class="tool-btn" data-action="zoom" data-qid="${qId}" title="Full Screen">🔍</button>
-                        </div>
-                        <div class="eval-canvas-container" id="container_${qId}">
-                            <canvas id="canvas_${qId}" class="draw-canvas"></canvas>
-                        </div>`;
-                    }
-                    else html += `<p style="color: #ff5252; font-weight: bold; margin-bottom: 15px;">Not answered</p>`;
-                    
-                    // 🟢 Bottom Row (Marks + Prev/Next Button) 🟢
-                    html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; flex-wrap: wrap; gap: 10px;">`;
-                    
-                    html += `
-                        <div class="input-group" style="margin-bottom:0; display:flex; align-items:center; gap:10px; width: auto;">
-                            <label style="color:#00e676; margin:0;">Marks:</label>
-                            <input type="number" class="q-mark-input" data-qid="${qId}" value="${studentMarks[qId]!==undefined?studentMarks[qId]:""}" placeholder="0" step="0.1" max="${qData.maxMarks || 100}" style="width:80px; padding: 10px; text-align:center;">
-                            <span style="color:#ffb74d; font-weight:bold; font-size:16px;">/ ${qData.maxMarks || 0}</span>
-                        </div>
-                        <div style="display:flex; gap:10px; margin-left:auto;">
-                    `;
-
-                    // Prev Button
-                    if (index > 0) {
-                        html += `<button class="submit-btn" style="width:auto; margin:0; padding:12px 20px; background:#444; color:#fff;" onclick="goToEvalSlide(${index-1}, null, false)">⬅️ Prev</button>`;
-                    }
-                    
-                    // Next / Submit Button
-                    if(index < questionsArray.length - 1) {
-                        html += `<button class="submit-btn" style="width:auto; margin:0; padding:12px 20px; background:#2196f3; color:#fff;" onclick="goToEvalSlide(${index+1}, '${qId}', true)">Next ➡️</button>`;
-                    } else {
-                        html += `<button class="submit-btn" style="width:auto; margin:0; padding:12px 20px; background:#00e676; color:#000;" onclick="showFinalEvalSubmit('${qId}')">Review & Submit ✅</button>`;
-                    }
-                    
-                    html += `</div></div></div></div>`; // End row, wrapper, slide
-                });
-                html += `</div></div>`; // End track, viewport
-                
-                scriptContainer.innerHTML = html; document.getElementById('evalMarks').value = sub.score !== undefined ? sub.score : "0";
-
-                // Initialize Canvases (Full Width 100%)
-                questionsArray.forEach(qItem => {
-                    const qId = qItem.id; let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null; if (!studentAns && sub.studentImageUrl && qItem.qNum === 1) studentAns = sub.studentImageUrl; let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null;
-                    if (studentAns || checkedAns) {
-                        const canvas = document.getElementById(`canvas_${qId}`);
-                        if (canvas) {
-                            const ctx = canvas.getContext('2d'); const imgBase = new Image(); imgBase.crossOrigin = "Anonymous";
-                            imgBase.onload = () => {
-                                const container = document.getElementById(`container_${qId}`);
-                                let cWidth = container.clientWidth;
-                                if (cWidth === 0) cWidth = window.innerWidth > 900 ? 800 : window.innerWidth - 40; 
-                                
-                                let cHeight = Math.floor(imgBase.height * (cWidth / imgBase.width));
-                                
-                                canvas.width = cWidth; canvas.height = cHeight;
-                                
-                                // Draw image stretched to full canvas width
-                                ctx.drawImage(imgBase, 0, 0, cWidth, cHeight);
-                                
-                                // Setup drawing stroke props
-                                ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-                                canvasRegistry[qId] = { canvas, ctx, imgBase, width: cWidth, height: cHeight, isModified: false, history: [], step: -1, mode: 'pen' };
-                                
-                                if (checkedAns) {
-                                    const imgChecked = new Image(); imgChecked.crossOrigin = "Anonymous";
-                                    imgChecked.onload = () => { ctx.drawImage(imgChecked, 0, 0, cWidth, cHeight); saveCanvasState(qId); canvasRegistry[qId].isModified = false; attachCanvasEvents(canvas, qId); };
-                                    imgChecked.src = checkedAns;
-                                } else { saveCanvasState(qId); attachCanvasEvents(canvas, qId); }
-                            }; imgBase.src = studentAns || checkedAns; 
-                        }
-                    }
-                });
-            } catch(e) { scriptContainer.innerHTML = "<p style='color:#ff5252; text-align:center;'>Error loading.</p>"; }
-            document.getElementById('evalFeedback').value = sub.feedback || ""; document.getElementById('evalUploadStatus').innerText = "";
-        }
-
-        function attachCanvasEvents(canvas, qId) {
-            let isDrawing = false;
-            function getCoords(e) { const rect = canvas.getBoundingClientRect(); const scaleX = canvas.width / rect.width; const scaleY = canvas.height / rect.height; let clientX = e.touches ? e.touches[0].clientX : e.clientX; let clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY }; }
-            function startDrawing(e) { isDrawing = true; const coords = getCoords(e); canvasRegistry[qId].ctx.beginPath(); canvasRegistry[qId].ctx.moveTo(coords.x, coords.y); }
-            function draw(e) { if(!isDrawing) return; e.preventDefault(); const coords = getCoords(e); canvasRegistry[qId].ctx.lineTo(coords.x, coords.y); canvasRegistry[qId].ctx.stroke(); canvasRegistry[qId].isModified = true; }
-            function stopDrawing() { if(isDrawing) { isDrawing = false; canvasRegistry[qId].ctx.closePath(); saveCanvasState(qId); } }
-            canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing); canvas.addEventListener('touchstart', startDrawing, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', stopDrawing);
-        }
-        
-        document.getElementById('evalScriptContainer').addEventListener('input', (e) => { 
-            if(e.target.classList.contains('q-mark-input')) { 
-                let maxVal = parseFloat(e.target.getAttribute('max')); let val = parseFloat(e.target.value);
-                if(!isNaN(val) && !isNaN(maxVal) && val > maxVal) { e.target.value = maxVal; val = maxVal; Swal.fire({toast: true, position: 'top-end', icon: 'warning', title: `Max marks is ${maxVal}`, showConfirmButton: false, timer: 2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); }
-                let total = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let v = parseFloat(inp.value); if(!isNaN(v)) total += v; }); 
-                document.getElementById('evalMarks').value = total.toFixed(2); 
-            } 
-        });
-
-        document.getElementById('saveEvalBtn').addEventListener('click', async () => {
-            let questionMarks = {}; let totalMarks = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let val = parseFloat(inp.value); if(!isNaN(val)) { totalMarks += val; questionMarks[inp.getAttribute('data-qid')] = val; } }); if(isNaN(totalMarks)) totalMarks = 0;
-            const btn = document.getElementById('saveEvalBtn'); btn.innerText = "Processing..."; btn.disabled = true; document.getElementById('evalUploadStatus').innerText = "Uploading checked scripts...";
-            let newCheckedImageUrls = currentEvalSub.checkedImageUrls || {}; let uploadPromises = [];
-            
-            for (let qId in canvasRegistry) {
-                if (canvasRegistry[qId].isModified) {
-                    uploadPromises.push(new Promise((resolve, reject) => { 
-                        // Canvas is already the exact composite of image + strokes, so we just export it.
-                        canvasRegistry[qId].canvas.toBlob(async (blob) => { const url = await uploadImageToImgBB(new File([blob], `checked_${qId}.jpg`, { type: "image/jpeg" })); if (url) { newCheckedImageUrls[qId] = url; resolve(); } else reject(); }, 'image/jpeg', 0.85); 
-                    }));
-                }
-            }
-            try { await Promise.all(uploadPromises); let updateData = { score: parseFloat(totalMarks.toFixed(2)), questionMarks: questionMarks, feedback: document.getElementById('evalFeedback').value, status: "evaluated" }; if (Object.keys(newCheckedImageUrls).length > 0) updateData.checkedImageUrls = newCheckedImageUrls; await setDoc(doc(db, "results", currentEvalSubId), updateData, {merge: true}); Swal.fire({icon:'success', title:'Saved', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); evalModal.classList.remove('show'); loadEvalSubmissions(); } 
-            catch(e) { Swal.fire('Error', 'Failed to save.', 'error'); } btn.innerText = "Submit Evaluation"; btn.disabled = false; document.getElementById('evalUploadStatus').innerText = "";
         });
 
         // 🟢 Manage Settings 🟢
