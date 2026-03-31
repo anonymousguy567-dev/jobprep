@@ -117,6 +117,7 @@
         body.light-mode .tool-btn { background: #FDFCF9; color: #333; border-color: rgba(102, 76, 40, 0.2); }
         body.light-mode .tool-btn.active { background: rgba(0, 131, 148, 0.1); border-color: #008394; }
         body.light-mode .canvas-wrapper { background: #FDFCF9; }
+        body.light-mode .input-group input, body.light-mode .input-group textarea { background: #FDFCF9; color:#333; border-color: rgba(102,76,40,0.2); box-shadow: inset 4px 4px 8px rgba(102,76,40,0.1); }
     </style>
 </head>
 <body>
@@ -182,14 +183,14 @@
                 <p style="color:#a0a0b0; margin-bottom:30px;">You have reached the end of this script.</p>
                 <div class="input-group" style="max-width: 400px; margin: 0 auto 20px auto;">
                     <label>Total Marks (Auto-calculated):</label>
-                    <input type="number" id="finalTotalMarks" readonly style="color: #00e676; text-align: center; font-size: 28px;">
+                    <input type="number" id="evalMarks" readonly style="color: #00e676; text-align: center; font-size: 28px;">
                 </div>
                 <div class="input-group" style="max-width: 400px; margin: 0 auto 30px auto;">
                     <label>Feedback (Optional):</label>
                     <textarea id="finalFeedback" rows="3" placeholder="Enter any comments..."></textarea>
                 </div>
                 <div style="display: flex; gap: 15px; justify-content: center;">
-                    <button class="action-btn" style="background:#444; color:#fff;" onclick="goToSlide(questionsData.length - 1)">⬅️ Review Again</button>
+                    <button class="action-btn" style="background:#444; color:#fff;" onclick="returnToEvalSlides()">⬅️ Review Again</button>
                     <button class="action-btn" style="background:#00e676; color:#000;" id="submitAndNextBtn">Submit & Next Student 🚀</button>
                 </div>
                 <p id="submitStatusTxt" style="color:#00e676; margin-top:15px; font-weight:bold;"></p>
@@ -200,7 +201,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, where, doc, getDoc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where, doc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE", authDomain: "mcq-portal-904fd.firebaseapp.com", projectId: "mcq-portal-904fd", storageBucket: "mcq-portal-904fd.firebasestorage.app", messagingSenderId: "977853699063", appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2" };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
@@ -232,11 +233,15 @@
             const examId = e.target.value; const qc = document.getElementById('queueContainer');
             if(!examId) { qc.style.display = 'none'; return; } qc.style.display = 'block';
             
-            // Load questions structure once for this exam
+            // 🟢 Fetch and Sort Questions by Timestamp 🟢
             questionsData = [];
             const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
-            qSnap.forEach(doc => { let d = doc.data(); if(!d.timestamp) d.timestamp = {seconds:0}; questionsData.push({id: doc.id, data: d}); });
-            questionsData.sort((a,b) => (a.data.timestamp?.seconds||0) - (b.data.timestamp?.seconds||0));
+            qSnap.forEach(doc => { questionsData.push({id: doc.id, data: doc.data()}); });
+            questionsData.sort((a, b) => {
+                let tA = a.data.timestamp?.toMillis ? a.data.timestamp.toMillis() : (a.data.timestamp?.seconds ? a.data.timestamp.seconds * 1000 : a.data.timestamp || 0);
+                let tB = b.data.timestamp?.toMillis ? b.data.timestamp.toMillis() : (b.data.timestamp?.seconds ? b.data.timestamp.seconds * 1000 : b.data.timestamp || 0);
+                return tA - tB;
+            });
 
             fetchSubmissions(examId);
         });
@@ -271,7 +276,7 @@
         window.closeEvaluation = function() {
             document.getElementById('evaluationView').style.display = 'none';
             document.getElementById('dashboardView').style.display = 'flex';
-            fetchSubmissions(document.getElementById('examSelector').value); // refresh data
+            fetchSubmissions(document.getElementById('examSelector').value);
         };
 
         // 🟢 Canvas Utilities 🟢
@@ -295,7 +300,7 @@
             d.canvas.addEventListener('touchstart', start, {passive:false}); d.canvas.addEventListener('touchmove', draw, {passive:false}); d.canvas.addEventListener('touchend', stop);
         }
 
-        // 🟢 Build the Slider UI 🟢
+        // 🟢 Canvas Slider UI 🟢
         async function openEvaluation(subData) {
             currentSubId = subData.id; canvasRegistry = {}; currentSlideIndex = 0;
             document.getElementById('dashboardView').style.display = 'none';
@@ -317,7 +322,7 @@
                 let cAns = (subData.checkedImageUrls && subData.checkedImageUrls[qId]) ? subData.checkedImageUrls[qId] : null; let urlToDraw = cAns || sAns;
                 
                 html += `<div class="eval-slide" id="slide_${index}">`;
-                html += `<div style="text-align:center; padding: 10px; color:#a0a0b0; font-weight:bold;">Question ${qNum} of ${questionsData.length}</div>`;
+                html += `<div style="text-align:center; padding: 10px; color:#a0a0b0; font-weight:bold; flex-shrink:0;">Question ${qNum} of ${questionsData.length}</div>`;
                 
                 if(urlToDraw) {
                     html += `
@@ -341,7 +346,7 @@
                 html += `
                 <div class="bottom-bar">
                     <div class="marks-input-wrapper">
-                        <input type="number" id="mark_${qId}" data-qid="${qId}" value="${studentMarks[qId]!==undefined?studentMarks[qId]:""}" placeholder="0" step="0.5" max="${q.maxMarks || 10}" oninput="validateMark(this)">
+                        <input type="number" class="q-mark-input" id="mark_${qId}" data-qid="${qId}" value="${studentMarks[qId]!==undefined?studentMarks[qId]:""}" placeholder="0" step="0.5" max="${q.maxMarks || 10}" oninput="validateMark(this)">
                         <span>/ ${q.maxMarks || 10}</span>
                     </div>
                     <div class="nav-buttons">`;
@@ -356,8 +361,9 @@
 
             track.innerHTML = html;
             document.getElementById('finalFeedback').value = subData.feedback || "";
+            window.updateTotalSum(); // Initialize total marks
 
-            // Init Canvas Full Width
+            // 🟢 Full-Width Canvas Calculation 🟢
             questionsData.forEach((qItem) => {
                 const qId = qItem.id; let sAns = (subData.studentImageUrls && subData.studentImageUrls[qId]) ? subData.studentImageUrls[qId] : null; if (!sAns && subData.studentImageUrl && qItem.data.qNum === 1) sAns = subData.studentImageUrl; let cAns = (subData.checkedImageUrls && subData.checkedImageUrls[qId]) ? subData.checkedImageUrls[qId] : null;
                 if(sAns || cAns) {
@@ -365,9 +371,19 @@
                     if(canvas) {
                         const ctx = canvas.getContext('2d'); const imgBase = new Image(); imgBase.crossOrigin = "Anonymous";
                         imgBase.onload = () => {
-                            let cWidth = document.getElementById(`wrapper_${qId}`).clientWidth;
-                            let cHeight = Math.floor(imgBase.height * (cWidth / imgBase.width));
-                            canvas.width = cWidth; canvas.height = cHeight;
+                            let container = document.getElementById(`wrapper_${qId}`);
+                            
+                            // 100% Width Fit Logic (Keeps aspect ratio)
+                            let maxW = container.clientWidth; 
+                            let maxH = window.innerHeight * 0.65; // Ensures it doesn't overflow screen vertically
+                            
+                            let ratio = Math.min(maxW / imgBase.width, maxH / imgBase.height);
+                            let cWidth = imgBase.width * ratio;
+                            let cHeight = imgBase.height * ratio;
+                            
+                            canvas.width = cWidth; 
+                            canvas.height = cHeight;
+                            
                             ctx.drawImage(imgBase, 0, 0, cWidth, cHeight);
                             ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
                             canvasRegistry[qId] = { canvas, ctx, imgBase, width: cWidth, height: cHeight, isModified: false, history: [], step: -1, mode: 'pen' };
@@ -383,13 +399,19 @@
             });
         }
 
+        // 🟢 Validation and Navigation Logic 🟢
         window.validateMark = function(inp) {
             let max = parseFloat(inp.getAttribute('max')); let val = parseFloat(inp.value);
             if(!isNaN(val) && val > max) { 
-                inp.value = ""; 
-                Swal.fire({toast:true, position:'top-end', icon:'error', title:`Cannot exceed ${max} marks!`, showConfirmButton:false, timer:2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); 
+                inp.value = max; 
+                Swal.fire({toast:true, position:'top-end', icon:'warning', title:`Max marks is ${max}`, showConfirmButton:false, timer:2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'}); 
             }
             updateTotalSum();
+        }
+
+        window.updateTotalSum = function() {
+            let total = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let v = parseFloat(inp.value); if(!isNaN(v)) total += v; });
+            document.getElementById('evalMarks').value = total.toFixed(2);
         }
 
         window.attemptNext = function(currentIndex, qId) {
@@ -405,8 +427,6 @@
 
         window.goToSlide = function(index) {
             currentSlideIndex = index;
-            document.getElementById('sliderTrack').style.display = 'flex';
-            document.getElementById('finalSubmitArea').style.display = 'none';
             document.getElementById('sliderTrack').style.transform = `translateX(-${index * 100}%)`;
         }
 
@@ -416,12 +436,13 @@
             document.getElementById('finalSubmitArea').style.display = 'flex';
         }
 
-        function updateTotalSum() {
-            let total = 0; document.querySelectorAll('.q-mark-input').forEach(inp => { let v = parseFloat(inp.value); if(!isNaN(v)) total += v; });
-            document.getElementById('finalTotalMarks').value = total.toFixed(2);
-        }
+        window.returnToEvalSlides = function() {
+            document.getElementById('finalSubmitArea').style.display = 'none';
+            document.getElementById('sliderTrack').style.display = 'flex';
+            goToSlide(questionsData.length - 1);
+        };
 
-        // Global Toolbar Actions
+        // 🟢 Global Toolbar Actions 🟢
         window.setTool = function(qId, tool, btnEl) {
             const d = canvasRegistry[qId]; if(!d) return;
             document.querySelectorAll(`.toolbar[data-qid="${qId}"] .tool-btn`).forEach(b => b.classList.remove('active'));
@@ -434,7 +455,7 @@
             const d = canvasRegistry[qId]; if(!d) return;
             if(action === 'undo') { if(d.step > 0) { d.step--; restoreCanvasStateLocal(d); } }
             else if(action === 'redo') { if(d.step < d.history.length - 1) { d.step++; restoreCanvasStateLocal(d); } }
-            else if(action === 'clear') { d.ctx.globalCompositeOperation = 'source-over'; d.ctx.clearRect(0, 0, d.width, d.height); d.ctx.globalCompositeOperation = d.mode === 'eraser' ? 'destination-out' : 'source-over'; saveState(qId); }
+            else if(action === 'clear') { d.ctx.globalCompositeOperation = 'source-over'; d.ctx.clearRect(0, 0, d.width, d.height); d.ctx.drawImage(d.imgBase, 0, 0, d.width, d.height); d.ctx.globalCompositeOperation = d.mode === 'eraser' ? 'destination-out' : 'source-over'; saveState(qId); }
             else if(action === 'zoom') {
                 const tempC = document.createElement('canvas'); tempC.width = d.width; tempC.height = d.height; const tCtx = tempC.getContext('2d');
                 tCtx.drawImage(d.imgBase, 0, 0, d.width, d.height); tCtx.drawImage(d.canvas, 0, 0, d.width, d.height);
@@ -481,9 +502,9 @@
                     btn.innerText = "Submit & Next Student 🚀"; btn.disabled = false; document.getElementById('submitStatusTxt').innerText = "";
                     const currentIdxInPending = pendingList.findIndex(p => p.id === currentSubId);
                     if(currentIdxInPending !== -1) {
-                        pendingList.splice(currentIdxInPending, 1); // remove from pending
-                        if(pendingList.length > 0) openEvaluation(pendingList[0]); // Load next
-                        else closeEvaluation(); // Go to dashboard if empty
+                        pendingList.splice(currentIdxInPending, 1);
+                        if(pendingList.length > 0) openEvaluation(pendingList[0]);
+                        else closeEvaluation();
                     } else { closeEvaluation(); }
                 }, 1000);
 
