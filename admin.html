@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Premium MCQ Portal</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -139,14 +140,16 @@
         .hamburger-btn svg { width: 35px; height: 35px; fill: #00bcd4; }
         .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; display: none; backdrop-filter: blur(3px); }
         
-        /* 🟢 Slide Scroll Canvas Layout 🟢 */
+        /* 🟢 Slide Scroll Canvas Layout & Toolbar 🟢 */
         .eval-slider-viewport { width: 100%; overflow: hidden; position: relative; border-radius: 20px; }
         .eval-slider-track { display: flex; transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); width: 100%; }
         .eval-q-slide { min-width: 100%; flex-shrink: 0; padding: 5px; }
 
         .eval-q-wrapper { margin-bottom: 25px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s;}
-        .eval-canvas-container { position: relative; overflow: hidden; border-radius: 12px; border: 2px solid rgba(255,255,255,0.1); background: #fff; margin-bottom: 10px; }
-        .draw-canvas { cursor: crosshair; touch-action: none; display: block; margin: 0 auto; max-width: 100%; }
+        
+        /* Modified for Full Width Canvas */
+        .eval-canvas-container { position: relative; overflow: hidden; border-radius: 12px; border: 2px solid rgba(255,255,255,0.1); background: #fff; margin-bottom: 10px; width: 100%;}
+        .draw-canvas { cursor: crosshair; touch-action: none; display: block; width: 100%; }
         
         .annotation-toolbar { display: flex; gap: 8px; background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 12px; margin-bottom: 15px; align-items: center; border: 1px solid rgba(255,255,255,0.05); overflow-x: auto; scrollbar-width: none; }
         .annotation-toolbar::-webkit-scrollbar { display: none; }
@@ -198,7 +201,7 @@
         body.light-mode .tool-btn:hover { background: rgba(102,76,40,0.1); }
         body.light-mode .tool-btn.active { background: rgba(0, 131, 148, 0.1); border-color: #008394; }
 
-        /* 📱 Mobile Canvas Expansion */
+        /* 📱 Mobile Edge-to-Edge Expansion */
         @media (max-width: 900px) { 
             #adminDashboardLayout { flex-direction: column; }
             .sidebar { position: fixed; left: -320px; top: 0; margin: 0; height: 100vh; z-index: 2600; border-radius: 0 30px 30px 0; transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
@@ -209,8 +212,7 @@
             .clay-box { padding: 25px 15px; }
             .action-buttons-row { flex-direction: column; }
             
-            /* Edge-to-Edge Canvas on Mobile */
-            .eval-q-wrapper { padding: 15px 10px; margin-bottom: 20px; }
+            .eval-q-wrapper { padding: 15px 10px; margin-bottom: 20px; border-radius: 12px;}
             .eval-canvas-container { margin: 0 -10px 15px -10px; border-radius: 0; border-left: none; border-right: none; }
             .draw-canvas { width: 100vw !important; max-width: none !important; }
             .annotation-toolbar { padding: 8px; border-radius: 8px; }
@@ -314,7 +316,13 @@
                 <h3>Manage Exam & Results</h3>
                 <div class="input-group"><label>Select Exam to Manage:</label><select id="manageExamSelector"><option value="">-- Select an Exam --</option></select></div>
                 <div id="manageWorkspace" style="display:none;">
-                    <div class="stats-banner"><div><h4>👥 Total Submissions</h4><div class="count" id="participantCount">...</div></div><button id="adminViewLiveResultBtn" class="btn-live-excel">👁️ View Leaderboard</button></div>
+                    <div class="stats-banner">
+                        <div><h4>👥 Total Submissions</h4><div class="count" id="participantCount">...</div></div>
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <button id="adminViewLiveResultBtn" class="btn-live-excel">👁️ View Leaderboard</button>
+                            <button id="downloadQABtn" class="btn-live-excel" style="background: #9c27b0; display:none;">📥 Download Q&A PDF</button>
+                        </div>
+                    </div>
                     <div id="updateSettingsBox" style="display: none;">
                         <h4 style="margin-bottom:15px; text-align: left;">Update Running Settings</h4>
                         <div class="input-group"><label>Update Title:</label><input type="text" id="editExamTitle"></div>
@@ -372,19 +380,22 @@
     </div>
 
     <div class="result-modal" id="evalModal">
-        <div class="result-modal-content" style="max-width: 950px; padding: 25px; overflow-y: auto; max-height: 95vh; display: block;">
-            <span class="result-close-btn" id="closeEvalModal">&times;</span>
-            <h3 style="margin-bottom:10px; text-align: center; color: #00e676;">✍️ Evaluate Script</h3>
-            <p id="evalStudentInfo" style="text-align: center; color: #a0a0b0; margin-bottom: 15px; font-size: 14px;"></p>
+        <div class="result-modal-content" style="max-width: 950px; padding: 25px; overflow-y: hidden; display: flex; flex-direction: column; height: 95vh;">
+            <span class="result-close-btn" id="closeEvalModal" style="z-index: 100;">&times;</span>
+            <h3 style="margin-bottom:10px; text-align: center; color: #00e676; flex-shrink:0;">✍️ Evaluate Script</h3>
+            <p id="evalStudentInfo" style="text-align: center; color: #a0a0b0; margin-bottom: 15px; font-size: 14px; flex-shrink:0;"></p>
             
-            <div id="evalScriptContainer" style="margin-top: 20px;"></div>
+            <div id="evalScriptContainer" style="flex-grow: 1; overflow-y: auto; overflow-x: hidden; position: relative; padding-right: 5px;"></div>
             
-            <div id="finalEvalSubmitArea" style="display: none; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+            <div id="finalEvalSubmitArea" style="display: none; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; flex-shrink:0;">
                 <h4 style="text-align: center; color: #ffb74d;">Final Review</h4>
                 <div class="input-group"><label>Total Marks Obtained (Auto-calculated):</label><input type="number" id="evalMarks" placeholder="0" step="0.1" readonly style="color: #00e676; text-align: center; font-size: 24px; border: 1px solid #00e676;"></div>
-                <div class="input-group"><label>Feedback / Comments (Optional):</label><textarea id="evalFeedback" rows="3"></textarea></div>
+                <div class="input-group"><label>Feedback / Comments (Optional):</label><textarea id="evalFeedback" rows="2"></textarea></div>
                 <p id="evalUploadStatus" style="font-size: 14px; color: #00e676; margin-top: 10px; font-weight: bold; text-align: center;"></p>
-                <button id="saveEvalBtn" class="submit-btn" style="background:#00e676; color:#000; margin-top:15px;">Submit Evaluation</button>
+                <div style="display:flex; gap:10px;">
+                    <button class="submit-btn" style="background:#444; color:#fff; margin-top:15px;" onclick="returnToEvalSlides()">⬅️ Back to Scripts</button>
+                    <button id="saveEvalBtn" class="submit-btn" style="background:#00e676; color:#000; margin-top:15px;">Submit Evaluation ✅</button>
+                </div>
             </div>
         </div>
     </div>
@@ -451,6 +462,14 @@
         document.getElementById('adminLoginBtn').addEventListener('click', async () => { try { await signInWithPopup(auth, provider); } catch (e) {} });
         document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
+        window.getBase64Image = function(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image(); img.crossOrigin = "Anonymous";
+                img.onload = () => { const canvas = document.createElement("canvas"); canvas.width = img.width; canvas.height = img.height; canvas.getContext("2d").drawImage(img, 0, 0); resolve({ dataURL: canvas.toDataURL("image/jpeg", 0.7), width: img.width, height: img.height }); };
+                img.onerror = (e) => reject(e); img.src = url;
+            });
+        };
+
         async function uploadImageToImgBB(file) { const formData = new FormData(); formData.append('image', file); try { const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData }); const data = await response.json(); if(data.success) return data.data.url; else throw new Error("Upload failed"); } catch(e) { return null; } }
 
         async function loadExamsIntoDropdowns() {
@@ -512,6 +531,23 @@
         document.getElementById('editAddMoreOptionBtn').addEventListener('click', () => { editOptCount++; renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount); });
         renderOptionsUI('dynamicAddOptionsContainer', 'correctOption', addOptCount);
 
+        // 🟢 Fetch Questions Helper (Sorted by timestamp) 🟢
+        async function getSortedQuestions(examId) {
+            const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
+            let questionsArray = [];
+            qSnap.forEach(doc => { 
+                let d = doc.data(); 
+                if(!d.timestamp) d.timestamp = { seconds: 0 }; 
+                questionsArray.push({ id: doc.id, data: d }); 
+            });
+            questionsArray.sort((a, b) => {
+                let tA = a.data.timestamp?.seconds || a.data.timestamp || 0;
+                let tB = b.data.timestamp?.seconds || b.data.timestamp || 0;
+                return tA - tB;
+            });
+            return questionsArray;
+        }
+
         document.getElementById('examSelector').addEventListener('change', async (e) => {
             const examId = e.target.value; const counterBox = document.getElementById('liveQuestionCounterBox');
             if(!examId) { counterBox.style.display = "none"; return; } const examType = allExamsData[examId].type;
@@ -525,7 +561,7 @@
                 document.querySelectorAll('#dynamicAddOptionsContainer input').forEach(i => i.setAttribute('required', 'true'));
             }
             counterBox.style.display = "block"; document.getElementById('liveQuestionNumber').innerText = "...";
-            try { const qSnap = await getDocs(collection(db, "exams", examId, "questions")); document.getElementById('liveQuestionNumber').innerText = qSnap.size + 1; } catch(e) {}
+            try { const qArr = await getSortedQuestions(examId); document.getElementById('liveQuestionNumber').innerText = qArr.length + 1; } catch(e) {}
         });
 
         document.getElementById('questionForm').addEventListener('submit', async function(e) { 
@@ -534,7 +570,7 @@
             if(examType === 'written' && !qText && document.getElementById('qImageFile').files.length === 0) { Swal.fire('Wait!', 'Provide Text or Image.', 'warning'); return; }
             const btn = document.getElementById('saveQuestionBtn'); btn.innerText = "Processing..."; 
             try { 
-                let questionData = { question: qText, timestamp: new Date() };
+                let questionData = { question: qText, timestamp: new Date().getTime() }; // Save timestamp
                 if(examType === 'written') {
                     questionData.maxMarks = parseFloat(document.getElementById('qMaxMarks').value);
                     if(document.getElementById('qImageFile').files.length > 0) { document.getElementById('qImageStatus').innerText = "Uploading Image..."; const url = await uploadImageToImgBB(document.getElementById('qImageFile').files[0]); if(url) questionData.imageUrl = url; document.getElementById('qImageStatus').innerText = ""; }
@@ -577,10 +613,12 @@
 
         let currentEvalSubId = null; let currentEvalSub = null; let canvasRegistry = {}; 
         
-        // 🟢 Canvas Slider Logic 🟢
+        // 🟢 Canvas Slider Logic & Prev/Next 🟢
         window.currentEvalSlide = 0;
-        window.goToEvalSlide = function(targetIndex, currentQid) {
-            if(currentQid) {
+        
+        window.goToEvalSlide = function(targetIndex, currentQid, isNextMode) {
+            // Validation block only when going NEXT
+            if(isNextMode && currentQid) {
                 const inp = document.querySelector(`.q-mark-input[data-qid="${currentQid}"]`);
                 if(!inp.value || isNaN(parseFloat(inp.value))) {
                     Swal.fire({toast:true, position:'top-end', icon:'warning', title:'Please enter marks first!', showConfirmButton:false, timer:2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'});
@@ -599,8 +637,14 @@
                     return;
                 }
             }
+            document.getElementById('evalScriptContainer').style.display = 'none';
             document.getElementById('finalEvalSubmitArea').style.display = 'block';
-            document.getElementById('finalEvalSubmitArea').scrollIntoView({behavior: 'smooth'});
+        };
+
+        // Return to slide view from final screen
+        window.returnToEvalSlides = function() {
+            document.getElementById('finalEvalSubmitArea').style.display = 'none';
+            document.getElementById('evalScriptContainer').style.display = 'block';
         };
 
         // 🟢 Canvas Toolbar Functions 🟢
@@ -672,13 +716,13 @@
             currentEvalSubId = sub.id; currentEvalSub = sub; canvasRegistry = {}; window.currentEvalSlide = 0;
             document.getElementById('evalStudentInfo').innerText = `Student: ${sub.rollNumber} | Email: ${sub.email}`;
             const scriptContainer = document.getElementById('evalScriptContainer'); scriptContainer.innerHTML = "<div style='text-align:center;'>Loading scripts...</div>"; 
+            document.getElementById('evalScriptContainer').style.display = 'block';
             document.getElementById('finalEvalSubmitArea').style.display = 'none';
             evalModal.classList.add('show');
             
             try {
-                const qSnap = await getDocs(collection(db, "exams", sub.examId, "questions")); 
-                let studentMarks = sub.questionMarks || {}; let questionsArray = [];
-                qSnap.forEach(doc => questionsArray.push({ id: doc.id, data: doc.data() }));
+                let questionsArray = await getSortedQuestions(sub.examId);
+                let studentMarks = sub.questionMarks || {};
 
                 let html = `<div class="eval-slider-viewport"><div class="eval-slider-track" id="evalSliderTrack" style="transform: translateX(0%);">`;
 
@@ -703,34 +747,43 @@
                             <div class="t-divider"></div>
                             <button class="tool-btn" data-action="zoom" data-qid="${qId}" title="Full Screen">🔍</button>
                         </div>
-                        <div class="eval-canvas-container">
+                        <div class="eval-canvas-container" id="container_${qId}">
                             <canvas id="canvas_${qId}" class="draw-canvas"></canvas>
                         </div>`;
                     }
                     else html += `<p style="color: #ff5252; font-weight: bold; margin-bottom: 15px;">Not answered</p>`;
                     
-                    // 🟢 Bottom Row (Marks + Next Button) 🟢
+                    // 🟢 Bottom Row (Marks + Prev/Next Button) 🟢
                     html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; flex-wrap: wrap; gap: 10px;">`;
+                    
                     html += `
                         <div class="input-group" style="margin-bottom:0; display:flex; align-items:center; gap:10px; width: auto;">
                             <label style="color:#00e676; margin:0;">Marks:</label>
                             <input type="number" class="q-mark-input" data-qid="${qId}" value="${studentMarks[qId]!==undefined?studentMarks[qId]:""}" placeholder="0" step="0.1" max="${qData.maxMarks || 100}" style="width:80px; padding: 10px; text-align:center;">
                             <span style="color:#ffb74d; font-weight:bold; font-size:16px;">/ ${qData.maxMarks || 0}</span>
                         </div>
+                        <div style="display:flex; gap:10px; margin-left:auto;">
                     `;
 
+                    // Prev Button
+                    if (index > 0) {
+                        html += `<button class="submit-btn" style="width:auto; margin:0; padding:12px 20px; background:#444; color:#fff;" onclick="goToEvalSlide(${index-1}, null, false)">⬅️ Prev</button>`;
+                    }
+                    
+                    // Next / Submit Button
                     if(index < questionsArray.length - 1) {
-                        html += `<button class="submit-btn" style="width:auto; margin:0; padding:12px 20px; background:#2196f3; color:#fff;" onclick="goToEvalSlide(${index+1}, '${qId}')">Next Question ➡️</button>`;
+                        html += `<button class="submit-btn" style="width:auto; margin:0; padding:12px 20px; background:#2196f3; color:#fff;" onclick="goToEvalSlide(${index+1}, '${qId}', true)">Next ➡️</button>`;
                     } else {
                         html += `<button class="submit-btn" style="width:auto; margin:0; padding:12px 20px; background:#00e676; color:#000;" onclick="showFinalEvalSubmit('${qId}')">Review & Submit ✅</button>`;
                     }
-                    html += `</div></div></div>`; // End row, wrapper, slide
+                    
+                    html += `</div></div></div></div>`; // End row, wrapper, slide
                 });
                 html += `</div></div>`; // End track, viewport
                 
                 scriptContainer.innerHTML = html; document.getElementById('evalMarks').value = sub.score !== undefined ? sub.score : "0";
 
-                // Initialize Canvases (Background Image + Transparent Drawing Layer)
+                // Initialize Canvases (Full Width 100%)
                 questionsArray.forEach(qItem => {
                     const qId = qItem.id; let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null; if (!studentAns && sub.studentImageUrl && qItem.qNum === 1) studentAns = sub.studentImageUrl; let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null;
                     if (studentAns || checkedAns) {
@@ -738,19 +791,24 @@
                         if (canvas) {
                             const ctx = canvas.getContext('2d'); const imgBase = new Image(); imgBase.crossOrigin = "Anonymous";
                             imgBase.onload = () => {
-                                let width = imgBase.width; let height = imgBase.height; 
-                                if (window.innerWidth <= 768) { width = window.innerWidth; height = Math.floor(imgBase.height * (window.innerWidth / imgBase.width)); }
-                                else if (width > 1000) { height = Math.floor(height * (1000 / width)); width = 1000; }
+                                const container = document.getElementById(`container_${qId}`);
+                                let cWidth = container.clientWidth;
+                                if (cWidth === 0) cWidth = window.innerWidth > 900 ? 800 : window.innerWidth - 40; 
                                 
-                                canvas.width = width; canvas.height = height;
-                                canvas.style.backgroundImage = `url(${imgBase.src})`; canvas.style.backgroundSize = "100% 100%"; canvas.style.backgroundRepeat = "no-repeat";
+                                let cHeight = Math.floor(imgBase.height * (cWidth / imgBase.width));
                                 
+                                canvas.width = cWidth; canvas.height = cHeight;
+                                
+                                // Draw image stretched to full canvas width
+                                ctx.drawImage(imgBase, 0, 0, cWidth, cHeight);
+                                
+                                // Setup drawing stroke props
                                 ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-                                canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false, history: [], step: -1, mode: 'pen' };
+                                canvasRegistry[qId] = { canvas, ctx, imgBase, width: cWidth, height: cHeight, isModified: false, history: [], step: -1, mode: 'pen' };
                                 
                                 if (checkedAns) {
                                     const imgChecked = new Image(); imgChecked.crossOrigin = "Anonymous";
-                                    imgChecked.onload = () => { ctx.drawImage(imgChecked, 0, 0, width, height); saveCanvasState(qId); canvasRegistry[qId].isModified = false; attachCanvasEvents(canvas, qId); };
+                                    imgChecked.onload = () => { ctx.drawImage(imgChecked, 0, 0, cWidth, cHeight); saveCanvasState(qId); canvasRegistry[qId].isModified = false; attachCanvasEvents(canvas, qId); };
                                     imgChecked.src = checkedAns;
                                 } else { saveCanvasState(qId); attachCanvasEvents(canvas, qId); }
                             }; imgBase.src = studentAns || checkedAns; 
@@ -787,9 +845,8 @@
             for (let qId in canvasRegistry) {
                 if (canvasRegistry[qId].isModified) {
                     uploadPromises.push(new Promise((resolve, reject) => { 
-                        const tempC = document.createElement('canvas'); tempC.width = canvasRegistry[qId].width; tempC.height = canvasRegistry[qId].height; const tCtx = tempC.getContext('2d');
-                        tCtx.drawImage(canvasRegistry[qId].imgBase, 0, 0, tempC.width, tempC.height); tCtx.drawImage(canvasRegistry[qId].canvas, 0, 0, tempC.width, tempC.height);
-                        tempC.toBlob(async (blob) => { const url = await uploadImageToImgBB(new File([blob], `checked_${qId}.jpg`, { type: "image/jpeg" })); if (url) { newCheckedImageUrls[qId] = url; resolve(); } else reject(); }, 'image/jpeg', 0.85); 
+                        // Canvas is already the exact composite of image + strokes, so we just export it.
+                        canvasRegistry[qId].canvas.toBlob(async (blob) => { const url = await uploadImageToImgBB(new File([blob], `checked_${qId}.jpg`, { type: "image/jpeg" })); if (url) { newCheckedImageUrls[qId] = url; resolve(); } else reject(); }, 'image/jpeg', 0.85); 
                     }));
                 }
             }
@@ -800,8 +857,9 @@
         // 🟢 Manage Settings 🟢
         document.getElementById('manageExamSelector').addEventListener('change', async (e) => {
             const examId = e.target.value; const workspace = document.getElementById('manageWorkspace'); const pCount = document.getElementById('participantCount'); const vBtn = document.getElementById('adminViewLiveResultBtn');
+            const qaBtn = document.getElementById('downloadQABtn'); if(qaBtn) qaBtn.style.display = "none";
             if(!examId) { workspace.style.display = "none"; return; } workspace.style.display = "block"; document.getElementById('manageQuestionsList').innerHTML = "Loading..."; pCount.innerText = "..."; if(vBtn) vBtn.style.display = "none";
-            const examDoc = await getDoc(doc(db, "exams", examId)); if(examDoc.exists()) { const data = examDoc.data(); document.getElementById('editExamTitle').value = data.title || ""; document.getElementById('editExamDuration').value = data.duration || 0; document.getElementById('editExamPublishTime').value = data.publishTime ? formatTimeForInput(data.publishTime) : ""; document.getElementById('updateSettingsBox').style.display = (data.status === "hidden" || data.status === "deleted" || (data.status === "active" && data.publishTime && new Date().getTime() >= data.publishTime)) ? "none" : "block"; document.getElementById('publishDraftBtn').style.display = data.status === "draft" ? "block" : "none"; }
+            const examDoc = await getDoc(doc(db, "exams", examId)); if(examDoc.exists()) { const data = examDoc.data(); document.getElementById('editExamTitle').value = data.title || ""; document.getElementById('editExamDuration').value = data.duration || 0; document.getElementById('editExamPublishTime').value = data.publishTime ? formatTimeForInput(data.publishTime) : ""; document.getElementById('updateSettingsBox').style.display = (data.status === "hidden" || data.status === "deleted" || (data.status === "active" && data.publishTime && new Date().getTime() >= data.publishTime)) ? "none" : "block"; document.getElementById('publishDraftBtn').style.display = data.status === "draft" ? "block" : "none"; if(qaBtn) qaBtn.style.display = "block"; }
             const resSnap = await getDocs(query(collection(db, "results"), where("examId", "==", examId))); pCount.innerText = resSnap.size; if(resSnap.size > 0 && vBtn) vBtn.style.display = "block"; loadQuestionsForEdit(examId);
         });
 
@@ -815,10 +873,83 @@
         });
 
         async function loadQuestionsForEdit(examId) {
-            const listDiv = document.getElementById('manageQuestionsList'); try { const qSnap = await getDocs(collection(db, "exams", examId, "questions")); if(qSnap.empty) { listDiv.innerHTML = "No questions found."; return; } let count = 1; listDiv.innerHTML = ""; qSnap.forEach((docSnap) => { const data = docSnap.data(); const qId = docSnap.id; const item = document.createElement('div'); item.className = "q-list-item"; let editBtnHtml = allExamsData[examId].type === 'written' ? '' : `<button class="btn-edit" data-id="${qId}">Edit</button>`; item.innerHTML = `<div class="q-text">Q${count}: ${data.question || '(Image)'}</div><div class="q-actions">${editBtnHtml}<button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++; if(allExamsData[examId].type !== 'written') { item.querySelector('.btn-edit').addEventListener('click', () => { document.getElementById('editQModal').classList.add('show'); document.getElementById('editQText').value = data.question; editOptCount = Object.keys(data.options).length; data.correctAnswer = data.correctAnswer || "1"; renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount, data.options); document.getElementById('editQCorrect').value = data.correctAnswer || ""; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); }); } 
+            const listDiv = document.getElementById('manageQuestionsList'); try { const questionsArray = await getSortedQuestions(examId); if(questionsArray.length === 0) { listDiv.innerHTML = "No questions found."; return; } let count = 1; listDiv.innerHTML = ""; questionsArray.forEach((qItem) => { const data = qItem.data; const qId = qItem.id; const item = document.createElement('div'); item.className = "q-list-item"; let editBtnHtml = allExamsData[examId].type === 'written' ? '' : `<button class="btn-edit" data-id="${qId}">Edit</button>`; item.innerHTML = `<div class="q-text">Q${count}: ${data.question || '(Image)'}</div><div class="q-actions">${editBtnHtml}<button class="btn-delete" data-id="${qId}">Delete</button></div>`; listDiv.appendChild(item); count++; if(allExamsData[examId].type !== 'written') { item.querySelector('.btn-edit').addEventListener('click', () => { document.getElementById('editQModal').classList.add('show'); document.getElementById('editQText').value = data.question; editOptCount = Object.keys(data.options).length; data.correctAnswer = data.correctAnswer || "1"; renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount, data.options); document.getElementById('editQCorrect').value = data.correctAnswer || ""; document.getElementById('saveEditedQBtn').setAttribute('data-qid', qId); document.getElementById('saveEditedQBtn').setAttribute('data-examid', examId); }); } 
             item.querySelector('.btn-delete').addEventListener('click', () => { Swal.fire({ title: 'Delete Question?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' }).then(async (res) => { if(res.isConfirmed) { await deleteDoc(doc(db, "exams", examId, "questions", qId)); loadQuestionsForEdit(examId); } }); }); }); } catch (err) {}
         }
         document.getElementById('saveEditedQBtn').addEventListener('click', async (e) => { const btn = e.target; const examId = btn.getAttribute('data-examid'); const qId = btn.getAttribute('data-qid'); if(!examId || !qId) return; let optObj = {}; document.querySelectorAll('#editDynamicOptionsContainer .dynamic-opt-input').forEach(inp => { optObj[inp.getAttribute('data-key')] = inp.value; }); await setDoc(doc(db, "exams", examId, "questions", qId), { question: document.getElementById('editQText').value, options: optObj, correctAnswer: document.getElementById('editQCorrect').value }, { merge: true }); document.getElementById('editQModal').classList.remove('show'); loadQuestionsForEdit(examId); Swal.fire({icon:'success', title:'Updated', timer:1000}); });
+
+        // 🟢 Download Q&A PDF 🟢
+        document.getElementById('downloadQABtn').addEventListener('click', async () => {
+            const examId = document.getElementById('manageExamSelector').value; if(!examId) return;
+            const btn = document.getElementById('downloadQABtn'); const originalText = btn.innerHTML;
+            btn.innerHTML = "⏳ Generating PDF..."; btn.disabled = true;
+
+            try {
+                const examData = allExamsData[examId]; if(!examData) throw new Error("Exam data not found");
+                const { jsPDF } = window.jspdf; const doc = new jsPDF();
+                const margin = 14; let finalY = 20; const pageWidth = doc.internal.pageSize.getWidth(); const pageHeight = doc.internal.pageSize.getHeight(); const maxImgWidth = pageWidth - (margin * 2);
+
+                doc.setFontSize(18); doc.setTextColor(0, 188, 212); doc.text(examData.title + " - Q&A", margin, finalY); finalY += 10;
+                doc.setFontSize(12); doc.setTextColor(100, 100, 100); doc.text("Official Question & Answer Bank", margin, finalY); finalY += 15;
+
+                const questions = await getSortedQuestions(examId);
+                if(questions.length === 0) { Swal.fire({title:'Empty', text:'No questions found.', icon:'info', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26'}); btn.innerHTML = originalText; btn.disabled = false; return; }
+
+                for(let i = 0; i < questions.length; i++) {
+                    const q = questions[i].data;
+                    doc.setFontSize(12); doc.setTextColor(0, 0, 0);
+                    
+                    let qText = `Q${i+1}: ${q.question || '(Image Only)'}`;
+                    if(examData.type === 'written' && q.maxMarks) qText += ` [Marks: ${q.maxMarks}]`;
+
+                    let splitTitle = doc.splitTextToSize(qText, maxImgWidth);
+                    if (finalY + (splitTitle.length * 7) > pageHeight - 20) { doc.addPage(); finalY = 20; }
+                    doc.text(splitTitle, margin, finalY); finalY += (splitTitle.length * 7) + 5;
+
+                    if(q.imageUrl) {
+                        try {
+                            const imgData = await window.getBase64Image(q.imageUrl);
+                            let imgW = imgData.width; let imgH = imgData.height;
+                            if (imgW > maxImgWidth) { const ratio = maxImgWidth / imgW; imgW = maxImgWidth; imgH = imgH * ratio; }
+                            if (imgH > pageHeight - 60) { const ratio = (pageHeight - 60) / imgH; imgH = pageHeight - 60; imgW = imgW * ratio; }
+                            if (finalY + imgH > pageHeight - 20) { doc.addPage(); finalY = 20; }
+                            doc.addImage(imgData.dataURL, 'JPEG', margin, finalY, imgW, imgH); finalY += imgH + 8;
+                        } catch(e) {}
+                    }
+
+                    if(examData.type === 'mcq') {
+                        doc.setFontSize(11);
+                        for(let optKey in q.options) {
+                            let optText = `${optKey}. ${q.options[optKey]}`;
+                            if(String(optKey) === String(q.correctAnswer)) { doc.setTextColor(0, 150, 0); optText += " (Correct Answer)"; } 
+                            else { doc.setTextColor(80, 80, 80); }
+                            
+                            let splitOpt = doc.splitTextToSize(optText, maxImgWidth - 10);
+                            if (finalY + (splitOpt.length * 6) > pageHeight - 20) { doc.addPage(); finalY = 20; }
+                            doc.text(splitOpt, margin + 5, finalY); finalY += (splitOpt.length * 6) + 2;
+                        }
+                        doc.setTextColor(0, 0, 0); finalY += 8;
+                    } else if(examData.type === 'written') {
+                        doc.setFontSize(11); doc.setTextColor(0, 150, 0); doc.text("Official Answer:", margin, finalY); finalY += 6; doc.setTextColor(0, 0, 0);
+                        if(q.answerImageUrl) {
+                            try {
+                                const imgData = await window.getBase64Image(q.answerImageUrl);
+                                let imgW = imgData.width; let imgH = imgData.height;
+                                if (imgW > maxImgWidth) { const ratio = maxImgWidth / imgW; imgW = maxImgWidth; imgH = imgH * ratio; }
+                                if (imgH > pageHeight - 60) { const ratio = (pageHeight - 60) / imgH; imgH = pageHeight - 60; imgW = imgW * ratio; }
+                                if (finalY + imgH > pageHeight - 20) { doc.addPage(); finalY = 20; }
+                                doc.addImage(imgData.dataURL, 'JPEG', margin, finalY, imgW, imgH); finalY += imgH + 12;
+                            } catch(e) {}
+                        } else {
+                            doc.setFontSize(10); doc.setTextColor(150, 150, 150); doc.text("No official answer image provided.", margin, finalY); finalY += 12; doc.setTextColor(0, 0, 0);
+                        }
+                    }
+                }
+                doc.save(`${examData.title.replace(/\s+/g, '_')}_QnA.pdf`);
+                Swal.fire({icon:'success', title:'Downloaded!', toast:true, position:'top-end', showConfirmButton:false, timer:2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'});
+            } catch (error) { Swal.fire('Error', 'Failed to generate PDF.', 'error'); }
+            btn.innerHTML = originalText; btn.disabled = false;
+        });
 
         // 🟢 DB Management 🟢
         document.getElementById('dbExamSelector').addEventListener('change', async (e) => {
