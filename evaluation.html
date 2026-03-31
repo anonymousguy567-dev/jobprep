@@ -77,7 +77,7 @@
         
         /* 🟢 The Perfect Fit Canvas Wrapper 🟢 */
         .canvas-wrapper { 
-            flex-grow: 1; /* Takes all remaining middle space */
+            flex-grow: 1; 
             display: flex; justify-content: center; align-items: center; 
             background: #1e1e26; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
             overflow: hidden; position: relative; padding: 5px;
@@ -85,9 +85,9 @@
         
         .draw-canvas { 
             cursor: crosshair; touch-action: none; display: block; 
-            max-width: 100%; max-height: 100%; /* The magic lines for fitting */
+            max-width: 100%; max-height: 100%; 
             object-fit: contain; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            border: 2px solid rgba(255,255,255,0.1); border-radius: 8px; background: #fff;
+            border: 2px solid rgba(255,255,255,0.1); border-radius: 8px; background: transparent;
         }
 
         /* Bottom Control Bar */
@@ -231,7 +231,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, where, doc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where, doc, getDoc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE", authDomain: "mcq-portal-904fd.firebaseapp.com", projectId: "mcq-portal-904fd", storageBucket: "mcq-portal-904fd.firebasestorage.app", messagingSenderId: "977853699063", appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2" };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
@@ -296,6 +296,7 @@
             document.getElementById('evalTbody').innerHTML = eHtml || '<tr><td colspan="3" style="text-align:center;">No evaluated scripts.</td></tr>';
         }
 
+        // Tab Logic
         document.getElementById('tabPending').addEventListener('click', () => { document.getElementById('tabPending').classList.add('active'); document.getElementById('tabEvaluated').classList.remove('active'); document.getElementById('pendingArea').style.display='block'; document.getElementById('evaluatedArea').style.display='none'; });
         document.getElementById('tabEvaluated').addEventListener('click', () => { document.getElementById('tabEvaluated').classList.add('active'); document.getElementById('tabPending').classList.remove('active'); document.getElementById('evaluatedArea').style.display='block'; document.getElementById('pendingArea').style.display='none'; });
 
@@ -329,9 +330,9 @@
             d.canvas.addEventListener('touchstart', start, {passive:false}); d.canvas.addEventListener('touchmove', draw, {passive:false}); d.canvas.addEventListener('touchend', stop);
         }
 
-        // 🟢 Canvas Slider UI (1-Screen Fit Logic) 🟢
+        // 🟢 Canvas Slider UI (1-Screen Fit & Eraser Logic) 🟢
         async function openEvaluation(subData) {
-            currentSubId = subData.id; canvasRegistry = {}; currentSlideIndex = 0;
+            currentSubId = subData.id; canvasRegistry = {}; window.currentEvalSlide = 0;
             document.getElementById('dashboardView').style.display = 'none';
             document.getElementById('evaluationView').style.display = 'flex';
             document.getElementById('finalSubmitArea').style.display = 'none';
@@ -365,11 +366,13 @@
                         <button class="tool-btn" onclick="execTool('${qId}', 'undo')" title="Undo">↩️</button>
                         <button class="tool-btn" onclick="execTool('${qId}', 'redo')" title="Redo">↪️</button>
                         <button class="tool-btn" onclick="execTool('${qId}', 'clear')" title="Clear All">🧹</button>
+                        <div class="t-divider"></div>
+                        <button class="tool-btn" onclick="execTool('${qId}', 'zoom')" title="Full Screen">🔍</button>
                     </div>`;
                 }
-                html += `</div>`; // End Top info
+                html += `</div>`; 
 
-                // Middle Canvas (Flex Grow + Fit)
+                // Middle Canvas
                 if(urlToDraw) {
                     html += `<div class="canvas-wrapper" id="wrapper_${qId}"><canvas id="canvas_${qId}" class="draw-canvas"></canvas></div>`;
                 } else {
@@ -395,9 +398,9 @@
 
             track.innerHTML = html;
             document.getElementById('finalFeedback').value = subData.feedback || "";
-            updateTotalSum(); // Init total sum calculation
+            updateTotalSum(); 
 
-            // Initialize Canvases (Auto-Fit Logic)
+            // Initialize Canvases (Background Image Lock logic for perfect eraser)
             setTimeout(() => {
                 questionsData.forEach((qItem) => {
                     const qId = qItem.id; let sAns = (subData.studentImageUrls && subData.studentImageUrls[qId]) ? subData.studentImageUrls[qId] : null; if (!sAns && subData.studentImageUrl && qItem.data.qNum === 1) sAns = subData.studentImageUrl; let cAns = (subData.checkedImageUrls && subData.checkedImageUrls[qId]) ? subData.checkedImageUrls[qId] : null;
@@ -407,18 +410,18 @@
                             const ctx = canvas.getContext('2d'); const imgBase = new Image(); imgBase.crossOrigin = "Anonymous";
                             imgBase.onload = () => {
                                 const wrapper = document.getElementById(`wrapper_${qId}`);
-                                // Get actual available space in wrapper
-                                let maxW = wrapper.clientWidth - 10; // 5px padding on each side
+                                let maxW = wrapper.clientWidth - 10; 
                                 let maxH = wrapper.clientHeight - 10; 
                                 
-                                // Calculate aspect ratio to fit inside the wrapper without cropping
                                 let ratio = Math.min(maxW / imgBase.width, maxH / imgBase.height);
-                                
                                 let cWidth = imgBase.width * ratio;
                                 let cHeight = imgBase.height * ratio;
                                 
                                 canvas.width = cWidth; canvas.height = cHeight;
-                                ctx.drawImage(imgBase, 0, 0, cWidth, cHeight);
+                                
+                                // Lock the original image as CSS background so eraser only erases strokes to transparent
+                                canvas.style.backgroundImage = `url(${sAns || cAns})`; // Using whatever original base is available
+                                canvas.style.backgroundSize = "100% 100%";
                                 
                                 ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
                                 canvasRegistry[qId] = { canvas, ctx, imgBase, width: cWidth, height: cHeight, isModified: false, history: [], step: -1, mode: 'pen' };
@@ -428,13 +431,14 @@
                                     imgChecked.onload = () => { ctx.drawImage(imgChecked, 0, 0, cWidth, cHeight); saveState(qId); canvasRegistry[qId].isModified = false; attachEvents(qId); };
                                     imgChecked.src = cAns;
                                 } else { saveState(qId); attachEvents(qId); }
-                            }; imgBase.src = sAns || cAns;
+                            }; imgBase.src = sAns || cAns; // Use the image for sizing calculation
                         }
                     }
                 });
-            }, 100); // small delay to let DOM paint and get correct wrapper heights
+            }, 100); 
         }
 
+        // 🟢 Validation and Navigation Logic 🟢
         window.validateMark = function(inp) {
             let max = parseFloat(inp.getAttribute('max')); let val = parseFloat(inp.value);
             if(!isNaN(val) && val > max) { 
@@ -461,9 +465,7 @@
         }
 
         window.goToSlide = function(index) {
-            currentSlideIndex = index;
-            document.getElementById('sliderTrack').style.display = 'flex';
-            document.getElementById('finalSubmitArea').style.display = 'none';
+            window.currentEvalSlide = index;
             document.getElementById('sliderTrack').style.transform = `translateX(-${index * 100}%)`;
         }
 
@@ -492,12 +494,23 @@
             const d = canvasRegistry[qId]; if(!d) return;
             if(action === 'undo') { if(d.step > 0) { d.step--; restoreCanvasStateLocal(d); } }
             else if(action === 'redo') { if(d.step < d.history.length - 1) { d.step++; restoreCanvasStateLocal(d); } }
-            else if(action === 'clear') { d.ctx.globalCompositeOperation = 'source-over'; d.ctx.clearRect(0, 0, d.width, d.height); d.ctx.drawImage(d.imgBase, 0, 0, d.width, d.height); d.ctx.globalCompositeOperation = d.mode === 'eraser' ? 'destination-out' : 'source-over'; saveState(qId); }
+            else if(action === 'clear') { 
+                d.ctx.globalCompositeOperation = 'source-over'; d.ctx.clearRect(0, 0, d.width, d.height); 
+                d.ctx.globalCompositeOperation = d.mode === 'eraser' ? 'destination-out' : 'source-over'; saveState(qId); 
+            }
+            else if(action === 'zoom') {
+                const tempC = document.createElement('canvas'); tempC.width = d.width; tempC.height = d.height; const tCtx = tempC.getContext('2d');
+                tCtx.drawImage(d.imgBase, 0, 0, d.width, d.height); tCtx.drawImage(d.canvas, 0, 0, d.width, d.height);
+                Swal.fire({ imageUrl: tempC.toDataURL(), imageAlt: 'Script', width: '95%', imageWidth: '100%', showConfirmButton: false, showCloseButton: true, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26' }); 
+            }
         }
 
         function restoreCanvasStateLocal(d) {
             const img = new Image(); img.crossOrigin = "Anonymous";
-            img.onload = () => { d.ctx.globalCompositeOperation = 'source-over'; d.ctx.clearRect(0, 0, d.width, d.height); d.ctx.drawImage(img, 0, 0, d.width, d.height); d.ctx.globalCompositeOperation = d.mode === 'eraser' ? 'destination-out' : 'source-over'; };
+            img.onload = () => { 
+                d.ctx.globalCompositeOperation = 'source-over'; d.ctx.clearRect(0, 0, d.width, d.height); d.ctx.drawImage(img, 0, 0, d.width, d.height); 
+                d.ctx.globalCompositeOperation = d.mode === 'eraser' ? 'destination-out' : 'source-over'; 
+            };
             img.src = d.history[d.step]; d.isModified = true;
         }
 
