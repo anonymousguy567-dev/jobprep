@@ -126,6 +126,7 @@
         }
         .theme-toggle-floating:hover { transform: rotate(20deg) scale(1.1); filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
 
+        /* Modals */
         .result-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 4000; display: none; justify-content: center; align-items: center; transition: 0.4s;}
         .result-modal.show { display: flex; animation: fadeIn 0.3s ease; }
         .result-modal-content { 
@@ -138,7 +139,7 @@
         .hamburger-btn { display: none; position: absolute; top: 20px; left: 20px; background: transparent; border: none; z-index: 3000; cursor: pointer; }
         .hamburger-btn svg { width: 35px; height: 35px; fill: #00bcd4; }
         .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; display: none; backdrop-filter: blur(3px); }
-        
+
         .option-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
         .option-row input { flex: 1; margin: 0;}
         .option-row label { margin: 0; min-width: 70px;}
@@ -158,7 +159,7 @@
         body.light-mode .nav-item { color: #666; }
         body.light-mode .nav-item:hover { background: rgba(102, 76, 40, 0.05); color: #222; }
         body.light-mode .nav-item.active { background: #F0EBE1; color: #008394; box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff; border-color: rgba(0, 131, 148, 0.2); }
-        body.light-mode .nav-divider, body.light-mode .t-divider { background: rgba(102, 76, 40, 0.1); }
+        body.light-mode .nav-divider { background: rgba(102, 76, 40, 0.1); }
         body.light-mode input, body.light-mode textarea, body.light-mode select { background: #F0EBE1; color: #333; border: 1px solid rgba(102, 76, 40, 0.1); box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff; }
         body.light-mode input:focus, body.light-mode textarea:focus, body.light-mode select:focus { box-shadow: inset 6px 6px 12px rgba(102, 76, 40, 0.2); border-color: #E1A95F;}
         body.light-mode select option { background: #F0EBE1; color: #333; }
@@ -181,8 +182,8 @@
             .sidebar.active { left: 0; }
             .hamburger-btn { display: block; }
             .mobile-sidebar-overlay.active { display: block; }
-            .main-content-area { padding: 80px 10px 20px 10px; }
-            .clay-box { padding: 25px 15px; }
+            .main-content-area { padding: 80px 15px 20px 15px; }
+            .clay-box { padding: 25px 20px; }
             .action-buttons-row { flex-direction: column; }
             .result-modal-content { padding: 25px 15px; width: 95%; }
         }
@@ -350,11 +351,13 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, orderBy, query, doc, getDoc, updateDoc, deleteDoc, setDoc, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
+        // Theme Init
         const themeToggleBtn = document.getElementById('themeToggleBtn');
         if (localStorage.getItem('theme') === 'light') { document.body.classList.add('light-mode'); themeToggleBtn.innerHTML = '🌙';} 
         else { themeToggleBtn.innerHTML = '🌞'; }
         themeToggleBtn.addEventListener('click', () => { document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); themeToggleBtn.innerHTML = isLight ? '🌙' : '🌞'; });
 
+        // Sidebar Navigation
         const sidebar = document.getElementById('sidebar'); const hamburgerBtn = document.getElementById('hamburgerBtn'); const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
         hamburgerBtn.addEventListener('click', () => { sidebar.classList.add('active'); mobileSidebarOverlay.classList.add('active'); });
         mobileSidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('active'); mobileSidebarOverlay.classList.remove('active'); });
@@ -459,6 +462,7 @@
         document.getElementById('editAddMoreOptionBtn').addEventListener('click', () => { editOptCount++; renderOptionsUI('editDynamicOptionsContainer', 'editQCorrect', editOptCount); });
         renderOptionsUI('dynamicAddOptionsContainer', 'correctOption', addOptCount);
 
+        // 🟢 Fetch Questions Helper (Sorted by timestamp) 🟢
         async function getSortedQuestions(examId) {
             const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
             let questionsArray = [];
@@ -468,8 +472,8 @@
                 questionsArray.push({ id: doc.id, data: d }); 
             });
             questionsArray.sort((a, b) => {
-                let tA = a.data.timestamp?.seconds || a.data.timestamp || 0;
-                let tB = b.data.timestamp?.seconds || b.data.timestamp || 0;
+                let tA = a.data.timestamp?.toMillis ? a.data.timestamp.toMillis() : (a.data.timestamp?.seconds ? a.data.timestamp.seconds * 1000 : a.data.timestamp || 0);
+                let tB = b.data.timestamp?.toMillis ? b.data.timestamp.toMillis() : (b.data.timestamp?.seconds ? b.data.timestamp.seconds * 1000 : b.data.timestamp || 0);
                 return tA - tB;
             });
             return questionsArray;
@@ -497,7 +501,7 @@
             if(examType === 'written' && !qText && document.getElementById('qImageFile').files.length === 0) { Swal.fire('Wait!', 'Provide Text or Image.', 'warning'); return; }
             const btn = document.getElementById('saveQuestionBtn'); btn.innerText = "Processing..."; 
             try { 
-                let questionData = { question: qText, timestamp: new Date().getTime() }; 
+                let questionData = { question: qText, timestamp: new Date().getTime() }; // Save timestamp explicitly as ms
                 if(examType === 'written') {
                     questionData.maxMarks = parseFloat(document.getElementById('qMaxMarks').value);
                     if(document.getElementById('qImageFile').files.length > 0) { document.getElementById('qImageStatus').innerText = "Uploading Image..."; const url = await uploadImageToImgBB(document.getElementById('qImageFile').files[0]); if(url) questionData.imageUrl = url; document.getElementById('qImageStatus').innerText = ""; }
