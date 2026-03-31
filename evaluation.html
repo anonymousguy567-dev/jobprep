@@ -231,7 +231,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, where, doc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where, doc, getDoc, setDoc, deleteDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE", authDomain: "mcq-portal-904fd.firebaseapp.com", projectId: "mcq-portal-904fd", storageBucket: "mcq-portal-904fd.firebasestorage.app", messagingSenderId: "977853699063", appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2" };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
@@ -334,7 +334,6 @@
             const qItem = questionsData[slideIndex];
             const qId = qItem.id;
             
-            // If already initialized, skip
             if(canvasRegistry[qId]) return;
 
             let sAns = (currentSubDataGlobal.studentImageUrls && currentSubDataGlobal.studentImageUrls[qId]) ? currentSubDataGlobal.studentImageUrls[qId] : null; 
@@ -344,7 +343,6 @@
             if(sAns || cAns) {
                 const canvas = document.getElementById(`canvas_${qId}`);
                 if(canvas) {
-                    // Show a small loader text while image loads
                     const wrapper = document.getElementById(`wrapper_${qId}`);
                     wrapper.style.position = 'relative';
                     const tempLoading = document.createElement('div');
@@ -449,10 +447,8 @@
             document.getElementById('finalFeedback').value = subData.feedback || "";
             updateTotalSum(); 
 
-            // ONLY INITIALIZE THE FIRST SLIDE INITIALLY
             setTimeout(() => {
                 initCanvasForSlide(0);
-                // Preload the second slide silently
                 if (questionsData.length > 1) { setTimeout(() => initCanvasForSlide(1), 500); }
             }, 50);
         }
@@ -485,7 +481,6 @@
         window.goToSlide = function(index) {
             window.currentEvalSlide = index;
             document.getElementById('sliderTrack').style.transform = `translateX(-${index * 100}%)`;
-            // Lazy load the current slide and the next one
             initCanvasForSlide(index);
             if (index + 1 < questionsData.length) { setTimeout(() => initCanvasForSlide(index + 1), 200); }
         }
@@ -535,7 +530,7 @@
             img.src = d.history[d.step]; d.isModified = true;
         }
 
-        // Final Submit Logic
+        // 🟢 Final Submit Logic (Fixed) 🟢
         document.getElementById('submitAndNextBtn').addEventListener('click', async () => {
             const btn = document.getElementById('submitAndNextBtn'); btn.innerText = "Saving..."; btn.disabled = true;
             document.getElementById('submitStatusTxt').innerText = "Uploading checked scripts to cloud...";
@@ -562,7 +557,6 @@
 
                 await setDoc(subRef, { score: parseFloat(totalMarks.toFixed(2)), questionMarks: qMarks, feedback: document.getElementById('finalFeedback').value, status: "evaluated", checkedImageUrls: mergedUrls }, {merge: true});
                 
-                // Success & Next Routing
                 document.getElementById('submitStatusTxt').innerText = "Saved Successfully!";
                 setTimeout(() => {
                     btn.innerText = "Submit & Next Student 🚀"; btn.disabled = false; document.getElementById('submitStatusTxt').innerText = "";
