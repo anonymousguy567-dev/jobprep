@@ -139,7 +139,11 @@
         .hamburger-btn svg { width: 35px; height: 35px; fill: #00bcd4; }
         .mobile-sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2500; display: none; backdrop-filter: blur(3px); }
         
-        /* 🟢 Canvas & Toolbar Styles 🟢 */
+        /* 🟢 Slide Scroll Canvas Layout 🟢 */
+        .eval-slider-viewport { width: 100%; overflow: hidden; position: relative; border-radius: 20px; }
+        .eval-slider-track { display: flex; transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); width: 100%; }
+        .eval-q-slide { min-width: 100%; flex-shrink: 0; padding: 5px; }
+
         .eval-q-wrapper { margin-bottom: 25px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s;}
         .eval-canvas-container { position: relative; overflow: hidden; border-radius: 12px; border: 2px solid rgba(255,255,255,0.1); background: #fff; margin-bottom: 10px; }
         .draw-canvas { cursor: crosshair; touch-action: none; display: block; margin: 0 auto; max-width: 100%; }
@@ -151,14 +155,12 @@
         .tool-btn.active { background: rgba(0, 188, 212, 0.2); border: 1px solid #00bcd4; }
         .tool-btn:active { transform: scale(0.9); }
         .t-divider { width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 5px; flex-shrink: 0; }
-        .jump-next-btn { font-size: 14px; background: rgba(0, 230, 118, 0.1); border: 1px solid #00e676; color: #00e676; font-weight: bold; white-space: nowrap; margin-left: auto; }
-        .jump-next-btn:hover { background: #00e676; color: #000; }
 
         .option-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
         .option-row input { flex: 1; margin: 0;}
         .option-row label { margin: 0; min-width: 70px;}
 
-        /* SweetAlert */
+        /* SweetAlert Tweaks */
         .swal2-popup { background: #1e1e26 !important; border-radius: 30px !important; color: #fff !important; box-shadow: 15px 15px 30px rgba(0,0,0,0.6), inset 3px 3px 8px rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.02) !important;}
         .swal2-title { color: #00bcd4 !important; }
         .swal2-input, .swal2-textarea { background: #15151a !important; color: #fff !important; border: 1px solid rgba(0, 188, 212, 0.2) !important; border-radius: 15px !important; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.6) !important; }
@@ -258,7 +260,13 @@
                 <h3>Create New Exam (Draft)</h3>
                 <form id="createExamForm">
                     <div class="input-group"><label>Exam Title:</label><input type="text" id="newExamTitle" required placeholder="Enter Exam Title"></div>
-                    <div class="input-group"><label>Exam Type:</label><select id="newExamType" required><option value="mcq">MCQ Exam</option><option value="written">Written Exam</option></select></div>
+                    <div class="input-group">
+                        <label>Exam Type:</label>
+                        <select id="newExamType" required>
+                            <option value="mcq">MCQ Exam</option>
+                            <option value="written">Written Exam</option>
+                        </select>
+                    </div>
                     <div class="input-group"><label>Exam Duration (Minutes):</label><input type="number" id="newExamDuration" required placeholder="Enter Duration"></div>
                     <div class="input-group"><label>Result Publish Date & Time:</label><input type="datetime-local" id="newExamPublishTime" required></div>
                     <button type="submit" class="submit-btn" style="background: #ffb74d;">Create Exam (Draft)</button>
@@ -279,6 +287,7 @@
                         <button type="button" id="addMoreOptionBtn" class="btn-live-excel" style="margin-bottom: 15px; background: #2196f3; color:#fff; display:block;">➕ Add Extra Option</button>
                         <div class="input-group"><label>Correct Answer:</label><select id="correctOption" required></select></div>
                     </div>
+
                     <div id="writtenMarksGroup" class="input-group" style="display: none;"><label>Max Marks for this Question:</label><input type="number" id="qMaxMarks" placeholder="e.g. 10"></div>
                     <button type="submit" class="submit-btn" id="saveQuestionBtn">Save Question</button>
                 </form>
@@ -292,7 +301,12 @@
                         <button class="btn-live-excel" id="filterPendingBtn" style="display:block; flex:1; background: #ffb74d; color: #000;">Show Pending</button>
                         <button class="btn-live-excel" id="filterEvalBtn" style="display:block; flex:1; background: #15151a; color: #a0a0b0; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.6);">Show Evaluated</button>
                     </div>
-                    <div class="result-table-wrapper"><table class="res-table"><thead><tr><th style="text-align: left;">Roll / Email</th><th>Status</th><th>Score</th><th>Action</th></tr></thead><tbody id="evalSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Select an exam to load scripts...</td></tr></tbody></table></div>
+                    <div class="result-table-wrapper">
+                        <table class="res-table">
+                            <thead><tr><th style="text-align: left;">Roll / Email</th><th>Status</th><th>Score</th><th>Action</th></tr></thead>
+                            <tbody id="evalSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Select an exam to load scripts...</td></tr></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -327,7 +341,12 @@
                     <div id="dbActionButtons" class="action-buttons-row"></div>
                     <div style="margin-top: 30px;">
                         <h4 style="margin-bottom: 15px; text-align: left;">📋 Individual Submissions</h4>
-                        <div class="result-table-wrapper"><table class="res-table"><thead><tr><th style="text-align: left;">Roll / Email</th><th>C / W / S</th><th>Score</th><th>Action</th></tr></thead><tbody id="dbSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr></tbody></table></div>
+                        <div class="result-table-wrapper">
+                            <table class="res-table">
+                                <thead><tr><th style="text-align: left;">Roll / Email</th><th>C / W / S</th><th>Score</th><th>Action</th></tr></thead>
+                                <tbody id="dbSubmissionsBody"><tr><td colspan="4" style="text-align:center; color: #a0a0b0;">Loading submissions...</td></tr></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -355,13 +374,13 @@
     <div class="result-modal" id="evalModal">
         <div class="result-modal-content" style="max-width: 950px; padding: 25px; overflow-y: auto; max-height: 95vh; display: block;">
             <span class="result-close-btn" id="closeEvalModal">&times;</span>
-            <p style="color: #ffb74d; margin-bottom: 10px; text-align: center; font-size: 14px; font-weight: bold;">*Use Desktop Mode for Best Experience</p>
             <h3 style="margin-bottom:10px; text-align: center; color: #00e676;">✍️ Evaluate Script</h3>
             <p id="evalStudentInfo" style="text-align: center; color: #a0a0b0; margin-bottom: 15px; font-size: 14px;"></p>
             
             <div id="evalScriptContainer" style="margin-top: 20px;"></div>
             
-            <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+            <div id="finalEvalSubmitArea" style="display: none; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                <h4 style="text-align: center; color: #ffb74d;">Final Review</h4>
                 <div class="input-group"><label>Total Marks Obtained (Auto-calculated):</label><input type="number" id="evalMarks" placeholder="0" step="0.1" readonly style="color: #00e676; text-align: center; font-size: 24px; border: 1px solid #00e676;"></div>
                 <div class="input-group"><label>Feedback / Comments (Optional):</label><textarea id="evalFeedback" rows="3"></textarea></div>
                 <p id="evalUploadStatus" style="font-size: 14px; color: #00e676; margin-top: 10px; font-weight: bold; text-align: center;"></p>
@@ -558,7 +577,33 @@
 
         let currentEvalSubId = null; let currentEvalSub = null; let canvasRegistry = {}; 
         
-        // 🟢 Canvas Interaction Toolkit 🟢
+        // 🟢 Canvas Slider Logic 🟢
+        window.currentEvalSlide = 0;
+        window.goToEvalSlide = function(targetIndex, currentQid) {
+            if(currentQid) {
+                const inp = document.querySelector(`.q-mark-input[data-qid="${currentQid}"]`);
+                if(!inp.value || isNaN(parseFloat(inp.value))) {
+                    Swal.fire({toast:true, position:'top-end', icon:'warning', title:'Please enter marks first!', showConfirmButton:false, timer:2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'});
+                    return;
+                }
+            }
+            window.currentEvalSlide = targetIndex;
+            document.getElementById('evalSliderTrack').style.transform = `translateX(-${targetIndex * 100}%)`;
+        };
+
+        window.showFinalEvalSubmit = function(currentQid) {
+            if(currentQid) {
+                const inp = document.querySelector(`.q-mark-input[data-qid="${currentQid}"]`);
+                if(!inp.value || isNaN(parseFloat(inp.value))) {
+                    Swal.fire({toast:true, position:'top-end', icon:'warning', title:'Please enter marks first!', showConfirmButton:false, timer:2000, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff'});
+                    return;
+                }
+            }
+            document.getElementById('finalEvalSubmitArea').style.display = 'block';
+            document.getElementById('finalEvalSubmitArea').scrollIntoView({behavior: 'smooth'});
+        };
+
+        // 🟢 Canvas Toolbar Functions 🟢
         function updateToolbarUI(qId, activeAction) {
             document.querySelectorAll(`.annotation-toolbar[data-qid="${qId}"] .tool-btn`).forEach(btn => {
                 if(btn.getAttribute('data-action') === activeAction) btn.classList.add('active');
@@ -587,23 +632,15 @@
             data.isModified = true;
         }
 
-        // Toolbar Event Delegation
         document.getElementById('evalScriptContainer').addEventListener('click', (e) => { 
             const btn = e.target.closest('.tool-btn');
             if(!btn) return;
             const action = btn.getAttribute('data-action');
             const qId = btn.getAttribute('data-qid');
             
-            if(action === 'next') {
-                const nextIndex = btn.getAttribute('data-nextindex');
-                const nextCard = document.getElementById(`qcard_${nextIndex}`);
-                if(nextCard) nextCard.scrollIntoView({behavior: 'smooth', block: 'start'});
-                return;
-            }
             if(action === 'zoom') {
                 const canvas = document.getElementById(`canvas_${qId}`);
                 if(canvas) { 
-                    // Combine background image and strokes for preview
                     const tempC = document.createElement('canvas'); tempC.width = canvas.width; tempC.height = canvas.height; const tCtx = tempC.getContext('2d');
                     tCtx.drawImage(canvasRegistry[qId].imgBase, 0, 0, tempC.width, tempC.height); tCtx.drawImage(canvas, 0, 0, tempC.width, tempC.height);
                     Swal.fire({ imageUrl: tempC.toDataURL(), imageAlt: 'Script Image', width: '90%', imageWidth: '100%', showConfirmButton: false, showCloseButton: true, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26' }); 
@@ -632,20 +669,26 @@
         });
 
         async function openEvalModal(sub) {
-            currentEvalSubId = sub.id; currentEvalSub = sub; canvasRegistry = {}; 
+            currentEvalSubId = sub.id; currentEvalSub = sub; canvasRegistry = {}; window.currentEvalSlide = 0;
             document.getElementById('evalStudentInfo').innerText = `Student: ${sub.rollNumber} | Email: ${sub.email}`;
-            const scriptContainer = document.getElementById('evalScriptContainer'); scriptContainer.innerHTML = "<div style='text-align:center;'>Loading scripts...</div>"; evalModal.classList.add('show');
+            const scriptContainer = document.getElementById('evalScriptContainer'); scriptContainer.innerHTML = "<div style='text-align:center;'>Loading scripts...</div>"; 
+            document.getElementById('finalEvalSubmitArea').style.display = 'none';
+            evalModal.classList.add('show');
+            
             try {
-                const qSnap = await getDocs(collection(db, "exams", sub.examId, "questions")); let html = ""; let qNum = 1; let studentMarks = sub.questionMarks || {}; let questionsArray = [];
+                const qSnap = await getDocs(collection(db, "exams", sub.examId, "questions")); 
+                let studentMarks = sub.questionMarks || {}; let questionsArray = [];
                 qSnap.forEach(doc => questionsArray.push({ id: doc.id, data: doc.data() }));
 
+                let html = `<div class="eval-slider-viewport"><div class="eval-slider-track" id="evalSliderTrack" style="transform: translateX(0%);">`;
+
                 questionsArray.forEach((qItem, index) => {
-                    const qData = qItem.data; const qId = qItem.id;
+                    const qData = qItem.data; const qId = qItem.id; let qNum = index + 1;
                     let studentAns = (sub.studentImageUrls && sub.studentImageUrls[qId]) ? sub.studentImageUrls[qId] : null; if (!studentAns && sub.studentImageUrl && qNum === 1) studentAns = sub.studentImageUrl;
                     let checkedAns = (sub.checkedImageUrls && sub.checkedImageUrls[qId]) ? sub.checkedImageUrls[qId] : null; let ansUrlToDraw = checkedAns || studentAns;
-                    let nextIndex = index + 2; // For next button
                     
-                    html += `<div id="qcard_${qNum}" class="eval-q-wrapper">`;
+                    html += `<div class="eval-q-slide" id="slide_${index}">`;
+                    html += `<div class="eval-q-wrapper" style="margin-bottom:0;">`;
                     html += `<p style="font-weight: bold; color: #00bcd4; margin-bottom: 15px; font-size: 16px;">Q${qNum}: ${qData.question || '(Image)'} <span style="color:#ffb74d;">[Max: ${qData.maxMarks || 0}]</span></p>`;
                     
                     if(ansUrlToDraw) {
@@ -659,7 +702,6 @@
                             <button class="tool-btn" data-action="clear" data-qid="${qId}" title="Clear Strokes">🧹</button>
                             <div class="t-divider"></div>
                             <button class="tool-btn" data-action="zoom" data-qid="${qId}" title="Full Screen">🔍</button>
-                            <button class="tool-btn jump-next-btn" data-action="next" data-nextindex="${nextIndex}">⬇️ Next Q</button>
                         </div>
                         <div class="eval-canvas-container">
                             <canvas id="canvas_${qId}" class="draw-canvas"></canvas>
@@ -667,8 +709,24 @@
                     }
                     else html += `<p style="color: #ff5252; font-weight: bold; margin-bottom: 15px;">Not answered</p>`;
                     
-                    html += `<div class="input-group" style="margin-bottom:0;"><label style="color:#00e676;">Marks:</label><input type="number" class="q-mark-input" data-qid="${qId}" value="${studentMarks[qId]!==undefined?studentMarks[qId]:""}" placeholder="0" step="0.1" max="${qData.maxMarks || 100}" style="width:120px;"></div></div>`; qNum++;
+                    // 🟢 Bottom Row (Marks + Next Button) 🟢
+                    html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; flex-wrap: wrap; gap: 10px;">`;
+                    html += `
+                        <div class="input-group" style="margin-bottom:0; display:flex; align-items:center; gap:10px; width: auto;">
+                            <label style="color:#00e676; margin:0;">Marks:</label>
+                            <input type="number" class="q-mark-input" data-qid="${qId}" value="${studentMarks[qId]!==undefined?studentMarks[qId]:""}" placeholder="0" step="0.1" max="${qData.maxMarks || 100}" style="width:80px; padding: 10px; text-align:center;">
+                            <span style="color:#ffb74d; font-weight:bold; font-size:16px;">/ ${qData.maxMarks || 0}</span>
+                        </div>
+                    `;
+
+                    if(index < questionsArray.length - 1) {
+                        html += `<button class="submit-btn" style="width:auto; margin:0; padding:12px 20px; background:#2196f3; color:#fff;" onclick="goToEvalSlide(${index+1}, '${qId}')">Next Question ➡️</button>`;
+                    } else {
+                        html += `<button class="submit-btn" style="width:auto; margin:0; padding:12px 20px; background:#00e676; color:#000;" onclick="showFinalEvalSubmit('${qId}')">Review & Submit ✅</button>`;
+                    }
+                    html += `</div></div></div>`; // End row, wrapper, slide
                 });
+                html += `</div></div>`; // End track, viewport
                 
                 scriptContainer.innerHTML = html; document.getElementById('evalMarks').value = sub.score !== undefined ? sub.score : "0";
 
@@ -691,8 +749,6 @@
                                 canvasRegistry[qId] = { canvas, ctx, imgBase, width, height, isModified: false, history: [], step: -1, mode: 'pen' };
                                 
                                 if (checkedAns) {
-                                    // Extract strokes if checked Ans exists (Since checkedAns is composite, it acts as the top layer for now)
-                                    // For future: It's better to store strokes separately.
                                     const imgChecked = new Image(); imgChecked.crossOrigin = "Anonymous";
                                     imgChecked.onload = () => { ctx.drawImage(imgChecked, 0, 0, width, height); saveCanvasState(qId); canvasRegistry[qId].isModified = false; attachCanvasEvents(canvas, qId); };
                                     imgChecked.src = checkedAns;
@@ -731,10 +787,8 @@
             for (let qId in canvasRegistry) {
                 if (canvasRegistry[qId].isModified) {
                     uploadPromises.push(new Promise((resolve, reject) => { 
-                        // Composite Background + Strokes for Saving
                         const tempC = document.createElement('canvas'); tempC.width = canvasRegistry[qId].width; tempC.height = canvasRegistry[qId].height; const tCtx = tempC.getContext('2d');
                         tCtx.drawImage(canvasRegistry[qId].imgBase, 0, 0, tempC.width, tempC.height); tCtx.drawImage(canvasRegistry[qId].canvas, 0, 0, tempC.width, tempC.height);
-                        
                         tempC.toBlob(async (blob) => { const url = await uploadImageToImgBB(new File([blob], `checked_${qId}.jpg`, { type: "image/jpeg" })); if (url) { newCheckedImageUrls[qId] = url; resolve(); } else reject(); }, 'image/jpeg', 0.85); 
                     }));
                 }
