@@ -55,7 +55,7 @@
         .res-table th { padding: 12px; color: #a0a0b0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .res-table td { padding: 15px 12px; border-bottom: 1px solid rgba(255,255,255,0.02); font-weight: bold; }
         
-        /* 🟢 Evaluation View (1-Screen Fit Logic) 🟢 */
+        /* 🟢 Evaluation View (Slider) 🟢 */
         #evaluationView { display: none; flex-direction: column; height: 100vh; position: absolute; top: 0; left: 0; width: 100%; background: #0b0c10; z-index: 200; }
         
         .eval-header { flex-shrink: 0; display: flex; justify-content: space-between; padding: 10px 20px; background: #15151a; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
@@ -75,18 +75,23 @@
         .tool-btn.active { background: rgba(0, 188, 212, 0.2); border-color: #00bcd4; }
         .t-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 4px; }
         
-        /* 🟢 The Perfect Fit Canvas Wrapper 🟢 */
+        /* 🟢 Horizontal Scroll Canvas Wrapper (No vertical scroll) 🟢 */
         .canvas-wrapper { 
             flex-grow: 1; 
-            display: flex; justify-content: center; align-items: center; 
+            display: block; 
             background: #1e1e26; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
-            overflow: hidden; position: relative; padding: 5px;
+            overflow-y: hidden; /* No up-down scroll */
+            overflow-x: auto;   /* Side scroll allowed */
+            position: relative; padding: 10px;
         }
         
+        .canvas-wrapper::-webkit-scrollbar { height: 8px; }
+        .canvas-wrapper::-webkit-scrollbar-thumb { background: rgba(0, 188, 212, 0.5); border-radius: 10px; }
+        
         .draw-canvas { 
-            cursor: crosshair; touch-action: none; display: block; 
-            max-width: 100%; max-height: 100%; 
-            object-fit: contain; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            cursor: crosshair; touch-action: none; display: block; margin: 0 auto;
+            max-width: none; /* Let it expand sideways if aspect ratio requires */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
             border: 2px solid rgba(255,255,255,0.1); border-radius: 8px; background: transparent;
         }
 
@@ -345,7 +350,7 @@
             d.canvas.addEventListener('touchstart', start, {passive:false}); d.canvas.addEventListener('touchmove', draw, {passive:false}); d.canvas.addEventListener('touchend', stop);
         }
 
-        // 🟢 Lazy Loading Canvas Init 🟢
+        // 🟢 Lazy Loading Canvas Init with Vertical Auto-Fit & Horizontal Scroll 🟢
         function initCanvasForSlide(slideIndex) {
             if (slideIndex < 0 || slideIndex >= questionsData.length) return;
             const qItem = questionsData[slideIndex];
@@ -370,12 +375,13 @@
                     imgBase.onload = () => {
                         if(tempLoading.parentNode) wrapper.removeChild(tempLoading);
                         
-                        let maxW = wrapper.clientWidth - 10; 
-                        let maxH = wrapper.clientHeight - 10; 
+                        // 🟢 Make height fit exactly to screen (no up-down scroll), allow width to spill over for side scroll 🟢
+                        let maxH = wrapper.clientHeight - 20; 
+                        if (maxH < 200) maxH = 400; // Fallback minimum
                         
-                        let ratio = Math.min(maxW / imgBase.width, maxH / imgBase.height);
+                        let ratio = maxH / imgBase.height;
+                        let cHeight = maxH;
                         let cWidth = imgBase.width * ratio;
-                        let cHeight = imgBase.height * ratio;
                         
                         canvas.width = cWidth; canvas.height = cHeight;
                         
@@ -438,11 +444,11 @@
                 }
                 html += `</div>`; 
 
-                // 🟢 UPDATE: Changed "No Image Submitted" to "No submission"
+                // 🟢 Proper "Not answered" UI Fix 🟢
                 if(urlToDraw) {
                     html += `<div class="canvas-wrapper" id="wrapper_${qId}"><canvas id="canvas_${qId}" class="draw-canvas"></canvas></div>`;
                 } else {
-                    html += `<div class="canvas-wrapper" style="color:#ff5252; font-size:20px; font-weight:bold;">No submission</div>`;
+                    html += `<div class="canvas-wrapper" style="display:flex; justify-content:center; align-items:center; color:#ff5252; font-size:28px; font-weight:bold; border: 2px dashed #ff5252; background: rgba(255,82,82,0.05);">Not answered</div>`;
                 }
 
                 html += `
