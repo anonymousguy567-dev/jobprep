@@ -149,7 +149,24 @@
 </head>
 <body>
 
-    <script>if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');</script>
+    <script>
+        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+        
+        // 🟢 Mobile Warning Popup 🟢
+        document.addEventListener("DOMContentLoaded", () => {
+            Swal.fire({
+                toast: true,
+                position: 'top',
+                icon: 'info',
+                title: 'Plz use your laptop, this site is not optimize for mobile',
+                showConfirmButton: false,
+                timer: 5000,
+                background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26',
+                color: document.body.classList.contains('light-mode') ? '#222' : '#fff'
+            });
+        });
+    </script>
+    
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div></div>
 
     <nav class="navbar">
@@ -421,10 +438,11 @@
                 }
                 html += `</div>`; 
 
+                // 🟢 UPDATE: Changed "No Image Submitted" to "No submission"
                 if(urlToDraw) {
                     html += `<div class="canvas-wrapper" id="wrapper_${qId}"><canvas id="canvas_${qId}" class="draw-canvas"></canvas></div>`;
                 } else {
-                    html += `<div class="canvas-wrapper" style="color:#ff5252; font-size:20px; font-weight:bold;">No Image Submitted</div>`;
+                    html += `<div class="canvas-wrapper" style="color:#ff5252; font-size:20px; font-weight:bold;">No submission</div>`;
                 }
 
                 html += `
@@ -447,6 +465,7 @@
             document.getElementById('finalFeedback').value = subData.feedback || "";
             updateTotalSum(); 
 
+            // ONLY INITIALIZE THE FIRST SLIDE INITIALLY
             setTimeout(() => {
                 initCanvasForSlide(0);
                 if (questionsData.length > 1) { setTimeout(() => initCanvasForSlide(1), 500); }
@@ -530,7 +549,7 @@
             img.src = d.history[d.step]; d.isModified = true;
         }
 
-        // 🟢 Final Submit Logic (Fixed) 🟢
+        // Final Submit Logic
         document.getElementById('submitAndNextBtn').addEventListener('click', async () => {
             const btn = document.getElementById('submitAndNextBtn'); btn.innerText = "Saving..."; btn.disabled = true;
             document.getElementById('submitStatusTxt').innerText = "Uploading checked scripts to cloud...";
@@ -557,6 +576,7 @@
 
                 await setDoc(subRef, { score: parseFloat(totalMarks.toFixed(2)), questionMarks: qMarks, feedback: document.getElementById('finalFeedback').value, status: "evaluated", checkedImageUrls: mergedUrls }, {merge: true});
                 
+                // Success & Next Routing
                 document.getElementById('submitStatusTxt').innerText = "Saved Successfully!";
                 setTimeout(() => {
                     btn.innerText = "Submit & Next Student 🚀"; btn.disabled = false; document.getElementById('submitStatusTxt').innerText = "";
