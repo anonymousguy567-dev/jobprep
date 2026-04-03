@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniDocs MCQ & Written Portal</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TNSE25JEYN"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -83,23 +85,56 @@
         .spa-section.active { display: flex; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 🟢 SECTION: Login 🟢 */
-        .login-clay-box {
-            background: #1e1e26; border-radius: 40px; padding: 50px 40px; text-align: center; width: 100%; max-width: 450px;
-            border: 1px solid rgba(255, 255, 255, 0.02); 
+        /* 🟢 SECTION: Split Login / Branding 🟢 */
+        .auth-container {
+            display: flex; width: 100%; max-width: 1100px; background: #1e1e26; border-radius: 40px; 
             box-shadow: 15px 15px 30px rgba(0,0,0,0.6), -10px -10px 25px rgba(255,255,255,0.02), inset 4px 4px 10px rgba(255,255,255,0.05), inset -6px -6px 20px rgba(0,0,0,0.4);
-            position: relative; transition: 0.4s; margin-top: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.02); overflow: hidden; margin-top: 20px; transition: 0.4s;
         }
-        .login-icon { font-size: 60px; margin-bottom: 15px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); animation: float 6s infinite alternate ease-in-out; }
-        .login-title { font-size: 28px; font-weight: 900; color: #fff; margin-bottom: 10px; letter-spacing: 1px; }
-        .login-subtitle { font-size: 14px; color: #a0a0b0; margin-bottom: 35px; line-height: 1.5; }
-        .google-login-btn {
-            width: 100%; padding: 16px; border-radius: 20px; font-size: 16px; font-weight: bold; cursor: pointer;
-            background: #ffffff; color: #111; border: none; display: flex; justify-content: center; align-items: center; gap: 12px;
-            box-shadow: 6px 6px 15px rgba(0,0,0,0.3), inset 2px 2px 5px rgba(255,255,255,1), inset -4px -4px 10px rgba(0,0,0,0.2); transition: 0.3s;
+        
+        /* Left Side: Branding */
+        .branding-side {
+            flex: 1; padding: 50px 40px; display: flex; flex-direction: column; justify-content: center; 
+            background: linear-gradient(135deg, rgba(0,188,212,0.1) 0%, rgba(11,12,16,0) 100%);
+            border-right: 1px solid rgba(255,255,255,0.05); position: relative;
         }
-        .google-login-btn:hover { transform: translateY(-3px); box-shadow: 8px 8px 20px rgba(0,0,0,0.4), inset 2px 2px 5px rgba(255,255,255,1), inset -4px -4px 10px rgba(0,0,0,0.2); }
-        .google-login-btn:active { transform: translateY(2px) scale(0.98); }
+        .branding-text { font-family: 'Poppins', sans-serif; text-align: left; }
+        .branding-text h2 { font-size: 1.5rem; color: #fff; font-weight: 300; margin-bottom: -5px; font-family: 'Poppins', sans-serif;}
+        .branding-text h1 { 
+            font-size: 3.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 10px; font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #00bcd4, #00e676); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase;
+        }
+        .branding-text h3 { font-size: 1.5rem; color: #ffb74d; font-weight: 700; margin-top: 10px; font-family: 'Poppins', sans-serif;}
+
+        /* Right Side: Auth Forms */
+        .form-side { flex: 1; padding: 50px 40px; background: transparent; }
+        .auth-tabs { display: flex; gap: 10px; margin-bottom: 30px; }
+        .auth-tab { 
+            flex: 1; padding: 12px; text-align: center; background: #15151a; border-radius: 12px; 
+            cursor: pointer; font-weight: bold; color: #a0a0b0; transition: 0.3s; border: 1px solid rgba(255,255,255,0.02); 
+        }
+        .auth-tab.active { background: #00bcd4; color: #000; box-shadow: 0 4px 15px rgba(0,188,212,0.3); border: none; }
+
+        .auth-form { display: none; flex-direction: column; gap: 15px; animation: fadeIn 0.4s ease;}
+        .auth-form.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .input-group { width: 100%; text-align: left;}
+        .input-group label { display: block; margin-bottom: 8px; font-size: 13px; color: #00bcd4; font-weight: bold; }
+        .input-group input { 
+            width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); color: #fff; outline: none; font-size: 14px; 
+            background: #15151a; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.5); transition: 0.3s; 
+        }
+        .input-group input:focus { border-color: #00bcd4; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.5), 0 0 10px rgba(0,188,212,0.2); }
+        
+        .submit-auth-btn { 
+            width: 100%; padding: 16px; margin-top: 5px; border-radius: 15px; border: none; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s;
+            background: #00bcd4; color: #000; box-shadow: 4px 4px 15px rgba(0, 188, 212, 0.3), inset 2px 2px 5px rgba(255,255,255,0.4); text-transform: uppercase;
+        }
+        .submit-auth-btn:active { transform: scale(0.97); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.3); }
+        
+        .forgot-pass-link { color: #00bcd4; font-size: 12px; text-decoration: none; font-weight: bold; transition: 0.2s; }
+        .forgot-pass-link:hover { color: #00e676; text-decoration: underline; }
 
         /* 🟢 SECTION: Homepage 🟢 */
         .welcome-header { text-align: center; margin-bottom: 40px; margin-top: 20px; width: 100%; }
@@ -212,15 +247,25 @@
         body.light-mode .nav-btn { background: #FDFCF9; color: #664C28; border-color: rgba(102, 76, 40, 0.1); box-shadow: 5px 5px 10px rgba(102, 76, 40, 0.1), -3px -3px 8px #ffffff, inset 2px 2px 4px #ffffff; }
         body.light-mode .btn-talk { color: #00A04A; }
 
-        body.light-mode .login-clay-box, body.light-mode .clay-box, body.light-mode .stat-box, body.light-mode .contact-modal {
+        body.light-mode .auth-container, body.light-mode .clay-box, body.light-mode .stat-box, body.light-mode .contact-modal {
             background: #FDFCF9; border: 1px solid rgba(102, 76, 40, 0.1); 
             box-shadow: 12px 12px 25px rgba(102, 76, 40, 0.1), -8px -8px 20px #ffffff, inset 3px 3px 8px #ffffff, inset -5px -5px 15px rgba(102, 76, 40, 0.05);
         }
-        body.light-mode .login-title, body.light-mode .welcome-header h1, body.light-mode .box-title { color: #222; }
-        body.light-mode .login-subtitle, body.light-mode .box-desc, body.light-mode .welcome-header p, body.light-mode .stat-box h3 { color: #777; }
-        body.light-mode .welcome-header span, body.light-mode .stat-box .val { color: #008394; }
+        body.light-mode .branding-side { background: linear-gradient(135deg, rgba(0,131,148,0.1) 0%, rgba(253,252,249,0) 100%); border-right-color: rgba(102,76,40,0.1);}
+        body.light-mode .branding-text h2 { color: #664C28; }
+        body.light-mode .branding-text h1 { background: linear-gradient(45deg, #008394, #00A04A); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+        body.light-mode .branding-text h3 { color: #D38B28; }
         
-        body.light-mode .google-login-btn { background: #E8E0D5; color: #222; box-shadow: 5px 5px 10px rgba(102, 76, 40, 0.1), inset 2px 2px 4px #ffffff; }
+        body.light-mode .auth-tab { background: #F0EBE1; color: #666; border-color: rgba(102, 76, 40, 0.1); }
+        body.light-mode .auth-tab.active { background: #008394; color: #fff; }
+        body.light-mode .input-group label { color: #008394; }
+        body.light-mode .input-group input { background: #F0EBE1; color: #222; border-color: rgba(102, 76, 40, 0.1); box-shadow: inset 2px 2px 5px rgba(102,76,40,0.1); }
+        body.light-mode .input-group input:focus { border-color: #008394; }
+        body.light-mode .submit-auth-btn { background: #008394; color: #fff; box-shadow: 4px 4px 10px rgba(0, 131, 148, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
+
+        body.light-mode .welcome-header h1, body.light-mode .box-title { color: #222; }
+        body.light-mode .box-desc, body.light-mode .welcome-header p, body.light-mode .stat-box h3 { color: #777; }
+        body.light-mode .welcome-header span, body.light-mode .stat-box .val { color: #008394; }
         
         body.light-mode .btn-live { background: #D32F2F; color: #fff; box-shadow: 4px 4px 10px rgba(211, 47, 47, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
         body.light-mode .btn-practice { background: #00A04A; color: #fff; box-shadow: 4px 4px 10px rgba(0, 160, 74, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
@@ -254,10 +299,13 @@
             
             .hamburger-btn { display: block; }
             
-            .login-clay-box { padding: 30px 20px; }
-            .login-icon { font-size: 50px; }
-            .login-title { font-size: 24px; }
-            .google-login-btn { font-size: 14px; padding: 12px; }
+            .auth-container { flex-direction: column; border-radius: 25px; }
+            .branding-side { padding: 30px 20px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
+            .branding-text { text-align: center; }
+            .branding-text h2 { font-size: 1.2rem; }
+            .branding-text h1 { font-size: 2.5rem; }
+            .branding-text h3 { font-size: 1.2rem; }
+            .form-side { padding: 30px 20px; }
 
             .welcome-header h1 { font-size: 26px; }
             .welcome-header p { font-size: 14px; }
@@ -295,7 +343,6 @@
         <div class="nav-buttons">
             <button class="nav-btn btn-talk" id="openTalkModalBtn">📝 Drop a Note</button>
             <button class="theme-toggle-btn" id="themeToggleBtn">🌞</button>
-            <button class="nav-btn btn-admin" id="goToAdminBtn" style="display:none;">⚙️ Admin</button>
             <button class="nav-btn" id="logoutBtn" style="display:none; color:#ff5252;">🚪 Logout</button>
         </div>
 
@@ -311,7 +358,6 @@
         <h3 style="color: #00bcd4; margin-bottom: 20px; text-align: center;">Menu</h3>
         <button class="nav-btn theme-toggle-btn-mobile" id="themeToggleBtnMobile" style="width: 100%; justify-content: center; border-radius: 15px; margin-bottom: 10px; border:none;">🌞 Light Mode</button>
         <button class="nav-btn btn-talk" id="openTalkModalBtnMobile" style="width: 100%; justify-content: center; border-radius: 15px; margin-bottom: 10px; border:none;">📝 Drop a Note</button>
-        <button class="nav-btn btn-admin" id="goToAdminBtnMobile" style="width: 100%; justify-content: center; border-radius: 15px; margin-bottom: 10px; display:none; border:none;">⚙️ Admin Panel</button>
         <button class="nav-btn" id="logoutBtnMobile" style="width: 100%; justify-content: center; border-radius: 15px; display:none; color:#ff5252; border:none;">🚪 Logout</button>
     </div>
 
@@ -336,7 +382,7 @@
     <div class="modal-overlay" id="meritModalOverlay">
         <div class="contact-modal" style="max-width: 600px; max-height: 85vh; overflow-y: auto;">
             <span class="modal-close" id="closeMeritModal">✖</span>
-            <div class="modal-title" style="color:#00bcd4;">🏆 Full Merit List</div>
+            <div class="modal-title" style="color:#00bcd4; font-size: 22px; font-weight:bold; margin-bottom: 15px; text-align: center;">🏆 Full Merit List</div>
             
             <select id="popupMeritExamSelector">
                 <option value="">-- Loading Exams --</option>
@@ -349,14 +395,69 @@
     </div>
 
     <div id="login-view" class="spa-section active">
-        <div class="login-clay-box">
-            <div class="login-icon">🛡️</div>
-            <h1 class="login-title">Secure Portal</h1>
-            <p class="login-subtitle">Log in to access your live exams, practice materials, and personal performance dashboard.</p>
-            <button id="loginBtn" class="google-login-btn">
-                <svg width="24" height="24" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-                Continue with Google
-            </button>
+        <div class="auth-container">
+            <div class="branding-side">
+                <div class="branding-text">
+                    <h2>Welcome to</h2>
+                    <h1>Job Preparation</h1>
+                    <h2>With</h2>
+                    <h3>Hridoy Bosunia</h3>
+                </div>
+            </div>
+            
+            <div class="form-side">
+                <div class="auth-tabs">
+                    <div class="auth-tab active" id="tabSignIn">Sign In</div>
+                    <div class="auth-tab" id="tabSignUp">Sign Up</div>
+                </div>
+
+                <form class="auth-form active" id="signInForm">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email" required autocomplete="email">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 5px;">
+                        <label>Password</label>
+                        <input type="password" id="loginPass" placeholder="Enter your password" required autocomplete="current-password">
+                    </div>
+                    <div style="text-align: right; margin-bottom: 15px; margin-top: -5px;">
+                        <a href="#" id="forgotPassLink" class="forgot-pass-link">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="submit-auth-btn" id="loginSubmitBtn">Sign In</button>
+                </form>
+
+                <form class="auth-form" id="signUpForm">
+                    <div style="display:flex; gap:10px;">
+                        <div class="input-group">
+                            <label>First Name</label>
+                            <input type="text" id="regFirstName" placeholder="e.g. First Name" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Last Name</label>
+                            <input type="text" id="regLastName" placeholder="e.g. Last Name" required>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="input-group">
+                            <label>Roll Number</label>
+                            <input type="number" id="regRoll" placeholder="e.g. 2002001" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Series</label>
+                            <input type="text" id="regSeries" placeholder="e.g. 20" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" id="regEmail" placeholder="Enter valid email" required autocomplete="email">
+                    </div>
+                    <div class="input-group">
+                        <label>Create Password</label>
+                        <input type="password" id="regPass" placeholder="Minimum 6 characters" required autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="submit-auth-btn" id="regSubmitBtn" style="background:#00e676;">Create Account</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -448,10 +549,11 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, where, doc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        // 🟢 Using Email/Password Auth methods + Password Reset 🟢
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query, where, doc, getDoc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-        // 🟢 Theme Toggle (Desktop & Mobile Sync)
+        // 🟢 Theme Toggle
         const body = document.body; 
         const themeToggleBtn = document.getElementById('themeToggleBtn');
         const themeToggleBtnMobile = document.getElementById('themeToggleBtnMobile');
@@ -469,21 +571,16 @@
             themeToggleBtn.innerHTML = isLight ? '🌙' : '🌞';
             themeToggleBtnMobile.innerHTML = isLight ? '🌙 Dark Mode' : '🌞 Light Mode';
         }
-
         themeToggleBtn.addEventListener('click', toggleTheme);
         themeToggleBtnMobile.addEventListener('click', toggleTheme);
 
-        // 🟢 Mobile Menu Slider Logic
+        // 🟢 Mobile Menu
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const slideMenu = document.getElementById('slideMenu');
         const slideMenuOverlay = document.getElementById('slideMenuOverlay');
         const closeMenuBtn = document.getElementById('closeMenuBtn');
 
-        function toggleMenu() {
-            slideMenu.classList.toggle('active');
-            slideMenuOverlay.classList.toggle('active');
-        }
-
+        function toggleMenu() { slideMenu.classList.toggle('active'); slideMenuOverlay.classList.toggle('active'); }
         hamburgerBtn.addEventListener('click', toggleMenu);
         closeMenuBtn.addEventListener('click', toggleMenu);
         slideMenuOverlay.addEventListener('click', toggleMenu);
@@ -492,24 +589,18 @@
         const talkModalOverlay = document.getElementById('talkModalOverlay'); 
         const openTalkModalBtn = document.getElementById('openTalkModalBtn');
         const openTalkModalBtnMobile = document.getElementById('openTalkModalBtnMobile');
-        
-        function openNoteModal() {
-            talkModalOverlay.classList.add('active');
-            if(slideMenu.classList.contains('active')) toggleMenu();
-        }
-
+        function openNoteModal() { talkModalOverlay.classList.add('active'); if(slideMenu.classList.contains('active')) toggleMenu(); }
         openTalkModalBtn.addEventListener('click', openNoteModal);
         openTalkModalBtnMobile.addEventListener('click', openNoteModal);
-
         document.getElementById('closeTalkModal').addEventListener('click', () => { talkModalOverlay.classList.remove('active'); });
         talkModalOverlay.addEventListener('click', (e) => { if (e.target === talkModalOverlay) talkModalOverlay.classList.remove('active'); });
 
+        // Contact form handling...
         const anonCheckbox = document.getElementById('anonCheckbox'); const userEmailInput = document.getElementById('userEmailInput'); const formFromName = document.getElementById('formFromName');
         anonCheckbox.addEventListener('change', function() {
             if (this.checked) { userEmailInput.value = "anonymous@mcqportal.com"; userEmailInput.disabled = true; userEmailInput.style.opacity = "0.5"; formFromName.value = "Anonymous Student"; } 
             else { userEmailInput.value = ""; userEmailInput.disabled = false; userEmailInput.style.opacity = "1"; formFromName.value = "MCQ Portal User"; }
         });
-
         document.getElementById('contactForm').addEventListener('submit', async function(e) {
             e.preventDefault(); const wasEmailDisabled = userEmailInput.disabled; if (wasEmailDisabled) userEmailInput.disabled = false; 
             const formData = new FormData(this); if (wasEmailDisabled) userEmailInput.disabled = true; 
@@ -527,76 +618,151 @@
 
         // 🔴 FIREBASE CONFIG 🔴
         const firebaseConfig = { apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE", authDomain: "mcq-portal-904fd.firebaseapp.com", projectId: "mcq-portal-904fd", storageBucket: "mcq-portal-904fd.firebasestorage.app", messagingSenderId: "977853699063", appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2" };
-        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 
-        const ADMIN_EMAILS = ["hridoymeruet@gmail.com", "mcqportal198@gmail.com"]; 
-        let userEmail = ""; let userName = ""; let allExamsData = {}; let timerInterval;
+        let userEmail = ""; let userName = ""; let userRoll = ""; let allExamsData = {}; let timerInterval;
 
         const mainLoader = document.getElementById('mainLoader');
         const logoutBtn = document.getElementById('logoutBtn');
         const logoutBtnMobile = document.getElementById('logoutBtnMobile');
-        const goToAdminBtn = document.getElementById('goToAdminBtn');
-        const goToAdminBtnMobile = document.getElementById('goToAdminBtnMobile');
 
-        // 🟢 SPA Router Logic
+        // SPA Router
         window.switchView = function(viewId) {
             document.querySelectorAll('.spa-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
             window.scrollTo(0, 0);
         };
 
-        // 🟢 Return to Admin Logic
-        function returnToAdmin() {
-            sessionStorage.removeItem('viewAsUser');
-            window.location.href = "admin.html";
-        }
-        goToAdminBtn.addEventListener('click', returnToAdmin);
-        goToAdminBtnMobile.addEventListener('click', returnToAdmin);
+        // 🟢 Custom Auth Form Logic 🟢
+        const tabSignIn = document.getElementById('tabSignIn');
+        const tabSignUp = document.getElementById('tabSignUp');
+        const signInForm = document.getElementById('signInForm');
+        const signUpForm = document.getElementById('signUpForm');
 
-        // 🟢 Central Auth 🟢
-        onAuthStateChanged(auth, (user) => {
+        tabSignIn.addEventListener('click', () => {
+            tabSignIn.classList.add('active'); tabSignUp.classList.remove('active');
+            signInForm.classList.add('active'); signUpForm.classList.remove('active');
+        });
+
+        tabSignUp.addEventListener('click', () => {
+            tabSignUp.classList.add('active'); tabSignIn.classList.remove('active');
+            signUpForm.classList.add('active'); signInForm.classList.remove('active');
+        });
+
+        // 🟢 Handle Forgot Password 🟢
+        document.getElementById('forgotPassLink').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const { value: email } = await Swal.fire({
+                title: 'Reset Password',
+                input: 'email',
+                inputLabel: 'Enter your registered email address',
+                inputPlaceholder: 'e.g. student@gmail.com',
+                showCancelButton: true,
+                background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26',
+                color: document.body.classList.contains('light-mode') ? '#222' : '#fff'
+            });
+
+            if (email) {
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    Swal.fire({ icon: 'success', title: 'Email Sent!', text: 'Check your inbox for the password reset link.', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' });
+                } catch (error) {
+                    Swal.fire({ icon: 'error', title: 'Oops!', text: 'Failed to send reset email. Make sure the email is correct.', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' });
+                }
+            }
+        });
+
+        // 🟢 Handle Sign Up 🟢
+        signUpForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fName = document.getElementById('regFirstName').value.trim();
+            const lName = document.getElementById('regLastName').value.trim();
+            const name = `${fName} ${lName}`;
+            const roll = document.getElementById('regRoll').value.trim();
+            const series = document.getElementById('regSeries').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPass').value;
+
+            const btn = document.getElementById('regSubmitBtn');
+            btn.innerText = "Creating..."; btn.disabled = true;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                await updateProfile(user, { displayName: name });
+                
+                await setDoc(doc(db, "users", user.uid), {
+                    firstName: fName, lastName: lName, name: name, roll: roll, series: series, email: email, createdAt: new Date()
+                });
+                
+                // Form submit successful - no popup needed, auth state will change and auto-redirect
+            } catch (error) {
+                let msg = "Failed to create account.";
+                if(error.code === 'auth/email-already-in-use') msg = "Email is already registered. Please sign in.";
+                else if(error.code === 'auth/weak-password') msg = "Password must be at least 6 characters.";
+                Swal.fire({ icon: 'error', title: 'Error', text: msg, background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' });
+                btn.innerText = "Create Account"; btn.disabled = false;
+            }
+        });
+
+        // 🟢 Handle Sign In 🟢
+        signInForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPass').value;
+
+            const btn = document.getElementById('loginSubmitBtn');
+            btn.innerText = "Signing in..."; btn.disabled = true;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'Login Failed', text: 'Incorrect email or password.', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1e1e26', color: document.body.classList.contains('light-mode') ? '#222' : '#fff' });
+                btn.innerText = "Sign In"; btn.disabled = false;
+            }
+        });
+
+        // 🟢 Central Auth State 🟢
+        onAuthStateChanged(auth, async (user) => {
             setTimeout(() => { mainLoader.style.opacity = "0"; setTimeout(() => mainLoader.style.display = "none", 500); }, 500);
 
             if (user) {
-                if (ADMIN_EMAILS.includes(user.email) && !sessionStorage.getItem('viewAsUser')) { 
-                    window.location.href = "admin.html"; 
-                } 
-                else {
-                    userEmail = user.email; userName = user.displayName || "Student";
-                    document.getElementById('studentNameDisplay').innerText = userName.split(' ')[0];
-                    document.getElementById('dashboardBoxTitle').innerText = `${userName.split(' ')[0]}'s Dashboard`;
-                    
-                    logoutBtn.style.display = "block";
-                    logoutBtnMobile.style.display = "flex";
-                    
-                    if (ADMIN_EMAILS.includes(user.email)) {
-                        goToAdminBtn.style.display = "block";
-                        goToAdminBtnMobile.style.display = "flex";
+                userEmail = user.email; 
+                userName = user.displayName || "Student";
+                let firstName = userName.split(' ')[0]; // Fallback if firstName is not in DB yet
+                
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if(userDoc.exists()) { 
+                        userRoll = userDoc.data().roll; 
+                        if(userDoc.data().firstName) firstName = userDoc.data().firstName;
                     }
+                } catch(e) {}
 
-                    switchView('home-view');
-                    loadAvailableExams();
-                }
+                document.getElementById('studentNameDisplay').innerText = firstName;
+                document.getElementById('dashboardBoxTitle').innerText = `${firstName}'s Dashboard`;
+                
+                logoutBtn.style.display = "block";
+                logoutBtnMobile.style.display = "flex";
+
+                switchView('home-view');
+                loadAvailableExams();
             } else {
                 logoutBtn.style.display = "none";
                 logoutBtnMobile.style.display = "none";
-                goToAdminBtn.style.display = "none";
-                goToAdminBtnMobile.style.display = "none";
+                
+                document.getElementById('loginSubmitBtn').innerText = "Sign In";
+                document.getElementById('loginSubmitBtn').disabled = false;
+                
+                document.getElementById('regSubmitBtn').innerText = "Create Account";
+                document.getElementById('regSubmitBtn').disabled = false;
+                
                 switchView('login-view');
             }
         });
 
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            const btn = document.getElementById('loginBtn'); const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<div class="loader" style="width: 20px; height: 20px; margin: 0; border-width: 3px;"></div>`; btn.disabled = true;
-            signInWithPopup(auth, provider).catch(() => { btn.innerHTML = originalHTML; btn.disabled = false; });
-        });
-
-        function handleLogout() {
-            sessionStorage.removeItem('viewAsUser');
-            signOut(auth);
-            if(slideMenu.classList.contains('active')) toggleMenu();
-        }
+        function handleLogout() { signOut(auth); if(slideMenu.classList.contains('active')) toggleMenu(); }
         logoutBtn.addEventListener('click', handleLogout);
         logoutBtnMobile.addEventListener('click', handleLogout);
 
@@ -628,8 +794,15 @@
                         } else if (exam.status === "active" && (!exam.publishTime || currentTime < exam.publishTime)) {
                             liveExamsCount++;
                             const publishText = exam.publishTime ? `<span class="publish-time">End: ${formatResultTime(exam.publishTime)}</span>` : "";
+                            const typeBadgeHtml = exam.type === 'written' ? `<span class="badge-written" style="font-size:10px; padding:3px 6px;">✍️ Written</span>` : `<span class="badge-mcq" style="font-size:10px; padding:3px 6px;">🎯 MCQ</span>`;
+                            
                             const item = document.createElement('div'); item.className = 'exam-item';
-                            item.innerHTML = `<div class="meta-info"><div class="exam-name">${exam.title}</div><div class="exam-time">⏱ ${exam.duration} Min</div>${publishText}</div><a href="exam.html?id=${examId}" class="start-btn">Start</a>`;
+                            item.innerHTML = `
+                                <div class="meta-info">
+                                    <div class="exam-name">${exam.title} ${typeBadgeHtml}</div>
+                                    <div class="exam-time">⏱ ${exam.duration} Min</div>${publishText}
+                                </div>
+                                <a href="exam.html?id=${examId}" class="start-btn">Start</a>`;
                             liveExamsListDiv.prepend(item);
                         }
                     }
@@ -752,7 +925,12 @@
                     }
 
                     let typeBadge = examData.type === 'written' ? `<span class="badge-written">✍️ Written</span>` : `<span class="badge-mcq">🎯 MCQ</span>`;
+                    
+                    // Written status update fix
                     let scoreDisplay = res.score !== undefined ? res.score : "Pending";
+                    if (examData.type === 'written' && (!res.status || res.status === 'pending')) {
+                        scoreDisplay = "Pending Evaluation ⏳";
+                    }
 
                     html += `<tr class="record-row">
                         <td>${examData.title}</td>
@@ -813,7 +991,6 @@
                     }
                 }
 
-                // Fetch and Render Merit List
                 const q = query(collection(db, "results"), where("examId", "==", examId));
                 const snapshot = await getDocs(q);
                 if (snapshot.empty) { popupMeritContent.innerHTML = '<p style="color: #ffb74d;">No submissions found for this exam.</p>'; return; }
@@ -866,7 +1043,7 @@
                 const publishTime = examData?.publishTime || 0;
 
                 document.getElementById('sheetExamTitle').innerText = examData?.title || "Exam Result";
-                document.getElementById('sheetRollDisplay').innerText = `Roll No: ${userData.rollNumber || 'N/A'}`; 
+                document.getElementById('sheetRollDisplay').innerText = `Roll No: ${userData.rollNumber || userRoll || 'N/A'}`; 
 
                 const qSnap = await getDocs(collection(db, "exams", examId, "questions"));
                 let totalMaxMarks = 0; let questionsList = []; let qNum = 1;
