@@ -44,7 +44,6 @@
         }
 
         h1, h2 { text-align: center; margin-bottom: 20px; color: #00bcd4; text-shadow: 0 0 10px rgba(0, 188, 212, 0.3); transition: 0.4s;}
-        #login-section { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 50px 0; }
         
         #exam-section, #result-section { display: none; }
         
@@ -72,7 +71,7 @@
         }
         .question-card::after { content: ""; display: table; clear: both; }
 
-        .marking-rules, .roll-input-box, .breakdown-box { 
+        .marking-rules, .breakdown-box { 
             background: #202028; padding: 25px; border-radius: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.02);
             box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.02), inset 2px 2px 4px rgba(255,255,255,0.05), inset -3px -3px 8px rgba(0,0,0,0.3);
             transition: 0.4s;
@@ -107,13 +106,12 @@
         .clear-selection-btn { display: inline-block; float: right; margin-top: 5px; font-size: 13px; color: #ffb74d; cursor: pointer; transition: 0.2s; font-weight: bold; padding: 5px 10px; border-radius: 8px; position: relative; z-index: 10;}
         .clear-selection-btn:hover { color: #ff5252; background: rgba(255, 82, 82, 0.1); }
 
-        .login-btn, .show-answers-btn { 
+        .show-answers-btn { 
             padding: 14px 28px; border-radius: 16px; text-decoration: none; font-size: 16px; font-weight: bold; border: 1px solid rgba(255,255,255,0.02); cursor: pointer; transition: 0.3s;
-            background: #252530; color: #00bcd4;
+            background: #252530; color: #00bcd4; width: 100%; margin-top: 20px;
             box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 2px 2px 5px rgba(255,255,255,0.05), inset -4px -4px 8px rgba(0,0,0,0.3);
         }
-        .login-btn:active, .show-answers-btn:active { box-shadow: inset 6px 6px 12px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.02); transform: translateY(2px) scale(0.96); }
-        .show-answers-btn { width: 100%; margin-top: 20px; }
+        .show-answers-btn:active { box-shadow: inset 6px 6px 12px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.02); transform: translateY(2px) scale(0.96); }
 
         .submit-btn { 
             width: 100%; padding: 18px; margin-top: 25px; border-radius: 18px; text-decoration: none; font-weight: bold; font-size: 18px; border: 1px solid rgba(255,255,255,0.05); cursor: pointer;
@@ -126,14 +124,6 @@
         
         .marking-rules { border-left: 5px solid #ffb74d; }
         .marking-rules span { color: #ffb74d; font-weight: bold; }
-        
-        .roll-input-box label { display: block; margin-bottom: 12px; color: #00bcd4; font-weight: bold; font-size: 16px; transition: 0.4s;}
-        .roll-input-box input { 
-            width: 100%; padding: 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.02); color: #fff; outline: none; font-size: 16px; font-weight: bold;
-            background: #15151a; box-shadow: inset 6px 6px 12px rgba(0,0,0,0.7), inset -2px -2px 5px rgba(255,255,255,0.02); transition: 0.4s;
-            -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text;
-        }
-        .roll-input-box input:focus { box-shadow: inset 6px 6px 12px rgba(0,0,0,0.9), 0 0 15px rgba(0, 188, 212, 0.3); }
 
         .breakdown-box { display: flex; justify-content: space-around; width: 100%; padding: 30px 20px; margin-bottom: 25px; transition: 0.4s;}
         .stat-item { text-align: center; }
@@ -169,7 +159,7 @@
         body.light-mode .user-info { background: rgba(253, 252, 249, 0.95); border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: 6px 6px 12px rgba(102, 76, 40, 0.15), -4px -4px 10px #ffffff, inset 2px 2px 4px #ffffff, inset -3px -3px 8px rgba(102, 76, 40, 0.05); }
         body.light-mode #examTimer { background: #F0EBE1; box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 4px #ffffff; }
         body.light-mode #progressTracker { color: #664C28; }
-        body.light-mode .question-card, body.light-mode .marking-rules, body.light-mode .roll-input-box, body.light-mode .breakdown-box { background: #F0EBE1; border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: 6px 6px 12px rgba(102, 76, 40, 0.15), -4px -4px 10px #ffffff, inset 2px 2px 4px #ffffff, inset -3px -3px 8px rgba(102, 76, 40, 0.05); }
+        body.light-mode .question-card, body.light-mode .marking-rules, body.light-mode .breakdown-box { background: #F0EBE1; border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: 6px 6px 12px rgba(102, 76, 40, 0.15), -4px -4px 10px #ffffff, inset 2px 2px 4px #ffffff, inset -3px -3px 8px rgba(102, 76, 40, 0.05); }
         
         body.light-mode .written-upload-box { background: #FDFCF9; border-color: rgba(102, 76, 40, 0.4); box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.1); }
         body.light-mode .written-upload-box label { color: #664C28; }
@@ -182,12 +172,9 @@
         body.light-mode .option-label.selected input[type="radio"] { accent-color: #FFFFF0; }
         body.light-mode .clear-selection-btn { color: #8A7254; }
         body.light-mode .clear-selection-btn:hover { background: rgba(102, 76, 40, 0.1); color: #ff5252; }
-        body.light-mode .login-btn, body.light-mode .show-answers-btn { background: #F0EBE1; color: #664C28; border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: 6px 6px 12px rgba(102, 76, 40, 0.15), -4px -4px 10px #ffffff, inset 2px 2px 5px #ffffff, inset -4px -4px 8px rgba(102, 76, 40, 0.05); }
+        body.light-mode .show-answers-btn { background: #F0EBE1; color: #664C28; border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: 6px 6px 12px rgba(102, 76, 40, 0.15), -4px -4px 10px #ffffff, inset 2px 2px 5px #ffffff, inset -4px -4px 8px rgba(102, 76, 40, 0.05); }
         body.light-mode .submit-btn { background: #664C28; color: #FFFFF0; border-color: rgba(102, 76, 40, 0.4); box-shadow: 4px 4px 10px rgba(102, 76, 40, 0.3), -2px -2px 5px #ffffff, inset 2px 2px 4px rgba(255,255,255,0.2); }
         body.light-mode .submit-btn:active { box-shadow: inset 4px 4px 10px rgba(0,0,0,0.4); color: #FFFFF0;}
-        body.light-mode .roll-input-box label { color: #664C28; }
-        body.light-mode .roll-input-box input { background: #FDFCF9; color: #4A3B2C; border: 1px solid rgba(102, 76, 40, 0.3); box-shadow: inset 4px 4px 8px rgba(102, 76, 40, 0.15), inset -2px -2px 5px #ffffff; }
-        body.light-mode .roll-input-box input:focus { box-shadow: inset 6px 6px 12px rgba(102, 76, 40, 0.2), 0 0 15px rgba(102, 76, 40, 0.2); }
         body.light-mode .stat-label { color: #8A7254; }
         body.light-mode .review-card { background: #F0EBE1; box-shadow: 5px 5px 12px rgba(102, 76, 40, 0.15), -3px -3px 8px #ffffff, inset 2px 2px 4px #ffffff; border-right: 1px solid rgba(102, 76, 40, 0.2); border-top: 1px solid rgba(102, 76, 40, 0.2); border-bottom: 1px solid rgba(102, 76, 40, 0.2); }
         body.light-mode .review-a { color: #664C28; }
@@ -202,7 +189,7 @@
         @media (max-width: 768px) { 
             body { padding: 20px 10px 40px 10px; }
             .glass-container { padding: 25px 15px; border-radius: 25px; }
-            .question-card, .marking-rules, .roll-input-box, .breakdown-box { padding: 18px 12px; border-radius: 16px; }
+            .question-card, .marking-rules, .breakdown-box { padding: 18px 12px; border-radius: 16px; }
             .question-text { font-size: 16px; margin-bottom: 10px; }
             .written-upload-box { padding: 12px 10px; }
             .user-info { padding: 12px 15px; width: 100%; border-radius: 15px;}
@@ -239,11 +226,6 @@
     <div class="bg-blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
 
     <div class="glass-container">
-        <div id="login-section">
-            <h1 style="margin-bottom: 5px;">Welcome to MCQ Portal</h1>
-            <p style="color: #a0a0b0; font-size: 15px; margin-bottom: 25px;">Please login securely to start your selected exam.</p>
-            <button id="loginBtn" class="login-btn">Login with Google</button>
-        </div>
 
         <div id="exam-section">
             <h2 style="color: #ffb74d; margin-bottom: 25px; text-transform: uppercase;">
@@ -263,11 +245,6 @@
             </div>
 
             <form id="examForm">
-                <div class="roll-input-box" id="rollInputBox">
-                    <label for="rollNumber">Enter Your Roll Number (Required):</label>
-                    <input type="number" id="rollNumber" placeholder="e.g. 2101001" required>
-                </div>
-
                 <div id="questionsContainer"><p style="text-align: center; color: #b3b3b3; font-size: 16px;">Loading questions...</p></div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">Submit Exam</button>
@@ -295,7 +272,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, addDoc, doc, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         // 🔴🔴 YOUR FIREBASE CONFIG 🔴🔴
@@ -307,7 +284,7 @@
             messagingSenderId: "977853699063",
             appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2"
         };
-        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const provider = new GoogleAuthProvider(); const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 
         const IMGBB_API_KEY = "35b7e96a7a04b874aa3e4a2949ff11cc";
 
@@ -316,7 +293,7 @@
 
         if(!currentExamId) { window.location.replace("index.html"); }
 
-        let userEmail = ""; let correctAnswersList = {}; let questionsDataList = {}; let timeLeft = 0; let timerInterval, saveInterval;
+        let userEmail = ""; let userRollNumber = "Unknown"; let correctAnswersList = {}; let questionsDataList = {}; let timeLeft = 0; let timerInterval, saveInterval;
         let examDurationMinutes = 0; let isPracticeMode = false; let isWrittenExam = false; 
         let isSubmitting = false; let totalQCount = 0; let tabSwitchCount = 0; let isExamActive = false;
         
@@ -324,7 +301,7 @@
         function checkWindowSize() { if (window.innerWidth < window.screen.width * 0.8) { usedSplitScreen = "Yes"; } }
         window.addEventListener('resize', checkWindowSize); checkWindowSize(); 
 
-        const loginSection = document.getElementById('login-section'); const examSection = document.getElementById('exam-section');
+        const examSection = document.getElementById('exam-section');
         const resultSection = document.getElementById('result-section'); const questionsContainer = document.getElementById('questionsContainer');
         const progressTracker = document.getElementById('progressTracker');
 
@@ -343,8 +320,7 @@
         function saveProgressLocally() {
             if (!currentExamId || !userEmail) return;
             const storageKey = 'exam_progress_' + currentExamId + '_' + userEmail;
-            const rollBox = document.getElementById('rollNumber');
-            let progress = { roll: rollBox ? rollBox.value : "", timestamp: new Date().getTime() };
+            let progress = { timestamp: new Date().getTime() };
             
             if(!isWrittenExam) {
                 const answers = {};
@@ -363,7 +339,6 @@
             if (savedStr) {
                 try {
                     const savedProgress = JSON.parse(savedStr);
-                    if (savedProgress.roll) { const rollBox = document.getElementById('rollNumber'); if (rollBox) rollBox.value = savedProgress.roll; }
                     
                     if (!isWrittenExam && savedProgress.answers) {
                         for (let qId in savedProgress.answers) {
@@ -386,9 +361,19 @@
             return str;
         }
 
+        // 🟢 Check User Auth Status 🟢
         onAuthStateChanged(auth, async (user) => {
             if (user && currentExamId) {
                 userEmail = user.email; 
+                
+                // Fetch User Roll Number automatically
+                try {
+                    const userQuery = query(collection(db, "users"), where("email", "==", userEmail));
+                    const userSnap = await getDocs(userQuery);
+                    if (!userSnap.empty) {
+                        userRollNumber = userSnap.docs[0].data().roll || userSnap.docs[0].data().rollNumber || userSnap.docs[0].data().studentId || "Unknown";
+                    }
+                } catch (err) { console.error("Error fetching roll number:", err); }
 
                 const examDocSnap = await getDoc(doc(db, "exams", currentExamId)); 
                 if (!examDocSnap.exists()) { 
@@ -401,8 +386,7 @@
                 if ((examData.publishTime && currentTime >= examData.publishTime) || examData.status === "deleted") {
                     isPracticeMode = true;
                     document.getElementById('practiceBadge').style.display = "inline-block"; document.getElementById('antiCheatWarning').style.display = "none";
-                    document.getElementById('practiceInfo').style.display = "block"; document.getElementById('rollInputBox').style.display = "none";
-                    document.getElementById('rollNumber').removeAttribute('required'); 
+                    document.getElementById('practiceInfo').style.display = "block";
                 }
 
                 if(!isPracticeMode) {
@@ -413,12 +397,12 @@
                     }
                 }
                 
-                loginSection.style.display = "none"; examSection.style.display = "block"; isExamActive = true; 
+                examSection.style.display = "block"; isExamActive = true; 
                 loadExamData(examData); 
-            } else if (!user && currentExamId) { loginSection.style.display = "flex"; }
+            } else if (!user) { 
+                Swal.fire({ icon: 'warning', title: 'Not Logged In', text: 'Please login first!', background: document.body.classList.contains('light-mode') ? '#FDFCF9' : '#1a1a22', color: document.body.classList.contains('light-mode') ? '#664C28' : '#fff' }).then(() => { window.location.href = "index.html"; });
+            }
         });
-
-        document.getElementById('loginBtn').addEventListener('click', () => { signInWithPopup(auth, provider).catch(console.error); });
 
         // 🟢 Tab Switch Protection (Strict Limit = 3 for MCQ, NO LIMIT for Written) 🟢
         document.addEventListener("visibilitychange", () => {
@@ -445,8 +429,7 @@
                 isWrittenExam = (examData.type === 'written');
 
                 if(isWrittenExam) {
-                    document.getElementById('examRulesBox').innerHTML = `<span style="font-size: 16px; color: #00bcd4;">✍️ Written Exam Instructions:</span><br><span style="color:#a0a0b0; font-size:14px;">Read the questions carefully and write your answers on paper. Upload the photo of your answer below each specific question.</span><br><span id="antiCheatWarning" style="color: #ff5252; margin-top: 10px; display: block; font-size: 14px;">🚨 You can switch tabs if needed to capture/upload
-                    images.</span>`;
+                    document.getElementById('examRulesBox').innerHTML = `<span style="font-size: 16px; color: #00bcd4;">✍️ Written Exam Instructions:</span><br><span style="color:#a0a0b0; font-size:14px;">Read the questions carefully and write your answers on paper. Upload the photo of your answer below each specific question.</span><br><span id="antiCheatWarning" style="color: #ff5252; margin-top: 10px; display: block; font-size: 14px;">🚨 You can switch tabs if needed to capture/upload images.</span>`;
                     progressTracker.innerText = "Written Exam Mode ✍️";
                 } else {
                     document.getElementById('antiCheatWarning').innerText = "🚨 Do not switch tabs or minimize the browser. Your exam will auto-submit on the 3rd attempt!";
@@ -458,7 +441,22 @@
                 let questionNumber = 1; questionsContainer.innerHTML = ""; 
                 if(querySnapshot.empty) { questionsContainer.innerHTML = "<p style='color:#ff5252; text-align:center;'>No questions found!</p>"; return; }
 
-                querySnapshot.forEach((doc) => {
+                // 🟢 Client-Side Sorting to Fix Admin Order Issue 🟢
+                let docsArray = [];
+                querySnapshot.forEach(doc => docsArray.push(doc));
+                docsArray.sort((a, b) => {
+                    let d1 = a.data(); let d2 = b.data();
+                    let t1 = d1.timestamp?.toMillis ? d1.timestamp.toMillis() : (d1.timestamp || 0);
+                    let t2 = d2.timestamp?.toMillis ? d2.timestamp.toMillis() : (d2.timestamp || 0);
+                    if (t1 && t2 && t1 !== t2) return t1 - t2; // Sort primarily by creation timestamp
+                    
+                    // Fallback to purely numeric IDs if no timestamp is present
+                    let n1 = parseInt(a.id); let n2 = parseInt(b.id);
+                    if (!isNaN(n1) && !isNaN(n2)) return n1 - n2;
+                    return a.id.localeCompare(b.id);
+                });
+
+                docsArray.forEach((doc) => {
                     const data = doc.data(); const qId = doc.id; 
                     correctAnswersList[qId] = data.correctAnswer; questionsDataList[qId] = data; 
                     const qCard = document.createElement('div'); qCard.className = 'question-card';
@@ -509,8 +507,6 @@
             if(answeredCount === totalQCount) progressTracker.style.color = "#00e676"; 
             else progressTracker.style.color = document.body.classList.contains('light-mode') ? "#664C28" : "#00bcd4"; 
         }
-
-        document.getElementById('rollNumber').addEventListener('input', saveProgressLocally);
 
         questionsContainer.addEventListener('change', (e) => {
             if(!isWrittenExam && e.target.type === 'radio') {
@@ -581,7 +577,7 @@
             isExamActive = false; clearInterval(timerInterval); if(!isPracticeMode) clearInterval(saveInterval);
             const submitBtn = document.getElementById('submitBtn'); submitBtn.innerText = "Submitting..."; submitBtn.disabled = true;
             
-            const rollNum = document.getElementById('rollNumber').value || "Practice";
+            const rollNum = isPracticeMode ? "Practice" : userRollNumber;
             let score = 0; let correctCount = 0; let wrongCount = 0; let skippedCount = 0;
             let totalQuestions = Object.keys(correctAnswersList).length; let userSelectedAnswers = {}; 
             
