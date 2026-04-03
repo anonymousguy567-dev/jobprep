@@ -136,6 +136,29 @@
         .forgot-pass-link { color: #00bcd4; font-size: 12px; text-decoration: none; font-weight: bold; transition: 0.2s; }
         .forgot-pass-link:hover { color: #00e676; text-decoration: underline; }
 
+        /* 🟢 Admin Login Card 🟢 */
+        .admin-login-card {
+            display: block;
+            width: 100%;
+            margin: 20px auto 0 auto; 
+            padding: 18px;
+            border-radius: 18px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            background: #252530; 
+            color: #00bcd4;
+            border: 1px solid rgba(255,255,255,0.02);
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -4px -4px 10px rgba(255,255,255,0.03), inset 2px 2px 5px rgba(255,255,255,0.05), inset -4px -4px 8px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+
+        .admin-login-card:active {
+            box-shadow: inset 6px 6px 12px rgba(0,0,0,0.5), inset -3px -3px 8px rgba(255,255,255,0.02); 
+            transform: translateY(2px) scale(0.96);
+        }
+
         /* 🟢 SECTION: Homepage 🟢 */
         .welcome-header { text-align: center; margin-bottom: 40px; margin-top: 20px; width: 100%; }
         .welcome-header h1 { font-size: 36px; color: #fff; font-weight: 900; margin-bottom: 10px; letter-spacing: 1px; }
@@ -262,6 +285,11 @@
         body.light-mode .input-group input { background: #F0EBE1; color: #222; border-color: rgba(102, 76, 40, 0.1); box-shadow: inset 2px 2px 5px rgba(102,76,40,0.1); }
         body.light-mode .input-group input:focus { border-color: #008394; }
         body.light-mode .submit-auth-btn { background: #008394; color: #fff; box-shadow: 4px 4px 10px rgba(0, 131, 148, 0.3), inset 2px 2px 4px rgba(255,255,255,0.4); }
+
+        body.light-mode .admin-login-card {
+            background: #F0EBE1; color: #664C28; border: 1px solid rgba(102, 76, 40, 0.3); 
+            box-shadow: 6px 6px 12px rgba(102, 76, 40, 0.15), -4px -4px 10px #ffffff, inset 2px 2px 5px #ffffff, inset -4px -4px 8px rgba(102, 76, 40, 0.05);
+        }
 
         body.light-mode .welcome-header h1, body.light-mode .box-title { color: #222; }
         body.light-mode .box-desc, body.light-mode .welcome-header p, body.light-mode .stat-box h3 { color: #777; }
@@ -459,6 +487,10 @@
                 </form>
             </div>
         </div>
+        
+        <a href="https://anonymousguy567-dev.github.io/admin/" class="admin-login-card">
+            👨‍💻 Admin Log in here
+        </a>
     </div>
 
     <div id="home-view" class="spa-section">
