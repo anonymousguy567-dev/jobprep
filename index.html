@@ -442,11 +442,11 @@
                 <form class="auth-form active" id="signInForm">
                     <div class="input-group">
                         <label>Email Address</label>
-                        <input type="email" id="loginEmail" placeholder="Enter your email" required autocomplete="email">
+                        <input type="email" name="email" id="loginEmail" placeholder="Enter your email" required autocomplete="username">
                     </div>
                     <div class="input-group" style="margin-bottom: 5px;">
                         <label>Password</label>
-                        <input type="password" id="loginPass" placeholder="Enter your password" required autocomplete="current-password">
+                        <input type="password" name="password" id="loginPass" placeholder="Enter your password" required autocomplete="current-password">
                     </div>
                     <div style="text-align: right; margin-bottom: 15px; margin-top: -5px;">
                         <a href="#" id="forgotPassLink" class="forgot-pass-link">Forgot Password?</a>
@@ -477,11 +477,11 @@
                     </div>
                     <div class="input-group">
                         <label>Email Address</label>
-                        <input type="email" id="regEmail" placeholder="Enter valid email" required autocomplete="email">
+                        <input type="email" name="email" id="regEmail" placeholder="Enter valid email" required autocomplete="email">
                     </div>
                     <div class="input-group">
                         <label>Create Password</label>
-                        <input type="password" id="regPass" placeholder="Minimum 6 characters" required autocomplete="new-password">
+                        <input type="password" name="new-password" id="regPass" placeholder="Minimum 6 characters" required autocomplete="new-password">
                     </div>
                     <button type="submit" class="submit-auth-btn" id="regSubmitBtn" style="background:#00e676;">Create Account</button>
                 </form>
@@ -581,8 +581,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-        // 🟢 Using Email/Password Auth methods + Password Reset 🟢
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        // 🟢 Added setPersistence and browserSessionPersistence 🟢
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile, onAuthStateChanged, signOut, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, query, where, doc, getDoc, setDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
         // 🟢 Theme Toggle
@@ -651,6 +651,9 @@
         // 🔴 FIREBASE CONFIG 🔴
         const firebaseConfig = { apiKey: "AIzaSyCxJ80HE80F0FEsb1jZpal_YNL6s0S_9xE", authDomain: "mcq-portal-904fd.firebaseapp.com", projectId: "mcq-portal-904fd", storageBucket: "mcq-portal-904fd.firebasestorage.app", messagingSenderId: "977853699063", appId: "1:977853699063:web:0fb1b7e2be9afadb7b54f2" };
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
+
+        // 🟢 FORCE SESSION PERSISTENCE (Auto-logout when tab/browser is closed) 🟢
+        setPersistence(auth, browserSessionPersistence).catch(console.error);
 
         let userEmail = ""; let userName = ""; let userRoll = ""; let allExamsData = {}; let timerInterval;
 
